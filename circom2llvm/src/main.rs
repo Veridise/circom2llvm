@@ -1,11 +1,13 @@
-
 use inkwell::builder::Builder;
-use inkwell::context::{Context};
+use inkwell::context::Context;
 use inkwell::module::Module;
-use inkwell::types::{PointerType, StructType, StringRadix};
-use inkwell::AddressSpace;
+use inkwell::types::{PointerType, StringRadix, StructType};
+use inkwell::{AddressSpace, IntPredicate};
 
-use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, InstructionValue, PointerValue, IntValue};
+use inkwell::values::{
+    BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue, PointerValue,
+};
+use program_structure::ast::ExpressionPrefixOpcode;
 use program_structure::{
     ast::{
         AssignOp, Definition, Expression, ExpressionInfixOpcode, SignalType, Statement,
@@ -33,10 +35,12 @@ struct TemplateCodeGen<'ctx, 'ast> {
     init_func_value: Option<FunctionValue<'ctx>>,
     templ_struct_ptr: Option<PointerValue<'ctx>>,
     intermediates2value: HashMap<&'ast String, BasicValueEnum<'ctx>>,
+
+    constraint_count: usize,
 }
 
-impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
-    fn _collect_information(&mut self) {
+impl<'ctx, 'ast> TemplateCodeGen<'ctx, 'ast> {
+    fn _collect_information(&mut self, codegen: &CodeGen<'ctx>) {
         match self.body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
@@ -46,7 +50,41 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
                             xtype,
                             initializations,
                         } => match xtype {
-                            VariableType::Var => {}
+                            VariableType::Var => {
+                                for init in initializations {
+                                    match init {
+                                        Statement::Substitution {
+                                            meta,
+                                            var,
+                                            access,
+                                            op,
+                                            rhe,
+                                        } => match rhe {
+                                            Expression::Number(_, num) => match op {
+                                                AssignOp::AssignVar => {
+                                                    let val = codegen
+                                                        .context
+                                                        .i128_type()
+                                                        .const_int_from_string(
+                                                            &num.to_string().to_owned(),
+                                                            StringRadix::Decimal,
+                                                        );
+                                                    self.intermediates2value.insert(
+                                                        var,
+                                                        val.unwrap().as_basic_value_enum(),
+                                                    );
+                                                }
+                                                _ => unreachable!(),
+                                            },
+                                            _ => unreachable!(),
+                                        },
+                                        Statement::Declaration { name, .. } => {
+                                            self.intermediates.push(name);
+                                        }
+                                        _ => unreachable!(),
+                                    }
+                                }
+                            }
                             VariableType::Signal(signal_type, _) => {
                                 for init in initializations {
                                     match init {
@@ -83,8 +121,8 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
                             }
                             VariableType::Component => {}
                             VariableType::AnonymousComponent => {}
-                        }
-                        _ => {}
+                        },
+                        _ => (),
                     }
                 }
             }
@@ -151,7 +189,12 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
         codegen.set_struct(build_struct_ptr, 1, "init_fn", initial_func_value);
         builder.build_return(Some(&build_struct_ptr));
         self.init_func_value = Some(init_func_value);
-        self.templ_struct_ptr = Some(init_func_value.get_first_param().unwrap().into_pointer_value());
+        self.templ_struct_ptr = Some(
+            init_func_value
+                .get_first_param()
+                .unwrap()
+                .into_pointer_value(),
+        );
     }
 
     fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>) {
@@ -166,30 +209,71 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
                     match stmt {
-                        Statement::Substitution { meta: _, var, access, op, rhe } => {
+                        Statement::Substitution {
+                            meta: _,
+                            var,
+                            access,
+                            op,
+                            rhe,
+                        } => {
                             let res = self._resolve_expr(codegen, rhe);
                             self._set_value(codegen, var, res);
                             match op {
                                 AssignOp::AssignConstraintSignal => {
-                                    let global_name = format!("{}.{}", self.name, var).to_lowercase().to_string();
-                                    self._add_constraint(codegen, &global_name, res);
-                                },
+                                    let global_name =
+                                        format!("{}.contraint.{}", self.name, self.constraint_count)
+                                            .to_lowercase()
+                                            .to_string();
+                                    self.constraint_count += 1;
+                                    let lval = self._get_value(codegen, var).into_int_value();
+                                    let rval = res.into_int_value();
+                                    self._add_constraint(
+                                        codegen,
+                                        &global_name,
+                                        IntPredicate::EQ,
+                                        lval,
+                                        rval,
+                                    );
+                                }
+                                _ => (),
+                            };
+                            match access {
                                 _ => (),
                             }
-                            match access {
-                                _ => ()
-                            }
-                        },
-                        Statement::InitializationBlock { meta, xtype, initializations } => (),
+                        }
+                        Statement::ConstraintEquality { meta: _, lhe, rhe } => {
+                            let global_name = format!("{}.contraint.{}", self.name, self.constraint_count)
+                                .to_lowercase()
+                                .to_string();
+                            self.constraint_count += 1;
+                            let lval = self._resolve_expr(codegen, lhe).into_int_value();
+                            let rval = self._resolve_expr(codegen, rhe).into_int_value();
+                            self._add_constraint(
+                                codegen,
+                                &global_name,
+                                IntPredicate::EQ,
+                                lval,
+                                rval,
+                            );
+                        }
+                        Statement::MultSubstitution { meta, lhe, op, rhe } => {
+                            print!("Coming");
+                        }
+                        Statement::InitializationBlock { .. } => (),
+                        Statement::Declaration { .. } => (),
                         _ => unreachable!(),
                     }
                 }
-            },
+            }
             _ => unreachable!(),
         }
     }
 
-    fn _resolve_expr(&mut self, codegen: &CodeGen<'ctx>, expr: &Expression) -> BasicValueEnum<'ctx> {
+    fn _resolve_expr(
+        &mut self,
+        codegen: &CodeGen<'ctx>,
+        expr: &Expression,
+    ) -> BasicValueEnum<'ctx> {
         match expr {
             Expression::InfixOp {
                 meta: _,
@@ -197,32 +281,82 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
                 infix_op,
                 rhe,
             } => {
-                let lval: BasicValueEnum<'ctx> = match lhe.as_ref() {
-                    Expression::Variable { meta: _, name, access: _ } => self._get_value(codegen, name),
-                    _ => unreachable!(),
-                };
-                let rval: BasicValueEnum<'ctx> = match rhe.as_ref() {
-                    Expression::Variable { meta: _, name, access: _ } => self._get_value(codegen, name),
-                    _ => unreachable!(),
-                };
+                let lval = self._resolve_expr(codegen, lhe.as_ref());
+                let rval = self._resolve_expr(codegen, rhe.as_ref());
 
-                let res = match infix_op {
-                    ExpressionInfixOpcode::Mul => {
-                        let mul = codegen.builder.build_int_mul(lval.into_int_value(), rval.into_int_value(), "mul");
-                        codegen.mod_value(mul).as_basic_value_enum()
-                    },
-                    _ => unreachable!(),
-                };
-                return res;
-            },
-            _ => unreachable!()
+                let res = self._resolve_infix_op(
+                    codegen,
+                    infix_op,
+                    lval.into_int_value(),
+                    rval.into_int_value(),
+                );
+                return res.as_basic_value_enum();
+            }
+            Expression::PrefixOp {
+                meta,
+                prefix_op,
+                rhe,
+            } => {
+                let rval = self._resolve_expr(codegen, rhe.as_ref());
+                let res = self._resolve_prefix_op(codegen, prefix_op, rval.into_int_value());
+                return res.as_basic_value_enum();
+            }
+            Expression::Variable { meta, name, access } => self._get_value(codegen, name),
+            Expression::Number(_, num) => {
+                let val = codegen
+                    .context
+                    .i128_type()
+                    .const_int_from_string(&num.to_string().to_owned(), StringRadix::Decimal);
+                return val.unwrap().as_basic_value_enum();
+            }
+            _ => unreachable!(),
         }
+    }
+
+    fn _resolve_prefix_op(
+        &self,
+        codegen: &CodeGen<'ctx>,
+        prefix_op: &ExpressionPrefixOpcode,
+        rval: IntValue<'ctx>,
+    ) -> IntValue<'ctx> {
+        let zero = codegen.context.i128_type().const_zero();
+        let temp = match prefix_op {
+            ExpressionPrefixOpcode::Sub => zero.const_sub(rval),
+            _ => unreachable!(),
+        };
+        return codegen.mod_value(temp);
+    }
+
+    fn _resolve_infix_op(
+        &self,
+        codegen: &CodeGen<'ctx>,
+        infix_op: &ExpressionInfixOpcode,
+        lval: IntValue<'ctx>,
+        rval: IntValue<'ctx>,
+    ) -> IntValue<'ctx> {
+        let temp = match infix_op {
+            ExpressionInfixOpcode::Add => codegen.builder.build_int_add(lval, rval, "add"),
+            ExpressionInfixOpcode::BitAnd => codegen.builder.build_and(lval, rval, "and"),
+            ExpressionInfixOpcode::BitOr => codegen.builder.build_or(lval, rval, "or"),
+            ExpressionInfixOpcode::BitXor => codegen.builder.build_xor(lval, rval, "xor"),
+            ExpressionInfixOpcode::Div => codegen.builder.build_int_signed_div(lval, rval, "sdiv"),
+            ExpressionInfixOpcode::IntDiv => {
+                codegen.builder.build_int_signed_div(lval, rval, "sdiv")
+            }
+            ExpressionInfixOpcode::Mod => codegen.builder.build_int_signed_rem(lval, rval, "mod"),
+            ExpressionInfixOpcode::Mul => codegen.builder.build_int_mul(lval, rval, "mul"),
+            ExpressionInfixOpcode::Sub => codegen.builder.build_int_sub(lval, rval, "sub"),
+            _ => unreachable!(),
+        };
+        return codegen.mod_value(temp);
     }
 
     fn _get_value(&self, codegen: &CodeGen<'ctx>, name: &String) -> BasicValueEnum<'ctx> {
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         if self.args.contains(name) {
-            let param_struct_ptr = codegen.get_struct(templ_struct_ptr, 0, "param").into_pointer_value();
+            let param_struct_ptr = codegen
+                .get_struct(templ_struct_ptr, 0, "param")
+                .into_pointer_value();
             let index = self.args.iter().position(|s| s == name).unwrap() as u32;
             return codegen.get_struct(param_struct_ptr, index, name);
         } else if self.inputs.contains(&name) {
@@ -231,12 +365,22 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
             return codegen.get_struct(templ_struct_ptr, index, name);
         } else if self.intermediates.contains(&name) {
             return *self.intermediates2value.get(name).unwrap();
+        } else if self.outputs.contains(&name) {
+            let mut index = self.outputs.iter().position(|&s| s == name).unwrap() as u32;
+            index += 2;
+            index += self.inputs.len() as u32;
+            return codegen.get_struct(templ_struct_ptr, index, name);
         } else {
             unreachable!();
         }
     }
 
-    fn _set_value(&mut self, codegen: &CodeGen<'ctx>, name: &'ast String, value: BasicValueEnum<'ctx>) {
+    fn _set_value(
+        &mut self,
+        codegen: &CodeGen<'ctx>,
+        name: &'ast String,
+        value: BasicValueEnum<'ctx>,
+    ) {
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         if self.outputs.contains(&name) {
             let mut index = self.outputs.iter().position(|&s| s == name).unwrap() as u32;
@@ -244,23 +388,35 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
             index += self.inputs.len() as u32;
             codegen.set_struct(templ_struct_ptr, index, name, value);
         } else if self.intermediates.contains(&name) {
-            self.intermediates2value.insert(name, value.as_basic_value_enum());
+            self.intermediates2value
+                .insert(name, value.as_basic_value_enum());
         } else {
             unreachable!();
         }
     }
 
-    fn _add_constraint(&self, codegen: &CodeGen<'ctx>, global_name: &'ast String, value: BasicValueEnum<'ctx>) {
-        let gv = codegen.module.add_global(codegen.context.i128_type(), None, global_name);
-        codegen.builder.build_store(gv.as_pointer_value(), value);
+    fn _add_constraint(
+        &self,
+        codegen: &CodeGen<'ctx>,
+        global_name: &String,
+        op: IntPredicate,
+        lval: IntValue<'ctx>,
+        rval: IntValue<'ctx>,
+    ) {
+        let gv = codegen
+            .module
+            .add_global(codegen.context.i128_type(), None, global_name);
+        let eq_val = codegen
+            .builder
+            .build_int_compare(op, lval, rval, &global_name);
+        codegen.builder.build_store(gv.as_pointer_value(), eq_val);
     }
 
     fn gen_ir(&mut self, codegen: &CodeGen<'ctx>) {
-        self._collect_information();
+        self._collect_information(codegen);
         self._gen_struct_and_function(codegen);
         self._fillin_initial_function(codegen);
     }
-
 }
 
 struct CodeGen<'ctx> {
@@ -304,10 +460,13 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     fn mod_value(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
-        let global_p = self.context.i128_type().const_int_from_string(GLOBAL_P, StringRadix::Decimal).unwrap();
+        let global_p = self
+            .context
+            .i128_type()
+            .const_int_from_string(GLOBAL_P, StringRadix::Decimal)
+            .unwrap();
         return value.const_signed_remainder(global_p);
     }
-
 }
 
 fn main() {
@@ -320,7 +479,10 @@ fn main() {
         module,
         builder,
     };
-    match parser::run_parser("./examples/AND-gates-circomlib.circom".to_string(), links) {
+    match parser::run_parser(
+        "./examples/BabyAdd-babyjub-circomlib.circom".to_string(),
+        links,
+    ) {
         Ok(ast) => {
             let definitions = ast.get_definitions();
             for defin in definitions {
@@ -344,6 +506,7 @@ fn main() {
                             init_func_value: None,
                             templ_struct_ptr: None,
                             intermediates2value: HashMap::new(),
+                            constraint_count: 0,
                         };
                         template_codegen.gen_ir(&codegen);
                     }
@@ -358,7 +521,7 @@ fn main() {
             }
             let result = codegen
                 .module
-                .print_to_file("./examples/AND-gates-circomlib.ll");
+                .print_to_file("./examples/BabyAdd-babyjub-circomlib.ll");
             match result {
                 Ok(_) => {}
                 Err(err) => {
