@@ -1,13 +1,11 @@
-use inkwell::basic_block::BasicBlock;
+
 use inkwell::builder::Builder;
-use inkwell::context::{self, Context};
-use inkwell::execution_engine::{ExecutionEngine, JitFunction};
+use inkwell::context::{Context};
 use inkwell::module::Module;
-use inkwell::types::{BasicTypeEnum, PointerType, StructType};
+use inkwell::types::{PointerType, StructType, StringRadix};
 use inkwell::AddressSpace;
 
-use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, InstructionValue, PointerValue};
-use inkwell::{module::Linkage, types::FunctionType};
+use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, InstructionValue, PointerValue, IntValue};
 use program_structure::{
     ast::{
         AssignOp, Definition, Expression, ExpressionInfixOpcode, SignalType, Statement,
@@ -16,24 +14,24 @@ use program_structure::{
     error_definition::Report,
 };
 use std::collections::HashMap;
-use std::iter::Enumerate;
-use std::ops::{Add, Index};
-use std::{error::Error, ops::ControlFlow};
 
 pub fn utils_add_symbol(mut v: Vec<String>, s: &String) {
     v.push(s.to_lowercase());
 }
 
-const GLOBAL_P: i128 = 12539295309507511577697735;
+const GLOBAL_P: &str = "12539295309507511577697735";
 
 struct TemplateCodeGen<'ctx, 'ast> {
     name: &'ast String,
     body: &'ast Statement,
     args: &'ast Vec<String>,
+
     inputs: Vec<&'ast String>,
     intermediates: Vec<&'ast String>,
     outputs: Vec<&'ast String>,
-    output2expr: HashMap<&'ast String, (&'ast AssignOp, &'ast Expression)>,
+
+    init_func_value: Option<FunctionValue<'ctx>>,
+    templ_struct_ptr: Option<PointerValue<'ctx>>,
     intermediates2value: HashMap<&'ast String, BasicValueEnum<'ctx>>,
 }
 
@@ -74,6 +72,9 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
                                             } else {
                                                 unreachable!();
                                             }
+                                            match dimensions {
+                                                _ => (),
+                                            }
                                         }
 
                                         _ => unreachable!(),
@@ -82,15 +83,6 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
                             }
                             VariableType::Component => {}
                             VariableType::AnonymousComponent => {}
-                        },
-                        Statement::Substitution {
-                            meta: _,
-                            var,
-                            access: _,
-                            op,
-                            rhe,
-                        } => {
-                            self.output2expr.insert(var, (op, rhe));
                         }
                         _ => {}
                     }
@@ -100,7 +92,7 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
         };
     }
 
-    fn _gen_struct_and_function(&self, codegen: &CodeGen<'ctx>) -> FunctionValue<'ctx> {
+    fn _gen_struct_and_function(&mut self, codegen: &CodeGen<'ctx>) {
         let CodeGen {
             context,
             module,
@@ -158,54 +150,77 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
         let initial_func_value = init_func_value.as_global_value().as_pointer_value();
         codegen.set_struct(build_struct_ptr, 1, "init_fn", initial_func_value);
         builder.build_return(Some(&build_struct_ptr));
-        return init_func_value;
+        self.init_func_value = Some(init_func_value);
+        self.templ_struct_ptr = Some(init_func_value.get_first_param().unwrap().into_pointer_value());
     }
 
-    fn _fillin_initial_function(&self, codegen: &CodeGen<'ctx>, init_func_value: FunctionValue<'ctx>) {
+    fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>) {
         let CodeGen {
-            context,
-            module,
+            context: _,
+            module: _,
             builder,
         } = codegen;
-        let templ_struct_ptr: PointerValue<'ctx> = init_func_value
-            .get_first_param()
-            .unwrap()
-            .into_pointer_value();
+        let init_func_value = self.init_func_value.unwrap();
         builder.position_at_end(init_func_value.get_first_basic_block().unwrap());
-        for output in &self.outputs {
-            let (op, expr) = self.output2expr.get(output).unwrap();
-            match expr {
-                Expression::InfixOp {
-                    meta,
-                    lhe,
-                    infix_op,
-                    rhe,
-                } => {
-                    let lval: BasicValueEnum<'ctx> = match lhe.as_ref() {
-                        Expression::Variable { meta, name, access } => self._get_value(codegen, templ_struct_ptr, name),
+        match self.body {
+            Statement::Block { meta: _, stmts } => {
+                for stmt in stmts {
+                    match stmt {
+                        Statement::Substitution { meta: _, var, access, op, rhe } => {
+                            let res = self._resolve_expr(codegen, rhe);
+                            self._set_value(codegen, var, res);
+                            match op {
+                                AssignOp::AssignConstraintSignal => {
+                                    let global_name = format!("{}.{}", self.name, var).to_lowercase().to_string();
+                                    self._add_constraint(codegen, &global_name, res);
+                                },
+                                _ => (),
+                            }
+                            match access {
+                                _ => ()
+                            }
+                        },
+                        Statement::InitializationBlock { meta, xtype, initializations } => (),
                         _ => unreachable!(),
-                    };
-                    let rval: BasicValueEnum<'ctx> = match rhe.as_ref() {
-                        Expression::Variable { meta, name, access } => self._get_value(codegen, templ_struct_ptr, name),
-                        _ => unreachable!(),
-                    };
-
-                    match infix_op {
-                        ExpressionInfixOpcode::Mul => {
-                            let mul = builder.build_int_mul(lval.into_int_value(), rval.into_int_value(), "mul");
-                            self._set_value(codegen, templ_struct_ptr, &output, mul);
-                        }
-                        _ => unreachable!(),
-                    };
+                    }
                 }
-                _ => {
-                    println!("Coming")
-                }
-            }
+            },
+            _ => unreachable!(),
         }
     }
 
-    fn _get_value(&self, codegen: &CodeGen<'ctx>, templ_struct_ptr: PointerValue<'ctx>, name: &String) -> BasicValueEnum<'ctx> {
+    fn _resolve_expr(&mut self, codegen: &CodeGen<'ctx>, expr: &Expression) -> BasicValueEnum<'ctx> {
+        match expr {
+            Expression::InfixOp {
+                meta: _,
+                lhe,
+                infix_op,
+                rhe,
+            } => {
+                let lval: BasicValueEnum<'ctx> = match lhe.as_ref() {
+                    Expression::Variable { meta: _, name, access: _ } => self._get_value(codegen, name),
+                    _ => unreachable!(),
+                };
+                let rval: BasicValueEnum<'ctx> = match rhe.as_ref() {
+                    Expression::Variable { meta: _, name, access: _ } => self._get_value(codegen, name),
+                    _ => unreachable!(),
+                };
+
+                let res = match infix_op {
+                    ExpressionInfixOpcode::Mul => {
+                        let mul = codegen.builder.build_int_mul(lval.into_int_value(), rval.into_int_value(), "mul");
+                        codegen.mod_value(mul).as_basic_value_enum()
+                    },
+                    _ => unreachable!(),
+                };
+                return res;
+            },
+            _ => unreachable!()
+        }
+    }
+
+    fn _get_value(&self, codegen: &CodeGen<'ctx>, name: &String) -> BasicValueEnum<'ctx> {
+        let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         if self.args.contains(name) {
             let param_struct_ptr = codegen.get_struct(templ_struct_ptr, 0, "param").into_pointer_value();
             let index = self.args.iter().position(|s| s == name).unwrap() as u32;
@@ -221,21 +236,29 @@ impl <'ctx, 'ast>TemplateCodeGen<'ctx, 'ast> {
         }
     }
 
-    fn _set_value<V: BasicValue<'ctx>>(&self, codegen: &CodeGen<'ctx>, templ_struct_ptr: PointerValue<'ctx>, name: &String, value: V) {
+    fn _set_value(&mut self, codegen: &CodeGen<'ctx>, name: &'ast String, value: BasicValueEnum<'ctx>) {
+        let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         if self.outputs.contains(&name) {
             let mut index = self.outputs.iter().position(|&s| s == name).unwrap() as u32;
             index += 2;
             index += self.inputs.len() as u32;
             codegen.set_struct(templ_struct_ptr, index, name, value);
+        } else if self.intermediates.contains(&name) {
+            self.intermediates2value.insert(name, value.as_basic_value_enum());
         } else {
             unreachable!();
         }
     }
 
+    fn _add_constraint(&self, codegen: &CodeGen<'ctx>, global_name: &'ast String, value: BasicValueEnum<'ctx>) {
+        let gv = codegen.module.add_global(codegen.context.i128_type(), None, global_name);
+        codegen.builder.build_store(gv.as_pointer_value(), value);
+    }
+
     fn gen_ir(&mut self, codegen: &CodeGen<'ctx>) {
         self._collect_information();
-        let init_func_value = self._gen_struct_and_function(codegen);
-        self._fillin_initial_function(codegen, init_func_value);
+        self._gen_struct_and_function(codegen);
+        self._fillin_initial_function(codegen);
     }
 
 }
@@ -279,6 +302,12 @@ impl<'ctx> CodeGen<'ctx> {
             .unwrap();
         return self.builder.build_store(res, value);
     }
+
+    fn mod_value(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
+        let global_p = self.context.i128_type().const_int_from_string(GLOBAL_P, StringRadix::Decimal).unwrap();
+        return value.const_signed_remainder(global_p);
+    }
+
 }
 
 fn main() {
@@ -312,7 +341,8 @@ fn main() {
                             inputs: Vec::new(),
                             intermediates: Vec::new(),
                             outputs: Vec::new(),
-                            output2expr: HashMap::new(),
+                            init_func_value: None,
+                            templ_struct_ptr: None,
                             intermediates2value: HashMap::new(),
                         };
                         template_codegen.gen_ir(&codegen);
@@ -323,7 +353,7 @@ fn main() {
                         args,
                         arg_location,
                         body,
-                    } => {}
+                    } => (),
                 }
             }
             let result = codegen
