@@ -1,14 +1,14 @@
 use super::codegen::CodeGen;
-use super::expression::{resolve_expr, resolve_initialization, Scope};
+use super::expression::{resolve_initialization, Scope};
+use super::statement::resolve_stmt;
 
 use inkwell::AddressSpace;
-
 use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, PointerValue};
 
-use program_structure::ast::{AssignOp, Expression, Statement, VariableType};
+use program_structure::ast::{SignalType, Statement, VariableType};
 use std::collections::HashMap;
 
-pub struct TemplateCodeGen<'ctx, 'ast> {
+pub struct TemplateScope<'ctx, 'ast> {
     pub name: &'ast String,
     pub body: &'ast Statement,
     pub args: &'ast Vec<String>,
@@ -23,24 +23,13 @@ pub struct TemplateCodeGen<'ctx, 'ast> {
     pub templ_struct_ptr: Option<PointerValue<'ctx>>,
 }
 
-impl<'ctx, 'ast> Scope<'ctx, 'ast> for TemplateCodeGen<'ctx, 'ast> {
-    fn add_input(&mut self, v: &'ast String) {
-        self.inputs.push(v);
-    }
-
-    fn add_intermediate(&mut self, v: &'ast String) {
-        self.intermediates.push(v);
-    }
-
-    fn add_output(&mut self, v: &'ast String) {
-        self.outputs.push(v);
-    }
-
+impl<'ctx, 'ast> Scope<'ctx, 'ast> for TemplateScope<'ctx, 'ast> {
     fn add_var(&mut self, v: &'ast String) {
         self.vars.push(v);
     }
 
-    fn get_variable(&self, codegen: &CodeGen<'ctx>, name: &String) -> BasicValueEnum<'ctx> {
+    fn get_variable(&self, codegen: &CodeGen<'ctx>, v: &String) -> BasicValueEnum<'ctx> {
+        let name = v;
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         if self.args.contains(name) {
             let assign_name: &str = &format!("assign_args.{}", name);
@@ -89,20 +78,88 @@ impl<'ctx, 'ast> Scope<'ctx, 'ast> for TemplateCodeGen<'ctx, 'ast> {
             index += 2;
             index += self.inputs.len() as u32;
             codegen.set_to_struct(templ_struct_ptr, index, write_name, value);
-        } else if self.vars.contains(&name) {
-            self.var2val.insert(name, value.as_basic_value_enum());
         } else {
-            unreachable!();
+            self.var2val.insert(name, value.as_basic_value_enum());
+            if !self.vars.contains(&name) {
+                println!("Variable {} isn't initialized!", name);
+                self.vars.push(&name);
+            }
         }
     }
+
+    fn get_main_fn(&self) -> FunctionValue<'ctx> {
+        return self.init_fn_val.unwrap();
+    }
+
 }
 
-impl<'ctx, 'ast> TemplateCodeGen<'ctx, 'ast> {
-    fn _collect_information(&mut self, codegen: &CodeGen<'ctx>) {
+impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
+
+    fn _add_input(&mut self, v: &'ast String) {
+        self.inputs.push(v);
+    }
+
+    fn _add_intermediate(&mut self, v: &'ast String) {
+        self.intermediates.push(v);
+    }
+
+    fn _add_output(&mut self, v: &'ast String) {
+        self.outputs.push(v);
+    }
+
+    fn _resolve_variables(&mut self) {
         match self.body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
-                    resolve_initialization(codegen, stmt, self);
+                    // Variables
+                    resolve_initialization(stmt, self);
+
+                    // Signals
+                    match stmt {
+                        Statement::InitializationBlock {
+                            meta: _,
+                            xtype,
+                            initializations,
+                        } => match xtype {
+                            VariableType::Signal(signal_type, _) => {
+                                for init in initializations {
+                                    match init {
+                                        Statement::Declaration {
+                                            meta: _,
+                                            xtype: _,
+                                            name,
+                                            dimensions,
+                                            is_constant,
+                                        } => {
+                                            if *is_constant {
+                                                match signal_type {
+                                                    SignalType::Input => {
+                                                        self._add_input(name);
+                                                    }
+                                                    SignalType::Intermediate => {
+                                                        self._add_intermediate(name);
+                                                    }
+                                                    SignalType::Output => {
+                                                        self._add_output(name);
+                                                    }
+                                                }
+                                            } else {
+                                                unreachable!();
+                                            }
+                                            match dimensions {
+                                                _ => (),
+                                            }
+                                        }
+                                        _ => unreachable!(),
+                                    }
+                                }
+                            }
+                            VariableType::Component => {}
+                            VariableType::AnonymousComponent => {},
+                            VariableType::Var => (),
+                        },
+                        _ => (),
+                    }
                 }
             }
             _ => unreachable!(),
@@ -174,77 +231,14 @@ impl<'ctx, 'ast> TemplateCodeGen<'ctx, 'ast> {
 
     fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>) {
         let CodeGen {
-            context: _,
-            module: _,
             builder,
             ..
         } = codegen;
-        let init_fn_val = self.init_fn_val.unwrap();
-        builder.position_at_end(init_fn_val.get_first_basic_block().unwrap());
+        builder.position_at_end(self.get_main_fn().get_first_basic_block().unwrap());
         match self.body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
-                    match stmt {
-                        Statement::Substitution {
-                            meta: _,
-                            var,
-                            access,
-                            op,
-                            rhe,
-                        } => {
-                            let res = resolve_expr(codegen, rhe, self);
-                            self.set_variable(codegen, var, res);
-                            match op {
-                                AssignOp::AssignConstraintSignal => {
-                                    let lval = self.get_variable(codegen, var).into_int_value();
-                                    let rval = res.into_int_value();
-                                    codegen.add_constraint(lval, rval);
-                                }
-                                _ => (),
-                            };
-                            match access {
-                                _ => (),
-                            }
-                        }
-                        Statement::ConstraintEquality { meta: _, lhe, rhe } => {
-                            let lval = resolve_expr(codegen, lhe, self).into_int_value();
-                            let rval = resolve_expr(codegen, rhe, self).into_int_value();
-                            codegen.add_constraint(lval, rval);
-                        }
-                        Statement::MultSubstitution { meta, lhe, op, rhe } => {
-                            print!("Coming MultSubstitution");
-                        }
-                        Statement::InitializationBlock {
-                            meta: _,
-                            xtype,
-                            initializations,
-                        } => match xtype {
-                            VariableType::Var => {
-                                for init in initializations {
-                                    match init {
-                                        Statement::Substitution {
-                                            meta: _,
-                                            var,
-                                            access: _,
-                                            op,
-                                            rhe,
-                                        } => match op {
-                                            AssignOp::AssignVar => {
-                                                let rval = resolve_expr(codegen, rhe, self);
-                                                self.var2val.insert(var, rval);
-                                            }
-                                            _ => unreachable!(),
-                                        },
-                                        Statement::Declaration { .. } => (),
-                                        _ => unreachable!(),
-                                    }
-                                }
-                            },
-                            _ => (),
-                        },
-                        Statement::Declaration { .. } => (),
-                        _ => unreachable!(),
-                    }
+                    resolve_stmt(self, codegen, stmt);
                 }
             }
             _ => unreachable!(),
@@ -252,18 +246,17 @@ impl<'ctx, 'ast> TemplateCodeGen<'ctx, 'ast> {
     }
 
     pub fn gen_ir(&mut self, codegen: &CodeGen<'ctx>) {
-        self._collect_information(codegen);
+        self._resolve_variables();
         self._gen_struct_and_function(codegen);
         self._fillin_initial_function(codegen);
     }
 }
 
-struct FunctionCodeGen<'ctx, 'ast> {
+struct FunctionScope<'ctx, 'ast> {
     name: &'ast String,
     body: &'ast Statement,
     args: &'ast Vec<String>,
 
     vars: Vec<&'ast String>,
-    var2expr: HashMap<&'ast String, &'ast Expression>,
     var2val: HashMap<&'ast String, BasicValueEnum<'ctx>>,
 }

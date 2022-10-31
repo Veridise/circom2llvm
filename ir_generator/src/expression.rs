@@ -1,17 +1,13 @@
 use super::codegen::CodeGen;
 
 use inkwell::types::StringRadix;
+use inkwell::IntPredicate;
 
-use inkwell::values::{BasicValue, BasicValueEnum, IntValue};
+use inkwell::values::{BasicValueEnum, FunctionValue, IntValue};
 use program_structure::ast::ExpressionPrefixOpcode;
-use program_structure::ast::{
-    Expression, ExpressionInfixOpcode, SignalType, Statement, VariableType,
-};
+use program_structure::ast::{Expression, ExpressionInfixOpcode, Statement, VariableType};
 
 pub trait Scope<'ctx, 'ast> {
-    fn add_input(&mut self, v: &'ast String);
-    fn add_intermediate(&mut self, v: &'ast String);
-    fn add_output(&mut self, v: &'ast String);
     fn add_var(&mut self, v: &'ast String);
     fn get_variable(&self, codegen: &CodeGen<'ctx>, v: &'ast String) -> BasicValueEnum<'ctx>;
     fn set_variable(
@@ -20,10 +16,19 @@ pub trait Scope<'ctx, 'ast> {
         name: &'ast String,
         value: BasicValueEnum<'ctx>,
     );
+    fn get_main_fn(&self) -> FunctionValue<'ctx>;
 }
 
-pub fn resolve_initialization<'ctx, 'ast>(codegen: &CodeGen<'ctx>, stmt: &'ast Statement, scope: &mut dyn Scope<'ctx, 'ast>) {
+pub fn resolve_initialization<'ctx, 'ast>(
+    stmt: &'ast Statement,
+    scope: &mut dyn Scope<'ctx, 'ast>,
+) {
     match stmt {
+        Statement::Block { meta: _, stmts } => {
+            for _stmt in stmts {
+                resolve_initialization(_stmt, scope);
+            }
+        }
         Statement::InitializationBlock {
             meta: _,
             xtype,
@@ -34,48 +39,12 @@ pub fn resolve_initialization<'ctx, 'ast>(codegen: &CodeGen<'ctx>, stmt: &'ast S
                     match init {
                         Statement::Declaration { name, .. } => {
                             scope.add_var(name);
-                        },
-                        Statement::Substitution { .. } => (),
-                        _ => unreachable!(),
-                    }
-                }
-            }
-            VariableType::Signal(signal_type, _) => {
-                for init in initializations {
-                    match init {
-                        Statement::Declaration {
-                            meta: _,
-                            xtype: _,
-                            name,
-                            dimensions,
-                            is_constant,
-                        } => {
-                            if *is_constant {
-                                match signal_type {
-                                    SignalType::Input => {
-                                        scope.add_input(name);
-                                    }
-                                    SignalType::Intermediate => {
-                                        scope.add_intermediate(name);
-                                    }
-                                    SignalType::Output => {
-                                        scope.add_output(name);
-                                    }
-                                }
-                            } else {
-                                unreachable!();
-                            }
-                            match dimensions {
-                                _ => (),
-                            }
                         }
-
-                        _ => unreachable!(),
+                        _ => (),
                     }
                 }
             }
-            VariableType::Component => {}
-            VariableType::AnonymousComponent => {}
+            _ => (),
         },
         _ => (),
     }
@@ -85,7 +54,7 @@ pub fn resolve_expr<'ctx, 'ast>(
     codegen: &CodeGen<'ctx>,
     expr: &'ast Expression,
     scope: &dyn Scope<'ctx, 'ast>,
-) -> BasicValueEnum<'ctx> {
+) -> IntValue<'ctx> {
     match expr {
         Expression::InfixOp {
             meta: _,
@@ -99,10 +68,10 @@ pub fn resolve_expr<'ctx, 'ast>(
             let res = resolve_infix_op(
                 codegen,
                 infix_op,
-                lval.into_int_value(),
-                rval.into_int_value(),
+                lval,
+                rval,
             );
-            return res.as_basic_value_enum();
+            return res;
         }
         Expression::PrefixOp {
             meta: _,
@@ -110,15 +79,19 @@ pub fn resolve_expr<'ctx, 'ast>(
             rhe,
         } => {
             let rval = resolve_expr(codegen, rhe.as_ref(), scope);
-            let res = resolve_prefix_op(codegen, prefix_op, rval.into_int_value());
-            return res.as_basic_value_enum();
+            let res = resolve_prefix_op(codegen, prefix_op, rval);
+            return res;
         }
-        Expression::Variable { meta: _, name, access: _ } => scope.get_variable(codegen, name),
+        Expression::Variable {
+            meta: _,
+            name,
+            access: _,
+        } => scope.get_variable(codegen, name).into_int_value(),
         Expression::Number(_, num) => {
             let val = codegen
                 .val_ty
                 .const_int_from_string(&num.to_string().to_owned(), StringRadix::Decimal);
-            return val.unwrap().as_basic_value_enum();
+            return val.unwrap();
         }
         _ => unreachable!(),
     }
@@ -149,12 +122,53 @@ fn resolve_infix_op<'ctx>(
         ExpressionInfixOpcode::BitAnd => builder.build_and(lval, rval, "and"),
         ExpressionInfixOpcode::BitOr => builder.build_or(lval, rval, "or"),
         ExpressionInfixOpcode::BitXor => builder.build_xor(lval, rval, "xor"),
+        ExpressionInfixOpcode::BoolAnd => builder.build_and(lval, rval, "and"),
+        ExpressionInfixOpcode::BoolOr => builder.build_and(lval, rval, "or"),
         ExpressionInfixOpcode::Div => builder.build_int_signed_div(lval, rval, "sdiv"),
         ExpressionInfixOpcode::IntDiv => builder.build_int_signed_div(lval, rval, "sdiv"),
         ExpressionInfixOpcode::Mod => builder.build_int_signed_rem(lval, rval, "mod"),
         ExpressionInfixOpcode::Mul => builder.build_int_mul(lval, rval, "mul"),
+        ExpressionInfixOpcode::Pow => unreachable!(),
+        ExpressionInfixOpcode::ShiftL => builder.build_left_shift(lval, rval, "lshift"),
+        ExpressionInfixOpcode::ShiftR => builder.build_right_shift(lval, rval, false, "rshift"),
         ExpressionInfixOpcode::Sub => builder.build_int_sub(lval, rval, "sub"),
-        _ => unreachable!(),
+
+        // Comparison
+        ExpressionInfixOpcode::Eq => builder.build_int_compare(IntPredicate::EQ, lval, rval, "eq"),
+        ExpressionInfixOpcode::Greater => {
+            builder.build_int_compare(IntPredicate::SGT, lval, rval, "sgt")
+        }
+        ExpressionInfixOpcode::GreaterEq => {
+            builder.build_int_compare(IntPredicate::SGE, lval, rval, "sge")
+        }
+
+        ExpressionInfixOpcode::NotEq => {
+            builder.build_int_compare(IntPredicate::NE, lval, rval, "ne")
+        }
+
+        ExpressionInfixOpcode::Lesser => {
+            builder.build_int_compare(IntPredicate::SLT, lval, rval, "slt")
+        }
+
+        ExpressionInfixOpcode::LesserEq => {
+            builder.build_int_compare(IntPredicate::SLE, lval, rval, "sle")
+        }
     };
     return codegen.mod_result(temp);
+}
+
+pub fn judge_stmt(stmt: &Statement) -> &str {
+    return match stmt {
+        Statement::Assert { .. } => "Is Assert",
+        Statement::Block { .. } => "Is Block",
+        Statement::ConstraintEquality { .. } => "Is ConstraintEquality",
+        Statement::Declaration { .. } => "Is Declaration",
+        Statement::IfThenElse { .. } => "Is IfThenElse",
+        Statement::InitializationBlock { .. } => "Is InitializationBlock",
+        Statement::LogCall { .. } => "Is LogCall",
+        Statement::MultSubstitution { .. } => "Is MultSubstitution",
+        Statement::Return { .. } => "Is Return",
+        Statement::Substitution { .. } => "Is Substitution",
+        Statement::While { .. } => "Is While",
+    };
 }

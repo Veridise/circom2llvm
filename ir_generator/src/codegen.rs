@@ -58,7 +58,7 @@ impl<'ctx> CodeGen<'ctx> {
     ) -> BasicValueEnum<'ctx> {
         let res = self
             .builder
-            .build_struct_gep(struct_ptr, index, name)
+            .build_struct_gep(struct_ptr, index, "struct_ptr")
             .unwrap();
         return self.builder.build_load(res, name);
     }
@@ -78,7 +78,7 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn mod_result(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
-        return value.const_signed_remainder(self._global_p);
+        return self.builder.build_int_signed_rem(value, self._global_p, value.get_name().to_str().unwrap());
     }
 
     pub fn add_constraint(&self, lval: IntValue<'ctx>, rval: IntValue<'ctx>) {

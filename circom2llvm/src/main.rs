@@ -1,12 +1,12 @@
 use inkwell::context::Context;
 use ir_generator::codegen::init_codegen;
-use ir_generator::scope::TemplateCodeGen;
+use ir_generator::scope::TemplateScope;
 
 use program_structure::{ast::Definition, error_definition::Report};
 use std::{collections::HashMap};
 
 fn main() {
-    let file_path = "./examples/AND-gates-circomlib";
+    let file_path = "./examples/ShR-shift-sha256-circomlib";
     let context = Context::create();
     let codegen = init_codegen(&context);
     match parser::run_parser(format!("{}.circom", file_path), Vec::new()) {
@@ -23,7 +23,7 @@ fn main() {
                         parallel: _,
                         is_custom_gate: _,
                     } => {
-                        let mut template_codegen = TemplateCodeGen {
+                        let mut template_codegen = TemplateScope {
                             name,
                             args,
                             body,
