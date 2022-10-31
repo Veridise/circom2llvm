@@ -28,8 +28,11 @@ fn main() {
                             args,
                             body,
                             inputs: Vec::new(),
-                            intermediates: Vec::new(),
+                            input_sig2dims: HashMap::new(),
+                            inters: Vec::new(),
+                            inter_sig2dims: HashMap::new(),
                             outputs: Vec::new(),
+                            output_sig2dims: HashMap::new(),
                             vars: Vec::new(),
 
                             var2val: HashMap::new(),

@@ -9,10 +9,9 @@ use inkwell::values::{
     BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue, PointerValue,
 };
 
-
-
 const GLOBAL_P: &str = "12539295309507511577697735";
 pub static mut APPLY_MOD: bool = true;
+pub const MAX_ARRAYSIZE: usize = 256;
 
 pub struct CodeGen<'ctx> {
     pub context: &'ctx Context,
@@ -77,10 +76,33 @@ impl<'ctx> CodeGen<'ctx> {
         return self.builder.build_store(res, value);
     }
 
+    pub fn get_from_array(
+        &self,
+        array_ptr: PointerValue<'ctx>,
+        indexes: &[IntValue<'ctx>],
+        name: &str,
+    ) -> BasicValueEnum<'ctx> {
+        let res = unsafe { self.builder.build_gep(array_ptr, indexes, "array_ptr") };
+        return self.builder.build_load(res, name);
+    }
+
+    pub fn set_to_array<V: BasicValue<'ctx>>(
+        &self,
+        array_ptr: PointerValue<'ctx>,
+        indexes: &[IntValue<'ctx>],
+        name: &str,
+        value: V,
+    ) -> InstructionValue<'ctx> {
+        let res = unsafe { self.builder.build_gep(array_ptr, indexes, name) };
+        return self.builder.build_store(res, value);
+    }
+
     pub fn mod_result(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
         if unsafe { APPLY_MOD } {
-            let name = value.get_name().to_str().unwrap();
-            return self.builder.build_int_signed_rem(value, self._global_p, name);
+            let name = &format!("{}.mod", value.get_name().to_str().unwrap())[0..];
+            return self
+                .builder
+                .build_int_signed_rem(value, self._global_p, name);
         } else {
             return value;
         }
@@ -102,16 +124,15 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     let module = context.create_module("main");
     let builder = context.create_builder();
 
-    // Global Prime
-    let global_p = context
-        .i128_type()
-        .const_int_from_string(GLOBAL_P, StringRadix::Decimal)
-        .unwrap();
-
     // Value Types
     let val_ty = context.i128_type();
     let bool_ty = context.bool_type();
     let constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
+
+    // Global Prime
+    let global_p = val_ty
+        .const_int_from_string(GLOBAL_P, StringRadix::Decimal)
+        .unwrap();
 
     // Add constraint function
     let args_ty = [val_ty.into(), val_ty.into(), constraint_gv_ptr_ty.into()];

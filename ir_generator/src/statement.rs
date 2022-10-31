@@ -1,13 +1,18 @@
+use crate::expression::resolve_access;
+
 use super::codegen::{CodeGen, APPLY_MOD};
 use super::expression::{resolve_expr, Scope};
 
 use inkwell::types::BasicType;
 use inkwell::values::BasicValue;
 
-use program_structure::ast::{AssignOp, Statement, VariableType, Expression};
+use program_structure::ast::{AssignOp, Expression, Statement, VariableType};
 
-
-pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &CodeGen<'ctx>, stmt: &'ast Statement) {
+pub fn resolve_stmt<'ctx, 'ast>(
+    scope: &mut dyn Scope<'ctx, 'ast>,
+    codegen: &CodeGen<'ctx>,
+    stmt: &'ast Statement,
+) {
     match stmt {
         Statement::Assert { meta: _, arg: _ } => {
             print!("Coming Assert");
@@ -30,9 +35,7 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
             else_case,
         } => {
             let CodeGen {
-                context,
-                builder,
-                ..
+                context, builder, ..
             } = codegen;
             let current_fnc = scope.get_main_fn();
             let current_bb = current_fnc.get_last_basic_block().unwrap();
@@ -71,13 +74,18 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
                         Statement::Substitution {
                             meta: _,
                             var,
-                            access: _,
+                            access,
                             op,
                             rhe,
                         } => match op {
                             AssignOp::AssignVar => {
                                 let rval = resolve_expr(codegen, rhe, scope);
-                                scope.set_variable(codegen, var, rval.as_basic_value_enum());
+                                scope.set_variable(
+                                    codegen,
+                                    var,
+                                    &mut resolve_access(codegen, scope, access),
+                                    rval.as_basic_value_enum(),
+                                );
                             }
                             _ => unreachable!(),
                         },
@@ -95,10 +103,7 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
             println!("Coming MultSubstitution");
         }
         Statement::Return { meta: _, value } => {
-            let CodeGen {
-                builder,
-                ..
-            } = codegen;
+            let CodeGen { builder, .. } = codegen;
             let rval = resolve_expr(codegen, value, scope).as_basic_value_enum();
             builder.build_return(Some(&rval));
         }
@@ -110,12 +115,13 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
             rhe,
         } => {
             let res = resolve_expr(codegen, rhe, scope);
-            scope.set_variable(codegen, var, res.as_basic_value_enum());
+            let access_val = &mut resolve_access(codegen, scope, access);
+            scope.set_variable(codegen, var, access_val, res.as_basic_value_enum());
             match op {
                 AssignOp::AssignConstraintSignal => {
-                    let lval = scope.get_variable(codegen, var).into_int_value();
+                    let lval = scope.get_variable(codegen, var, access_val);
                     let rval = res;
-                    codegen.add_constraint(lval, rval);
+                    codegen.add_constraint(lval.into_int_value(), rval);
                 }
                 _ => (),
             };
@@ -148,27 +154,23 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
             };
 
             let ctrl_var_name = match cond {
-                Expression::InfixOp { lhe, .. }=> {
-                    match lhe.as_ref() {
-                        Expression::Variable { name, .. } => {
-                            name
-                        },
-                        _ => unreachable!()
-                    }
+                Expression::InfixOp { lhe, .. } => match lhe.as_ref() {
+                    Expression::Variable { name, .. } => name,
+                    _ => unreachable!(),
                 },
                 _ => unreachable!(),
             };
 
             // current -> loop.body
             builder.position_at_end(current_bb);
-            let ctrl_var_entry = scope.get_variable(codegen, ctrl_var_name);
+            let ctrl_var_entry = scope.get_variable(codegen, ctrl_var_name, &mut Vec::new());
             builder.build_unconditional_branch(loop_bb);
 
             // loop.body
             builder.position_at_end(loop_bb);
             let phi = builder.build_phi(val_ty.as_basic_type_enum(), "loop.i");
             phi.add_incoming(&[(&ctrl_var_entry, current_bb)]);
-            scope.set_variable(codegen, ctrl_var_name, phi.as_basic_value());
+            scope.set_variable(codegen, ctrl_var_name, &mut Vec::new(), phi.as_basic_value());
 
             resolve_stmt(scope, codegen, stmt_body);
             builder.position_at_end(loop_bb);
@@ -178,11 +180,11 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
 
             // loop.latch
             builder.position_at_end(latch_bb);
-            unsafe {APPLY_MOD = false};
+            unsafe { APPLY_MOD = false };
             resolve_stmt(scope, codegen, stmt_step);
-            unsafe {APPLY_MOD = true};
+            unsafe { APPLY_MOD = true };
             builder.position_at_end(latch_bb);
-            let ctrl_var_latch = scope.get_variable(codegen, ctrl_var_name);
+            let ctrl_var_latch = scope.get_variable(codegen, ctrl_var_name, &mut Vec::new());
             phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
             let cond_var = resolve_expr(codegen, cond, scope);
 

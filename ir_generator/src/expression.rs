@@ -4,16 +4,17 @@ use inkwell::types::StringRadix;
 use inkwell::IntPredicate;
 
 use inkwell::values::{BasicValueEnum, FunctionValue, IntValue};
-use program_structure::ast::ExpressionPrefixOpcode;
+use program_structure::ast::{ExpressionPrefixOpcode, Access};
 use program_structure::ast::{Expression, ExpressionInfixOpcode, Statement, VariableType};
 
 pub trait Scope<'ctx, 'ast> {
     fn add_var(&mut self, v: &'ast String);
-    fn get_variable(&self, codegen: &CodeGen<'ctx>, v: &'ast String) -> BasicValueEnum<'ctx>;
+    fn get_variable(&self, codegen: &CodeGen<'ctx>, v: &'ast String, access: &mut Vec<IntValue<'ctx>>) -> BasicValueEnum<'ctx>;
     fn set_variable(
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &'ast String,
+        access: &mut Vec<IntValue<'ctx>>,
         value: BasicValueEnum<'ctx>,
     );
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
@@ -48,6 +49,15 @@ pub fn resolve_initialization<'ctx, 'ast>(
         },
         _ => (),
     }
+}
+
+pub fn resolve_access<'ctx, 'ast>(codegen: &CodeGen<'ctx>, scope: &dyn Scope<'ctx, 'ast>, access: &'ast Vec<Access>) -> Vec<IntValue<'ctx>> {
+    let access_vals = access.iter().map(|s|
+        match s {
+            Access::ComponentAccess(val) => todo!(),
+            Access::ArrayAccess(expr) => resolve_expr(codegen, &expr, scope),
+    }).collect();
+    return access_vals;
 }
 
 pub fn resolve_expr<'ctx, 'ast>(
@@ -85,8 +95,8 @@ pub fn resolve_expr<'ctx, 'ast>(
         Expression::Variable {
             meta: _,
             name,
-            access: _,
-        } => scope.get_variable(codegen, name).into_int_value(),
+            access,
+        } => scope.get_variable(codegen, name, &mut resolve_access(codegen, scope, access)).into_int_value(),
         Expression::Number(_, num) => {
             let val = codegen
                 .val_ty
@@ -102,7 +112,7 @@ fn resolve_prefix_op<'ctx>(
     prefix_op: &ExpressionPrefixOpcode,
     rval: IntValue<'ctx>,
 ) -> IntValue<'ctx> {
-    let zero = codegen.context.i128_type().const_zero();
+    let zero = codegen.val_ty.const_zero();
     let temp = match prefix_op {
         ExpressionPrefixOpcode::Sub => zero.const_sub(rval),
         _ => unreachable!(),
