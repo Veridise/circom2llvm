@@ -1,6 +1,6 @@
 use super::codegen::CodeGen;
 use super::expression::{resolve_initialization, Scope};
-use super::statement::resolve_stmt;
+use super::statement::{resolve_stmt};
 
 use inkwell::AddressSpace;
 use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, PointerValue};

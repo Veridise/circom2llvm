@@ -12,6 +12,7 @@ use inkwell::values::{
 
 
 const GLOBAL_P: &str = "12539295309507511577697735";
+pub static mut APPLY_MOD: bool = true;
 
 pub struct CodeGen<'ctx> {
     pub context: &'ctx Context,
@@ -25,7 +26,6 @@ pub struct CodeGen<'ctx> {
     _global_constraint_ptr_ty: PointerType<'ctx>,
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_constraint_count: usize,
-
 }
 
 impl<'ctx> CodeGen<'ctx> {
@@ -78,7 +78,12 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn mod_result(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
-        return self.builder.build_int_signed_rem(value, self._global_p, value.get_name().to_str().unwrap());
+        if unsafe { APPLY_MOD } {
+            let name = value.get_name().to_str().unwrap();
+            return self.builder.build_int_signed_rem(value, self._global_p, name);
+        } else {
+            return value;
+        }
     }
 
     pub fn add_constraint(&self, lval: IntValue<'ctx>, rval: IntValue<'ctx>) {

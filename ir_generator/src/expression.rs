@@ -117,6 +117,7 @@ fn resolve_infix_op<'ctx>(
     rval: IntValue<'ctx>,
 ) -> IntValue<'ctx> {
     let CodeGen { builder, .. } = codegen;
+    let mut _apply_mod = true;
     let temp = match infix_op {
         ExpressionInfixOpcode::Add => builder.build_int_add(lval, rval, "add"),
         ExpressionInfixOpcode::BitAnd => builder.build_and(lval, rval, "and"),
@@ -134,27 +135,39 @@ fn resolve_infix_op<'ctx>(
         ExpressionInfixOpcode::Sub => builder.build_int_sub(lval, rval, "sub"),
 
         // Comparison
-        ExpressionInfixOpcode::Eq => builder.build_int_compare(IntPredicate::EQ, lval, rval, "eq"),
+        ExpressionInfixOpcode::Eq => {
+            _apply_mod = false;
+            builder.build_int_compare(IntPredicate::EQ, lval, rval, "eq")
+        }
         ExpressionInfixOpcode::Greater => {
+            _apply_mod = false;
             builder.build_int_compare(IntPredicate::SGT, lval, rval, "sgt")
         }
         ExpressionInfixOpcode::GreaterEq => {
+            _apply_mod = false;
             builder.build_int_compare(IntPredicate::SGE, lval, rval, "sge")
         }
 
         ExpressionInfixOpcode::NotEq => {
+            _apply_mod = false;
             builder.build_int_compare(IntPredicate::NE, lval, rval, "ne")
         }
 
         ExpressionInfixOpcode::Lesser => {
+            _apply_mod = false;
             builder.build_int_compare(IntPredicate::SLT, lval, rval, "slt")
         }
 
         ExpressionInfixOpcode::LesserEq => {
+            _apply_mod = false;
             builder.build_int_compare(IntPredicate::SLE, lval, rval, "sle")
         }
     };
-    return codegen.mod_result(temp);
+    if _apply_mod {
+        return codegen.mod_result(temp);
+    } else {
+        return temp;
+    }
 }
 
 pub fn judge_stmt(stmt: &Statement) -> &str {

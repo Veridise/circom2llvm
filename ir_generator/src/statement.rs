@@ -1,4 +1,4 @@
-use super::codegen::CodeGen;
+use super::codegen::{CodeGen, APPLY_MOD};
 use super::expression::{resolve_expr, Scope};
 
 use inkwell::types::BasicType;
@@ -178,7 +178,9 @@ pub fn resolve_stmt<'ctx, 'ast> (scope: &mut dyn Scope<'ctx, 'ast>, codegen: &Co
 
             // loop.latch
             builder.position_at_end(latch_bb);
+            unsafe {APPLY_MOD = false};
             resolve_stmt(scope, codegen, stmt_step);
+            unsafe {APPLY_MOD = true};
             builder.position_at_end(latch_bb);
             let ctrl_var_latch = scope.get_variable(codegen, ctrl_var_name);
             phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
