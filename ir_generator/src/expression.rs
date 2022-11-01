@@ -1,22 +1,30 @@
+use crate::codegen::MAX_ARRAYSIZE;
+
 use super::codegen::CodeGen;
 
 use inkwell::types::StringRadix;
 use inkwell::IntPredicate;
 
-use inkwell::values::{BasicValueEnum, FunctionValue, IntValue};
-use program_structure::ast::{ExpressionPrefixOpcode, Access};
+use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue};
+use program_structure::ast::{Access, ExpressionPrefixOpcode};
 use program_structure::ast::{Expression, ExpressionInfixOpcode, Statement, VariableType};
 
 pub trait Scope<'ctx, 'ast> {
-    fn add_var(&mut self, v: &'ast String);
-    fn get_variable(&self, codegen: &CodeGen<'ctx>, v: &'ast String, access: &mut Vec<IntValue<'ctx>>) -> BasicValueEnum<'ctx>;
-    fn set_variable(
+    fn add_var(&mut self, name: &'ast String);
+    fn get_var(
+        &self,
+        codegen: &CodeGen<'ctx>,
+        name: &'ast String,
+        access: &mut Vec<IntValue<'ctx>>,
+    ) -> BasicValueEnum<'ctx>;
+    fn set_var(
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &'ast String,
         access: &mut Vec<IntValue<'ctx>>,
         value: BasicValueEnum<'ctx>,
     );
+    fn get_var_dims_len(&self, name: &'ast String) -> usize;
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
 }
 
@@ -51,12 +59,18 @@ pub fn resolve_initialization<'ctx, 'ast>(
     }
 }
 
-pub fn resolve_access<'ctx, 'ast>(codegen: &CodeGen<'ctx>, scope: &dyn Scope<'ctx, 'ast>, access: &'ast Vec<Access>) -> Vec<IntValue<'ctx>> {
-    let access_vals = access.iter().map(|s|
-        match s {
+pub fn resolve_access<'ctx, 'ast>(
+    codegen: &CodeGen<'ctx>,
+    scope: &dyn Scope<'ctx, 'ast>,
+    access: &'ast Vec<Access>,
+) -> Vec<IntValue<'ctx>> {
+    let access_vals = access
+        .iter()
+        .map(|s| match s {
             Access::ComponentAccess(val) => todo!(),
-            Access::ArrayAccess(expr) => resolve_expr(codegen, &expr, scope),
-    }).collect();
+            Access::ArrayAccess(expr) => resolve_expr(codegen, &expr, scope).into_int_value(),
+        })
+        .collect();
     return access_vals;
 }
 
@@ -64,46 +78,92 @@ pub fn resolve_expr<'ctx, 'ast>(
     codegen: &CodeGen<'ctx>,
     expr: &'ast Expression,
     scope: &dyn Scope<'ctx, 'ast>,
-) -> IntValue<'ctx> {
+) -> BasicValueEnum<'ctx> {
     match expr {
+        Expression::AnonymousComp {
+            meta,
+            id,
+            is_parallel,
+            params,
+            signals,
+        } => {
+            println!("Expr: AnonymousComp");
+            unreachable!()
+        }
+        Expression::ArrayInLine { meta: _, values } => {
+            let mut res = Vec::new();
+            for val in values {
+                res.push(resolve_expr(codegen, val, scope).into_int_value());
+            }
+            if values.len() > MAX_ARRAYSIZE as usize {
+                unreachable!()
+            }
+            return codegen.build_inline_array(&res).as_basic_value_enum();
+        }
+        Expression::Call { meta, id, args } => {
+            println!("Expr: Call");
+            unreachable!()
+        }
         Expression::InfixOp {
             meta: _,
             lhe,
             infix_op,
             rhe,
         } => {
-            let lval = resolve_expr(codegen, lhe.as_ref(), scope);
-            let rval = resolve_expr(codegen, rhe.as_ref(), scope);
+            let lval = resolve_expr(codegen, lhe.as_ref(), scope).into_int_value();
+            let rval = resolve_expr(codegen, rhe.as_ref(), scope).into_int_value();
 
-            let res = resolve_infix_op(
-                codegen,
-                infix_op,
-                lval,
-                rval,
-            );
-            return res;
+            let res = resolve_infix_op(codegen, infix_op, lval, rval);
+            return res.as_basic_value_enum();
+        }
+        Expression::InlineSwitchOp {
+            meta: _,
+            cond,
+            if_true,
+            if_false,
+        } => {
+            return codegen.build_inline_switch(
+                resolve_expr(codegen, cond.as_ref(), scope).into_int_value(),
+                resolve_expr(codegen, if_true.as_ref(), scope).into_int_value(),
+                resolve_expr(codegen, if_false.as_ref(), scope).into_int_value(),
+            ).as_basic_value_enum();
+        }
+        Expression::Number(_, num) => {
+            let val = codegen
+                .val_ty
+                .const_int_from_string(&num.to_string().to_owned(), StringRadix::Decimal);
+            return val.unwrap().as_basic_value_enum();
+        }
+        Expression::ParallelOp { meta, rhe } => {
+            println!("Expr: ParallelOp");
+            unreachable!()
         }
         Expression::PrefixOp {
             meta: _,
             prefix_op,
             rhe,
         } => {
-            let rval = resolve_expr(codegen, rhe.as_ref(), scope);
+            let rval = resolve_expr(codegen, rhe.as_ref(), scope).into_int_value();
             let res = resolve_prefix_op(codegen, prefix_op, rval);
-            return res;
+            return res.as_basic_value_enum();
+        }
+        Expression::Tuple { meta, values } => {
+            println!("Expr: ParallelOp");
+            unreachable!()
+        }
+        Expression::UniformArray {
+            meta,
+            value,
+            dimension,
+        } => {
+            println!("Expr: UniformArray");
+            unreachable!()
         }
         Expression::Variable {
             meta: _,
             name,
             access,
-        } => scope.get_variable(codegen, name, &mut resolve_access(codegen, scope, access)).into_int_value(),
-        Expression::Number(_, num) => {
-            let val = codegen
-                .val_ty
-                .const_int_from_string(&num.to_string().to_owned(), StringRadix::Decimal);
-            return val.unwrap();
-        }
-        _ => unreachable!(),
+        } => scope.get_var(codegen, name, &mut resolve_access(codegen, scope, access)),
     }
 }
 
@@ -117,7 +177,7 @@ fn resolve_prefix_op<'ctx>(
         ExpressionPrefixOpcode::Sub => zero.const_sub(rval),
         _ => unreachable!(),
     };
-    return codegen.mod_result(temp);
+    return codegen.build_result_modulo(temp);
 }
 
 fn resolve_infix_op<'ctx>(
@@ -174,7 +234,7 @@ fn resolve_infix_op<'ctx>(
         }
     };
     if _apply_mod {
-        return codegen.mod_result(temp);
+        return codegen.build_result_modulo(temp);
     } else {
         return temp;
     }

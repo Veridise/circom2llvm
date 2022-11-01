@@ -23,9 +23,9 @@ pub fn resolve_stmt<'ctx, 'ast>(
             }
         }
         Statement::ConstraintEquality { meta: _, lhe, rhe } => {
-            let lval = resolve_expr(codegen, lhe, scope);
-            let rval = resolve_expr(codegen, rhe, scope);
-            codegen.add_constraint(lval, rval);
+            let lval = resolve_expr(codegen, lhe, scope).into_int_value();
+            let rval = resolve_expr(codegen, rhe, scope).into_int_value();
+            codegen.build_constraint(lval, rval);
         }
         Statement::Declaration { .. } => (),
         Statement::IfThenElse {
@@ -42,7 +42,7 @@ pub fn resolve_stmt<'ctx, 'ast>(
             let if_bb = context.append_basic_block(current_fnc, "if.body");
             let else_bb = context.append_basic_block(current_fnc, "if.else");
             let end_bb = context.append_basic_block(current_fnc, "if.end");
-            let cond = resolve_expr(codegen, cond, scope);
+            let cond = resolve_expr(codegen, cond, scope).into_int_value();
 
             // current -> if.body
             builder.position_at_end(current_bb);
@@ -80,7 +80,7 @@ pub fn resolve_stmt<'ctx, 'ast>(
                         } => match op {
                             AssignOp::AssignVar => {
                                 let rval = resolve_expr(codegen, rhe, scope);
-                                scope.set_variable(
+                                scope.set_var(
                                     codegen,
                                     var,
                                     &mut resolve_access(codegen, scope, access),
@@ -116,12 +116,12 @@ pub fn resolve_stmt<'ctx, 'ast>(
         } => {
             let res = resolve_expr(codegen, rhe, scope);
             let access_val = &mut resolve_access(codegen, scope, access);
-            scope.set_variable(codegen, var, access_val, res.as_basic_value_enum());
+            scope.set_var(codegen, var, access_val, res.as_basic_value_enum());
             match op {
                 AssignOp::AssignConstraintSignal => {
-                    let lval = scope.get_variable(codegen, var, access_val);
-                    let rval = res;
-                    codegen.add_constraint(lval.into_int_value(), rval);
+                    let lval = scope.get_var(codegen, var, access_val).into_int_value();
+                    let rval = res.into_int_value();
+                    codegen.build_constraint(lval, rval);
                 }
                 _ => (),
             };
@@ -163,14 +163,19 @@ pub fn resolve_stmt<'ctx, 'ast>(
 
             // current -> loop.body
             builder.position_at_end(current_bb);
-            let ctrl_var_entry = scope.get_variable(codegen, ctrl_var_name, &mut Vec::new());
+            let ctrl_var_entry = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
             builder.build_unconditional_branch(loop_bb);
 
             // loop.body
             builder.position_at_end(loop_bb);
             let phi = builder.build_phi(val_ty.as_basic_type_enum(), "loop.i");
             phi.add_incoming(&[(&ctrl_var_entry, current_bb)]);
-            scope.set_variable(codegen, ctrl_var_name, &mut Vec::new(), phi.as_basic_value());
+            scope.set_var(
+                codegen,
+                ctrl_var_name,
+                &mut Vec::new(),
+                phi.as_basic_value(),
+            );
 
             resolve_stmt(scope, codegen, stmt_body);
             builder.position_at_end(loop_bb);
@@ -184,9 +189,9 @@ pub fn resolve_stmt<'ctx, 'ast>(
             resolve_stmt(scope, codegen, stmt_step);
             unsafe { APPLY_MOD = true };
             builder.position_at_end(latch_bb);
-            let ctrl_var_latch = scope.get_variable(codegen, ctrl_var_name, &mut Vec::new());
+            let ctrl_var_latch = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
             phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
-            let cond_var = resolve_expr(codegen, cond, scope);
+            let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
 
             let exit_bb = context.append_basic_block(current_func, "loop.exit");
             builder.build_conditional_branch(cond_var, loop_bb, exit_bb);

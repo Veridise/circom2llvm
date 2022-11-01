@@ -2,7 +2,9 @@ use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::expression::{resolve_initialization, Scope};
 use super::statement::resolve_stmt;
 
-use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue};
+use inkwell::values::{
+    BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue, PointerValue,
+};
 use inkwell::AddressSpace;
 
 use program_structure::ast::{Expression, SignalType, Statement, VariableType};
@@ -16,11 +18,9 @@ pub struct TemplateScope<'ctx, 'ast> {
     pub inputs: Vec<&'ast String>,
     pub inters: Vec<&'ast String>,
     pub outputs: Vec<&'ast String>,
-    pub input_sig2dims: HashMap<&'ast String, Vec<&'ast String>>,
-    pub inter_sig2dims: HashMap<&'ast String, Vec<&'ast String>>,
-    pub output_sig2dims: HashMap<&'ast String, Vec<&'ast String>>,
 
     pub vars: Vec<&'ast String>,
+    pub var2dims: HashMap<&'ast String, &'ast Vec<Expression>>,
     pub var2val: HashMap<&'ast String, BasicValueEnum<'ctx>>,
 
     pub init_fn_val: Option<FunctionValue<'ctx>>,
@@ -28,119 +28,54 @@ pub struct TemplateScope<'ctx, 'ast> {
 }
 
 impl<'ctx, 'ast> Scope<'ctx, 'ast> for TemplateScope<'ctx, 'ast> {
-    fn add_var(&mut self, v: &'ast String) {
-        self.vars.push(v);
+    fn add_var(&mut self, name: &'ast String) {
+        self.vars.push(name);
     }
 
-    fn get_variable(
+    fn get_var_dims_len(&self, name: &'ast String) -> usize {
+        let res = self.var2dims.get(name);
+        return match res {
+            None => 0,
+            Some(_res) => {
+                if _res.len() <= 1 {
+                    return _res.len();
+                } else {
+                    println!("Dimensions more than 2 isn't supported now.");
+                    unreachable!();
+                }
+            }
+        };
+    }
+
+    fn get_var(
         &self,
         codegen: &CodeGen<'ctx>,
-        v: &String,
+        name: &String,
         access: &mut Vec<IntValue<'ctx>>,
     ) -> BasicValueEnum<'ctx> {
-        let name = v;
-        let templ_struct_ptr = self.templ_struct_ptr.unwrap();
-        if self.args.contains(name) {
-            return *self.var2val.get(name).unwrap();
-        } else if self.inputs.contains(&name) {
-            let assign_name: &str = &format!("assign_signal_input.{}", name);
-            let mut index = self.inputs.iter().position(|&s| s == name).unwrap() as u32;
-            index += 2;
-            let dims = self.input_sig2dims.get(name).unwrap();
-            if dims.len() > 0 {
-                let mut idxes = Vec::new();
-                idxes.push(codegen.context.i32_type().const_int(0, false));
-                idxes.push(codegen.context.i32_type().const_int(index as u64, false));
-                idxes.append(access);
-                return codegen.get_from_array(templ_struct_ptr, &idxes[0..], name);
-            } else {
-                return codegen.get_from_struct(templ_struct_ptr, index, assign_name);
-            }
-        } else if self.inters.contains(&name) {
-            let dims = self.inter_sig2dims.get(name).unwrap();
-            if dims.len() > 0 {
-                let mut idxes = Vec::new();
-                idxes.push(codegen.context.i32_type().const_int(0, false));
-                idxes.append(access);
-                return codegen.get_from_array(self.var2val.get(name).unwrap().into_pointer_value(), &idxes[0..], name);
-            } else {
-                return *self.var2val.get(name).unwrap();
-            }
-        } else if self.outputs.contains(&name) {
-            let assign_name: &str = &format!("read_signal_output.{}", name);
-            let mut index = self.outputs.iter().position(|&s| s == name).unwrap() as u32;
-            index += 2;
-            index += self.inputs.len() as u32;
-            let dims = self.output_sig2dims.get(name).unwrap();
-            if dims.len() > 0 {
-                let mut idxes = Vec::new();
-                idxes.push(codegen.context.i32_type().const_int(0, false));
-                idxes.push(codegen.context.i32_type().const_int(index as u64, false));
-                idxes.append(access);
-                return codegen.get_from_array(templ_struct_ptr, &idxes[0..], name);
-            } else {
-                return codegen.get_from_struct(templ_struct_ptr, index, assign_name);
-            }
-        } else if self.vars.contains(&name) {
-            return *self.var2val.get(name).unwrap();
+        let val_or_ptr = *self.var2val.get(name).unwrap();
+        if access.len() == 0 {
+            return val_or_ptr;
         } else {
-            unreachable!();
+            return codegen.build_array_getter(val_or_ptr.into_pointer_value(), &access[0..], name);
         }
     }
 
-    fn set_variable(
+    fn set_var(
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &'ast String,
         access: &mut Vec<IntValue<'ctx>>,
         value: BasicValueEnum<'ctx>,
     ) {
-        let templ_struct_ptr = self.templ_struct_ptr.unwrap();
-        if self.inputs.contains(&name) {
-            let write_name: &str = &format!("write_signal_input.{}", name);
-            let mut index = self.outputs.iter().position(|&s| s == name).unwrap() as u32;
-            index += 2;
-            let dims = self.input_sig2dims.get(name).unwrap();
-            if dims.len() > 0 {
-                let mut idxes = Vec::new();
-                idxes.push(codegen.context.i32_type().const_int(0, false));
-                idxes.push(codegen.context.i32_type().const_int(index as u64, false));
-                idxes.append(access);
-                codegen.set_to_array(templ_struct_ptr, &idxes[0..], name, value);
-            } else {
-                codegen.set_to_struct(templ_struct_ptr, index, write_name, value);
-            }
-        } else if self.inters.contains(&name) {
-            let dims = self.inter_sig2dims.get(name).unwrap();
-            if dims.len() > 0 {
-                let mut idxes = Vec::new();
-                idxes.push(codegen.context.i32_type().const_int(0, false));
-                idxes.append(access);
-                codegen.set_to_array(self.var2val.get(name).unwrap().into_pointer_value(), &idxes[0..], name, value);
-            } else {
-                self.var2val.insert(name, value.as_basic_value_enum());
-            }
-        } else if self.outputs.contains(&name) {
-            let write_name: &str = &format!("write_signal_output.{}", name);
-            let mut index = self.outputs.iter().position(|&s| s == name).unwrap() as u32;
-            index += 2;
-            index += self.inputs.len() as u32;
-            let dims = self.output_sig2dims.get(name).unwrap();
-            if dims.len() > 0 {
-                let mut idxes = Vec::new();
-                idxes.push(codegen.context.i32_type().const_int(0, false));
-                idxes.push(codegen.context.i32_type().const_int(index as u64, false));
-                idxes.append(access);
-                codegen.set_to_array(templ_struct_ptr, &idxes[0..], name, value);
-            } else {
-                codegen.set_to_struct(templ_struct_ptr, index, write_name, value);
-            }
-        } else {
+        if access.len() == 0 {
             self.var2val.insert(name, value.as_basic_value_enum());
             if !self.vars.contains(&name) {
-                println!("Variable {} isn't initialized!", name);
                 self.vars.push(&name);
             }
+        } else {
+            let ptr = *self.var2val.get(name).unwrap();
+            codegen.build_array_setter(ptr.into_pointer_value(), &access[0..], name, value);
         }
     }
 
@@ -150,22 +85,51 @@ impl<'ctx, 'ast> Scope<'ctx, 'ast> for TemplateScope<'ctx, 'ast> {
 }
 
 impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
-    fn _add_input(&mut self, v: &'ast String, dims: Vec<&'ast String>) {
+    fn _read_signal_from_struct(
+        &self,
+        codegen: &CodeGen<'ctx>,
+        name: &String,
+        assign_name: &str,
+        offset: u32,
+        container: &Vec<&'ast String>,
+    ) -> BasicValueEnum<'ctx> {
+        let templ_struct_ptr = self.templ_struct_ptr.unwrap();
+        let mut index = container.iter().position(|&s| s == name).unwrap() as u32;
+        index += offset;
+        return codegen.build_struct_getter(templ_struct_ptr, index, assign_name);
+    }
+
+    fn _write_signal_to_struct(
+        &self,
+        codegen: &CodeGen<'ctx>,
+        name: &String,
+        assign_name: &str,
+        offset: u32,
+        container: &Vec<&'ast String>,
+        v: BasicValueEnum<'ctx>,
+    ) -> InstructionValue<'ctx> {
+        let templ_struct_ptr = self.templ_struct_ptr.unwrap();
+        let mut index = container.iter().position(|&s| s == name).unwrap() as u32;
+        index += offset;
+        return codegen.build_struct_setter(templ_struct_ptr, index, assign_name, v);
+    }
+
+    fn _add_input(&mut self, v: &'ast String, dims: &'ast Vec<Expression>) {
         self.inputs.push(v);
-        self.input_sig2dims.insert(v, dims);
+        self.var2dims.insert(v, dims);
     }
 
-    fn _add_intermediate(&mut self, v: &'ast String, dims: Vec<&'ast String>) {
+    fn _add_intermediate(&mut self, v: &'ast String, dims: &'ast Vec<Expression>) {
         self.inters.push(v);
-        self.inter_sig2dims.insert(v, dims);
+        self.var2dims.insert(v, dims);
     }
 
-    fn _add_output(&mut self, v: &'ast String, dims: Vec<&'ast String>) {
+    fn _add_output(&mut self, v: &'ast String, dims: &'ast Vec<Expression>) {
         self.outputs.push(v);
-        self.output_sig2dims.insert(v, dims);
+        self.var2dims.insert(v, dims);
     }
 
-    fn _resolve_variables(&mut self) {
+    fn _initial_variables(&mut self) {
         match self.body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
@@ -189,25 +153,16 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
                                             dimensions,
                                             is_constant,
                                         } => {
-                                            let mut dims: Vec<&String> = Vec::new();
-                                            for dim in dimensions {
-                                                match dim {
-                                                    Expression::Variable { name, .. } => {
-                                                        dims.push(name);
-                                                    }
-                                                    _ => unreachable!(),
-                                                }
-                                            }
                                             if *is_constant {
                                                 match signal_type {
                                                     SignalType::Input => {
-                                                        self._add_input(name, dims);
+                                                        self._add_input(name, dimensions);
                                                     }
                                                     SignalType::Intermediate => {
-                                                        self._add_intermediate(name, dims);
+                                                        self._add_intermediate(name, dimensions);
                                                     }
                                                     SignalType::Output => {
-                                                        self._add_output(name, dims);
+                                                        self._add_output(name, dimensions);
                                                     }
                                                 };
                                             } else {
@@ -230,7 +185,7 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
         }
     }
 
-    fn _gen_struct_and_function(&mut self, codegen: &CodeGen<'ctx>) {
+    fn _build_function(&mut self, codegen: &CodeGen<'ctx>) {
         let CodeGen {
             context,
             module,
@@ -238,7 +193,9 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
             ..
         } = codegen;
         let signal_ty = context.i128_type();
-        let signal_arr_ptr_ty = signal_ty.array_type(MAX_ARRAYSIZE as u32).ptr_type(AddressSpace::Generic);
+        let signal_arr_ptr_ty = signal_ty
+            .array_type(MAX_ARRAYSIZE)
+            .ptr_type(AddressSpace::Generic);
         let param_ty = context.i128_type();
         let void_ty = context.void_type();
         let templ_name = self.name;
@@ -247,13 +204,13 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
         let param_struct_name = &format!("t_struct_param_{}", templ_name)
             .to_lowercase()
             .to_owned()[..];
-        let (param_struct_ty, param_struct_ptr_ty) = codegen.define_struct(param_struct_name);
+        let (param_struct_ty, param_struct_ptr_ty) = codegen.build_struct(param_struct_name);
         let param_struct_fields = vec![param_ty.into(); self.args.len()];
         param_struct_ty.set_body(&param_struct_fields, false);
 
         // Circuit struct
         let templ_struct_name = &format!("t_struct_{}", templ_name).to_lowercase().to_owned()[..];
-        let (templ_struct_ty, templ_struct_ptr_ty) = codegen.define_struct(templ_struct_name);
+        let (templ_struct_ty, templ_struct_ptr_ty) = codegen.build_struct(templ_struct_name);
 
         // Function for initialization of the circuit struct, called `init`
         let init_func_name = &format!("t_fn_init_{}", templ_name)
@@ -266,24 +223,20 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
 
         // Set body for circuit struct
         let mut templ_struct_fields = vec![param_struct_ptr_ty.into(), init_func_ptr_ty.into()];
-        for (_, v) in &self.input_sig2dims {
-            if v.len() == 0 {
+        for name in &self.inputs {
+            if self.get_var_dims_len(name) == 0 {
                 templ_struct_fields.push(signal_ty.into());
             } else {
                 templ_struct_fields.push(signal_arr_ptr_ty.into());
             }
         }
-        for (_, v) in &self.output_sig2dims {
-            if v.len() == 0 {
+        for name in &self.outputs {
+            if self.get_var_dims_len(name) == 0 {
                 templ_struct_fields.push(signal_ty.into());
             } else {
                 templ_struct_fields.push(signal_arr_ptr_ty.into());
             }
         }
-        templ_struct_fields.append(&mut vec![
-            signal_ty.into();
-            self.input_sig2dims.len() + self.outputs.len()
-        ]);
         templ_struct_ty.set_body(&templ_struct_fields, false);
 
         // Function for generation of the circuit struct, called `build`
@@ -299,28 +252,62 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
         let build_struct_ptr = builder.build_alloca(templ_struct_ty, "");
 
         let param_value = build_func_value.get_first_param().unwrap();
-        codegen.set_to_struct(build_struct_ptr, 0, "param", param_value);
+        codegen.build_struct_setter(build_struct_ptr, 0, "param", param_value);
 
         let initial_func_value = init_fn_val.as_global_value().as_pointer_value();
-        codegen.set_to_struct(build_struct_ptr, 1, "init_fn", initial_func_value);
+        codegen.build_struct_setter(build_struct_ptr, 1, "init_fn", initial_func_value);
         builder.build_return(Some(&build_struct_ptr));
         self.init_fn_val = Some(init_fn_val);
         self.templ_struct_ptr = Some(init_fn_val.get_first_param().unwrap().into_pointer_value());
     }
 
     fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>) {
-        let CodeGen { builder, .. } = codegen;
+        let CodeGen {
+            builder, context, ..
+        } = codegen;
+
+        let array_size = context.i32_type().const_int(MAX_ARRAYSIZE as u64, false);
         builder.position_at_end(self.get_main_fn().get_first_basic_block().unwrap());
+
         // Bind args
         for arg in self.args {
             let assign_name: &str = &format!("params.{}", arg);
             let param_struct_ptr = codegen
-                .get_from_struct(self.templ_struct_ptr.unwrap(), 0, "param")
+                .build_struct_getter(self.templ_struct_ptr.unwrap(), 0, "param")
                 .into_pointer_value();
             let index = self.args.iter().position(|s| s == arg).unwrap() as u32;
-            let var = codegen.get_from_struct(param_struct_ptr, index, assign_name);
+            let var = codegen.build_struct_getter(param_struct_ptr, index, assign_name);
             self.var2val.insert(arg, var);
         }
+
+        // Bind input signals
+        for input in &self.inputs {
+            let assign_name: &str = &format!("read_signal_input.{}", input);
+            let var = self._read_signal_from_struct(codegen, input, assign_name, 2, &self.inputs);
+            if self.get_var_dims_len(input) == 0 {
+                self.var2val.insert(input, var.as_basic_value_enum());
+            } else {
+                let ptr = builder.build_array_alloca(codegen.val_ty, array_size, input);
+                _ = builder.build_memcpy(ptr, 4, var.into_pointer_value(), 4, array_size);
+                self.var2val.insert(input, ptr.as_basic_value_enum());
+            }
+        }
+
+        // Initial arrays
+        for (name, _) in &self.var2dims {
+            if !self.var2val.contains_key(name) && self.get_var_dims_len(name) > 0 {
+                let ptr: PointerValue;
+                if self.outputs.contains(name) {
+                    ptr = builder
+                        .build_array_malloc(codegen.val_ty, array_size, name)
+                        .unwrap();
+                } else {
+                    ptr = builder.build_array_alloca(codegen.val_ty, array_size, name);
+                }
+                self.var2val.insert(name, ptr.as_basic_value_enum());
+            }
+        }
+
         match self.body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
@@ -329,11 +316,32 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
             }
             _ => unreachable!(),
         }
+
+        // Write-in output signals
+        let current_bb = context.append_basic_block(self.init_fn_val.unwrap(), "exit");
+        builder.position_at_end(current_bb);
+
+        for output in &self.outputs {
+            let assign_name: &str = &format!("write_signal_output.{}", output);
+            let offset = 2 + self.inputs.len() as u32;
+            let val;
+            if self.get_var_dims_len(output) == 0 {
+                val = self.var2val.get(output).unwrap().to_owned();
+            } else {
+                val = self
+                    .var2val
+                    .get(output)
+                    .unwrap()
+                    .into_pointer_value()
+                    .as_basic_value_enum();
+            }
+            self._write_signal_to_struct(codegen, output, assign_name, offset, &self.outputs, val);
+        }
     }
 
     pub fn gen_ir(&mut self, codegen: &CodeGen<'ctx>) {
-        self._resolve_variables();
-        self._gen_struct_and_function(codegen);
+        self._initial_variables();
+        self._build_function(codegen);
         self._fillin_initial_function(codegen);
     }
 }
