@@ -12,5 +12,4 @@ Cargo.lock
 # Dev
 
 .vscode
-examples
 examples_c
