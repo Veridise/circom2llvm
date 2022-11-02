@@ -240,22 +240,22 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
         templ_struct_ty.set_body(&templ_struct_fields, false);
 
         // Function for generation of the circuit struct, called `build`
-        let build_func_name = &format!("t_fn_build_{}", templ_name)
+        let build_fn_name = &format!("t_fn_build_{}", templ_name)
             .to_lowercase()
             .to_owned()[..];
-        let build_func_type = templ_struct_ty.fn_type(&[param_struct_ptr_ty.into()], false);
-        let build_func_value = module.add_function(build_func_name, build_func_type, None);
-        let current_bb = context.append_basic_block(build_func_value, "entry");
+        let build_fn_ty = templ_struct_ty.ptr_type(AddressSpace::Generic).fn_type(&[param_struct_ptr_ty.into()], false);
+        let build_fn_val = module.add_function(build_fn_name, build_fn_ty, None);
+        let current_bb = context.append_basic_block(build_fn_val, "entry");
         builder.position_at_end(current_bb);
 
         // Add instruction to the `build` function.
         let build_struct_ptr = builder.build_alloca(templ_struct_ty, "");
 
-        let param_value = build_func_value.get_first_param().unwrap();
-        codegen.build_struct_setter(build_struct_ptr, 0, "param", param_value);
+        let param_val = build_fn_val.get_first_param().unwrap();
+        codegen.build_struct_setter(build_struct_ptr, 0, "param", param_val);
 
-        let initial_func_value = init_fn_val.as_global_value().as_pointer_value();
-        codegen.build_struct_setter(build_struct_ptr, 1, "init_fn", initial_func_value);
+        let init_fn_ptr = init_fn_val.as_global_value().as_pointer_value();
+        codegen.build_struct_setter(build_struct_ptr, 1, "init_fn", init_fn_ptr);
         builder.build_return(Some(&build_struct_ptr));
         self.init_fn_val = Some(init_fn_val);
         self.templ_struct_ptr = Some(init_fn_val.get_first_param().unwrap().into_pointer_value());
@@ -318,8 +318,9 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
         }
 
         // Write-in output signals
-        let current_bb = context.append_basic_block(self.init_fn_val.unwrap(), "exit");
-        builder.position_at_end(current_bb);
+        let exit_bb = context.append_basic_block(self.init_fn_val.unwrap(), "exit");
+        builder.build_unconditional_branch(exit_bb);
+        builder.position_at_end(exit_bb);
 
         for output in &self.outputs {
             let assign_name: &str = &format!("write_signal_output.{}", output);
@@ -337,6 +338,8 @@ impl<'ctx, 'ast> TemplateScope<'ctx, 'ast> {
             }
             self._write_signal_to_struct(codegen, output, assign_name, offset, &self.outputs, val);
         }
+
+        builder.build_return(None);
     }
 
     pub fn gen_ir(&mut self, codegen: &CodeGen<'ctx>) {

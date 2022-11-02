@@ -53,11 +53,11 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn build_constraint(&self, lval: IntValue<'ctx>, rval: IntValue<'ctx>) {
-        self.module
-            .add_global(self.context.bool_type().ptr_type(AddressSpace::Generic), None, "constraint");
+        let gv = self.module
+            .add_global(self.context.bool_type(), None, "constraint");
         self.builder.build_call(
             self._global_constraint_fn_val,
-            &[lval.into(), rval.into()],
+            &[lval.into(), rval.into(), gv.as_basic_value_enum().into()],
             "",
         );
     }
@@ -178,6 +178,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     );
     let gv_val = constraint_fn_val.get_last_param().unwrap().into_pointer_value();
     builder.build_store(gv_val, eq_val);
+    builder.build_return(None);
 
     // Add inline switch function
     let inlineswitch_fn_args_ty = [bool_ty.into(), val_ty.into(), val_ty.into()];
