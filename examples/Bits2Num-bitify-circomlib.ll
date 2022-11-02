@@ -4,12 +4,13 @@ source_filename = "main"
 %t_struct_bits2num = type { %t_struct_param_bits2num*, void (%t_struct_bits2num*)*, [256 x i128]*, i128 }
 %t_struct_param_bits2num = type { i128 }
 
-@constraint = external global i1*
+@constraint = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -53,14 +54,16 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod)
+  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod, i1* @constraint)
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_bits2num, %t_struct_bits2num* %0, i32 0, i32 3
   store i128 %add.mod, i128* %write_signal_output.out, align 4
+  ret void
 }
 
-define %t_struct_bits2num @t_fn_build_bits2num(%t_struct_param_bits2num* %0) {
+define %t_struct_bits2num* @t_fn_build_bits2num(%t_struct_param_bits2num* %0) {
 entry:
   %1 = alloca %t_struct_bits2num, align 8
   %param = getelementptr inbounds %t_struct_bits2num, %t_struct_bits2num* %1, i32 0, i32 0

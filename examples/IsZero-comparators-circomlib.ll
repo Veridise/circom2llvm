@@ -4,13 +4,14 @@ source_filename = "main"
 %t_struct_iszero = type { %t_struct_param_iszero*, void (%t_struct_iszero*)*, i128, i128 }
 %t_struct_param_iszero = type {}
 
-@constraint = external global i1*
-@constraint.1 = external global i1*
+@constraint = external global i1
+@constraint.1 = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -36,17 +37,19 @@ entry:
   %mul.mod = srem i128 %mul, 12539295309507511577697735
   %add = add i128 %mul.mod, 1
   %add.mod = srem i128 %add, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod)
+  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod, i1* @constraint)
   %mul1 = mul i128 %read_signal_input.in, %add.mod
   %mul1.mod = srem i128 %mul1, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul1.mod, i128 0)
+  call void @intrinsic_add_constraint(i128 %mul1.mod, i128 0, i1* @constraint.1)
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %entry
   %write_signal_output.out = getelementptr inbounds %t_struct_iszero, %t_struct_iszero* %0, i32 0, i32 3
   store i128 %add.mod, i128* %write_signal_output.out, align 4
+  ret void
 }
 
-define %t_struct_iszero @t_fn_build_iszero(%t_struct_param_iszero* %0) {
+define %t_struct_iszero* @t_fn_build_iszero(%t_struct_param_iszero* %0) {
 entry:
   %1 = alloca %t_struct_iszero, align 8
   %param = getelementptr inbounds %t_struct_iszero, %t_struct_iszero* %1, i32 0, i32 0

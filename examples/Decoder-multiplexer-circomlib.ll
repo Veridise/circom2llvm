@@ -4,14 +4,15 @@ source_filename = "main"
 %t_struct_decoder = type { %t_struct_param_decoder*, void (%t_struct_decoder*)*, i128, [256 x i128]*, i128 }
 %t_struct_param_decoder = type { i128 }
 
-@constraint = external global i1*
-@constraint.1 = external global i1*
-@constraint.2 = external global i1*
+@constraint = external global i1
+@constraint.1 = external global i1
+@constraint.2 = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -49,7 +50,7 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %sub.mod = srem i128 %sub, 12539295309507511577697735
   %mul = mul i128 %out4, %sub.mod
   %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 0)
+  call void @intrinsic_add_constraint(i128 %mul.mod, i128 0, i1* @constraint)
   %array_ptr5 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out6 = load i128, i128* %array_ptr5, align 4
   %add = add i128 0, %out6
@@ -62,21 +63,23 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod)
+  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod, i1* @constraint.1)
   %sub8 = sub i128 %add.mod, 1
   %sub8.mod = srem i128 %sub8, 12539295309507511577697735
   %mul9 = mul i128 %add.mod, %sub8.mod
   %mul9.mod = srem i128 %mul9, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul9.mod, i128 0)
+  call void @intrinsic_add_constraint(i128 %mul9.mod, i128 0, i1* @constraint.2)
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_decoder, %t_struct_decoder* %0, i32 0, i32 3
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
   %write_signal_output.success = getelementptr inbounds %t_struct_decoder, %t_struct_decoder* %0, i32 0, i32 4
   store i128 %add.mod, i128* %write_signal_output.success, align 4
+  ret void
 }
 
-define %t_struct_decoder @t_fn_build_decoder(%t_struct_param_decoder* %0) {
+define %t_struct_decoder* @t_fn_build_decoder(%t_struct_param_decoder* %0) {
 entry:
   %1 = alloca %t_struct_decoder, align 8
   %param = getelementptr inbounds %t_struct_decoder, %t_struct_decoder* %1, i32 0, i32 0

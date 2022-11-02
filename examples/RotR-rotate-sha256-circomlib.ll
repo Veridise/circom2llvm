@@ -4,12 +4,13 @@ source_filename = "main"
 %t_struct_rotr = type { %t_struct_param_rotr*, void (%t_struct_rotr*)*, [256 x i128]*, [256 x i128]* }
 %t_struct_param_rotr = type { i128, i128 }
 
-@constraint = external global i1*
+@constraint = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -55,7 +56,7 @@ loop.body:                                        ; preds = %loop.latch, %entry
   store i128 %in6, i128* %out7, align 4
   %array_ptr8 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out9 = load i128, i128* %array_ptr8, align 4
-  call void @intrinsic_add_constraint(i128 %out9, i128 %in6)
+  call void @intrinsic_add_constraint(i128 %out9, i128 %in6, i1* @constraint)
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
@@ -64,13 +65,15 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_rotr, %t_struct_rotr* %0, i32 0, i32 3
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
+  ret void
 }
 
-define %t_struct_rotr @t_fn_build_rotr(%t_struct_param_rotr* %0) {
+define %t_struct_rotr* @t_fn_build_rotr(%t_struct_param_rotr* %0) {
 entry:
   %1 = alloca %t_struct_rotr, align 8
   %param = getelementptr inbounds %t_struct_rotr, %t_struct_rotr* %1, i32 0, i32 0

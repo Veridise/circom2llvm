@@ -4,13 +4,14 @@ source_filename = "main"
 %t_struct_xor3 = type { %t_struct_param_xor3*, void (%t_struct_xor3*)*, [256 x i128]*, [256 x i128]*, [256 x i128]*, [256 x i128]* }
 %t_struct_param_xor3 = type { i128 }
 
-@constraint = external global i1*
-@constraint.1 = external global i1*
+@constraint = external global i1
+@constraint.1 = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -48,9 +49,9 @@ entry:
   %5 = bitcast i128* %c to i8*
   %6 = bitcast [256 x i128]* %read_signal_input.c to i8*
   call void @llvm.memcpy.p0i8.p0i8.i32(i8* align 4 %5, i8* align 4 %6, i32 256, i1 false)
-  %mid = alloca i128, i32 256, align 8
   %malloccall = tail call i8* @malloc(i32 mul (i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32), i32 256))
   %out = bitcast i8* %malloccall to i128*
+  %mid = alloca i128, i32 256, align 8
   br label %loop.body
 
 loop.body:                                        ; preds = %loop.latch, %entry
@@ -65,7 +66,7 @@ loop.body:                                        ; preds = %loop.latch, %entry
   store i128 %mul.mod, i128* %mid8, align 4
   %array_ptr9 = getelementptr inbounds i128, i128* %mid, i128 %loop.i
   %mid10 = load i128, i128* %array_ptr9, align 4
-  call void @intrinsic_add_constraint(i128 %mid10, i128 %mul.mod)
+  call void @intrinsic_add_constraint(i128 %mid10, i128 %mul.mod, i1* @constraint)
   %array_ptr11 = getelementptr inbounds i128, i128* %a, i128 %loop.i
   %a12 = load i128, i128* %array_ptr11, align 4
   %array_ptr13 = getelementptr inbounds i128, i128* %b, i128 %loop.i
@@ -106,7 +107,7 @@ loop.body:                                        ; preds = %loop.latch, %entry
   store i128 %sub33.mod, i128* %out34, align 4
   %array_ptr35 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out36 = load i128, i128* %array_ptr35, align 4
-  call void @intrinsic_add_constraint(i128 %out36, i128 %sub33.mod)
+  call void @intrinsic_add_constraint(i128 %out36, i128 %sub33.mod, i1* @constraint.1)
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
@@ -115,13 +116,15 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_xor3, %t_struct_xor3* %0, i32 0, i32 5
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
+  ret void
 }
 
-define %t_struct_xor3 @t_fn_build_xor3(%t_struct_param_xor3* %0) {
+define %t_struct_xor3* @t_fn_build_xor3(%t_struct_param_xor3* %0) {
 entry:
   %1 = alloca %t_struct_xor3, align 8
   %param = getelementptr inbounds %t_struct_xor3, %t_struct_xor3* %1, i32 0, i32 0

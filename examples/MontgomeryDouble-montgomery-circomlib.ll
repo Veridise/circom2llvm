@@ -4,15 +4,16 @@ source_filename = "main"
 %t_struct_montgomerydouble = type { %t_struct_param_montgomerydouble*, void (%t_struct_montgomerydouble*)*, [256 x i128]*, [256 x i128]* }
 %t_struct_param_montgomerydouble = type {}
 
-@constraint = external global i1*
-@constraint.1 = external global i1*
-@constraint.2 = external global i1*
-@constraint.3 = external global i1*
+@constraint = external global i1
+@constraint.1 = external global i1
+@constraint.2 = external global i1
+@constraint.3 = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -42,7 +43,7 @@ entry:
   %in3 = load i128, i128* %array_ptr2, align 4
   %mul = mul i128 %in1, %in3
   %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %mul.mod)
+  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %mul.mod, i1* @constraint)
   %mul4 = mul i128 3, %mul.mod
   %mul4.mod = srem i128 %mul4, 12539295309507511577697735
   %array_ptr5 = getelementptr inbounds i128, i128* %in, i128 0
@@ -75,7 +76,7 @@ entry:
   %add20.mod = srem i128 %add20, 12539295309507511577697735
   %add21 = add i128 %add20.mod, 1
   %add21.mod = srem i128 %add21, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul15.mod, i128 %add21.mod)
+  call void @intrinsic_add_constraint(i128 %mul15.mod, i128 %add21.mod, i1* @constraint.1)
   %mul22 = mul i128 1, %sdiv.mod
   %mul22.mod = srem i128 %mul22, 12539295309507511577697735
   %mul23 = mul i128 %mul22.mod, %sdiv.mod
@@ -92,7 +93,7 @@ entry:
   store i128 %sub27.mod, i128* %out28, align 4
   %array_ptr29 = getelementptr inbounds i128, i128* %out, i128 0
   %out30 = load i128, i128* %array_ptr29, align 4
-  call void @intrinsic_add_constraint(i128 %out30, i128 %sub27.mod)
+  call void @intrinsic_add_constraint(i128 %out30, i128 %sub27.mod, i1* @constraint.2)
   %array_ptr31 = getelementptr inbounds i128, i128* %in, i128 0
   %in32 = load i128, i128* %array_ptr31, align 4
   %array_ptr33 = getelementptr inbounds i128, i128* %out, i128 0
@@ -109,14 +110,16 @@ entry:
   store i128 %sub39.mod, i128* %out40, align 4
   %array_ptr41 = getelementptr inbounds i128, i128* %out, i128 1
   %out42 = load i128, i128* %array_ptr41, align 4
-  call void @intrinsic_add_constraint(i128 %out42, i128 %sub39.mod)
+  call void @intrinsic_add_constraint(i128 %out42, i128 %sub39.mod, i1* @constraint.3)
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %entry
   %write_signal_output.out = getelementptr inbounds %t_struct_montgomerydouble, %t_struct_montgomerydouble* %0, i32 0, i32 3
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
+  ret void
 }
 
-define %t_struct_montgomerydouble @t_fn_build_montgomerydouble(%t_struct_param_montgomerydouble* %0) {
+define %t_struct_montgomerydouble* @t_fn_build_montgomerydouble(%t_struct_param_montgomerydouble* %0) {
 entry:
   %1 = alloca %t_struct_montgomerydouble, align 8
   %param = getelementptr inbounds %t_struct_montgomerydouble, %t_struct_montgomerydouble* %1, i32 0, i32 0

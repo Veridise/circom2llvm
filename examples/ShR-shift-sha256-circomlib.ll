@@ -4,13 +4,14 @@ source_filename = "main"
 %t_struct_shr = type { %t_struct_param_shr*, void (%t_struct_shr*)*, [256 x i128]*, [256 x i128]* }
 %t_struct_param_shr = type { i128, i128 }
 
-@constraint = external global i1*
-@constraint.1 = external global i1*
+@constraint = external global i1
+@constraint.1 = external global i1
 
 define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -57,7 +58,7 @@ if.body:                                          ; preds = %loop.body
   store i128 0, i128* %out6, align 4
   %array_ptr = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out7 = load i128, i128* %array_ptr, align 4
-  call void @intrinsic_add_constraint(i128 %out7, i128 0)
+  call void @intrinsic_add_constraint(i128 %out7, i128 0, i1* @constraint)
   br label %if.end
 
 if.else:                                          ; preds = %loop.body
@@ -69,7 +70,7 @@ if.else:                                          ; preds = %loop.body
   store i128 %in10, i128* %out11, align 4
   %array_ptr12 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out13 = load i128, i128* %array_ptr12, align 4
-  call void @intrinsic_add_constraint(i128 %out13, i128 %in10)
+  call void @intrinsic_add_constraint(i128 %out13, i128 %in10, i1* @constraint.1)
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.body
@@ -80,13 +81,15 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_shr, %t_struct_shr* %0, i32 0, i32 3
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
+  ret void
 }
 
-define %t_struct_shr @t_fn_build_shr(%t_struct_param_shr* %0) {
+define %t_struct_shr* @t_fn_build_shr(%t_struct_param_shr* %0) {
 entry:
   %1 = alloca %t_struct_shr, align 8
   %param = getelementptr inbounds %t_struct_shr, %t_struct_shr* %1, i32 0, i32 0

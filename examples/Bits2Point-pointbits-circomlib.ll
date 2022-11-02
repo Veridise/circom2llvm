@@ -8,6 +8,7 @@ define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
+  ret void
 }
 
 define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
@@ -31,13 +32,15 @@ entry:
   call void @llvm.memcpy.p0i8.p0i8.i32(i8* align 4 %1, i8* align 4 %2, i32 256, i1 false)
   %malloccall = tail call i8* @malloc(i32 mul (i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32), i32 256))
   %out = bitcast i8* %malloccall to i128*
+  br label %exit
 
-exit:                                             ; No predecessors!
+exit:                                             ; preds = %entry
   %write_signal_output.out = getelementptr inbounds %t_struct_bits2point, %t_struct_bits2point* %0, i32 0, i32 3
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
+  ret void
 }
 
-define %t_struct_bits2point @t_fn_build_bits2point(%t_struct_param_bits2point* %0) {
+define %t_struct_bits2point* @t_fn_build_bits2point(%t_struct_param_bits2point* %0) {
 entry:
   %1 = alloca %t_struct_bits2point, align 8
   %param = getelementptr inbounds %t_struct_bits2point, %t_struct_bits2point* %1, i32 0, i32 0
