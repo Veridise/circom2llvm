@@ -49,9 +49,9 @@ entry:
   %5 = bitcast i128* %c to i8*
   %6 = bitcast [256 x i128]* %read_signal_input.c to i8*
   call void @llvm.memcpy.p0i8.p0i8.i32(i8* align 4 %5, i8* align 4 %6, i32 256, i1 false)
-  %mid = alloca i128, i32 256, align 8
   %malloccall = tail call i8* @malloc(i32 mul (i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32), i32 256))
   %out = bitcast i8* %malloccall to i128*
+  %mid = alloca i128, i32 256, align 8
   br label %loop.body
 
 loop.body:                                        ; preds = %loop.latch, %entry
@@ -61,12 +61,11 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %array_ptr6 = getelementptr inbounds i128, i128* %c, i128 %loop.i
   %c7 = load i128, i128* %array_ptr6, align 4
   %mul = mul i128 %b5, %c7
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
   %mid8 = getelementptr inbounds i128, i128* %mid, i128 %loop.i
-  store i128 %mul.mod, i128* %mid8, align 4
+  store i128 %mul, i128* %mid8, align 4
   %array_ptr9 = getelementptr inbounds i128, i128* %mid, i128 %loop.i
   %mid10 = load i128, i128* %array_ptr9, align 4
-  call void @intrinsic_add_constraint(i128 %mid10, i128 %mul.mod, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %mid10, i128 %mul, i1* @constraint)
   %array_ptr11 = getelementptr inbounds i128, i128* %a, i128 %loop.i
   %a12 = load i128, i128* %array_ptr11, align 4
   %array_ptr13 = getelementptr inbounds i128, i128* %b, i128 %loop.i
@@ -74,24 +73,19 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %array_ptr15 = getelementptr inbounds i128, i128* %c, i128 %loop.i
   %c16 = load i128, i128* %array_ptr15, align 4
   %add = add i128 %b14, %c16
-  %add.mod = srem i128 %add, 12539295309507511577697735
   %array_ptr17 = getelementptr inbounds i128, i128* %mid, i128 %loop.i
   %mid18 = load i128, i128* %array_ptr17, align 4
   %mul19 = mul i128 2, %mid18
-  %mul19.mod = srem i128 %mul19, 12539295309507511577697735
-  %sub = sub i128 %add.mod, %mul19.mod
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  %mul20 = mul i128 %a12, %sub.mod
-  %mul20.mod = srem i128 %mul20, 12539295309507511577697735
+  %sub = sub i128 %add, %mul19
+  %mul20 = mul i128 %a12, %sub
   %array_ptr21 = getelementptr inbounds i128, i128* %mid, i128 %loop.i
   %mid22 = load i128, i128* %array_ptr21, align 4
-  %add23 = add i128 %mul20.mod, %mid22
-  %add23.mod = srem i128 %add23, 12539295309507511577697735
+  %add23 = add i128 %mul20, %mid22
   %out24 = getelementptr inbounds i128, i128* %out, i128 %loop.i
-  store i128 %add23.mod, i128* %out24, align 4
+  store i128 %add23, i128* %out24, align 4
   %array_ptr25 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out26 = load i128, i128* %array_ptr25, align 4
-  call void @intrinsic_add_constraint(i128 %out26, i128 %add23.mod, i1* @constraint.1)
+  call void @intrinsic_add_constraint(i128 %out26, i128 %add23, i1* @constraint.1)
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body

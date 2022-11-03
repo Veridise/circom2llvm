@@ -47,14 +47,11 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %array_ptr = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out4 = load i128, i128* %array_ptr, align 4
   %sub = sub i128 %read_signal_input.inp, %loop.i
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  %mul = mul i128 %out4, %sub.mod
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 0, i1* @constraint)
+  %mul = mul i128 %out4, %sub
+  call void @intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint)
   %array_ptr5 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out6 = load i128, i128* %array_ptr5, align 4
   %add = add i128 0, %out6
-  %add.mod = srem i128 %add, 12539295309507511577697735
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
@@ -63,19 +60,17 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod, i1* @constraint.1)
-  %sub8 = sub i128 %add.mod, 1
-  %sub8.mod = srem i128 %sub8, 12539295309507511577697735
-  %mul9 = mul i128 %add.mod, %sub8.mod
-  %mul9.mod = srem i128 %mul9, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul9.mod, i128 0, i1* @constraint.2)
+  call void @intrinsic_add_constraint(i128 %add, i128 %add, i1* @constraint.1)
+  %sub8 = sub i128 %add, 1
+  %mul9 = mul i128 %add, %sub8
+  call void @intrinsic_add_constraint(i128 %mul9, i128 0, i1* @constraint.2)
   br label %exit
 
 exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_decoder, %t_struct_decoder* %0, i32 0, i32 3
   store i128* %out, [256 x i128]** %write_signal_output.out, align 8
   %write_signal_output.success = getelementptr inbounds %t_struct_decoder, %t_struct_decoder* %0, i32 0, i32 4
-  store i128 %add.mod, i128* %write_signal_output.success, align 4
+  store i128 %add, i128* %write_signal_output.success, align 4
   ret void
 }
 

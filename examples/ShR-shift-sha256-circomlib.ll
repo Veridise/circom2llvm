@@ -48,8 +48,7 @@ entry:
 loop.body:                                        ; preds = %loop.latch, %entry
   %loop.i = phi i128 [ 0, %entry ], [ %add14, %loop.latch ]
   %add = add i128 %loop.i, %params.r
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  %sge = icmp sge i128 %add.mod, %params.n
+  %sge = icmp sge i128 %add, %params.n
   br i1 %sge, label %if.body, label %if.else
   br label %loop.latch
 
@@ -63,8 +62,7 @@ if.body:                                          ; preds = %loop.body
 
 if.else:                                          ; preds = %loop.body
   %add8 = add i128 %loop.i, %params.r
-  %add8.mod = srem i128 %add8, 12539295309507511577697735
-  %array_ptr9 = getelementptr inbounds i128, i128* %in, i128 %add8.mod
+  %array_ptr9 = getelementptr inbounds i128, i128* %in, i128 %add8
   %in10 = load i128, i128* %array_ptr9, align 4
   %out11 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   store i128 %in10, i128* %out11, align 4

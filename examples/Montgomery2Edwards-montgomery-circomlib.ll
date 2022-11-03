@@ -40,43 +40,35 @@ entry:
   %array_ptr2 = getelementptr inbounds i128, i128* %in, i128 1
   %in3 = load i128, i128* %array_ptr2, align 4
   %sdiv = sdiv i128 %in1, %in3
-  %sdiv.mod = srem i128 %sdiv, 12539295309507511577697735
   %out4 = getelementptr inbounds i128, i128* %out, i128 0
-  store i128 %sdiv.mod, i128* %out4, align 4
+  store i128 %sdiv, i128* %out4, align 4
   %array_ptr5 = getelementptr inbounds i128, i128* %in, i128 0
   %in6 = load i128, i128* %array_ptr5, align 4
   %sub = sub i128 %in6, 1
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
   %array_ptr7 = getelementptr inbounds i128, i128* %in, i128 0
   %in8 = load i128, i128* %array_ptr7, align 4
   %add = add i128 %in8, 1
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  %sdiv9 = sdiv i128 %sub.mod, %add.mod
-  %sdiv9.mod = srem i128 %sdiv9, 12539295309507511577697735
+  %sdiv9 = sdiv i128 %sub, %add
   %out10 = getelementptr inbounds i128, i128* %out, i128 1
-  store i128 %sdiv9.mod, i128* %out10, align 4
+  store i128 %sdiv9, i128* %out10, align 4
   %array_ptr11 = getelementptr inbounds i128, i128* %out, i128 0
   %out12 = load i128, i128* %array_ptr11, align 4
   %array_ptr13 = getelementptr inbounds i128, i128* %in, i128 1
   %in14 = load i128, i128* %array_ptr13, align 4
   %mul = mul i128 %out12, %in14
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
   %array_ptr15 = getelementptr inbounds i128, i128* %in, i128 0
   %in16 = load i128, i128* %array_ptr15, align 4
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %in16, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %mul, i128 %in16, i1* @constraint)
   %array_ptr17 = getelementptr inbounds i128, i128* %out, i128 1
   %out18 = load i128, i128* %array_ptr17, align 4
   %array_ptr19 = getelementptr inbounds i128, i128* %in, i128 0
   %in20 = load i128, i128* %array_ptr19, align 4
   %add21 = add i128 %in20, 1
-  %add21.mod = srem i128 %add21, 12539295309507511577697735
-  %mul22 = mul i128 %out18, %add21.mod
-  %mul22.mod = srem i128 %mul22, 12539295309507511577697735
+  %mul22 = mul i128 %out18, %add21
   %array_ptr23 = getelementptr inbounds i128, i128* %in, i128 0
   %in24 = load i128, i128* %array_ptr23, align 4
   %sub25 = sub i128 %in24, 1
-  %sub25.mod = srem i128 %sub25, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul22.mod, i128 %sub25.mod, i1* @constraint.1)
+  call void @intrinsic_add_constraint(i128 %mul22, i128 %sub25, i1* @constraint.1)
   br label %exit
 
 exit:                                             ; preds = %entry

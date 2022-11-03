@@ -58,60 +58,45 @@ entry:
   %struct_ptr9 = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 11
   %read_signal_input.prev_upd = load i128, i128* %struct_ptr9, align 4
   %mul = mul i128 %read_signal_input.prev_top, %read_signal_input.levIns
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %mul.mod, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %mul, i128 %mul, i1* @constraint)
   %array_ptr = getelementptr inbounds i128, i128* %fnc, i128 0
   %fnc10 = load i128, i128* %array_ptr, align 4
-  %mul11 = mul i128 %mul.mod, %fnc10
-  %mul11.mod = srem i128 %mul11, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul11.mod, i128 %mul11.mod, i1* @constraint.1)
-  %sub = sub i128 %read_signal_input.prev_top, %mul.mod
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %sub.mod, i128 %sub.mod, i1* @constraint.2)
-  %mul12 = mul i128 %mul11.mod, %read_signal_input.is0
-  %mul12.mod = srem i128 %mul12, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul12.mod, i128 %mul12.mod, i1* @constraint.3)
-  %sub13 = sub i128 %mul11.mod, %mul12.mod
-  %sub13.mod = srem i128 %sub13, 12539295309507511577697735
-  %add = add i128 %sub13.mod, %read_signal_input.prev_bot
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  %mul14 = mul i128 %add.mod, %read_signal_input.xor
-  %mul14.mod = srem i128 %mul14, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul14.mod, i128 %mul14.mod, i1* @constraint.4)
+  %mul11 = mul i128 %mul, %fnc10
+  call void @intrinsic_add_constraint(i128 %mul11, i128 %mul11, i1* @constraint.1)
+  %sub = sub i128 %read_signal_input.prev_top, %mul
+  call void @intrinsic_add_constraint(i128 %sub, i128 %sub, i1* @constraint.2)
+  %mul12 = mul i128 %mul11, %read_signal_input.is0
+  call void @intrinsic_add_constraint(i128 %mul12, i128 %mul12, i1* @constraint.3)
+  %sub13 = sub i128 %mul11, %mul12
+  %add = add i128 %sub13, %read_signal_input.prev_bot
+  %mul14 = mul i128 %add, %read_signal_input.xor
+  call void @intrinsic_add_constraint(i128 %mul14, i128 %mul14, i1* @constraint.4)
   %sub15 = sub i128 1, %read_signal_input.xor
-  %sub15.mod = srem i128 %sub15, 12539295309507511577697735
-  %sub16 = sub i128 %mul11.mod, %mul12.mod
-  %sub16.mod = srem i128 %sub16, 12539295309507511577697735
-  %add17 = add i128 %sub16.mod, %read_signal_input.prev_bot
-  %add17.mod = srem i128 %add17, 12539295309507511577697735
-  %mul18 = mul i128 %sub15.mod, %add17.mod
-  %mul18.mod = srem i128 %mul18, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul18.mod, i128 %mul18.mod, i1* @constraint.5)
-  %sub19 = sub i128 %mul.mod, %mul11.mod
-  %sub19.mod = srem i128 %sub19, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %sub19.mod, i128 %sub19.mod, i1* @constraint.6)
+  %sub16 = sub i128 %mul11, %mul12
+  %add17 = add i128 %sub16, %read_signal_input.prev_bot
+  %mul18 = mul i128 %sub15, %add17
+  call void @intrinsic_add_constraint(i128 %mul18, i128 %mul18, i1* @constraint.5)
+  %sub19 = sub i128 %mul, %mul11
+  call void @intrinsic_add_constraint(i128 %sub19, i128 %sub19, i1* @constraint.6)
   %add20 = add i128 %read_signal_input.prev_new1, %read_signal_input.prev_old0
-  %add20.mod = srem i128 %add20, 12539295309507511577697735
-  %add21 = add i128 %add20.mod, %read_signal_input.prev_na
-  %add21.mod = srem i128 %add21, 12539295309507511577697735
-  %add22 = add i128 %add21.mod, %read_signal_input.prev_upd
-  %add22.mod = srem i128 %add22, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %add22.mod, i128 %add22.mod, i1* @constraint.7)
+  %add21 = add i128 %add20, %read_signal_input.prev_na
+  %add22 = add i128 %add21, %read_signal_input.prev_upd
+  call void @intrinsic_add_constraint(i128 %add22, i128 %add22, i1* @constraint.7)
   br label %exit
 
 exit:                                             ; preds = %entry
   %write_signal_output.st_top = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 12
-  store i128 %sub.mod, i128* %write_signal_output.st_top, align 4
+  store i128 %sub, i128* %write_signal_output.st_top, align 4
   %write_signal_output.st_old0 = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 13
-  store i128 %mul12.mod, i128* %write_signal_output.st_old0, align 4
+  store i128 %mul12, i128* %write_signal_output.st_old0, align 4
   %write_signal_output.st_bot = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 14
-  store i128 %mul18.mod, i128* %write_signal_output.st_bot, align 4
+  store i128 %mul18, i128* %write_signal_output.st_bot, align 4
   %write_signal_output.st_new1 = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 15
-  store i128 %mul14.mod, i128* %write_signal_output.st_new1, align 4
+  store i128 %mul14, i128* %write_signal_output.st_new1, align 4
   %write_signal_output.st_na = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 16
-  store i128 %add22.mod, i128* %write_signal_output.st_na, align 4
+  store i128 %add22, i128* %write_signal_output.st_na, align 4
   %write_signal_output.st_upd = getelementptr inbounds %t_struct_smtprocessorsm, %t_struct_smtprocessorsm* %0, i32 0, i32 17
-  store i128 %sub19.mod, i128* %write_signal_output.st_upd, align 4
+  store i128 %sub19, i128* %write_signal_output.st_upd, align 4
   ret void
 }
 

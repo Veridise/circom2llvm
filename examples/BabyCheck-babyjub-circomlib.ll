@@ -33,22 +33,15 @@ entry:
   %struct_ptr1 = getelementptr inbounds %t_struct_babycheck, %t_struct_babycheck* %0, i32 0, i32 3
   %read_signal_input.y = load i128, i128* %struct_ptr1, align 4
   %mul = mul i128 %read_signal_input.x, %read_signal_input.x
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %mul.mod, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %mul, i128 %mul, i1* @constraint)
   %mul2 = mul i128 %read_signal_input.y, %read_signal_input.y
-  %mul2.mod = srem i128 %mul2, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul2.mod, i128 %mul2.mod, i1* @constraint.1)
-  %mul3 = mul i128 168700, %mul.mod
-  %mul3.mod = srem i128 %mul3, 12539295309507511577697735
-  %add = add i128 %mul3.mod, %mul2.mod
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  %mul4 = mul i128 168696, %mul.mod
-  %mul4.mod = srem i128 %mul4, 12539295309507511577697735
-  %mul5 = mul i128 %mul4.mod, %mul2.mod
-  %mul5.mod = srem i128 %mul5, 12539295309507511577697735
-  %add6 = add i128 1, %mul5.mod
-  %add6.mod = srem i128 %add6, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add6.mod, i1* @constraint.2)
+  call void @intrinsic_add_constraint(i128 %mul2, i128 %mul2, i1* @constraint.1)
+  %mul3 = mul i128 168700, %mul
+  %add = add i128 %mul3, %mul2
+  %mul4 = mul i128 168696, %mul
+  %mul5 = mul i128 %mul4, %mul2
+  %add6 = add i128 1, %mul5
+  call void @intrinsic_add_constraint(i128 %add, i128 %add6, i1* @constraint.2)
   br label %exit
 
 exit:                                             ; preds = %entry

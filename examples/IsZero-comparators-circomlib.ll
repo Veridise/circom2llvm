@@ -31,21 +31,17 @@ entry:
   %read_signal_input.in = load i128, i128* %struct_ptr, align 4
   %ne = icmp ne i128 %read_signal_input.in, 0
   %sdiv = sdiv i128 1, %read_signal_input.in
-  %sdiv.mod = srem i128 %sdiv, 12539295309507511577697735
-  %inlineswitch = call i128 @intrinsic_inline_switch(i1 %ne, i128 %sdiv.mod, i128 0)
-  %mul = mul i128 srem (i128 sub (i128 0, i128 %read_signal_input.in), i128 12539295309507511577697735), %inlineswitch
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  %add = add i128 %mul.mod, 1
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod, i1* @constraint)
-  %mul1 = mul i128 %read_signal_input.in, %add.mod
-  %mul1.mod = srem i128 %mul1, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul1.mod, i128 0, i1* @constraint.1)
+  %inlineswitch = call i128 @intrinsic_inline_switch(i1 %ne, i128 %sdiv, i128 0)
+  %mul = mul i128 sub (i128 0, i128 %read_signal_input.in), %inlineswitch
+  %add = add i128 %mul, 1
+  call void @intrinsic_add_constraint(i128 %add, i128 %add, i1* @constraint)
+  %mul1 = mul i128 %read_signal_input.in, %add
+  call void @intrinsic_add_constraint(i128 %mul1, i128 0, i1* @constraint.1)
   br label %exit
 
 exit:                                             ; preds = %entry
   %write_signal_output.out = getelementptr inbounds %t_struct_iszero, %t_struct_iszero* %0, i32 0, i32 3
-  store i128 %add.mod, i128* %write_signal_output.out, align 4
+  store i128 %add, i128* %write_signal_output.out, align 4
   ret void
 }
 

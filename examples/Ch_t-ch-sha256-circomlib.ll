@@ -61,18 +61,15 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %array_ptr8 = getelementptr inbounds i128, i128* %c, i128 %loop.i
   %c9 = load i128, i128* %array_ptr8, align 4
   %sub = sub i128 %b7, %c9
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  %mul = mul i128 %a5, %sub.mod
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
+  %mul = mul i128 %a5, %sub
   %array_ptr10 = getelementptr inbounds i128, i128* %c, i128 %loop.i
   %c11 = load i128, i128* %array_ptr10, align 4
-  %add = add i128 %mul.mod, %c11
-  %add.mod = srem i128 %add, 12539295309507511577697735
+  %add = add i128 %mul, %c11
   %out12 = getelementptr inbounds i128, i128* %out, i128 %loop.i
-  store i128 %add.mod, i128* %out12, align 4
+  store i128 %add, i128* %out12, align 4
   %array_ptr13 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out14 = load i128, i128* %array_ptr13, align 4
-  call void @intrinsic_add_constraint(i128 %out14, i128 %add.mod, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %out14, i128 %add, i1* @constraint)
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body

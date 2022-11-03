@@ -53,16 +53,14 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %array_ptr5 = getelementptr inbounds i128, i128* %in2, i128 %loop.i
   %in26 = load i128, i128* %array_ptr5, align 4
   %mul = mul i128 %in14, %in26
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
   %aux7 = getelementptr inbounds i128, i128* %aux, i128 %loop.i
-  store i128 %mul.mod, i128* %aux7, align 4
+  store i128 %mul, i128* %aux7, align 4
   %array_ptr8 = getelementptr inbounds i128, i128* %aux, i128 %loop.i
   %aux9 = load i128, i128* %array_ptr8, align 4
-  call void @intrinsic_add_constraint(i128 %aux9, i128 %mul.mod, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %aux9, i128 %mul, i1* @constraint)
   %array_ptr10 = getelementptr inbounds i128, i128* %aux, i128 %loop.i
   %aux11 = load i128, i128* %array_ptr10, align 4
   %add = add i128 0, %aux11
-  %add.mod = srem i128 %add, 12539295309507511577697735
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
@@ -71,12 +69,12 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %add.mod, i1* @constraint.1)
+  call void @intrinsic_add_constraint(i128 %add, i128 %add, i1* @constraint.1)
   br label %exit
 
 exit:                                             ; preds = %loop.exit
   %write_signal_output.out = getelementptr inbounds %t_struct_escalarproduct, %t_struct_escalarproduct* %0, i32 0, i32 4
-  store i128 %add.mod, i128* %write_signal_output.out, align 4
+  store i128 %add, i128* %write_signal_output.out, align 4
   ret void
 }
 

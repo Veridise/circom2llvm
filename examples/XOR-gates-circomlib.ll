@@ -31,19 +31,15 @@ entry:
   %struct_ptr1 = getelementptr inbounds %t_struct_xor, %t_struct_xor* %0, i32 0, i32 3
   %read_signal_input.b = load i128, i128* %struct_ptr1, align 4
   %add = add i128 %read_signal_input.a, %read_signal_input.b
-  %add.mod = srem i128 %add, 12539295309507511577697735
   %mul = mul i128 2, %read_signal_input.a
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  %mul2 = mul i128 %mul.mod, %read_signal_input.b
-  %mul2.mod = srem i128 %mul2, 12539295309507511577697735
-  %sub = sub i128 %add.mod, %mul2.mod
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %sub.mod, i128 %sub.mod, i1* @constraint)
+  %mul2 = mul i128 %mul, %read_signal_input.b
+  %sub = sub i128 %add, %mul2
+  call void @intrinsic_add_constraint(i128 %sub, i128 %sub, i1* @constraint)
   br label %exit
 
 exit:                                             ; preds = %entry
   %write_signal_output.out = getelementptr inbounds %t_struct_xor, %t_struct_xor* %0, i32 0, i32 4
-  store i128 %sub.mod, i128* %write_signal_output.out, align 4
+  store i128 %sub, i128* %write_signal_output.out, align 4
   ret void
 }
 

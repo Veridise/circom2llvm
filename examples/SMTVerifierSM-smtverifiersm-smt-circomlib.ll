@@ -49,45 +49,35 @@ entry:
   %struct_ptr7 = getelementptr inbounds %t_struct_smtverifiersm, %t_struct_smtverifiersm* %0, i32 0, i32 9
   %read_signal_input.prev_na = load i128, i128* %struct_ptr7, align 4
   %mul = mul i128 %read_signal_input.prev_top, %read_signal_input.levIns
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %mul.mod, i1* @constraint)
-  %mul8 = mul i128 %mul.mod, %read_signal_input.fnc
-  %mul8.mod = srem i128 %mul8, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul8.mod, i128 %mul8.mod, i1* @constraint.1)
-  %sub = sub i128 %read_signal_input.prev_top, %mul.mod
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %sub.mod, i128 %sub.mod, i1* @constraint.2)
-  %sub9 = sub i128 %mul.mod, %mul8.mod
-  %sub9.mod = srem i128 %sub9, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %sub9.mod, i128 %sub9.mod, i1* @constraint.3)
+  call void @intrinsic_add_constraint(i128 %mul, i128 %mul, i1* @constraint)
+  %mul8 = mul i128 %mul, %read_signal_input.fnc
+  call void @intrinsic_add_constraint(i128 %mul8, i128 %mul8, i1* @constraint.1)
+  %sub = sub i128 %read_signal_input.prev_top, %mul
+  call void @intrinsic_add_constraint(i128 %sub, i128 %sub, i1* @constraint.2)
+  %sub9 = sub i128 %mul, %mul8
+  call void @intrinsic_add_constraint(i128 %sub9, i128 %sub9, i1* @constraint.3)
   %sub10 = sub i128 1, %read_signal_input.is0
-  %sub10.mod = srem i128 %sub10, 12539295309507511577697735
-  %mul11 = mul i128 %mul8.mod, %sub10.mod
-  %mul11.mod = srem i128 %mul11, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul11.mod, i128 %mul11.mod, i1* @constraint.4)
-  %mul12 = mul i128 %mul.mod, %read_signal_input.is0
-  %mul12.mod = srem i128 %mul12, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul12.mod, i128 %mul12.mod, i1* @constraint.5)
+  %mul11 = mul i128 %mul8, %sub10
+  call void @intrinsic_add_constraint(i128 %mul11, i128 %mul11, i1* @constraint.4)
+  %mul12 = mul i128 %mul, %read_signal_input.is0
+  call void @intrinsic_add_constraint(i128 %mul12, i128 %mul12, i1* @constraint.5)
   %add = add i128 %read_signal_input.prev_na, %read_signal_input.prev_inew
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  %add13 = add i128 %add.mod, %read_signal_input.prev_iold
-  %add13.mod = srem i128 %add13, 12539295309507511577697735
-  %add14 = add i128 %add13.mod, %read_signal_input.prev_i0
-  %add14.mod = srem i128 %add14, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %add14.mod, i128 %add14.mod, i1* @constraint.6)
+  %add13 = add i128 %add, %read_signal_input.prev_iold
+  %add14 = add i128 %add13, %read_signal_input.prev_i0
+  call void @intrinsic_add_constraint(i128 %add14, i128 %add14, i1* @constraint.6)
   br label %exit
 
 exit:                                             ; preds = %entry
   %write_signal_output.st_top = getelementptr inbounds %t_struct_smtverifiersm, %t_struct_smtverifiersm* %0, i32 0, i32 10
-  store i128 %sub.mod, i128* %write_signal_output.st_top, align 4
+  store i128 %sub, i128* %write_signal_output.st_top, align 4
   %write_signal_output.st_i0 = getelementptr inbounds %t_struct_smtverifiersm, %t_struct_smtverifiersm* %0, i32 0, i32 11
-  store i128 %mul12.mod, i128* %write_signal_output.st_i0, align 4
+  store i128 %mul12, i128* %write_signal_output.st_i0, align 4
   %write_signal_output.st_iold = getelementptr inbounds %t_struct_smtverifiersm, %t_struct_smtverifiersm* %0, i32 0, i32 12
-  store i128 %mul11.mod, i128* %write_signal_output.st_iold, align 4
+  store i128 %mul11, i128* %write_signal_output.st_iold, align 4
   %write_signal_output.st_inew = getelementptr inbounds %t_struct_smtverifiersm, %t_struct_smtverifiersm* %0, i32 0, i32 13
-  store i128 %sub9.mod, i128* %write_signal_output.st_inew, align 4
+  store i128 %sub9, i128* %write_signal_output.st_inew, align 4
   %write_signal_output.st_na = getelementptr inbounds %t_struct_smtverifiersm, %t_struct_smtverifiersm* %0, i32 0, i32 14
-  store i128 %add14.mod, i128* %write_signal_output.st_na, align 4
+  store i128 %add14, i128* %write_signal_output.st_na, align 4
   ret void
 }
 

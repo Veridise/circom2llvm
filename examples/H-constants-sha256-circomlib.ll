@@ -41,14 +41,12 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %array_ptr = getelementptr inbounds i128, i128* %inlinearray, i128 %params.x
   %c = load i128, i128* %array_ptr, align 4
   %rshift = lshr i128 %c, %loop.i
-  %rshift.mod = srem i128 %rshift, 12539295309507511577697735
-  %and = and i128 %rshift.mod, 1
-  %and.mod = srem i128 %and, 12539295309507511577697735
+  %and = and i128 %rshift, 1
   %out2 = getelementptr inbounds i128, i128* %out, i128 %loop.i
-  store i128 %and.mod, i128* %out2, align 4
+  store i128 %and, i128* %out2, align 4
   %array_ptr3 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out4 = load i128, i128* %array_ptr3, align 4
-  call void @intrinsic_add_constraint(i128 %out4, i128 %and.mod, i1* @constraint)
+  call void @intrinsic_add_constraint(i128 %out4, i128 %and, i1* @constraint)
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body

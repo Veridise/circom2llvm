@@ -47,66 +47,52 @@ entry:
   %array_ptr3 = getelementptr inbounds i128, i128* %in1, i128 1
   %in14 = load i128, i128* %array_ptr3, align 4
   %sub = sub i128 %in22, %in14
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
   %array_ptr5 = getelementptr inbounds i128, i128* %in2, i128 0
   %in26 = load i128, i128* %array_ptr5, align 4
   %array_ptr7 = getelementptr inbounds i128, i128* %in1, i128 0
   %in18 = load i128, i128* %array_ptr7, align 4
   %sub9 = sub i128 %in26, %in18
-  %sub9.mod = srem i128 %sub9, 12539295309507511577697735
-  %sdiv = sdiv i128 %sub.mod, %sub9.mod
-  %sdiv.mod = srem i128 %sdiv, 12539295309507511577697735
+  %sdiv = sdiv i128 %sub, %sub9
   %array_ptr10 = getelementptr inbounds i128, i128* %in2, i128 0
   %in211 = load i128, i128* %array_ptr10, align 4
   %array_ptr12 = getelementptr inbounds i128, i128* %in1, i128 0
   %in113 = load i128, i128* %array_ptr12, align 4
   %sub14 = sub i128 %in211, %in113
-  %sub14.mod = srem i128 %sub14, 12539295309507511577697735
-  %mul = mul i128 %sdiv.mod, %sub14.mod
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
+  %mul = mul i128 %sdiv, %sub14
   %array_ptr15 = getelementptr inbounds i128, i128* %in2, i128 1
   %in216 = load i128, i128* %array_ptr15, align 4
   %array_ptr17 = getelementptr inbounds i128, i128* %in1, i128 1
   %in118 = load i128, i128* %array_ptr17, align 4
   %sub19 = sub i128 %in216, %in118
-  %sub19.mod = srem i128 %sub19, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 %sub19.mod, i1* @constraint)
-  %mul20 = mul i128 1, %sdiv.mod
-  %mul20.mod = srem i128 %mul20, 12539295309507511577697735
-  %mul21 = mul i128 %mul20.mod, %sdiv.mod
-  %mul21.mod = srem i128 %mul21, 12539295309507511577697735
-  %sub22 = sub i128 %mul21.mod, 168698
-  %sub22.mod = srem i128 %sub22, 12539295309507511577697735
+  call void @intrinsic_add_constraint(i128 %mul, i128 %sub19, i1* @constraint)
+  %mul20 = mul i128 1, %sdiv
+  %mul21 = mul i128 %mul20, %sdiv
+  %sub22 = sub i128 %mul21, 168698
   %array_ptr23 = getelementptr inbounds i128, i128* %in1, i128 0
   %in124 = load i128, i128* %array_ptr23, align 4
-  %sub25 = sub i128 %sub22.mod, %in124
-  %sub25.mod = srem i128 %sub25, 12539295309507511577697735
+  %sub25 = sub i128 %sub22, %in124
   %array_ptr26 = getelementptr inbounds i128, i128* %in2, i128 0
   %in227 = load i128, i128* %array_ptr26, align 4
-  %sub28 = sub i128 %sub25.mod, %in227
-  %sub28.mod = srem i128 %sub28, 12539295309507511577697735
+  %sub28 = sub i128 %sub25, %in227
   %out29 = getelementptr inbounds i128, i128* %out, i128 0
-  store i128 %sub28.mod, i128* %out29, align 4
+  store i128 %sub28, i128* %out29, align 4
   %array_ptr30 = getelementptr inbounds i128, i128* %out, i128 0
   %out31 = load i128, i128* %array_ptr30, align 4
-  call void @intrinsic_add_constraint(i128 %out31, i128 %sub28.mod, i1* @constraint.1)
+  call void @intrinsic_add_constraint(i128 %out31, i128 %sub28, i1* @constraint.1)
   %array_ptr32 = getelementptr inbounds i128, i128* %in1, i128 0
   %in133 = load i128, i128* %array_ptr32, align 4
   %array_ptr34 = getelementptr inbounds i128, i128* %out, i128 0
   %out35 = load i128, i128* %array_ptr34, align 4
   %sub36 = sub i128 %in133, %out35
-  %sub36.mod = srem i128 %sub36, 12539295309507511577697735
-  %mul37 = mul i128 %sdiv.mod, %sub36.mod
-  %mul37.mod = srem i128 %mul37, 12539295309507511577697735
+  %mul37 = mul i128 %sdiv, %sub36
   %array_ptr38 = getelementptr inbounds i128, i128* %in1, i128 1
   %in139 = load i128, i128* %array_ptr38, align 4
-  %sub40 = sub i128 %mul37.mod, %in139
-  %sub40.mod = srem i128 %sub40, 12539295309507511577697735
+  %sub40 = sub i128 %mul37, %in139
   %out41 = getelementptr inbounds i128, i128* %out, i128 1
-  store i128 %sub40.mod, i128* %out41, align 4
+  store i128 %sub40, i128* %out41, align 4
   %array_ptr42 = getelementptr inbounds i128, i128* %out, i128 1
   %out43 = load i128, i128* %array_ptr42, align 4
-  call void @intrinsic_add_constraint(i128 %out43, i128 %sub40.mod, i1* @constraint.2)
+  call void @intrinsic_add_constraint(i128 %out43, i128 %sub40, i1* @constraint.2)
   br label %exit
 
 exit:                                             ; preds = %entry

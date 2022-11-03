@@ -13,7 +13,7 @@ cmake --build build/
 
 # Usage
 ```bash
-opt -f -load -enable-new-pm=0 path-to-lib/UnderConstraints.so --UnderConstraints input.ll 1> /dev/null 2> output.json
+opt -f -load -enable-new-pm=0 path-to-lib/UnderConstraints.so --UnderConstraints input.ll 1> /dev/null 2> output.log
 ```
 
 # Compilation of LLVM

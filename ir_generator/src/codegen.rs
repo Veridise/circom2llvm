@@ -93,14 +93,15 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn build_result_modulo(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
-        if unsafe { APPLY_MOD } {
-            let name = &format!("{}.mod", value.get_name().to_str().unwrap())[0..];
-            return self
-                .builder
-                .build_int_signed_rem(value, self._global_p, name);
-        } else {
-            return value;
-        }
+        // if unsafe { APPLY_MOD } {
+        //     let name = &format!("{}.mod", value.get_name().to_str().unwrap())[0..];
+        //     return self
+        //         .builder
+        //         .build_int_signed_rem(value, self._global_p, name);
+        // } else {
+        //     return value;
+        // }
+        return value;
     }
 
     pub fn build_struct(&self, name: &str) -> (StructType<'ctx>, PointerType<'ctx>) {

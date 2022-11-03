@@ -40,26 +40,20 @@ entry:
 loop.body:                                        ; preds = %loop.latch, %entry
   %loop.i = phi i128 [ 0, %entry ], [ %add10, %loop.latch ]
   %rshift = lshr i128 %read_signal_input.in, %loop.i
-  %rshift.mod = srem i128 %rshift, 12539295309507511577697735
-  %and = and i128 %rshift.mod, 1
-  %and.mod = srem i128 %and, 12539295309507511577697735
+  %and = and i128 %rshift, 1
   %out3 = getelementptr inbounds i128, i128* %out, i128 %loop.i
-  store i128 %and.mod, i128* %out3, align 4
+  store i128 %and, i128* %out3, align 4
   %array_ptr = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out4 = load i128, i128* %array_ptr, align 4
   %array_ptr5 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out6 = load i128, i128* %array_ptr5, align 4
   %sub = sub i128 %out6, 1
-  %sub.mod = srem i128 %sub, 12539295309507511577697735
-  %mul = mul i128 %out4, %sub.mod
-  %mul.mod = srem i128 %mul, 12539295309507511577697735
-  call void @intrinsic_add_constraint(i128 %mul.mod, i128 0, i1* @constraint)
+  %mul = mul i128 %out4, %sub
+  call void @intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint)
   %array_ptr7 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   %out8 = load i128, i128* %array_ptr7, align 4
   %mul9 = mul i128 %out8, 1
-  %mul9.mod = srem i128 %mul9, 12539295309507511577697735
-  %add = add i128 0, %mul9.mod
-  %add.mod = srem i128 %add, 12539295309507511577697735
+  %add = add i128 0, %mul9
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
@@ -68,7 +62,7 @@ loop.latch:                                       ; preds = %loop.body
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  call void @intrinsic_add_constraint(i128 %add.mod, i128 %read_signal_input.in, i1* @constraint.1)
+  call void @intrinsic_add_constraint(i128 %add, i128 %read_signal_input.in, i1* @constraint.1)
   br label %exit
 
 exit:                                             ; preds = %loop.exit

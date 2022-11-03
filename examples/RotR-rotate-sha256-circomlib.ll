@@ -47,10 +47,8 @@ entry:
 loop.body:                                        ; preds = %loop.latch, %entry
   %loop.i = phi i128 [ 0, %entry ], [ %add10, %loop.latch ]
   %add = add i128 %loop.i, %params.r
-  %add.mod = srem i128 %add, 12539295309507511577697735
-  %mod = srem i128 %add.mod, %params.n
-  %mod.mod = srem i128 %mod, 12539295309507511577697735
-  %array_ptr = getelementptr inbounds i128, i128* %in, i128 %mod.mod
+  %mod = srem i128 %add, %params.n
+  %array_ptr = getelementptr inbounds i128, i128* %in, i128 %mod
   %in6 = load i128, i128* %array_ptr, align 4
   %out7 = getelementptr inbounds i128, i128* %out, i128 %loop.i
   store i128 %in6, i128* %out7, align 4
