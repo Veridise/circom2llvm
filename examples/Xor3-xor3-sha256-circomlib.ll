@@ -49,9 +49,9 @@ entry:
   %5 = bitcast i128* %c to i8*
   %6 = bitcast [256 x i128]* %read_signal_input.c to i8*
   call void @llvm.memcpy.p0i8.p0i8.i32(i8* align 4 %5, i8* align 4 %6, i32 256, i1 false)
+  %mid = alloca i128, i32 256, align 8
   %malloccall = tail call i8* @malloc(i32 mul (i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32), i32 256))
   %out = bitcast i8* %malloccall to i128*
-  %mid = alloca i128, i32 256, align 8
   br label %loop.body
 
 loop.body:                                        ; preds = %loop.latch, %entry
