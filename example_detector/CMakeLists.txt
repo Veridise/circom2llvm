@@ -1,5 +1,5 @@
 add_llvm_library(UnderConstraints MODULE
-    under_constraints.cpp
+    UnderConstraints.cpp
     PLUGIN_TOOL
     opt
 )

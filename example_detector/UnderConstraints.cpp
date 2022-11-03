@@ -1,5 +1,5 @@
-#include <unordered_set>
 #include <iostream>
+#include <unordered_set>
 
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Module.h"
@@ -17,15 +17,15 @@ struct UnderConstraints : public ModulePass {
         return F.getName().startswith_insensitive("t_fn_init_");
     }
 
-    std::vector<llvm::Value *> locateOutputSignals(llvm::Function &F) {
-        std::vector<llvm::Value *> output_signals =
-            std::vector<llvm::Value *>();
+    std::vector<llvm::StoreInst *> locateOutputSignals(llvm::Function &F) {
+        auto output_signals = std::vector<llvm::StoreInst *>();
         if (isTemplateInitFunc(F)) {
             for (auto &bb : F.getBasicBlockList()) {
                 if (bb.getName().startswith_insensitive("exit")) {
                     for (auto &inst : bb.getInstList()) {
-                        if (isa<StoreInst>(inst)) {
-                            output_signals.push_back(inst.getOperand(0));
+                        if (llvm::StoreInst *store_inst =
+                                dyn_cast<llvm::StoreInst>(&inst)) {
+                            output_signals.push_back(store_inst);
                         }
                     }
                 }
@@ -43,7 +43,10 @@ struct UnderConstraints : public ModulePass {
                     for (auto &inst : bb.getInstList()) {
                         if (llvm::LoadInst *load_inst =
                                 dyn_cast<llvm::LoadInst>(&inst)) {
-                            input_signals.push_back(load_inst);
+                            if (load_inst->getName().startswith_insensitive(
+                                    "read_signal_input")) {
+                                input_signals.push_back(load_inst);
+                            }
                         }
                     }
                 }
@@ -74,52 +77,61 @@ struct UnderConstraints : public ModulePass {
     }
 
     bool runOnModule(Module &M) override {
-        auto output_signals = std::vector<llvm::Value *>();
-        auto input_signals = std::vector<llvm::Value *>();
+        auto output_signals = std::vector<llvm::StoreInst *>();
+        auto input_signals = std::vector<llvm::LoadInst *>();
         auto constraints = std::vector<llvm::CallInst *>();
         for (auto &F : M.getFunctionList()) {
             auto temp_osigs = locateOutputSignals(F);
             output_signals.insert(std::end(output_signals),
-                                  std::begin(temp_osigs),
-                                  std::begin(temp_osigs));
+                                  std::begin(temp_osigs), std::end(temp_osigs));
             auto temp_isigs = locateInputSignals(F);
             input_signals.insert(std::end(input_signals),
-                                 std::begin(temp_isigs),
-                                 std::begin(temp_isigs));
+                                 std::begin(temp_isigs), std::end(temp_isigs));
             auto temp_cstrs = locateConstraints(F);
             constraints.insert(std::end(constraints), std::begin(temp_cstrs),
-                               std::begin(temp_cstrs));
+                               std::end(temp_cstrs));
         }
+        std::cerr << "Detecting: ";
+        std::cerr << output_signals.size();
+        std::cerr << " output signals\n";
+
         auto input_signal_names = std::unordered_set<std::string>();
         for (auto &input_signal : input_signals) {
             input_signal_names.insert(input_signal->getName().str());
         };
+
         for (auto &output_signal : output_signals) {
             bool under_constraint_from_input = false;
+            auto storeValue = output_signal->getValueOperand();
+            if (isa<Constant>(storeValue)) {
+                continue;
+            }
             for (auto &constraint : constraints) {
-                auto constraint_to =
-                    constraint->getCalledFunction()->getOperand(0);
-                auto constraint_from =
-                    constraint->getCalledFunction()->getOperand(1);
-                if (constraint_to->getName() == output_signal->getName()) {
-                    for (auto use = constraint_from->use_begin();
-                         use != constraint_from->use_end(); ++use) {
-                        if (Value *value = dyn_cast<Value>(*use)) {
-                            if (input_signal_names.find(
-                                    value->getName().str()) !=
-                                input_signal_names.end()) {
-                                under_constraint_from_input = true;
+                auto constraint_to = constraint->getArgOperand(0);
+                auto constraint_from = constraint->getArgOperand(1);
+                if (constraint_to->getName() == storeValue->getName()) {
+                    for (auto use_iter = constraint_from->use_begin();
+                         use_iter != constraint_from->use_end(); ++use_iter) {
+                        if (llvm::Instruction *inst =
+                            dyn_cast<llvm::Instruction>(use_iter->get())) {
+                            for (auto &opd: inst->operands()) {
+                                auto opd_name = opd->getName().str();
+                                if (input_signal_names.find(opd_name) != input_signal_names.end()) {
+                                    under_constraint_from_input = true;
+                                }
                             }
                         }
                     }
                 }
             }
             if (!under_constraint_from_input) {
-                std::cerr << "Imvalid output signal: ";
-                std::cerr << output_signal->getName().str();
+                std::cerr << "Invalid output signal: ";
+                std::cerr
+                    << output_signal->getPointerOperand()->getName().str();
                 std::cerr << "\n";
             };
         }
+        return false;
     };
 };
 }  // namespace
