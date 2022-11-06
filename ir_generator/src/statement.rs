@@ -1,5 +1,3 @@
-use crate::expression::resolve_access;
-
 use super::codegen::{CodeGen, APPLY_MOD};
 use super::expression::{resolve_expr, Scope};
 
@@ -8,11 +6,7 @@ use inkwell::values::BasicValue;
 
 use program_structure::ast::{AssignOp, Expression, Statement, VariableType};
 
-pub fn resolve_stmt<'ctx, 'ast>(
-    scope: &mut dyn Scope<'ctx, 'ast>,
-    codegen: &CodeGen<'ctx>,
-    stmt: &'ast Statement,
-) {
+pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, stmt: &Statement) {
     match stmt {
         Statement::Assert { meta: _, arg: _ } => {
             print!("Coming Assert");
@@ -65,36 +59,28 @@ pub fn resolve_stmt<'ctx, 'ast>(
         }
         Statement::InitializationBlock {
             meta: _,
-            xtype,
+            xtype: _,
             initializations,
-        } => match xtype {
-            VariableType::Var => {
-                for init in initializations {
-                    match init {
-                        Statement::Substitution {
-                            meta: _,
-                            var,
-                            access,
-                            op,
-                            rhe,
-                        } => match op {
-                            AssignOp::AssignVar => {
-                                let rval = resolve_expr(codegen, rhe, scope);
-                                scope.set_var(
-                                    codegen,
-                                    var,
-                                    &mut resolve_access(codegen, scope, access),
-                                    rval.as_basic_value_enum(),
-                                );
-                            }
-                            _ => unreachable!(),
-                        },
-                        Statement::Declaration { .. } => (),
+        } => {
+            for init in initializations {
+                match init {
+                    Statement::Substitution {
+                        meta: _,
+                        var,
+                        access,
+                        op,
+                        rhe,
+                    } => match op {
+                        AssignOp::AssignVar => {
+                            let rval = resolve_expr(codegen, rhe, scope);
+                            scope.set_var(codegen, var, access, rval.as_basic_value_enum());
+                        }
                         _ => unreachable!(),
-                    }
+                    },
+                    Statement::Declaration { .. } => (),
+                    _ => unreachable!(),
                 }
             }
-            _ => (),
         },
         Statement::LogCall { meta, args } => {
             println!("Coming LogCall");
@@ -115,11 +101,10 @@ pub fn resolve_stmt<'ctx, 'ast>(
             rhe,
         } => {
             let res = resolve_expr(codegen, rhe, scope);
-            let access_val = &mut resolve_access(codegen, scope, access);
-            scope.set_var(codegen, var, access_val, res.as_basic_value_enum());
+            scope.set_var(codegen, var, access, res.as_basic_value_enum());
             match op {
                 AssignOp::AssignConstraintSignal => {
-                    let lval = scope.get_var(codegen, var, access_val).into_int_value();
+                    let lval = scope.get_var(codegen, var, access).into_int_value();
                     let rval = res.into_int_value();
                     codegen.build_constraint(lval, rval);
                 }

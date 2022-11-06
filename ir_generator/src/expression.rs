@@ -5,32 +5,33 @@ use super::codegen::CodeGen;
 use inkwell::types::StringRadix;
 use inkwell::IntPredicate;
 
-use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue};
+use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue, InstructionValue};
 use program_structure::ast::{Access, ExpressionPrefixOpcode};
 use program_structure::ast::{Expression, ExpressionInfixOpcode, Statement, VariableType};
 
-pub trait Scope<'ctx, 'ast> {
-    fn add_var(&mut self, name: &'ast String);
+pub trait Scope<'ctx> {
+    fn add_var(&mut self, name: &String);
     fn get_var(
         &self,
         codegen: &CodeGen<'ctx>,
-        name: &'ast String,
-        access: &mut Vec<IntValue<'ctx>>,
+        name: &String,
+        access: &Vec<Access>,
     ) -> BasicValueEnum<'ctx>;
     fn set_var(
         &mut self,
         codegen: &CodeGen<'ctx>,
-        name: &'ast String,
-        access: &mut Vec<IntValue<'ctx>>,
+        name: &String,
+        access: &Vec<Access>,
         value: BasicValueEnum<'ctx>,
     );
-    fn get_var_dims_len(&self, name: &'ast String) -> usize;
+    fn get_var_dims_len(&self, name: &String) -> usize;
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
+    fn call(&self, codegen: &CodeGen<'ctx>, id: &String, args: &Vec<Expression>) -> BasicValueEnum<'ctx>;
 }
 
-pub fn resolve_initialization<'ctx, 'ast>(
-    stmt: &'ast Statement,
-    scope: &mut dyn Scope<'ctx, 'ast>,
+pub fn resolve_initialization<'ctx>(
+    stmt: &Statement,
+    scope: &mut dyn Scope<'ctx>,
 ) {
     match stmt {
         Statement::Block { meta: _, stmts } => {
@@ -59,25 +60,10 @@ pub fn resolve_initialization<'ctx, 'ast>(
     }
 }
 
-pub fn resolve_access<'ctx, 'ast>(
+pub fn resolve_expr<'ctx>(
     codegen: &CodeGen<'ctx>,
-    scope: &dyn Scope<'ctx, 'ast>,
-    access: &'ast Vec<Access>,
-) -> Vec<IntValue<'ctx>> {
-    let access_vals = access
-        .iter()
-        .map(|s| match s {
-            Access::ComponentAccess(val) => todo!(),
-            Access::ArrayAccess(expr) => resolve_expr(codegen, &expr, scope).into_int_value(),
-        })
-        .collect();
-    return access_vals;
-}
-
-pub fn resolve_expr<'ctx, 'ast>(
-    codegen: &CodeGen<'ctx>,
-    expr: &'ast Expression,
-    scope: &dyn Scope<'ctx, 'ast>,
+    expr: &Expression,
+    scope: &dyn Scope<'ctx>,
 ) -> BasicValueEnum<'ctx> {
     match expr {
         Expression::AnonymousComp {
@@ -101,8 +87,7 @@ pub fn resolve_expr<'ctx, 'ast>(
             return codegen.build_inline_array(&res).as_basic_value_enum();
         }
         Expression::Call { meta, id, args } => {
-            println!("Expr: Call");
-            unreachable!()
+            return scope.call(codegen, id, args);
         }
         Expression::InfixOp {
             meta: _,
@@ -163,7 +148,7 @@ pub fn resolve_expr<'ctx, 'ast>(
             meta: _,
             name,
             access,
-        } => scope.get_var(codegen, name, &mut resolve_access(codegen, scope, access)),
+        } => scope.get_var(codegen, name, access),
     }
 }
 
@@ -238,6 +223,71 @@ fn resolve_infix_op<'ctx>(
     } else {
         return temp;
     }
+}
+
+pub fn read_signal_from_struct<'ctx> (
+    codegen: &CodeGen<'ctx>,
+    inputs: &Vec<String>,
+    outputs: &Vec<String>,
+    signal_name: &String,
+    struct_ptr: PointerValue<'ctx>,
+    call_from_inner: bool,
+) -> BasicValueEnum<'ctx> {
+    let mut assign_name;
+    if call_from_inner {
+        assign_name = format!("{}", signal_name);
+    } else {
+        assign_name = format!("outter_{}", signal_name);
+    }
+    let container: &Vec<String>;
+    let offset;
+    if inputs.contains(&signal_name) {
+        container = inputs;
+        offset = 2;
+        assign_name = format!("read_signal_input_{}", assign_name);
+    } else if outputs.contains(&signal_name) {
+        container = outputs;
+        offset = 2 + inputs.len() as u32;
+        assign_name = format!("read_signal_output_{}", assign_name);
+    } else {
+        unreachable!()
+    }
+    let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
+    index += offset;
+    return codegen.build_struct_getter(struct_ptr, index, &assign_name);
+}
+
+pub fn write_signal_to_struct<'ctx> (
+    codegen: &CodeGen<'ctx>,
+    inputs: &Vec<String>,
+    outputs: &Vec<String>,
+    signal_name: &String,
+    struct_ptr: PointerValue<'ctx>,
+    call_from_inner: bool,
+    v: BasicValueEnum<'ctx>,
+) -> InstructionValue<'ctx> {
+    let mut assign_name;
+    if call_from_inner {
+        assign_name = format!("{}", signal_name);
+    } else {
+        assign_name = format!("outter_{}", signal_name);
+    }
+    let container: &Vec<String>;
+    let offset;
+    if inputs.contains(&signal_name) {
+        container = inputs;
+        offset = 2;
+        assign_name = format!("write_signal_input_{}", assign_name);
+    } else if outputs.contains(&signal_name) {
+        container = outputs;
+        offset = 2 + inputs.len() as u32;
+        assign_name = format!("write_signal_output_{}", assign_name);
+    } else {
+        unreachable!()
+    }
+    let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
+    index += offset;
+    return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);
 }
 
 pub fn judge_stmt(stmt: &Statement) -> &str {

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
@@ -25,6 +27,8 @@ pub struct CodeGen<'ctx> {
 
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_inlineswitch_fn_val: FunctionValue<'ctx>,
+
+    _global_input_output_record: HashMap<String, (Vec<String>, Vec<String>)>,
 }
 
 impl<'ctx> CodeGen<'ctx> {
@@ -145,6 +149,14 @@ impl<'ctx> CodeGen<'ctx> {
         return res;
     }
 
+    pub fn get_input_output_names(&self, templ_name: &String) -> &(Vec<String>, Vec<String>) {
+        return self._global_input_output_record.get(templ_name).unwrap();
+    }
+
+    pub fn set_input_output_names(&mut self, templ_name: &String, v: (Vec<String>, Vec<String>)) {
+        self._global_input_output_record.insert(templ_name.clone(), v);
+    }
+
 }
 
 pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
@@ -211,6 +223,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
         _global_p: global_p,
         _global_constraint_fn_val: constraint_fn_val,
         _global_inlineswitch_fn_val: inlineswitch_fn_val,
+        _global_input_output_record: HashMap::new(),
     };
     return codegen;
 }

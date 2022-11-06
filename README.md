@@ -16,6 +16,7 @@ Compile circom code to llvm partially
 # Unimplemented Features
 1. The array with 2 or more dimensions.
 2. The array parameters for a template.
+3. The component initialization.
 
 # Use
 ```bash

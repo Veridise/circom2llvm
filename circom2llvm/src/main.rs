@@ -33,11 +33,11 @@ fn main() {
     for file_path in paths {
         println!("Current file: {}", file_path.clone().to_str().unwrap());
         let context = Context::create();
-        let codegen = init_codegen(&context);
+        let mut codegen = init_codegen(&context);
         let input_path = file_path.clone().into_os_string().into_string().unwrap();
         match parser::run_parser(input_path, Vec::new()) {
             Ok(ast) => {
-                generate(ast, &codegen, None);
+                generate(ast, &mut codegen, None);
                 let output_path = file_path
                     .with_extension("ll")
                     .into_os_string()
