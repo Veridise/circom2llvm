@@ -1,8 +1,11 @@
 use super::codegen::CodeGen;
 use super::expression::resolve_initialization;
-use super::namer::name_fn;
-use super::scope::Scope;
+use super::namer::name_entry_block;
+use super::scope::{Scope, ScopeTrait};
+use super::statement::resolve_stmt;
 
+use inkwell::values::BasicValue;
+use inkwell::AddressSpace;
 use program_structure::ast::{Statement, VariableType};
 
 pub struct Function<'ctx> {
@@ -26,16 +29,66 @@ impl<'ctx> Function<'ctx> {
         let CodeGen {
             context,
             module,
-            builder,
+            val_ty,
             ..
         } = codegen;
-        let signal_ty = context.i128_type();
-        let param_ty = context.i128_type();
-        let void_ty = context.void_type();
-        let fn_name = name_fn(&self.scope.name);
-        let param_types = vec![param_ty.into(); self.scope.args.len()];
-        let fn_type = void_ty.fn_type(&param_types, false);
-        module.add_function(&fn_name, fn_type, None);
+
+        let fn_name = &self.scope.name;
+
+        let mut param_tys = Vec::new();
+        for name in &self.scope.args {
+            if self.scope.get_var_dims_len(name) == 0 {
+                param_tys.push(codegen.val_ty.into());
+            } else {
+                param_tys.push(
+                    codegen
+                        .build_arr_val_ty(self.scope.get_var_dims_len(name))
+                        .ptr_type(AddressSpace::Generic)
+                        .into(),
+                );
+            }
+        }
+
+        let fn_ty = val_ty.fn_type(&param_tys, false);
+        let fn_val = module.add_function(&fn_name, fn_ty, None);
+        context.append_basic_block(fn_val, &name_entry_block());
+        self.scope.set_main_fn(fn_val);
+    }
+
+    fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
+        let CodeGen { builder, .. } = codegen;
+        let fn_val = &self.scope.get_main_fn();
+        builder.position_at_end(fn_val.get_first_basic_block().unwrap());
+        // Bind args
+        let mut i = 0;
+        for arg in &self.scope.args {
+            self.scope
+                .var2val
+                .insert(arg.to_string(), fn_val.get_nth_param(i).unwrap());
+            i += 1;
+        }
+        // Initial arrays
+        for (name, _) in &self.scope.var2dim_len {
+            let dims_len = self.scope.get_var_dims_len(name);
+            if dims_len == 0 {
+                continue;
+            }
+            if self.scope.var2val.contains_key(name) {
+                let ptr = builder.build_alloca(codegen.build_arr_val_ty(dims_len), name);
+                self.scope
+                    .var2val
+                    .insert(name.clone(), ptr.as_basic_value_enum());
+            }
+        }
+
+        match body {
+            Statement::Block { meta: _, stmts } => {
+                for stmt in stmts {
+                    resolve_stmt(&mut self.scope, codegen, stmt);
+                }
+            }
+            _ => unreachable!(),
+        }
     }
 
     pub fn gen_ir(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
@@ -43,6 +96,4 @@ impl<'ctx> Function<'ctx> {
         self._build_function(codegen);
         self._fillin_initial_function(codegen, body);
     }
-
-    fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {}
 }

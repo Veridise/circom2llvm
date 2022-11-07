@@ -38,19 +38,23 @@ pub fn name_constraint() -> String {
 }
 
 pub fn name_intrinsinc_fn(fn_name: &str) -> String {
-    return format!("fn_intrinsic_{}", fn_name.to_lowercase());
+    return format!("fn_intrinsic_{}", fn_name).to_lowercase();
 }
 
 pub fn name_template_fn(templ_name: &str, fn_name: &str) -> String {
-    return format!("fn_template_{}_{}", fn_name.to_lowercase(), templ_name.to_lowercase());
+    return format!("fn_template_{}_{}", fn_name, templ_name).to_lowercase();
 }
 
 pub fn name_template_struct(templ_name: &str, struct_name: &str) -> String {
-    return format!("struct_template_{}_{}", struct_name.to_lowercase(), templ_name.to_lowercase());
+    return format!("struct_template_{}_{}", struct_name, templ_name).to_lowercase();
 }
 
 pub fn name_fn(fn_name: &str) -> String {
-    return format!("fn_{}", fn_name.to_lowercase());
+    return format!("fn_{}", fn_name).to_lowercase();
+}
+
+pub fn name_fn_struct(fn_name: &str, struct_name: &str) -> String {
+    return format!("struct_fn_{}_{}", fn_name, struct_name).to_lowercase();
 }
 
 pub fn name_signal(signal_name: &str, templ_name: &str, is_read: bool, input: bool, inner: bool) -> String {
@@ -70,6 +74,6 @@ pub fn name_signal(signal_name: &str, templ_name: &str, is_read: bool, input: bo
     } else {
         name = format!("outter_{}", name);
     }
-    name = format!("{}_{}.{}", name, templ_name.to_lowercase(), signal_name.to_lowercase());
+    name = format!("{}_{}.{}", name, templ_name, signal_name).to_lowercase();
     return name;
 }
