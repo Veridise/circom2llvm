@@ -1,15 +1,23 @@
+use crate::namer::{name_if_block, name_loop_block};
+
 use super::codegen::{CodeGen, APPLY_MOD};
-use super::expression::{resolve_expr, Scope};
+use super::expression::resolve_expr;
+use super::scope::ScopeTrait;
 
 use inkwell::types::BasicType;
 use inkwell::values::BasicValue;
 
-use program_structure::ast::{AssignOp, Expression, Statement, VariableType};
+use program_structure::ast::{AssignOp, Expression, Statement};
 
-pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, stmt: &Statement) {
+pub fn resolve_stmt<'ctx>(
+    scope: &mut dyn ScopeTrait<'ctx>,
+    codegen: &CodeGen<'ctx>,
+    stmt: &Statement,
+) {
     match stmt {
-        Statement::Assert { meta: _, arg: _ } => {
+        Statement::Assert { .. } => {
             print!("Coming Assert");
+            unreachable!();
         }
         Statement::Block { meta: _, stmts } => {
             for stmt in stmts {
@@ -33,9 +41,9 @@ pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, 
             } = codegen;
             let current_fnc = scope.get_main_fn();
             let current_bb = current_fnc.get_last_basic_block().unwrap();
-            let if_bb = context.append_basic_block(current_fnc, "if.body");
-            let else_bb = context.append_basic_block(current_fnc, "if.else");
-            let end_bb = context.append_basic_block(current_fnc, "if.end");
+            let if_bb = context.append_basic_block(current_fnc, &name_if_block(true, false));
+            let else_bb = context.append_basic_block(current_fnc, &name_if_block(false, false));
+            let end_bb = context.append_basic_block(current_fnc, &name_if_block(false, true));
             let cond = resolve_expr(codegen, cond, scope).into_int_value();
 
             // current -> if.body
@@ -81,12 +89,14 @@ pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, 
                     _ => unreachable!(),
                 }
             }
-        },
-        Statement::LogCall { meta, args } => {
-            println!("Coming LogCall");
         }
-        Statement::MultSubstitution { meta, lhe, op, rhe } => {
+        Statement::LogCall { .. } => {
+            println!("Coming LogCall");
+            unreachable!();
+        }
+        Statement::MultSubstitution { .. } => {
             println!("Coming MultSubstitution");
+            unreachable!();
         }
         Statement::Return { meta: _, value } => {
             let CodeGen { builder, .. } = codegen;
@@ -127,7 +137,8 @@ pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, 
             } = codegen;
             let current_func = scope.get_main_fn();
             let current_bb = current_func.get_last_basic_block().unwrap();
-            let loop_bb = context.append_basic_block(current_func, "loop.body");
+            let loop_bb = context
+                .append_basic_block(current_func, &name_loop_block(true, false, false, false));
 
             let (stmt_body, stmt_step) = match stmt.as_ref() {
                 Statement::Block { meta: _, stmts } => {
@@ -153,7 +164,10 @@ pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, 
 
             // loop.body
             builder.position_at_end(loop_bb);
-            let phi = builder.build_phi(val_ty.as_basic_type_enum(), "loop.i");
+            let phi = builder.build_phi(
+                val_ty.as_basic_type_enum(),
+                &name_loop_block(false, true, false, false),
+            );
             phi.add_incoming(&[(&ctrl_var_entry, current_bb)]);
             scope.set_var(
                 codegen,
@@ -165,7 +179,8 @@ pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, 
             resolve_stmt(scope, codegen, stmt_body);
             builder.position_at_end(loop_bb);
 
-            let latch_bb = context.append_basic_block(current_func, "loop.latch");
+            let latch_bb = context
+                .append_basic_block(current_func, &name_loop_block(false, false, true, false));
             builder.build_unconditional_branch(latch_bb);
 
             // loop.latch
@@ -178,7 +193,8 @@ pub fn resolve_stmt<'ctx>(scope: &mut dyn Scope<'ctx>, codegen: &CodeGen<'ctx>, 
             phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
             let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
 
-            let exit_bb = context.append_basic_block(current_func, "loop.exit");
+            let exit_bb = context
+                .append_basic_block(current_func, &name_loop_block(false, false, false, true));
             builder.build_conditional_branch(cond_var, loop_bb, exit_bb);
 
             //loop exit

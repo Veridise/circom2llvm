@@ -20,7 +20,7 @@ fn main() {
     let args = Args::parse();
     let mut paths: Vec<PathBuf> = Vec::new();
     if args.genall {
-        for p in fs::read_dir("./examples").unwrap() {
+        for p in fs::read_dir("./examples/test").unwrap() {
             let path = p.unwrap().path();
             if path.extension().unwrap() == "circom" {
                 paths.push(path);

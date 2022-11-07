@@ -1,61 +1,60 @@
-use crate::codegen::MAX_ARRAYSIZE;
-
-use super::codegen::CodeGen;
+use super::codegen::{CodeGen, MAX_ARRAYSIZE};
+use super::namer::name_signal;
+use super::scope::ScopeTrait;
 
 use inkwell::types::StringRadix;
+use inkwell::values::{BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue};
 use inkwell::IntPredicate;
-
-use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue, InstructionValue};
-use program_structure::ast::{Access, ExpressionPrefixOpcode};
-use program_structure::ast::{Expression, ExpressionInfixOpcode, Statement, VariableType};
-
-pub trait Scope<'ctx> {
-    fn add_var(&mut self, name: &String);
-    fn get_var(
-        &self,
-        codegen: &CodeGen<'ctx>,
-        name: &String,
-        access: &Vec<Access>,
-    ) -> BasicValueEnum<'ctx>;
-    fn set_var(
-        &mut self,
-        codegen: &CodeGen<'ctx>,
-        name: &String,
-        access: &Vec<Access>,
-        value: BasicValueEnum<'ctx>,
-    );
-    fn get_var_dims_len(&self, name: &String) -> usize;
-    fn get_main_fn(&self) -> FunctionValue<'ctx>;
-    fn call(&self, codegen: &CodeGen<'ctx>, id: &String, args: &Vec<Expression>) -> BasicValueEnum<'ctx>;
-}
+use program_structure::ast::{
+    Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement, VariableType,
+};
 
 pub fn resolve_initialization<'ctx>(
     stmt: &Statement,
-    scope: &mut dyn Scope<'ctx>,
+    scope: &mut dyn ScopeTrait<'ctx>,
+    init_xtype: &VariableType,
 ) {
     match stmt {
         Statement::Block { meta: _, stmts } => {
             for _stmt in stmts {
-                resolve_initialization(_stmt, scope);
+                resolve_initialization(_stmt, scope, init_xtype);
+            }
+        }
+        Statement::Declaration {
+            name, dimensions, ..
+        } => {
+            scope.set_var_dims_len(name, dimensions.len());
+            match init_xtype {
+                VariableType::Var => scope.add_var(name),
+                VariableType::Component => scope.add_component(name),
+                VariableType::AnonymousComponent => {
+                    println!("Coming AnonymousComponent");
+                    unreachable!()
+                }
+                // We don't handle signals here because they are limited in template.
+                VariableType::Signal(_, _) => (),
+            }
+        }
+        Statement::IfThenElse {
+            if_case, else_case, ..
+        } => {
+            resolve_initialization(if_case.as_ref(), scope, init_xtype);
+            match else_case {
+                Some(else_) => resolve_initialization(else_, scope, init_xtype),
+                None => (),
             }
         }
         Statement::InitializationBlock {
             meta: _,
             xtype,
             initializations,
-        } => match xtype {
-            VariableType::Var => {
-                for init in initializations {
-                    match init {
-                        Statement::Declaration { name, .. } => {
-                            scope.add_var(name);
-                        }
-                        _ => (),
-                    }
-                }
+        } => {
+            for init in initializations {
+                resolve_initialization(init, scope, xtype);
             }
-            _ => (),
-        },
+        }
+        Statement::Substitution { var, access, .. } => scope.set_var_dims_len(var, access.len()),
+        Statement::While { stmt, .. } => resolve_initialization(stmt.as_ref(), scope, init_xtype),
         _ => (),
     }
 }
@@ -63,16 +62,10 @@ pub fn resolve_initialization<'ctx>(
 pub fn resolve_expr<'ctx>(
     codegen: &CodeGen<'ctx>,
     expr: &Expression,
-    scope: &dyn Scope<'ctx>,
+    scope: &dyn ScopeTrait<'ctx>,
 ) -> BasicValueEnum<'ctx> {
     match expr {
-        Expression::AnonymousComp {
-            meta,
-            id,
-            is_parallel,
-            params,
-            signals,
-        } => {
+        Expression::AnonymousComp { .. } => {
             println!("Expr: AnonymousComp");
             unreachable!()
         }
@@ -82,11 +75,12 @@ pub fn resolve_expr<'ctx>(
                 res.push(resolve_expr(codegen, val, scope).into_int_value());
             }
             if values.len() > MAX_ARRAYSIZE as usize {
+                println!("Max arraysize is {}", MAX_ARRAYSIZE);
                 unreachable!()
             }
             return codegen.build_inline_array(&res).as_basic_value_enum();
         }
-        Expression::Call { meta, id, args } => {
+        Expression::Call { meta: _, id, args } => {
             return scope.call(codegen, id, args);
         }
         Expression::InfixOp {
@@ -107,11 +101,13 @@ pub fn resolve_expr<'ctx>(
             if_true,
             if_false,
         } => {
-            return codegen.build_inline_switch(
-                resolve_expr(codegen, cond.as_ref(), scope).into_int_value(),
-                resolve_expr(codegen, if_true.as_ref(), scope).into_int_value(),
-                resolve_expr(codegen, if_false.as_ref(), scope).into_int_value(),
-            ).as_basic_value_enum();
+            return codegen
+                .build_inline_switch(
+                    resolve_expr(codegen, cond.as_ref(), scope).into_int_value(),
+                    resolve_expr(codegen, if_true.as_ref(), scope).into_int_value(),
+                    resolve_expr(codegen, if_false.as_ref(), scope).into_int_value(),
+                )
+                .as_basic_value_enum();
         }
         Expression::Number(_, num) => {
             let val = codegen
@@ -119,7 +115,7 @@ pub fn resolve_expr<'ctx>(
                 .const_int_from_string(&num.to_string().to_owned(), StringRadix::Decimal);
             return val.unwrap().as_basic_value_enum();
         }
-        Expression::ParallelOp { meta, rhe } => {
+        Expression::ParallelOp { .. } => {
             println!("Expr: ParallelOp");
             unreachable!()
         }
@@ -132,15 +128,11 @@ pub fn resolve_expr<'ctx>(
             let res = resolve_prefix_op(codegen, prefix_op, rval);
             return res.as_basic_value_enum();
         }
-        Expression::Tuple { meta, values } => {
-            println!("Expr: ParallelOp");
+        Expression::Tuple { .. } => {
+            println!("Expr: Tuple");
             unreachable!()
         }
-        Expression::UniformArray {
-            meta,
-            value,
-            dimension,
-        } => {
+        Expression::UniformArray { .. } => {
             println!("Expr: UniformArray");
             unreachable!()
         }
@@ -225,83 +217,61 @@ fn resolve_infix_op<'ctx>(
     }
 }
 
-pub fn read_signal_from_struct<'ctx> (
+pub fn read_signal_from_struct<'ctx>(
     codegen: &CodeGen<'ctx>,
     inputs: &Vec<String>,
     outputs: &Vec<String>,
     signal_name: &String,
+    templ_name: &String,
     struct_ptr: PointerValue<'ctx>,
     call_from_inner: bool,
 ) -> BasicValueEnum<'ctx> {
-    let mut assign_name;
-    if call_from_inner {
-        assign_name = format!("{}", signal_name);
-    } else {
-        assign_name = format!("outter_{}", signal_name);
-    }
     let container: &Vec<String>;
     let offset;
+    let input;
     if inputs.contains(&signal_name) {
         container = inputs;
         offset = 2;
-        assign_name = format!("read_signal_input_{}", assign_name);
+        input = true;
     } else if outputs.contains(&signal_name) {
         container = outputs;
         offset = 2 + inputs.len() as u32;
-        assign_name = format!("read_signal_output_{}", assign_name);
+        input = false;
     } else {
         unreachable!()
     }
+    let assign_name = name_signal(signal_name, templ_name, false, input, call_from_inner);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     return codegen.build_struct_getter(struct_ptr, index, &assign_name);
 }
 
-pub fn write_signal_to_struct<'ctx> (
+pub fn write_signal_to_struct<'ctx>(
     codegen: &CodeGen<'ctx>,
     inputs: &Vec<String>,
     outputs: &Vec<String>,
+    templ_name: &String,
     signal_name: &String,
     struct_ptr: PointerValue<'ctx>,
     call_from_inner: bool,
     v: BasicValueEnum<'ctx>,
 ) -> InstructionValue<'ctx> {
-    let mut assign_name;
-    if call_from_inner {
-        assign_name = format!("{}", signal_name);
-    } else {
-        assign_name = format!("outter_{}", signal_name);
-    }
     let container: &Vec<String>;
     let offset;
+    let input;
     if inputs.contains(&signal_name) {
         container = inputs;
         offset = 2;
-        assign_name = format!("write_signal_input_{}", assign_name);
+        input = true;
     } else if outputs.contains(&signal_name) {
         container = outputs;
         offset = 2 + inputs.len() as u32;
-        assign_name = format!("write_signal_output_{}", assign_name);
+        input = false;
     } else {
         unreachable!()
     }
+    let assign_name = name_signal(signal_name, templ_name, false, input, call_from_inner);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);
-}
-
-pub fn judge_stmt(stmt: &Statement) -> &str {
-    return match stmt {
-        Statement::Assert { .. } => "Is Assert",
-        Statement::Block { .. } => "Is Block",
-        Statement::ConstraintEquality { .. } => "Is ConstraintEquality",
-        Statement::Declaration { .. } => "Is Declaration",
-        Statement::IfThenElse { .. } => "Is IfThenElse",
-        Statement::InitializationBlock { .. } => "Is InitializationBlock",
-        Statement::LogCall { .. } => "Is LogCall",
-        Statement::MultSubstitution { .. } => "Is MultSubstitution",
-        Statement::Return { .. } => "Is Return",
-        Statement::Substitution { .. } => "Is Substitution",
-        Statement::While { .. } => "Is While",
-    };
 }
