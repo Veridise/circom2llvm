@@ -58,7 +58,8 @@ impl<'ctx> Function<'ctx> {
     fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
         let CodeGen { builder, .. } = codegen;
         let fn_val = &self.scope.get_main_fn();
-        builder.position_at_end(fn_val.get_first_basic_block().unwrap());
+        let current_bb = fn_val.get_first_basic_block().unwrap();
+        builder.position_at_end(current_bb);
         // Bind args
         let mut i = 0;
         for arg in &self.scope.args {

@@ -14,13 +14,16 @@ struct Args {
 
     #[arg(short, long, action)]
     genall: bool,
+
+    #[arg(short, long, default_value_t = String::new())]
+    dir: String,
 }
 
 fn main() {
     let args = Args::parse();
     let mut paths: Vec<PathBuf> = Vec::new();
     if args.genall {
-        for p in fs::read_dir("./examples/test").unwrap() {
+        for p in fs::read_dir(args.dir).unwrap() {
             let path = p.unwrap().path();
             if path.extension().unwrap() == "circom" {
                 paths.push(path);

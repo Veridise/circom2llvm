@@ -3,7 +3,7 @@ use super::expression::{read_signal_from_struct, resolve_expr, write_signal_to_s
 use super::namer::{name_fn, name_template_fn};
 
 use inkwell::values::{
-    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue,
+    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue, AnyValue,
 };
 
 use program_structure::ast::{Access, Expression};
@@ -107,7 +107,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     left_access = 0;
                 }
             };
-            let indexes: Vec<IntValue<'ctx>> = access[left_access..]
+            let mut indexes: Vec<IntValue<'ctx>> = access[left_access..]
                 .iter()
                 .map(|s| match s {
                     Access::ComponentAccess(_) => unreachable!(),
@@ -116,6 +116,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     }
                 })
                 .collect();
+            indexes.insert(0, codegen.const_zero);
             return codegen.build_array_getter(
                 val_or_ptr.into_pointer_value(),
                 &indexes[0..],
@@ -161,7 +162,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     left_access = 0;
                 }
             };
-            let indexes: Vec<IntValue<'ctx>> = access[left_access..]
+            let mut indexes: Vec<IntValue<'ctx>> = access[left_access..]
                 .iter()
                 .map(|s| match s {
                     Access::ComponentAccess(_) => unreachable!(),
@@ -170,6 +171,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     }
                 })
                 .collect();
+            indexes.insert(0, codegen.const_zero);
             codegen.build_array_setter(ptr, &indexes[0..], name, value);
         }
     }

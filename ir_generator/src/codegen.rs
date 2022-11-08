@@ -3,14 +3,14 @@ use std::collections::HashMap;
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
+use inkwell::intrinsics::Intrinsic;
 use inkwell::module::{Linkage, Module};
-use inkwell::types::{
-    FunctionType, IntType, PointerType, StringRadix, StructType, ArrayType,
-};
+use inkwell::types::{ArrayType, FunctionType, IntType, PointerType, StringRadix, StructType};
 use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
-    BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue, PointerValue,
+    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue,
+    PointerValue,
 };
 
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
@@ -26,12 +26,13 @@ pub struct CodeGen<'ctx> {
 
     pub val_ty: IntType<'ctx>,
 
-    // Internal utils
-    _global_p: IntValue<'ctx>,
+    pub const_p: IntValue<'ctx>,
+    pub const_zero: IntValue<'ctx>,
 
+    // Internal utils
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_inlineswitch_fn_val: FunctionValue<'ctx>,
-
+    _global_pow_fn_val: FunctionValue<'ctx>,
     _global_input_output_record: HashMap<String, (Vec<String>, Vec<String>)>,
 }
 
@@ -149,15 +150,9 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn build_inline_array(&self, values: &Vec<IntValue<'ctx>>) -> PointerValue<'ctx> {
-        let size = self
-            .context
-            .i32_type()
-            .const_int(values.len() as u64, false);
         let arr_val = self.val_ty.const_array(&values[0..]);
         let assign_name = "inline_array";
-        let res = self
-            .builder
-            .build_array_alloca(self.val_ty, size, assign_name);
+        let res = self.builder.build_alloca(arr_val.get_type(), assign_name);
         self.builder.build_store(res, arr_val);
         return res;
     }
@@ -174,10 +169,19 @@ impl<'ctx> CodeGen<'ctx> {
     pub fn build_arr_val_ty(&self, dims_len: usize) -> ArrayType<'ctx> {
         assert!(dims_len > 0);
         let mut arr_ty = self.val_ty.array_type(MAX_ARRAYSIZE);
-        for _ in 2..dims_len {
+        for _ in 1..dims_len {
             arr_ty = arr_ty.array_type(MAX_ARRAYSIZE);
         }
         return arr_ty;
+    }
+
+    pub fn build_pow(&self, args: &[BasicMetadataValueEnum<'ctx>], name: &str) -> IntValue<'ctx> {
+        return self
+            .builder
+            .build_call(self._global_pow_fn_val, args, name)
+            .try_as_basic_value()
+            .unwrap_left()
+            .into_int_value();
     }
 }
 
@@ -191,9 +195,11 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     let constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
 
     // Global Prime
-    let global_p = val_ty
+    let const_p = val_ty
         .const_int_from_string(GLOBAL_P, StringRadix::Decimal)
         .unwrap();
+
+    let const_zero = context.i64_type().const_zero();
 
     // Add constraint function
     let constraint_fn_args_ty = [val_ty.into(), val_ty.into(), constraint_gv_ptr_ty.into()];
@@ -248,16 +254,24 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     builder.position_at_end(inlineswitch_fn_f_bb);
     builder.build_return(Some(&inlineswitch_fn_val.get_nth_param(2).unwrap()));
 
+    // Add pow function
+    let pow_intrinsic = Intrinsic::find("llvm.powi").unwrap();
+    let pow_fn_val = pow_intrinsic
+        .get_declaration(&module, &[val_ty.into(), context.i32_type().into()])
+        .unwrap();
+
     let codegen = CodeGen {
         context,
         module,
         builder,
 
         val_ty,
-        _global_p: global_p,
+        const_p,
+        const_zero,
         _global_constraint_fn_val: constraint_fn_val,
         _global_inlineswitch_fn_val: inlineswitch_fn_val,
         _global_input_output_record: HashMap::new(),
+        _global_pow_fn_val: pow_fn_val,
     };
     return codegen;
 }

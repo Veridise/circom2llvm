@@ -4,8 +4,7 @@ use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_tem
 use super::scope::{Scope, ScopeTrait};
 use super::statement::resolve_stmt;
 
-use inkwell::types::{BasicType, BasicTypeEnum};
-use inkwell::values::{BasicValue, PointerValue, BasicValueEnum};
+use inkwell::values::{BasicValue, PointerValue, AnyValue};
 use inkwell::AddressSpace;
 use program_structure::ast::{Expression, SignalType, Statement, VariableType};
 
@@ -99,7 +98,7 @@ impl<'ctx> Template<'ctx> {
         let param_struct_name = name_template_struct(templ_name, "params");
         let (param_struct_ty, param_struct_ptr_ty) = codegen.build_struct(&param_struct_name);
 
-        let mut param_struct_fields: Vec<BasicTypeEnum> = Vec::new();
+        let mut param_struct_fields = Vec::new();
         for name in &self.scope.args {
             if self.scope.get_var_dims_len(name) == 0 {
                 param_struct_fields.push(codegen.val_ty.into());
@@ -185,7 +184,8 @@ impl<'ctx> Template<'ctx> {
 
         let templ_name = &self.scope.name;
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
-        builder.position_at_end(self.scope.get_main_fn().get_first_basic_block().unwrap());
+        let current_bb = self.scope.get_main_fn().get_first_basic_block().unwrap();
+        builder.position_at_end(current_bb);
 
         // Bind args
         for arg in &self.scope.args {
@@ -196,7 +196,25 @@ impl<'ctx> Template<'ctx> {
             let index = self.scope.args.iter().position(|s| s == arg).unwrap() as u32;
             let assign_name: &str = &format!("{}.{}", assign_name0, arg);
             let var = codegen.build_struct_getter(param_struct_ptr, index, assign_name);
-            self.scope.var2val.insert(arg.clone(), var);
+            let dims_len = self.scope.get_var_dims_len(arg);
+            if dims_len == 0 {
+                self.scope
+                    .var2val
+                    .insert(arg.clone(), var.as_basic_value_enum());
+            } else {
+                let arr_val_ty = codegen.build_arr_val_ty(dims_len);
+                let ptr = builder.build_alloca(arr_val_ty, arg);
+                _ = builder.build_memcpy(
+                    ptr,
+                    4,
+                    var.into_pointer_value(),
+                    4,
+                    arr_val_ty.size_of().unwrap(),
+                );
+                self.scope
+                    .var2val
+                    .insert(arg.clone(), ptr.as_basic_value_enum());
+            }
         }
 
         // Bind input signals
@@ -234,7 +252,7 @@ impl<'ctx> Template<'ctx> {
         // Initial arrays
         for (name, _) in &self.scope.var2dim_len {
             let dims_len = self.scope.get_var_dims_len(name);
-            if !self.scope.var2val.contains_key(name) && !dims_len == 0 {
+            if !self.scope.var2val.contains_key(name) && !(dims_len == 0) {
                 let ptr: PointerValue;
                 let arr_val_ty = codegen.build_arr_val_ty(dims_len);
                 if self.outputs.contains(name) {

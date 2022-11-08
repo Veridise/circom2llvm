@@ -9,26 +9,93 @@ use program_structure::ast::{
     Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement, VariableType,
 };
 
+fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait<'ctx>) {
+    match expr {
+        Expression::AnonymousComp { .. } => (),
+        Expression::ArrayInLine { meta: _, values } => {
+            for v in values {
+                prefetch_access_from_expr(v, scope)
+            }
+        }
+        Expression::Call { .. } => (),
+        Expression::InfixOp {
+            meta: _,
+            lhe,
+            infix_op: _,
+            rhe,
+        } => {
+            prefetch_access_from_expr(lhe, scope);
+            prefetch_access_from_expr(rhe, scope);
+        }
+        Expression::InlineSwitchOp {
+            meta: _,
+            cond,
+            if_true,
+            if_false,
+        } => {
+            prefetch_access_from_expr(cond, scope);
+            prefetch_access_from_expr(if_true, scope);
+            prefetch_access_from_expr(if_false, scope);
+        }
+        Expression::Number(_, _) => (),
+        Expression::ParallelOp { meta: _, rhe } => prefetch_access_from_expr(rhe, scope),
+        Expression::PrefixOp {
+            meta: _,
+            prefix_op: _,
+            rhe,
+        } => prefetch_access_from_expr(rhe, scope),
+        Expression::Tuple { meta: _, values } => {
+            for v in values {
+                prefetch_access_from_expr(v, scope)
+            }
+        }
+        Expression::UniformArray {
+            meta: _,
+            value,
+            dimension,
+        } => {
+            prefetch_access_from_expr(value, scope);
+            prefetch_access_from_expr(dimension, scope);
+        }
+        Expression::Variable {
+            meta: _,
+            name,
+            access,
+        } => scope.set_var_dims_len(name, access.len()),
+    }
+}
+
 pub fn resolve_initialization<'ctx>(
     stmt: &Statement,
     scope: &mut dyn ScopeTrait<'ctx>,
     init_xtype: &VariableType,
 ) {
     match stmt {
+        Statement::Assert { meta: _, arg } => {
+            prefetch_access_from_expr(arg, scope);
+        }
         Statement::Block { meta: _, stmts } => {
             for _stmt in stmts {
                 resolve_initialization(_stmt, scope, init_xtype);
             }
         }
+        Statement::ConstraintEquality { meta: _, lhe, rhe } => {
+            prefetch_access_from_expr(lhe, scope);
+            prefetch_access_from_expr(rhe, scope);
+        }
         Statement::Declaration {
-            name, dimensions, ..
+            meta: _,
+            xtype: _,
+            name,
+            dimensions,
+            is_constant: _,
         } => {
             scope.set_var_dims_len(name, dimensions.len());
             match init_xtype {
                 VariableType::Var => scope.add_var(name),
                 VariableType::Component => scope.add_component(name),
                 VariableType::AnonymousComponent => {
-                    println!("Coming AnonymousComponent");
+                    println!("VariableType: AnonymousComponent");
                     unreachable!()
                 }
                 // We don't handle signals here because they are limited in template.
@@ -36,8 +103,12 @@ pub fn resolve_initialization<'ctx>(
             }
         }
         Statement::IfThenElse {
-            if_case, else_case, ..
+            meta: _,
+            cond,
+            if_case,
+            else_case,
         } => {
+            prefetch_access_from_expr(cond, scope);
             resolve_initialization(if_case.as_ref(), scope, init_xtype);
             match else_case {
                 Some(else_) => resolve_initialization(else_, scope, init_xtype),
@@ -53,9 +124,28 @@ pub fn resolve_initialization<'ctx>(
                 resolve_initialization(init, scope, xtype);
             }
         }
-        Statement::Substitution { var, access, .. } => scope.set_var_dims_len(var, access.len()),
+        Statement::LogCall { .. } => (),
+        Statement::MultSubstitution {
+            meta: _,
+            lhe,
+            op: _,
+            rhe,
+        } => {
+            prefetch_access_from_expr(lhe, scope);
+            prefetch_access_from_expr(rhe, scope);
+        }
+        Statement::Return { meta: _, value } => prefetch_access_from_expr(value, scope),
+        Statement::Substitution {
+            meta: _,
+            var,
+            access,
+            op: _,
+            rhe,
+        } => {
+            prefetch_access_from_expr(rhe, scope);
+            scope.set_var_dims_len(var, access.len())
+        }
         Statement::While { stmt, .. } => resolve_initialization(stmt.as_ref(), scope, init_xtype),
-        _ => (),
     }
 }
 
@@ -75,7 +165,7 @@ pub fn resolve_expr<'ctx>(
                 res.push(resolve_expr(codegen, val, scope).into_int_value());
             }
             if values.len() > MAX_ARRAYSIZE as usize {
-                println!("Max arraysize is {}", MAX_ARRAYSIZE);
+                println!("Err: max arraysize is {}", MAX_ARRAYSIZE);
                 unreachable!()
             }
             return codegen.build_inline_array(&res).as_basic_value_enum();
@@ -176,7 +266,7 @@ fn resolve_infix_op<'ctx>(
         ExpressionInfixOpcode::IntDiv => builder.build_int_signed_div(lval, rval, "sdiv"),
         ExpressionInfixOpcode::Mod => builder.build_int_signed_rem(lval, rval, "mod"),
         ExpressionInfixOpcode::Mul => builder.build_int_mul(lval, rval, "mul"),
-        ExpressionInfixOpcode::Pow => unreachable!(),
+        ExpressionInfixOpcode::Pow => codegen.build_pow(&[lval.into(), rval.into()], "pow"),
         ExpressionInfixOpcode::ShiftL => builder.build_left_shift(lval, rval, "lshift"),
         ExpressionInfixOpcode::ShiftR => builder.build_right_shift(lval, rval, false, "rshift"),
         ExpressionInfixOpcode::Sub => builder.build_int_sub(lval, rval, "sub"),

@@ -53,10 +53,6 @@ pub fn name_fn(fn_name: &str) -> String {
     return format!("fn_{}", fn_name).to_lowercase();
 }
 
-pub fn name_fn_struct(fn_name: &str, struct_name: &str) -> String {
-    return format!("struct_fn_{}_{}", fn_name, struct_name).to_lowercase();
-}
-
 pub fn name_signal(signal_name: &str, templ_name: &str, is_read: bool, input: bool, inner: bool) -> String {
     let mut name = "".to_string();
     if is_read {

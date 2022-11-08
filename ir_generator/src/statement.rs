@@ -91,11 +91,11 @@ pub fn resolve_stmt<'ctx>(
             }
         }
         Statement::LogCall { .. } => {
-            println!("Coming LogCall");
+            println!("Statement: LogCall");
             unreachable!();
         }
         Statement::MultSubstitution { .. } => {
-            println!("Coming MultSubstitution");
+            println!("Statement: MultSubstitution");
             unreachable!();
         }
         Statement::Return { meta: _, value } => {
