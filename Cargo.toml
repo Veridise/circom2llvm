@@ -4,4 +4,5 @@ members = [
     "ir_generator",
     "parser",
     "program_structure",
+    "detect_templates",
 ]
