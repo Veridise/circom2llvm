@@ -26,7 +26,6 @@ struct Args {
 #[serde_as]
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TemplateDef {
-    pub name: String,
     pub args: Vec<String>,
     pub signals: Vec<Signal>,
 }
@@ -53,11 +52,11 @@ fn main() {
     } else {
         paths.push(PathBuf::from(args.filepath));
     }
-    let mut result: HashMap<String, Vec<TemplateDef>> = HashMap::new();
+    let mut result: HashMap<String, HashMap<String, TemplateDef>> = HashMap::new();
     for file_path in paths {
         println!("Current file: {}", file_path.clone().to_str().unwrap());
         let input_path = file_path.clone().into_os_string().into_string().unwrap();
-        let mut templates = Vec::new();
+        let mut templates: HashMap<String, TemplateDef> = HashMap::new();
         match parser::run_parser(input_path.clone(), Vec::new()) {
             Ok(ast) => {
                 let definitions = ast.get_definitions();
@@ -102,11 +101,10 @@ fn main() {
                                 }
                             }
                             let template = TemplateDef {
-                                name: name.to_owned(),
                                 args: args.to_owned(),
                                 signals: signals,
                             };
-                            templates.push(template);
+                            templates.insert(name.to_owned(), template);
                         },
                         _ => {}
                     }
