@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 program_structure = {path = "../program_structure"}
 inkwell = { git = "https://github.com/TheDan64/inkwell", branch = "master", features = ["llvm13-0"] }
+num-traits = "0.2.6"

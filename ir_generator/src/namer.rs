@@ -49,10 +49,6 @@ pub fn name_template_struct(templ_name: &str, struct_name: &str) -> String {
     return format!("struct_template_{}_{}", struct_name, templ_name).to_lowercase();
 }
 
-pub fn name_fn(fn_name: &str) -> String {
-    return format!("fn_{}", fn_name).to_lowercase();
-}
-
 pub fn name_signal(signal_name: &str, templ_name: &str, is_read: bool, input: bool, inner: bool) -> String {
     let mut name = "".to_string();
     if is_read {

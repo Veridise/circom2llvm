@@ -1,10 +1,12 @@
+use crate::expression::resolve_dimensions;
+
 use super::codegen::CodeGen;
 use super::expression::{read_signal_from_struct, resolve_initialization, write_signal_to_struct};
 use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_template_struct};
-use super::scope::{Scope, ScopeTrait};
+use super::scope::{Scope, ScopeCodegenTrait, ScopeTrait};
 use super::statement::resolve_stmt;
 
-use inkwell::values::{BasicValue, PointerValue, AnyValue};
+use inkwell::values::{BasicValue, PointerValue};
 use inkwell::AddressSpace;
 use program_structure::ast::{Expression, SignalType, Statement, VariableType};
 
@@ -20,20 +22,22 @@ pub struct Template<'ctx> {
 impl<'ctx> Template<'ctx> {
     fn _add_input(&mut self, v: &String, dims: &Vec<Expression>) {
         self.inputs.push(v.clone());
-        self.scope.set_var_dims_len(v, dims.len());
+        self.scope.set_var_dims(v, resolve_dimensions(dims));
     }
 
     fn _add_intermediate(&mut self, v: &String, dims: &Vec<Expression>) {
         self.inters.push(v.clone());
-        self.scope.set_var_dims_len(v, dims.len());
+        self.scope.set_var_dims(v, resolve_dimensions(dims));
     }
 
     fn _add_output(&mut self, v: &String, dims: &Vec<Expression>) {
         self.outputs.push(v.clone());
-        self.scope.var2dim_len.insert(v.clone(), dims.len());
+        self.scope.set_var_dims(v, resolve_dimensions(dims));
     }
+}
 
-    fn _initial_variables(&mut self, body: &Statement) {
+impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
+    fn initial_name_symbol(&mut self, _codegen: &CodeGen<'ctx>, body: &Statement) {
         match body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
@@ -83,7 +87,7 @@ impl<'ctx> Template<'ctx> {
         }
     }
 
-    fn _build_function(&mut self, codegen: &CodeGen<'ctx>) {
+    fn build_function(&mut self, codegen: &CodeGen<'ctx>, _body: &Statement) {
         let CodeGen {
             context,
             module,
@@ -105,7 +109,7 @@ impl<'ctx> Template<'ctx> {
             } else {
                 param_struct_fields.push(
                     codegen
-                        .build_arr_val_ty(self.scope.get_var_dims_len(name))
+                        .build_array_ty(self.scope.get_var_dims(name).unwrap())
                         .ptr_type(AddressSpace::Generic)
                         .into(),
                 );
@@ -133,7 +137,7 @@ impl<'ctx> Template<'ctx> {
             } else {
                 templ_struct_fields.push(
                     codegen
-                        .build_arr_val_ty(self.scope.get_var_dims_len(name))
+                        .build_array_ty(self.scope.get_var_dims(name).unwrap())
                         .ptr_type(AddressSpace::Generic)
                         .into(),
                 );
@@ -145,7 +149,7 @@ impl<'ctx> Template<'ctx> {
             } else {
                 templ_struct_fields.push(
                     codegen
-                        .build_arr_val_ty(self.scope.get_var_dims_len(name))
+                        .build_array_ty(self.scope.get_var_dims(name).unwrap())
                         .ptr_type(AddressSpace::Generic)
                         .into(),
                 );
@@ -177,15 +181,11 @@ impl<'ctx> Template<'ctx> {
         self.templ_struct_ptr = Some(init_fn_val.get_first_param().unwrap().into_pointer_value());
     }
 
-    fn _fillin_initial_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        let CodeGen {
-            builder, context, ..
-        } = codegen;
-
+    fn build_instrustions(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
         let templ_name = &self.scope.name;
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         let current_bb = self.scope.get_main_fn().get_first_basic_block().unwrap();
-        builder.position_at_end(current_bb);
+        codegen.builder.position_at_end(current_bb);
 
         // Bind args
         for arg in &self.scope.args {
@@ -202,9 +202,9 @@ impl<'ctx> Template<'ctx> {
                     .var2val
                     .insert(arg.clone(), var.as_basic_value_enum());
             } else {
-                let arr_val_ty = codegen.build_arr_val_ty(dims_len);
-                let ptr = builder.build_alloca(arr_val_ty, arg);
-                _ = builder.build_memcpy(
+                let arr_val_ty = codegen.build_array_ty(self.scope.get_var_dims(arg).unwrap());
+                let ptr = codegen.builder.build_alloca(arr_val_ty, arg);
+                _ = codegen.builder.build_memcpy(
                     ptr,
                     4,
                     var.into_pointer_value(),
@@ -234,9 +234,9 @@ impl<'ctx> Template<'ctx> {
                     .var2val
                     .insert(input.clone(), var.as_basic_value_enum());
             } else {
-                let arr_val_ty = codegen.build_arr_val_ty(dims_len);
-                let ptr = builder.build_alloca(arr_val_ty, input);
-                _ = builder.build_memcpy(
+                let arr_val_ty = codegen.build_array_ty(self.scope.get_var_dims(input).unwrap());
+                let ptr = codegen.builder.build_alloca(arr_val_ty, input);
+                _ = codegen.builder.build_memcpy(
                     ptr,
                     4,
                     var.into_pointer_value(),
@@ -250,17 +250,14 @@ impl<'ctx> Template<'ctx> {
         }
 
         // Initial arrays
-        for (name, _) in &self.scope.var2dim_len {
-            let dims_len = self.scope.get_var_dims_len(name);
-            if !self.scope.var2val.contains_key(name) && !(dims_len == 0) {
+        for (name, dims) in &self.scope.var2dims {
+            if !self.scope.var2val.contains_key(name) && !(dims.len() == 0) {
                 let ptr: PointerValue;
-                let arr_val_ty = codegen.build_arr_val_ty(dims_len);
+                let arr_val_ty = codegen.build_array_ty(dims);
                 if self.outputs.contains(name) {
-                    ptr = builder
-                        .build_malloc(arr_val_ty, name)
-                        .unwrap();
+                    ptr = codegen.builder.build_malloc(arr_val_ty, name).unwrap();
                 } else {
-                    ptr = builder.build_alloca(arr_val_ty, name);
+                    ptr = codegen.builder.build_alloca(arr_val_ty, name);
                 }
                 self.scope
                     .var2val
@@ -278,10 +275,11 @@ impl<'ctx> Template<'ctx> {
         }
 
         // Write-in output signals
-        let exit_bb =
-            context.append_basic_block(self.scope.main_fn_val.unwrap(), &name_exit_block());
-        builder.build_unconditional_branch(exit_bb);
-        builder.position_at_end(exit_bb);
+        let exit_bb = codegen
+            .context
+            .append_basic_block(self.scope.main_fn_val.unwrap(), &name_exit_block());
+        codegen.builder.build_unconditional_branch(exit_bb);
+        codegen.builder.position_at_end(exit_bb);
 
         for output in &self.outputs {
             let val = self.scope.var2val.get(output).unwrap().to_owned();
@@ -297,12 +295,6 @@ impl<'ctx> Template<'ctx> {
             );
         }
 
-        builder.build_return(None);
-    }
-
-    pub fn gen_ir(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        self._initial_variables(body);
-        self._build_function(codegen);
-        self._fillin_initial_function(codegen, body);
+        codegen.builder.build_return(None);
     }
 }

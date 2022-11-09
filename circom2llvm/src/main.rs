@@ -50,7 +50,7 @@ fn main() {
                 match result {
                     Ok(_) => {}
                     Err(err) => {
-                        println!("{}", err.to_string());
+                        println!("Err: {}", err.to_string());
                     }
                 }
             }

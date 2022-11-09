@@ -1,12 +1,13 @@
 use super::codegen::CodeGen;
 use super::expression::{read_signal_from_struct, resolve_expr, write_signal_to_struct};
-use super::namer::{name_fn, name_template_fn};
+use super::namer::name_template_fn;
 
 use inkwell::values::{
-    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue, AnyValue,
+    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue,
 };
 
-use program_structure::ast::{Access, Expression};
+use num_traits::ToPrimitive;
+use program_structure::ast::{Access, Expression, Statement};
 use std::collections::HashMap;
 use std::usize;
 
@@ -26,8 +27,9 @@ pub trait ScopeTrait<'ctx> {
         access: &Vec<Access>,
         value: BasicValueEnum<'ctx>,
     );
-    fn get_var_dims_len(&self, name: &String) -> usize;
-    fn set_var_dims_len(&mut self, name: &String, dims_len: usize);
+    fn get_var_dims_len(&self, name: &String) -> u32;
+    fn get_var_dims(&self, name: &String) -> Option<&Vec<u32>>;
+    fn set_var_dims(&mut self, name: &String, dims: Vec<u32>);
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
     fn set_main_fn(&mut self, fn_val: FunctionValue<'ctx>);
     fn call(
@@ -38,11 +40,17 @@ pub trait ScopeTrait<'ctx> {
     ) -> BasicValueEnum<'ctx>;
 }
 
+pub trait ScopeCodegenTrait<'ctx> {
+    fn initial_name_symbol(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
+    fn build_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
+    fn build_instrustions(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement);
+}
+
 pub struct Scope<'ctx> {
     pub name: String,
     pub args: Vec<String>,
     pub vars: Vec<String>,
-    pub var2dim_len: HashMap<String, usize>,
+    pub var2dims: HashMap<String, Vec<u32>>,
     pub var2val: HashMap<String, BasicValueEnum<'ctx>>,
     pub comps: Vec<String>,
 
@@ -58,16 +66,45 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         self.comps.push(v.clone());
     }
 
-    fn get_var_dims_len(&self, name: &String) -> usize {
-        let res = self.var2dim_len.get(name);
-        return match res {
+    fn get_var_dims_len(&self, name: &String) -> u32 {
+        let res_op = self.var2dims.get(name);
+        return match res_op {
+            Some(res) => res.len().to_u32().unwrap(),
             None => 0,
-            Some(&_res) => _res,
         };
     }
 
-    fn set_var_dims_len(&mut self, name: &String, dims_len: usize) {
-        self.var2dim_len.insert(name.to_string(), dims_len);
+    fn get_var_dims(&self, name: &String) -> Option<&Vec<u32>> {
+        return self.var2dims.get(name);
+    }
+
+    fn set_var_dims(&mut self, name: &String, mut dims: Vec<u32>) {
+        let _name = name.to_string();
+        let current_dims_op = self.var2dims.get(name);
+        match current_dims_op {
+            None => {
+                self.var2dims.insert(_name, dims);
+            }
+            Some(current_dims) => {
+                if dims.len() > current_dims.len() {
+                    self.var2dims.insert(_name, dims);
+                } else if dims.len() == current_dims.len() {
+                    let size = dims.len();
+                    let mut update = false;
+                    for i in 0..size {
+                        if dims[i] <= current_dims[i] {
+                            dims[i] = current_dims[i]
+                        } else {
+                            update = true;
+                        }
+                    }
+                    if update {
+                        self.var2dims.insert(_name, dims);
+                    }
+                }
+            }
+        };
+        return;
     }
 
     fn get_var(
@@ -195,7 +232,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         if self.comps.contains(lower_id) {
             fn_name = name_template_fn(&lower_id, "build");
         } else {
-            fn_name = name_fn(lower_id);
+            fn_name = codegen.get_fn_name_rewrite(id);
         }
         let build_fn = codegen.module.get_function(&fn_name).unwrap();
         let arg_vals: Vec<BasicMetadataValueEnum<'ctx>> = args

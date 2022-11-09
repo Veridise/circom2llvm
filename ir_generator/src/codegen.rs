@@ -29,6 +29,8 @@ pub struct CodeGen<'ctx> {
     pub const_p: IntValue<'ctx>,
     pub const_zero: IntValue<'ctx>,
 
+    pub fn_rewrite: HashMap<String, String>,
+
     // Internal utils
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_inlineswitch_fn_val: FunctionValue<'ctx>,
@@ -152,25 +154,27 @@ impl<'ctx> CodeGen<'ctx> {
     pub fn build_inline_array(&self, values: &Vec<IntValue<'ctx>>) -> PointerValue<'ctx> {
         let arr_val = self.val_ty.const_array(&values[0..]);
         let assign_name = "inline_array";
-        let res = self.builder.build_alloca(arr_val.get_type(), assign_name);
-        self.builder.build_store(res, arr_val);
-        return res;
+        let ptr = self.builder.build_alloca(arr_val.get_type(), assign_name);
+        self.builder.build_store(ptr, arr_val);
+        return ptr;
     }
 
-    pub fn get_input_output_names(&self, templ_name: &String) -> &(Vec<String>, Vec<String>) {
-        return self._global_input_output_record.get(templ_name).unwrap();
-    }
-
-    pub fn set_input_output_names(&mut self, templ_name: &String, v: (Vec<String>, Vec<String>)) {
-        self._global_input_output_record
-            .insert(templ_name.clone(), v);
-    }
-
-    pub fn build_arr_val_ty(&self, dims_len: usize) -> ArrayType<'ctx> {
-        assert!(dims_len > 0);
-        let mut arr_ty = self.val_ty.array_type(MAX_ARRAYSIZE);
-        for _ in 1..dims_len {
-            arr_ty = arr_ty.array_type(MAX_ARRAYSIZE);
+    pub fn build_array_ty(&self, dims: &Vec<u32>) -> ArrayType<'ctx> {
+        assert!(dims.len() > 0);
+        let mut i = 0;
+        let size = dims[dims.len() - 1];
+        let mut arr_ty = self.val_ty.array_type(size);
+        for d in dims.iter().rev() {
+            let mut size: u32 = *d;
+            if size == 0 {
+                size = MAX_ARRAYSIZE;
+            }
+            if i == 0 {
+                //Do Nothing;
+            } else {
+                arr_ty = arr_ty.array_type(size);
+            }
+            i += 1;
         }
         return arr_ty;
     }
@@ -183,6 +187,28 @@ impl<'ctx> CodeGen<'ctx> {
             .unwrap_left()
             .into_int_value();
     }
+
+    pub fn get_input_output_names(&self, templ_name: &String) -> &(Vec<String>, Vec<String>) {
+        return self._global_input_output_record.get(templ_name).unwrap();
+    }
+
+    pub fn set_input_output_names(&mut self, templ_name: &String, v: (Vec<String>, Vec<String>)) {
+        self._global_input_output_record
+            .insert(templ_name.clone(), v);
+    }
+
+    pub fn get_fn_name_rewrite(&self, fn_name: &str) -> String {
+        let current = self.fn_rewrite.get(fn_name);
+        match current {
+            Some(name) => name.to_string(),
+            None => fn_name.to_string(),
+        }
+    }
+
+    pub fn set_fn_name_rewrite(&mut self, old_fn_name: &str, new_fn_name: &str) {
+        self.fn_rewrite.insert(old_fn_name.to_string(), new_fn_name.to_string());
+    }
+
 }
 
 pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
@@ -199,7 +225,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
         .const_int_from_string(GLOBAL_P, StringRadix::Decimal)
         .unwrap();
 
-    let const_zero = context.i64_type().const_zero();
+    let const_zero = val_ty.const_zero();
 
     // Add constraint function
     let constraint_fn_args_ty = [val_ty.into(), val_ty.into(), constraint_gv_ptr_ty.into()];
@@ -257,7 +283,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     // Add pow function
     let pow_intrinsic = Intrinsic::find("llvm.powi").unwrap();
     let pow_fn_val = pow_intrinsic
-        .get_declaration(&module, &[val_ty.into(), context.i32_type().into()])
+        .get_declaration(&module, &[val_ty.into(), context.i64_type().into()])
         .unwrap();
 
     let codegen = CodeGen {
@@ -268,10 +294,13 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
         val_ty,
         const_p,
         const_zero,
+
+        fn_rewrite: HashMap::new(),
+
         _global_constraint_fn_val: constraint_fn_val,
         _global_inlineswitch_fn_val: inlineswitch_fn_val,
-        _global_input_output_record: HashMap::new(),
         _global_pow_fn_val: pow_fn_val,
+        _global_input_output_record: HashMap::new(),
     };
     return codegen;
 }

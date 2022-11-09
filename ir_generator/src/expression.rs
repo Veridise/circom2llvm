@@ -6,8 +6,10 @@ use inkwell::types::StringRadix;
 use inkwell::values::{BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue};
 use inkwell::IntPredicate;
 use program_structure::ast::{
-    Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement, VariableType,
+    Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement, VariableType,
 };
+
+use num_traits::cast::ToPrimitive;
 
 fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait<'ctx>) {
     match expr {
@@ -17,7 +19,15 @@ fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait
                 prefetch_access_from_expr(v, scope)
             }
         }
-        Expression::Call { .. } => (),
+        Expression::Call {
+            meta: _,
+            id: _,
+            args,
+        } => {
+            for arg in args {
+                prefetch_access_from_expr(arg, scope);
+            }
+        }
         Expression::InfixOp {
             meta: _,
             lhe,
@@ -61,7 +71,7 @@ fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait
             meta: _,
             name,
             access,
-        } => scope.set_var_dims_len(name, access.len()),
+        } => resolve_access(name, access, scope),
     }
 }
 
@@ -90,7 +100,7 @@ pub fn resolve_initialization<'ctx>(
             dimensions,
             is_constant: _,
         } => {
-            scope.set_var_dims_len(name, dimensions.len());
+            scope.set_var_dims(name, resolve_dimensions(dimensions));
             match init_xtype {
                 VariableType::Var => scope.add_var(name),
                 VariableType::Component => scope.add_component(name),
@@ -143,7 +153,7 @@ pub fn resolve_initialization<'ctx>(
             rhe,
         } => {
             prefetch_access_from_expr(rhe, scope);
-            scope.set_var_dims_len(var, access.len())
+            resolve_access(var, access, scope);
         }
         Statement::While { stmt, .. } => resolve_initialization(stmt.as_ref(), scope, init_xtype),
     }
@@ -160,13 +170,13 @@ pub fn resolve_expr<'ctx>(
             unreachable!()
         }
         Expression::ArrayInLine { meta: _, values } => {
-            let mut res = Vec::new();
-            for val in values {
-                res.push(resolve_expr(codegen, val, scope).into_int_value());
-            }
             if values.len() > MAX_ARRAYSIZE as usize {
                 println!("Err: max arraysize is {}", MAX_ARRAYSIZE);
                 unreachable!()
+            }
+            let mut res = Vec::new();
+            for val in values {
+                res.push(resolve_expr(codegen, val, scope).into_int_value());
             }
             return codegen.build_inline_array(&res).as_basic_value_enum();
         }
@@ -223,8 +233,11 @@ pub fn resolve_expr<'ctx>(
             unreachable!()
         }
         Expression::UniformArray { .. } => {
-            println!("Expr: UniformArray");
-            unreachable!()
+            let mut dimensions = Vec::new();
+            let _ = resolve_uniform_array(codegen, expr, scope, &mut dimensions);
+            let arr_ty = codegen.build_array_ty(&dimensions);
+            let ptr = codegen.builder.build_alloca(arr_ty, "uniform_array");
+            return ptr.as_basic_value_enum();
         }
         Expression::Variable {
             meta: _,
@@ -364,4 +377,64 @@ pub fn write_signal_to_struct<'ctx>(
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);
+}
+
+fn resolve_uniform_array<'ctx>(
+    codegen: &CodeGen<'ctx>,
+    expr: &Expression,
+    scope: &dyn ScopeTrait<'ctx>,
+    dimensions: &mut Vec<u32>,
+) -> IntValue<'ctx> {
+    match expr {
+        Expression::UniformArray {
+            meta: _,
+            value,
+            dimension,
+        } => {
+            let size = match dimension.as_ref() {
+                Expression::Number(_, big_int) => big_int.to_u32().unwrap(),
+                _ => 0,
+            };
+            dimensions.push(size);
+            return resolve_uniform_array(codegen, value, scope, dimensions);
+        }
+        _ => {
+            let res = resolve_expr(codegen, expr, scope).into_int_value();
+            return res;
+        }
+    }
+}
+
+pub fn resolve_dimensions<'ctx>(dims: &Vec<Expression>) -> Vec<u32> {
+    return dims
+        .iter()
+        .map(|dim| match dim {
+            Expression::Number(_, bigint) => bigint.to_u32().unwrap(),
+            _ => 0,
+        })
+        .collect();
+}
+
+fn resolve_access<'ctx>(name: &String, access: &Vec<Access>, scope: &mut dyn ScopeTrait<'ctx>) {
+    if access.len() == 0 {
+        return;
+    } else {
+        let first_access = &access[0];
+        let is_array = match first_access {
+            Access::ArrayAccess(..) => true,
+            Access::ComponentAccess(..) => false,
+        };
+        if is_array {
+            let dims: Vec<u32> = access
+                .iter()
+                .map(|a| match a {
+                    Access::ArrayAccess(expr) => match expr {
+                        Expression::Number(_, bigint) => bigint.to_u32().unwrap(),
+                        _ => 0,
+                    },
+                    Access::ComponentAccess(..) => unreachable!(),
+                }).collect();
+            scope.set_var_dims(name, dims);
+        }
+    }
 }

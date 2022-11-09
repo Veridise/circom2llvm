@@ -1,5 +1,4 @@
-// src: circomlib-cff5ab6
-pragma circom 2.0.0;
+pragma circom 2.0.2;
 
 template AND(n) {
     signal input a;
