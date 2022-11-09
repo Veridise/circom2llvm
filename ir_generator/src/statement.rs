@@ -5,7 +5,7 @@ use super::expression::resolve_expr;
 use super::scope::ScopeTrait;
 
 use inkwell::types::{BasicMetadataTypeEnum, BasicType, BasicTypeEnum};
-use inkwell::values::{BasicValue, AnyValue};
+use inkwell::values::{AnyValue, BasicValue, BasicValueEnum};
 
 use program_structure::ast::{AssignOp, Expression, Statement};
 
@@ -105,7 +105,17 @@ pub fn resolve_stmt<'ctx>(
         }
         Statement::Return { meta: _, value } => {
             let mut rval = resolve_expr(codegen, value, scope).as_basic_value_enum();
-            
+            match rval {
+                BasicValueEnum::ArrayValue(arr_val) => {
+                    let ptr = codegen
+                        .builder
+                        .build_malloc(arr_val.get_type(), "ret_array")
+                        .unwrap();
+                    codegen.builder.build_store(ptr, rval);
+                    rval = ptr.as_basic_value_enum();
+                }
+                _ => (),
+            }
             let ret = codegen.builder.build_return(Some(&rval));
             let current_fn_val = ret.get_parent().unwrap().get_parent().unwrap();
             let current_ret_ty = current_fn_val.get_type().get_return_type().unwrap();
@@ -121,10 +131,11 @@ pub fn resolve_stmt<'ctx>(
                 let fn_ty = match rval.get_type() {
                     BasicTypeEnum::IntType(ret_ty) => ret_ty.fn_type(&params, false),
                     BasicTypeEnum::PointerType(ret_ty) => ret_ty.fn_type(&params, false),
+                    BasicTypeEnum::ArrayType(ret_ty) => ret_ty.fn_type(&params, false),
                     _ => {
-                        println!("Ret: {} \n", rval.print_to_string());              
+                        println!("Err: unsupported return val: {} \n", rval.print_to_string());
                         unreachable!()
-                    },
+                    }
                 };
                 let fn_val = codegen.module.add_function(fn_name, fn_ty, None);
                 current_fn_val.replace_all_uses_with(fn_val);
@@ -155,11 +166,6 @@ pub fn resolve_stmt<'ctx>(
                         None => (),
                     }
                 }
-                println!(
-                    "Old: {}, New: {}",
-                    fn_name.to_string(),
-                    fn_val.get_name().to_str().unwrap()
-                );
                 codegen
                     .set_fn_name_rewrite(&fn_name.to_string(), fn_val.get_name().to_str().unwrap());
             }

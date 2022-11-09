@@ -170,8 +170,16 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         value: BasicValueEnum<'ctx>,
     ) {
         if access.len() == 0 {
-            self.var2val
-                .insert(name.clone(), value.as_basic_value_enum());
+            match value {
+                BasicValueEnum::ArrayValue(array_value) => {
+                    let ptr = self.var2val.get(name).unwrap().into_pointer_value();
+                    codegen.builder.build_store(ptr, array_value);
+                }
+                _ => {
+                    self.var2val
+                        .insert(name.clone(), value.as_basic_value_enum());
+                }
+            }
             if !self.vars.contains(&name) {
                 self.vars.push(name.clone());
             }
