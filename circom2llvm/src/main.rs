@@ -44,14 +44,20 @@ fn main() {
         match parser::run_parser(input_path, Vec::new()) {
             Ok(ast) => {
                 let mut includes: Vec<String> = Vec::new();
+                let mut pathbufs: Vec<PathBuf> = Vec::new();
+                let mut concludes: Vec<String> = Vec::new();
                 for i in &ast.includes {
                     includes.push(i.clone());
+                    pathbufs.push(input_pathbuf.clone());
                 }
                 let mut ast_vec: Vec<AST> = vec![ast];
                 while includes.len() > 0 {
                     let relative_path = includes.pop().unwrap();
-                    let include_input_pathbuf = input_pathbuf.join(relative_path);
+                    concludes.push(relative_path.clone());
+                    let origin_pathbuf = pathbufs.pop().unwrap();
+                    let mut include_input_pathbuf = origin_pathbuf.join(relative_path);
                     let include_input_path = include_input_pathbuf.clone().into_os_string().into_string().unwrap();
+                    include_input_pathbuf.pop();
                     let last_ast = match parser::run_parser(include_input_path, Vec::new()) {
                         Ok(ast) => ast,
                         Err((file_library, report_collection)) => {
@@ -60,7 +66,11 @@ fn main() {
                         }
                     };
                     for i in &last_ast.includes {
+                        if concludes.contains(i) {
+                            continue;
+                        }
                         includes.push(i.clone());
+                        pathbufs.push(include_input_pathbuf.clone());
                     }
                     ast_vec.push(last_ast);
                 }
