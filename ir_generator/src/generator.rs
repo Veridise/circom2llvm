@@ -5,7 +5,7 @@ use super::function::Function;
 use super::scope::{Scope, ScopeCodegenTrait};
 use super::template::Template;
 
-use program_structure::ast::{Definition, Statement, AST};
+use program_structure::ast::{Definition, Statement};
 use std::collections::HashMap;
 
 pub struct TestSetting {}
@@ -64,8 +64,7 @@ pub fn gen_compile_order<'ctx> (
     }
 }
 
-pub fn generate(ast: AST, codegen: &mut CodeGen, test_setting: Option<TestSetting>) {
-    let definitions = ast.get_definitions();
+pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, test_setting: Option<TestSetting>) {
     let mut template_scopes: Vec<(Template, &Statement)> = Vec::new();
     let mut function_scopes: Vec<(Function, &Statement)> = Vec::new();
     for defin in definitions {
