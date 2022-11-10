@@ -29,8 +29,6 @@ pub struct CodeGen<'ctx> {
     pub const_p: IntValue<'ctx>,
     pub const_zero: IntValue<'ctx>,
 
-    pub fn_rewrite: HashMap<String, String>,
-
     // Internal utils
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_inlineswitch_fn_val: FunctionValue<'ctx>,
@@ -170,7 +168,7 @@ impl<'ctx> CodeGen<'ctx> {
                 size = MAX_ARRAYSIZE;
             }
             if i == 0 {
-                //Do Nothing;
+                //Do nothing.
             } else {
                 arr_ty = arr_ty.array_type(size);
             }
@@ -195,18 +193,6 @@ impl<'ctx> CodeGen<'ctx> {
     pub fn set_input_output_names(&mut self, templ_name: &String, v: (Vec<String>, Vec<String>)) {
         self._global_input_output_record
             .insert(templ_name.clone(), v);
-    }
-
-    pub fn get_fn_name_rewrite(&self, fn_name: &str) -> String {
-        let current = self.fn_rewrite.get(fn_name);
-        match current {
-            Some(name) => name.to_string(),
-            None => fn_name.to_string(),
-        }
-    }
-
-    pub fn set_fn_name_rewrite(&mut self, old_fn_name: &str, new_fn_name: &str) {
-        self.fn_rewrite.insert(old_fn_name.to_string(), new_fn_name.to_string());
     }
 
 }
@@ -294,8 +280,6 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
         val_ty,
         const_p,
         const_zero,
-
-        fn_rewrite: HashMap::new(),
 
         _global_constraint_fn_val: constraint_fn_val,
         _global_inlineswitch_fn_val: inlineswitch_fn_val,

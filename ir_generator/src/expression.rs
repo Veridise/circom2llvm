@@ -2,30 +2,50 @@ use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::namer::name_signal;
 use super::scope::ScopeTrait;
 
-use inkwell::types::StringRadix;
+use inkwell::types::{BasicType, BasicTypeEnum, StringRadix};
 use inkwell::values::{BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue};
-use inkwell::IntPredicate;
+use inkwell::{AddressSpace, IntPredicate};
 use program_structure::ast::{
     Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement, VariableType,
 };
 
 use num_traits::cast::ToPrimitive;
 
-fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait<'ctx>) {
+fn merge_type<'ctx>(
+    a: Option<BasicTypeEnum<'ctx>>,
+    b: Option<BasicTypeEnum<'ctx>>,
+) -> Option<BasicTypeEnum<'ctx>> {
+    match a {
+        Some(..) => {
+            return a;
+        }
+        None => match b {
+            Some(..) => {
+                return b;
+            }
+            None => {
+                return None;
+            }
+        },
+    }
+}
+
+fn infer_dimensions<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait<'ctx>) {
     match expr {
         Expression::AnonymousComp { .. } => (),
         Expression::ArrayInLine { meta: _, values } => {
             for v in values {
-                prefetch_access_from_expr(v, scope)
+                infer_dimensions(v, scope)
             }
         }
         Expression::Call {
             meta: _,
-            id: _,
+            id,
             args,
         } => {
+            scope.add_dep_function(id);
             for arg in args {
-                prefetch_access_from_expr(arg, scope);
+                infer_dimensions(arg, scope);
             }
         }
         Expression::InfixOp {
@@ -34,8 +54,8 @@ fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait
             infix_op: _,
             rhe,
         } => {
-            prefetch_access_from_expr(lhe, scope);
-            prefetch_access_from_expr(rhe, scope);
+            infer_dimensions(lhe, scope);
+            infer_dimensions(rhe, scope);
         }
         Expression::InlineSwitchOp {
             meta: _,
@@ -43,20 +63,20 @@ fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait
             if_true,
             if_false,
         } => {
-            prefetch_access_from_expr(cond, scope);
-            prefetch_access_from_expr(if_true, scope);
-            prefetch_access_from_expr(if_false, scope);
+            infer_dimensions(cond, scope);
+            infer_dimensions(if_true, scope);
+            infer_dimensions(if_false, scope);
         }
         Expression::Number(_, _) => (),
-        Expression::ParallelOp { meta: _, rhe } => prefetch_access_from_expr(rhe, scope),
+        Expression::ParallelOp { meta: _, rhe } => infer_dimensions(rhe, scope),
         Expression::PrefixOp {
             meta: _,
             prefix_op: _,
             rhe,
-        } => prefetch_access_from_expr(rhe, scope),
+        } => infer_dimensions(rhe, scope),
         Expression::Tuple { meta: _, values } => {
             for v in values {
-                prefetch_access_from_expr(v, scope)
+                infer_dimensions(v, scope)
             }
         }
         Expression::UniformArray {
@@ -64,8 +84,8 @@ fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait
             value,
             dimension,
         } => {
-            prefetch_access_from_expr(value, scope);
-            prefetch_access_from_expr(dimension, scope);
+            infer_dimensions(value, scope);
+            infer_dimensions(dimension, scope);
         }
         Expression::Variable {
             meta: _,
@@ -75,23 +95,85 @@ fn prefetch_access_from_expr<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait
     }
 }
 
-pub fn resolve_initialization<'ctx>(
+pub fn infer_type<'ctx>(
+    codegen: &CodeGen<'ctx>,
+    expr: &Expression,
+    scope: &dyn ScopeTrait<'ctx>,
+) -> Option<BasicTypeEnum<'ctx>> {
+    match expr {
+        Expression::AnonymousComp { .. } => {
+            println!("Expr: AnonymousComp");
+            unreachable!();
+        }
+        Expression::ArrayInLine { meta: _, values } => {
+            let arr_ty = codegen.build_array_ty(&vec![values.len() as u32]);
+            return Some(arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum());
+        }
+        Expression::Call { id, .. } => {
+            let called_fn = scope.match_fn_val(codegen, id);
+            return Some(called_fn.get_type().get_return_type().unwrap());
+        }
+        Expression::InfixOp { lhe, rhe, .. } => {
+            let lty = infer_type(codegen, lhe, scope);
+            let rty = infer_type(codegen, rhe, scope);
+            return merge_type(lty, rty);
+        }
+        Expression::InlineSwitchOp {
+            if_true, if_false, ..
+        } => {
+            let lty = infer_type(codegen, if_true.as_ref(), scope);
+            let rty = infer_type(codegen, if_false.as_ref(), scope);
+            return merge_type(lty, rty);
+        }
+        Expression::Number(..) => {
+            return Some(codegen.val_ty.as_basic_type_enum());
+        }
+        Expression::ParallelOp { rhe, .. } => {
+            return infer_type(codegen, rhe.as_ref(), scope);
+        }
+        Expression::PrefixOp { rhe, .. } => {
+            return infer_type(codegen, rhe.as_ref(), scope);
+        }
+        Expression::Tuple { .. } => {
+            println!("Expr: Tuple");
+            unreachable!();
+        }
+        Expression::UniformArray { .. } => {
+            let mut dimensions = Vec::new();
+            let _ = resolve_uniform_array(codegen, expr, scope, &mut dimensions);
+            let arr_ty = codegen.build_array_ty(&dimensions);
+            return Some(arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum());
+        }
+        Expression::Variable {
+            name, access, ..
+        } => {
+            if access.len() == 0 {
+                return Some(scope.get_var_ty(name).unwrap().as_basic_type_enum());
+            } else {
+                return None;
+            }
+        }
+    }
+}
+
+pub fn resolve_statement_initially<'ctx>(
+    codegen: &CodeGen<'ctx>,
     stmt: &Statement,
     scope: &mut dyn ScopeTrait<'ctx>,
     init_xtype: &VariableType,
 ) {
     match stmt {
         Statement::Assert { meta: _, arg } => {
-            prefetch_access_from_expr(arg, scope);
+            infer_dimensions(arg, scope);
         }
         Statement::Block { meta: _, stmts } => {
             for _stmt in stmts {
-                resolve_initialization(_stmt, scope, init_xtype);
+                resolve_statement_initially(codegen, _stmt, scope, init_xtype);
             }
         }
         Statement::ConstraintEquality { meta: _, lhe, rhe } => {
-            prefetch_access_from_expr(lhe, scope);
-            prefetch_access_from_expr(rhe, scope);
+            infer_dimensions(lhe, scope);
+            infer_dimensions(rhe, scope);
         }
         Statement::Declaration {
             meta: _,
@@ -100,10 +182,22 @@ pub fn resolve_initialization<'ctx>(
             dimensions,
             is_constant: _,
         } => {
-            scope.set_var_dims(name, resolve_dimensions(dimensions));
+            let dims = resolve_dimensions(dimensions);
+            let dims_len = dims.len().clone();
             match init_xtype {
-                VariableType::Var => scope.add_var(name),
-                VariableType::Component => scope.add_component(name),
+                VariableType::Var => {
+                    // Update type of variable;
+                    let var_ty;
+                    if dims_len == 0 {
+                        var_ty = codegen.val_ty.as_basic_type_enum();
+                    } else {
+                        var_ty = codegen.build_array_ty(&dims).as_basic_type_enum()
+                    }
+                    scope.set_var_ty(name, var_ty);
+                    // Update variable table;
+                    scope.add_var(name)
+                }
+                VariableType::Component => scope.add_dep_component(name),
                 VariableType::AnonymousComponent => {
                     println!("VariableType: AnonymousComponent");
                     unreachable!()
@@ -111,6 +205,8 @@ pub fn resolve_initialization<'ctx>(
                 // We don't handle signals here because they are limited in template.
                 VariableType::Signal(_, _) => (),
             }
+            // Update Dimensions;
+            scope.set_var_dims(name, dims);
         }
         Statement::IfThenElse {
             meta: _,
@@ -118,10 +214,10 @@ pub fn resolve_initialization<'ctx>(
             if_case,
             else_case,
         } => {
-            prefetch_access_from_expr(cond, scope);
-            resolve_initialization(if_case.as_ref(), scope, init_xtype);
+            infer_dimensions(cond, scope);
+            resolve_statement_initially(codegen, if_case.as_ref(), scope, init_xtype);
             match else_case {
-                Some(else_) => resolve_initialization(else_, scope, init_xtype),
+                Some(else_) => resolve_statement_initially(codegen, else_, scope, init_xtype),
                 None => (),
             }
         }
@@ -131,7 +227,7 @@ pub fn resolve_initialization<'ctx>(
             initializations,
         } => {
             for init in initializations {
-                resolve_initialization(init, scope, xtype);
+                resolve_statement_initially(codegen, init, scope, xtype);
             }
         }
         Statement::LogCall { .. } => (),
@@ -141,10 +237,10 @@ pub fn resolve_initialization<'ctx>(
             op: _,
             rhe,
         } => {
-            prefetch_access_from_expr(lhe, scope);
-            prefetch_access_from_expr(rhe, scope);
+            infer_dimensions(lhe, scope);
+            infer_dimensions(rhe, scope);
         }
-        Statement::Return { meta: _, value } => prefetch_access_from_expr(value, scope),
+        Statement::Return { meta: _, value } => infer_dimensions(value, scope),
         Statement::Substitution {
             meta: _,
             var,
@@ -152,10 +248,12 @@ pub fn resolve_initialization<'ctx>(
             op: _,
             rhe,
         } => {
-            prefetch_access_from_expr(rhe, scope);
+            infer_dimensions(rhe, scope);
             resolve_access(var, access, scope);
         }
-        Statement::While { stmt, .. } => resolve_initialization(stmt.as_ref(), scope, init_xtype),
+        Statement::While { stmt, .. } => {
+            resolve_statement_initially(codegen, stmt.as_ref(), scope, init_xtype)
+        }
     }
 }
 
@@ -393,6 +491,7 @@ fn resolve_uniform_array<'ctx>(
         } => {
             let size = match dimension.as_ref() {
                 Expression::Number(_, big_int) => big_int.to_u32().unwrap(),
+                // 0 here will be converted to MAX_ARRAYSIZE when we generate
                 _ => 0,
             };
             dimensions.push(size);
@@ -433,7 +532,8 @@ fn resolve_access<'ctx>(name: &String, access: &Vec<Access>, scope: &mut dyn Sco
                         _ => 0,
                     },
                     Access::ComponentAccess(..) => unreachable!(),
-                }).collect();
+                })
+                .collect();
             scope.set_var_dims(name, dims);
         }
     }

@@ -4,14 +4,14 @@ use super::codegen::{CodeGen, APPLY_MOD};
 use super::expression::resolve_expr;
 use super::scope::ScopeTrait;
 
-use inkwell::types::{BasicMetadataTypeEnum, BasicType, BasicTypeEnum};
-use inkwell::values::{AnyValue, BasicValue, BasicValueEnum};
+use inkwell::types::BasicType;
+use inkwell::values::{BasicValue, BasicValueEnum};
 
 use program_structure::ast::{AssignOp, Expression, Statement};
 
 pub fn resolve_stmt<'ctx>(
     scope: &mut dyn ScopeTrait<'ctx>,
-    codegen: &mut CodeGen<'ctx>,
+    codegen: &CodeGen<'ctx>,
     stmt: &Statement,
 ) {
     match stmt {
@@ -116,59 +116,7 @@ pub fn resolve_stmt<'ctx>(
                 }
                 _ => (),
             }
-            let ret = codegen.builder.build_return(Some(&rval));
-            let current_fn_val = ret.get_parent().unwrap().get_parent().unwrap();
-            let current_ret_ty = current_fn_val.get_type().get_return_type().unwrap();
-            if current_ret_ty == rval.get_type() {
-                //Do nothing;
-            } else {
-                let fn_name = current_fn_val.get_name().to_str().unwrap();
-                let params: Vec<BasicMetadataTypeEnum> = current_fn_val
-                    .get_params()
-                    .iter()
-                    .map(|s| s.get_type().into())
-                    .collect();
-                let fn_ty = match rval.get_type() {
-                    BasicTypeEnum::IntType(ret_ty) => ret_ty.fn_type(&params, false),
-                    BasicTypeEnum::PointerType(ret_ty) => ret_ty.fn_type(&params, false),
-                    BasicTypeEnum::ArrayType(ret_ty) => ret_ty.fn_type(&params, false),
-                    _ => {
-                        println!("Err: unsupported return val: {} \n", rval.print_to_string());
-                        unreachable!()
-                    }
-                };
-                let fn_val = codegen.module.add_function(fn_name, fn_ty, None);
-                current_fn_val.replace_all_uses_with(fn_val);
-                for bb in current_fn_val.get_basic_blocks() {
-                    let new_bb = codegen
-                        .context
-                        .append_basic_block(fn_val, bb.get_name().to_str().unwrap());
-                    codegen.builder.position_at_end(new_bb);
-                    let first_inst_op = bb.get_first_instruction();
-                    match first_inst_op {
-                        Some(mut first_inst) => {
-                            let name: Option<&str> = match first_inst.get_name() {
-                                Some(_name) => Some(_name.to_str().unwrap()),
-                                None => None,
-                            };
-                            codegen
-                                .builder
-                                .insert_instruction(&first_inst.clone(), name);
-                            while let Some(next_inst) = first_inst.get_next_instruction() {
-                                let name: Option<&str> = match next_inst.get_name() {
-                                    Some(_name) => Some(_name.to_str().unwrap()),
-                                    None => None,
-                                };
-                                codegen.builder.insert_instruction(&next_inst.clone(), name);
-                                first_inst = next_inst;
-                            }
-                        }
-                        None => (),
-                    }
-                }
-                codegen
-                    .set_fn_name_rewrite(&fn_name.to_string(), fn_val.get_name().to_str().unwrap());
-            }
+            codegen.builder.build_return(Some(&rval));
         }
         Statement::Substitution {
             meta: _,

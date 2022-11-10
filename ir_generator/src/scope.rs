@@ -6,6 +6,8 @@ use inkwell::values::{
     BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue,
 };
 
+use inkwell::types::{BasicTypeEnum};
+
 use num_traits::ToPrimitive;
 use program_structure::ast::{Access, Expression, Statement};
 use std::collections::HashMap;
@@ -13,7 +15,8 @@ use std::usize;
 
 pub trait ScopeTrait<'ctx> {
     fn add_var(&mut self, name: &String);
-    fn add_component(&mut self, v: &String);
+    fn add_dep_component(&mut self, v: &String);
+    fn add_dep_function(&mut self, v: &String);
     fn get_var(
         &self,
         codegen: &CodeGen<'ctx>,
@@ -30,6 +33,8 @@ pub trait ScopeTrait<'ctx> {
     fn get_var_dims_len(&self, name: &String) -> u32;
     fn get_var_dims(&self, name: &String) -> Option<&Vec<u32>>;
     fn set_var_dims(&mut self, name: &String, dims: Vec<u32>);
+    fn get_var_ty(&self, name: &String) -> Option<&BasicTypeEnum<'ctx>>;
+    fn set_var_ty(&mut self, name: &String, ty: BasicTypeEnum<'ctx>);
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
     fn set_main_fn(&mut self, fn_val: FunctionValue<'ctx>);
     fn call(
@@ -38,12 +43,14 @@ pub trait ScopeTrait<'ctx> {
         id: &String,
         args: &Vec<Expression>,
     ) -> BasicValueEnum<'ctx>;
+    fn match_fn_val(&self, codegen: &CodeGen<'ctx>, id: &String) -> FunctionValue<'ctx>;
+    fn deps(&self) -> Vec<&String>;
 }
 
 pub trait ScopeCodegenTrait<'ctx> {
-    fn initial_name_symbol(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
+    fn initial_info(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement);
     fn build_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
-    fn build_instrustions(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement);
+    fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
 }
 
 pub struct Scope<'ctx> {
@@ -51,8 +58,10 @@ pub struct Scope<'ctx> {
     pub args: Vec<String>,
     pub vars: Vec<String>,
     pub var2dims: HashMap<String, Vec<u32>>,
+    pub var2ty: HashMap<String, BasicTypeEnum<'ctx>>,
     pub var2val: HashMap<String, BasicValueEnum<'ctx>>,
-    pub comps: Vec<String>,
+    pub dep_comps: Vec<String>,
+    pub dep_fns: Vec<String>,
 
     pub main_fn_val: Option<FunctionValue<'ctx>>,
 }
@@ -62,8 +71,12 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         self.vars.push(name.clone());
     }
 
-    fn add_component(&mut self, v: &String) {
-        self.comps.push(v.clone());
+    fn add_dep_component(&mut self, v: &String) {
+        self.dep_comps.push(v.clone());
+    }
+
+    fn add_dep_function(&mut self, v: &String) {
+        self.dep_fns.push(v.clone());
     }
 
     fn get_var_dims_len(&self, name: &String) -> u32 {
@@ -105,6 +118,14 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             }
         };
         return;
+    }
+
+    fn get_var_ty(&self, name: &String) -> Option<&BasicTypeEnum<'ctx>> {
+        return self.var2ty.get(name);
+    }
+
+    fn set_var_ty(&mut self, name: &String, ty: BasicTypeEnum<'ctx>) {
+        self.var2ty.insert(name.clone(), ty);
     }
 
     fn get_var(
@@ -172,8 +193,18 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         if access.len() == 0 {
             match value {
                 BasicValueEnum::ArrayValue(array_value) => {
-                    let ptr = self.var2val.get(name).unwrap().into_pointer_value();
-                    codegen.builder.build_store(ptr, array_value);
+                    let ptr_op = self.var2val.get(name);
+                    match ptr_op {
+                        Some(ptr) => {
+                            codegen.builder.build_store(ptr.into_pointer_value(), array_value);
+                        },
+                        None => {
+                            let ptr = codegen.builder.build_alloca(array_value.get_type(), name);
+                            codegen.builder.build_store(ptr, array_value);
+                            self.var2val.insert(name.clone(), ptr.as_basic_value_enum());
+                        }
+                    }
+                    
                 }
                 _ => {
                     self.var2val
@@ -235,14 +266,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         id: &String,
         args: &Vec<Expression>,
     ) -> BasicValueEnum<'ctx> {
-        let fn_name: String;
-        let lower_id = &id.to_lowercase();
-        if self.comps.contains(lower_id) {
-            fn_name = name_template_fn(&lower_id, "build");
-        } else {
-            fn_name = codegen.get_fn_name_rewrite(id);
-        }
-        let build_fn = codegen.module.get_function(&fn_name).unwrap();
+        let called_fn = self.match_fn_val(codegen, id);
         let arg_vals: Vec<BasicMetadataValueEnum<'ctx>> = args
             .iter()
             .map(|a| {
@@ -250,12 +274,34 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                 return BasicMetadataValueEnum::from(basic_val);
             })
             .collect();
-        let assign_name = fn_name;
         return codegen
             .builder
-            .build_call(build_fn, &arg_vals, &assign_name)
+            .build_call(called_fn, &arg_vals, "call")
             .try_as_basic_value()
             .left()
             .unwrap();
     }
+
+    fn match_fn_val(&self, codegen: &CodeGen<'ctx>, id: &String) -> FunctionValue<'ctx> {
+        let fn_name: String;
+        let lower_id = &id.to_lowercase();
+        if self.dep_comps.contains(lower_id) {
+            fn_name = name_template_fn(&lower_id, "build");
+        } else {
+            fn_name = id.to_string();
+        }
+        return codegen.module.get_function(&fn_name).unwrap();
+    }
+
+    fn deps(&self) -> Vec<&String> {
+        let mut deps = Vec::new();
+        for d in &self.dep_comps {
+            deps.push(d);
+        }
+        for d in &self.dep_fns {
+            deps.push(d);
+        }
+        return deps;
+    }
+
 }

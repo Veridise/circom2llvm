@@ -1,7 +1,7 @@
 use crate::expression::resolve_dimensions;
 
 use super::codegen::CodeGen;
-use super::expression::{read_signal_from_struct, resolve_initialization, write_signal_to_struct};
+use super::expression::{read_signal_from_struct, resolve_statement_initially, write_signal_to_struct};
 use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_template_struct};
 use super::scope::{Scope, ScopeCodegenTrait, ScopeTrait};
 use super::statement::resolve_stmt;
@@ -37,12 +37,13 @@ impl<'ctx> Template<'ctx> {
 }
 
 impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
-    fn initial_name_symbol(&mut self, _codegen: &CodeGen<'ctx>, body: &Statement) {
+    fn initial_info(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
+        // Collect variables, types, dimensions of array and dependences.
         match body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
                     // Variables
-                    resolve_initialization(stmt, &mut self.scope, &VariableType::Var);
+                    resolve_statement_initially(codegen, stmt, &mut self.scope, &VariableType::Var);
 
                     // We only handle signals here.
                     match stmt {
@@ -85,6 +86,13 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
             }
             _ => unreachable!(),
         }
+        codegen.set_input_output_names(
+            &self.scope.name.to_lowercase().to_string(),
+            (
+                self.inputs.to_vec(),
+                self.outputs.to_vec(),
+            ),
+        );
     }
 
     fn build_function(&mut self, codegen: &CodeGen<'ctx>, _body: &Statement) {
@@ -181,7 +189,7 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
         self.templ_struct_ptr = Some(init_fn_val.get_first_param().unwrap().into_pointer_value());
     }
 
-    fn build_instrustions(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
+    fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
         let templ_name = &self.scope.name;
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         let current_bb = self.scope.get_main_fn().get_first_basic_block().unwrap();
