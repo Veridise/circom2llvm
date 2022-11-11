@@ -1,14 +1,16 @@
-use crate::expression::resolve_dimensions;
+use crate::inferrence::{build_array_ty, resolve_dimensions};
 
 use super::codegen::CodeGen;
-use super::expression::{read_signal_from_struct, resolve_statement_initially, write_signal_to_struct};
+use super::expression::{read_signal_from_struct, write_signal_to_struct};
+use super::inferrence::infer_from_statement;
 use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_template_struct};
 use super::scope::{Scope, ScopeCodegenTrait, ScopeTrait};
 use super::statement::resolve_stmt;
 
+use inkwell::types::{BasicType, BasicTypeEnum};
 use inkwell::values::{BasicValue, PointerValue};
 use inkwell::AddressSpace;
-use program_structure::ast::{Expression, SignalType, Statement, VariableType};
+use program_structure::ast::{SignalType, Statement, VariableType};
 
 pub struct Template<'ctx> {
     pub scope: Scope<'ctx>,
@@ -20,19 +22,67 @@ pub struct Template<'ctx> {
 }
 
 impl<'ctx> Template<'ctx> {
-    fn _add_input(&mut self, v: &String, dims: &Vec<Expression>) {
+    fn _add_input(&mut self, v: &String) {
         self.inputs.push(v.clone());
-        self.scope.set_var_dims(v, resolve_dimensions(dims));
     }
 
-    fn _add_intermediate(&mut self, v: &String, dims: &Vec<Expression>) {
+    fn _add_intermediate(&mut self, v: &String) {
         self.inters.push(v.clone());
-        self.scope.set_var_dims(v, resolve_dimensions(dims));
     }
 
-    fn _add_output(&mut self, v: &String, dims: &Vec<Expression>) {
+    fn _add_output(&mut self, v: &String) {
         self.outputs.push(v.clone());
-        self.scope.set_var_dims(v, resolve_dimensions(dims));
+    }
+
+    fn infer_signal_from_statement(&mut self, codegen: &CodeGen<'ctx>, stmt: &Statement) {
+        // We only handle signals here.
+        match stmt {
+            Statement::InitializationBlock {
+                meta: _,
+                xtype,
+                initializations,
+            } => match xtype {
+                VariableType::Signal(signal_type, _) => {
+                    for init in initializations {
+                        match init {
+                            Statement::Declaration {
+                                meta: _,
+                                xtype: _,
+                                name,
+                                dimensions,
+                                is_constant: _,
+                            } => {
+                                match signal_type {
+                                    SignalType::Input => {
+                                        self._add_input(name);
+                                    }
+                                    SignalType::Intermediate => {
+                                        self._add_intermediate(name);
+                                    }
+                                    SignalType::Output => {
+                                        self._add_output(name);
+                                    }
+                                };
+                                let dims = resolve_dimensions(dimensions);
+                                let dims_len = dims.len().clone();
+                                let var_ty;
+                                if dims_len == 0 {
+                                    var_ty = codegen.val_ty.as_basic_type_enum();
+                                } else {
+                                    var_ty =
+                                        build_array_ty(codegen.val_ty.as_basic_type_enum(), &dims)
+                                            .as_basic_type_enum();
+                                }
+                                self.scope.set_var_ty(name, var_ty);
+                            }
+                            _ => unreachable!(),
+                        }
+                    }
+                }
+                _ => (),
+            },
+            _ => (),
+        }
     }
 }
 
@@ -42,56 +92,18 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
         match body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
-                    // Variables
-                    resolve_statement_initially(codegen, stmt, &mut self.scope, &VariableType::Var);
+                    // Collect information from statements as more as possible;
+                    infer_from_statement(codegen, stmt, &mut self.scope, &VariableType::Var);
 
                     // We only handle signals here.
-                    match stmt {
-                        Statement::InitializationBlock {
-                            meta: _,
-                            xtype,
-                            initializations,
-                        } => match xtype {
-                            VariableType::Signal(signal_type, _) => {
-                                for init in initializations {
-                                    match init {
-                                        Statement::Declaration {
-                                            meta: _,
-                                            xtype: _,
-                                            name,
-                                            dimensions,
-                                            is_constant: _,
-                                        } => {
-                                            match signal_type {
-                                                SignalType::Input => {
-                                                    self._add_input(name, dimensions);
-                                                }
-                                                SignalType::Intermediate => {
-                                                    self._add_intermediate(name, dimensions);
-                                                }
-                                                SignalType::Output => {
-                                                    self._add_output(name, dimensions);
-                                                }
-                                            };
-                                        }
-                                        _ => unreachable!(),
-                                    }
-                                }
-                            }
-                            _ => (),
-                        },
-                        _ => (),
-                    }
+                    self.infer_signal_from_statement(codegen, stmt);
                 }
             }
             _ => unreachable!(),
         }
         codegen.set_input_output_names(
-            &self.scope.name.to_lowercase().to_string(),
-            (
-                self.inputs.to_vec(),
-                self.outputs.to_vec(),
-            ),
+            &self.scope.name,
+            (self.inputs.to_vec(), self.outputs.to_vec()),
         );
     }
 
@@ -112,19 +124,11 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
 
         let mut param_struct_fields = Vec::new();
         for name in &self.scope.args {
-            if self.scope.get_var_dims_len(name) == 0 {
-                param_struct_fields.push(codegen.val_ty.into());
-            } else {
-                param_struct_fields.push(
-                    codegen
-                        .build_array_ty(self.scope.get_var_dims(name).unwrap())
-                        .ptr_type(AddressSpace::Generic)
-                        .into(),
-                );
-            }
+            let arg_ty = self.scope.get_var_ty_as_ptr(name);
+            param_struct_fields.push(arg_ty);
         }
 
-        param_struct_ty.set_body(&param_struct_fields, false);
+        param_struct_ty.set_body(&param_struct_fields[0..], false);
 
         // Circuit struct
         let templ_struct_name = name_template_struct(templ_name, "circuit");
@@ -140,28 +144,12 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
         // Set body for circuit struct
         let mut templ_struct_fields = vec![param_struct_ptr_ty.into(), init_fn_ptr_ty.into()];
         for name in &self.inputs {
-            if self.scope.get_var_dims_len(name) == 0 {
-                templ_struct_fields.push(codegen.val_ty.into());
-            } else {
-                templ_struct_fields.push(
-                    codegen
-                        .build_array_ty(self.scope.get_var_dims(name).unwrap())
-                        .ptr_type(AddressSpace::Generic)
-                        .into(),
-                );
-            }
+            let field_ty = self.scope.get_var_ty_as_ptr(name);
+            templ_struct_fields.push(field_ty);
         }
         for name in &self.outputs {
-            if self.scope.get_var_dims_len(name) == 0 {
-                templ_struct_fields.push(codegen.val_ty.into());
-            } else {
-                templ_struct_fields.push(
-                    codegen
-                        .build_array_ty(self.scope.get_var_dims(name).unwrap())
-                        .ptr_type(AddressSpace::Generic)
-                        .into(),
-                );
-            }
+            let field_ty = self.scope.get_var_ty_as_ptr(name);
+            templ_struct_fields.push(field_ty);
         }
         templ_struct_ty.set_body(&templ_struct_fields, false);
 
@@ -190,86 +178,50 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
     }
 
     fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        let templ_name = &self.scope.name;
+        let templ_name = self.scope.name.clone();
         let templ_struct_ptr = self.templ_struct_ptr.unwrap();
         let current_bb = self.scope.get_main_fn().get_first_basic_block().unwrap();
         codegen.builder.position_at_end(current_bb);
 
         // Bind args
-        for arg in &self.scope.args {
-            let assign_name0 = name_template_struct(templ_name, "params");
+        let args = self.scope.args.clone();
+        for arg in &args {
+            let assign_name0 = name_template_struct(&templ_name, "params");
             let param_struct_ptr = codegen
                 .build_struct_getter(templ_struct_ptr, 0, &assign_name0)
                 .into_pointer_value();
-            let index = self.scope.args.iter().position(|s| s == arg).unwrap() as u32;
+            let index = args.iter().position(|s| s == arg).unwrap() as u32;
             let assign_name: &str = &format!("{}.{}", assign_name0, arg);
-            let var = codegen.build_struct_getter(param_struct_ptr, index, assign_name);
-            let dims_len = self.scope.get_var_dims_len(arg);
-            if dims_len == 0 {
-                self.scope
-                    .var2val
-                    .insert(arg.clone(), var.as_basic_value_enum());
-            } else {
-                let arr_val_ty = codegen.build_array_ty(self.scope.get_var_dims(arg).unwrap());
-                let ptr = codegen.builder.build_alloca(arr_val_ty, arg);
-                _ = codegen.builder.build_memcpy(
-                    ptr,
-                    4,
-                    var.into_pointer_value(),
-                    4,
-                    arr_val_ty.size_of().unwrap(),
-                );
-                self.scope
-                    .var2val
-                    .insert(arg.clone(), ptr.as_basic_value_enum());
-            }
+            let val = codegen.build_struct_getter(param_struct_ptr, index, assign_name);
+            self.scope.bind_variable(codegen, arg, val);
         }
 
         // Bind input signals
         for input in &self.inputs {
-            let var = read_signal_from_struct(
-                codegen,
-                &self.inputs,
-                &self.outputs,
-                input,
-                &self.scope.name,
-                templ_struct_ptr,
-                true,
-            );
-            let dims_len = self.scope.get_var_dims_len(input);
-            if dims_len == 0 {
-                self.scope
-                    .var2val
-                    .insert(input.clone(), var.as_basic_value_enum());
-            } else {
-                let arr_val_ty = codegen.build_array_ty(self.scope.get_var_dims(input).unwrap());
-                let ptr = codegen.builder.build_alloca(arr_val_ty, input);
-                _ = codegen.builder.build_memcpy(
-                    ptr,
-                    4,
-                    var.into_pointer_value(),
-                    4,
-                    arr_val_ty.size_of().unwrap(),
-                );
-                self.scope
-                    .var2val
-                    .insert(input.clone(), ptr.as_basic_value_enum());
-            }
+            let val =
+                read_signal_from_struct(codegen, &self.scope.name, input, templ_struct_ptr, true);
+            self.scope.bind_variable(codegen, input, val);
         }
 
         // Initial arrays
-        for (name, dims) in &self.scope.var2dims {
-            if !self.scope.var2val.contains_key(name) && !(dims.len() == 0) {
-                let ptr: PointerValue;
-                let arr_val_ty = codegen.build_array_ty(dims);
-                if self.outputs.contains(name) {
-                    ptr = codegen.builder.build_malloc(arr_val_ty, name).unwrap();
-                } else {
-                    ptr = codegen.builder.build_alloca(arr_val_ty, name);
+        for (name, ty) in &self.scope.var2ty {
+            if self.scope.var2val.contains_key(name) {
+                continue;
+            } else {
+                match ty {
+                    BasicTypeEnum::ArrayType(arr_ty) => {
+                        let ptr;
+                        if self.outputs.contains(name) {
+                            ptr = codegen.builder.build_malloc(arr_ty.clone(), name).unwrap();
+                        } else {
+                            ptr = codegen.builder.build_alloca(arr_ty.clone(), name);
+                        }
+                        self.scope
+                            .var2val
+                            .insert(name.clone(), ptr.as_basic_value_enum());
+                    }
+                    _ => (),
                 }
-                self.scope
-                    .var2val
-                    .insert(name.clone(), ptr.as_basic_value_enum());
             }
         }
 
@@ -293,8 +245,6 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
             let val = self.scope.var2val.get(output).unwrap().to_owned();
             write_signal_to_struct(
                 codegen,
-                &self.inputs,
-                &self.outputs,
                 &self.scope.name,
                 output,
                 templ_struct_ptr,

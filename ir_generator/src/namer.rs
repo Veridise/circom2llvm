@@ -52,20 +52,20 @@ pub fn name_template_struct(templ_name: &str, struct_name: &str) -> String {
 pub fn name_signal(signal_name: &str, templ_name: &str, is_read: bool, input: bool, inner: bool) -> String {
     let mut name = "".to_string();
     if is_read {
-        name = format!("read_{}", name);
+        name = format!("read{}", name);
     } else {
-        name = format!("write_{}", name);
+        name = format!("write{}", name);
     }
     if input {
-        name = format!("input_{}", name);
+        name = format!("{}_input", name);
     } else {
-        name = format!("output_{}", name);
+        name = format!("{}_output", name);
     }
     if inner {
-        name = format!("inner_{}", name);
+        name = format!("{}_inner", name);
     } else {
-        name = format!("outter_{}", name);
+        name = format!("{}_outter", name);
     }
-    name = format!("{}_{}.{}", name, templ_name, signal_name).to_lowercase();
+    name = format!("{}.{}.{}", name, templ_name, signal_name).to_lowercase();
     return name;
 }

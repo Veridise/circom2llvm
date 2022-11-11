@@ -1,261 +1,15 @@
+use crate::inferrence::build_array_ty;
+
 use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::namer::name_signal;
 use super::scope::ScopeTrait;
 
-use inkwell::types::{BasicType, BasicTypeEnum, StringRadix};
+use inkwell::types::{StringRadix, BasicType};
 use inkwell::values::{BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue};
-use inkwell::{AddressSpace, IntPredicate};
-use program_structure::ast::{
-    Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement, VariableType,
-};
+use inkwell::IntPredicate;
+use program_structure::ast::{Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode};
 
 use num_traits::cast::ToPrimitive;
-
-fn merge_type<'ctx>(
-    a: Option<BasicTypeEnum<'ctx>>,
-    b: Option<BasicTypeEnum<'ctx>>,
-) -> Option<BasicTypeEnum<'ctx>> {
-    match a {
-        Some(..) => {
-            return a;
-        }
-        None => match b {
-            Some(..) => {
-                return b;
-            }
-            None => {
-                return None;
-            }
-        },
-    }
-}
-
-fn infer_dimensions<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait<'ctx>) {
-    match expr {
-        Expression::AnonymousComp { .. } => (),
-        Expression::ArrayInLine { meta: _, values } => {
-            for v in values {
-                infer_dimensions(v, scope)
-            }
-        }
-        Expression::Call {
-            meta: _,
-            id,
-            args,
-        } => {
-            scope.add_dep_function(id);
-            for arg in args {
-                infer_dimensions(arg, scope);
-            }
-        }
-        Expression::InfixOp {
-            meta: _,
-            lhe,
-            infix_op: _,
-            rhe,
-        } => {
-            infer_dimensions(lhe, scope);
-            infer_dimensions(rhe, scope);
-        }
-        Expression::InlineSwitchOp {
-            meta: _,
-            cond,
-            if_true,
-            if_false,
-        } => {
-            infer_dimensions(cond, scope);
-            infer_dimensions(if_true, scope);
-            infer_dimensions(if_false, scope);
-        }
-        Expression::Number(_, _) => (),
-        Expression::ParallelOp { meta: _, rhe } => infer_dimensions(rhe, scope),
-        Expression::PrefixOp {
-            meta: _,
-            prefix_op: _,
-            rhe,
-        } => infer_dimensions(rhe, scope),
-        Expression::Tuple { meta: _, values } => {
-            for v in values {
-                infer_dimensions(v, scope)
-            }
-        }
-        Expression::UniformArray {
-            meta: _,
-            value,
-            dimension,
-        } => {
-            infer_dimensions(value, scope);
-            infer_dimensions(dimension, scope);
-        }
-        Expression::Variable {
-            meta: _,
-            name,
-            access,
-        } => resolve_access(name, access, scope),
-    }
-}
-
-pub fn infer_type<'ctx>(
-    codegen: &CodeGen<'ctx>,
-    expr: &Expression,
-    scope: &dyn ScopeTrait<'ctx>,
-) -> Option<BasicTypeEnum<'ctx>> {
-    match expr {
-        Expression::AnonymousComp { .. } => {
-            println!("Expr: AnonymousComp");
-            unreachable!();
-        }
-        Expression::ArrayInLine { meta: _, values } => {
-            let arr_ty = codegen.build_array_ty(&vec![values.len() as u32]);
-            return Some(arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum());
-        }
-        Expression::Call { id, .. } => {
-            let called_fn = scope.match_fn_val(codegen, id);
-            return Some(called_fn.get_type().get_return_type().unwrap());
-        }
-        Expression::InfixOp { lhe, rhe, .. } => {
-            let lty = infer_type(codegen, lhe, scope);
-            let rty = infer_type(codegen, rhe, scope);
-            return merge_type(lty, rty);
-        }
-        Expression::InlineSwitchOp {
-            if_true, if_false, ..
-        } => {
-            let lty = infer_type(codegen, if_true.as_ref(), scope);
-            let rty = infer_type(codegen, if_false.as_ref(), scope);
-            return merge_type(lty, rty);
-        }
-        Expression::Number(..) => {
-            return Some(codegen.val_ty.as_basic_type_enum());
-        }
-        Expression::ParallelOp { rhe, .. } => {
-            return infer_type(codegen, rhe.as_ref(), scope);
-        }
-        Expression::PrefixOp { rhe, .. } => {
-            return infer_type(codegen, rhe.as_ref(), scope);
-        }
-        Expression::Tuple { .. } => {
-            println!("Expr: Tuple");
-            unreachable!();
-        }
-        Expression::UniformArray { .. } => {
-            let mut dimensions = Vec::new();
-            let _ = resolve_uniform_array(codegen, expr, scope, &mut dimensions);
-            let arr_ty = codegen.build_array_ty(&dimensions);
-            return Some(arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum());
-        }
-        Expression::Variable {
-            name, access, ..
-        } => {
-            if access.len() == 0 {
-                return Some(scope.get_var_ty(name).unwrap().as_basic_type_enum());
-            } else {
-                return None;
-            }
-        }
-    }
-}
-
-pub fn resolve_statement_initially<'ctx>(
-    codegen: &CodeGen<'ctx>,
-    stmt: &Statement,
-    scope: &mut dyn ScopeTrait<'ctx>,
-    init_xtype: &VariableType,
-) {
-    match stmt {
-        Statement::Assert { meta: _, arg } => {
-            infer_dimensions(arg, scope);
-        }
-        Statement::Block { meta: _, stmts } => {
-            for _stmt in stmts {
-                resolve_statement_initially(codegen, _stmt, scope, init_xtype);
-            }
-        }
-        Statement::ConstraintEquality { meta: _, lhe, rhe } => {
-            infer_dimensions(lhe, scope);
-            infer_dimensions(rhe, scope);
-        }
-        Statement::Declaration {
-            meta: _,
-            xtype: _,
-            name,
-            dimensions,
-            is_constant: _,
-        } => {
-            let dims = resolve_dimensions(dimensions);
-            let dims_len = dims.len().clone();
-            match init_xtype {
-                VariableType::Var => {
-                    // Update type of variable;
-                    let var_ty;
-                    if dims_len == 0 {
-                        var_ty = codegen.val_ty.as_basic_type_enum();
-                    } else {
-                        var_ty = codegen.build_array_ty(&dims).as_basic_type_enum()
-                    }
-                    scope.set_var_ty(name, var_ty);
-                    // Update variable table;
-                    scope.add_var(name)
-                }
-                VariableType::Component => scope.add_dep_component(name),
-                VariableType::AnonymousComponent => {
-                    println!("VariableType: AnonymousComponent");
-                    unreachable!()
-                }
-                // We don't handle signals here because they are limited in template.
-                VariableType::Signal(_, _) => (),
-            }
-            // Update Dimensions;
-            scope.set_var_dims(name, dims);
-        }
-        Statement::IfThenElse {
-            meta: _,
-            cond,
-            if_case,
-            else_case,
-        } => {
-            infer_dimensions(cond, scope);
-            resolve_statement_initially(codegen, if_case.as_ref(), scope, init_xtype);
-            match else_case {
-                Some(else_) => resolve_statement_initially(codegen, else_, scope, init_xtype),
-                None => (),
-            }
-        }
-        Statement::InitializationBlock {
-            meta: _,
-            xtype,
-            initializations,
-        } => {
-            for init in initializations {
-                resolve_statement_initially(codegen, init, scope, xtype);
-            }
-        }
-        Statement::LogCall { .. } => (),
-        Statement::MultSubstitution {
-            meta: _,
-            lhe,
-            op: _,
-            rhe,
-        } => {
-            infer_dimensions(lhe, scope);
-            infer_dimensions(rhe, scope);
-        }
-        Statement::Return { meta: _, value } => infer_dimensions(value, scope),
-        Statement::Substitution {
-            meta: _,
-            var,
-            access,
-            op: _,
-            rhe,
-        } => {
-            infer_dimensions(rhe, scope);
-            resolve_access(var, access, scope);
-        }
-        Statement::While { stmt, .. } => {
-            resolve_statement_initially(codegen, stmt.as_ref(), scope, init_xtype)
-        }
-    }
-}
 
 pub fn resolve_expr<'ctx>(
     codegen: &CodeGen<'ctx>,
@@ -333,7 +87,7 @@ pub fn resolve_expr<'ctx>(
         Expression::UniformArray { .. } => {
             let mut dimensions = Vec::new();
             let _ = resolve_uniform_array(codegen, expr, scope, &mut dimensions);
-            let arr_ty = codegen.build_array_ty(&dimensions);
+            let arr_ty = build_array_ty(codegen.val_ty.as_basic_type_enum(), &dimensions);
             let ptr = codegen.builder.build_alloca(arr_ty, "uniform_array");
             return ptr.as_basic_value_enum();
         }
@@ -420,16 +174,15 @@ fn resolve_infix_op<'ctx>(
 
 pub fn read_signal_from_struct<'ctx>(
     codegen: &CodeGen<'ctx>,
-    inputs: &Vec<String>,
-    outputs: &Vec<String>,
-    signal_name: &String,
     templ_name: &String,
+    signal_name: &String,
     struct_ptr: PointerValue<'ctx>,
     call_from_inner: bool,
 ) -> BasicValueEnum<'ctx> {
     let container: &Vec<String>;
     let offset;
     let input;
+    let (inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
     if inputs.contains(&signal_name) {
         container = inputs;
         offset = 2;
@@ -449,8 +202,6 @@ pub fn read_signal_from_struct<'ctx>(
 
 pub fn write_signal_to_struct<'ctx>(
     codegen: &CodeGen<'ctx>,
-    inputs: &Vec<String>,
-    outputs: &Vec<String>,
     templ_name: &String,
     signal_name: &String,
     struct_ptr: PointerValue<'ctx>,
@@ -460,6 +211,7 @@ pub fn write_signal_to_struct<'ctx>(
     let container: &Vec<String>;
     let offset;
     let input;
+    let (inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
     if inputs.contains(&signal_name) {
         container = inputs;
         offset = 2;
@@ -477,7 +229,7 @@ pub fn write_signal_to_struct<'ctx>(
     return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);
 }
 
-fn resolve_uniform_array<'ctx>(
+pub fn resolve_uniform_array<'ctx>(
     codegen: &CodeGen<'ctx>,
     expr: &Expression,
     scope: &dyn ScopeTrait<'ctx>,
@@ -491,8 +243,7 @@ fn resolve_uniform_array<'ctx>(
         } => {
             let size = match dimension.as_ref() {
                 Expression::Number(_, big_int) => big_int.to_u32().unwrap(),
-                // 0 here will be converted to MAX_ARRAYSIZE when we generate
-                _ => 0,
+                _ => MAX_ARRAYSIZE,
             };
             dimensions.push(size);
             return resolve_uniform_array(codegen, value, scope, dimensions);
@@ -500,41 +251,6 @@ fn resolve_uniform_array<'ctx>(
         _ => {
             let res = resolve_expr(codegen, expr, scope).into_int_value();
             return res;
-        }
-    }
-}
-
-pub fn resolve_dimensions<'ctx>(dims: &Vec<Expression>) -> Vec<u32> {
-    return dims
-        .iter()
-        .map(|dim| match dim {
-            Expression::Number(_, bigint) => bigint.to_u32().unwrap(),
-            _ => 0,
-        })
-        .collect();
-}
-
-fn resolve_access<'ctx>(name: &String, access: &Vec<Access>, scope: &mut dyn ScopeTrait<'ctx>) {
-    if access.len() == 0 {
-        return;
-    } else {
-        let first_access = &access[0];
-        let is_array = match first_access {
-            Access::ArrayAccess(..) => true,
-            Access::ComponentAccess(..) => false,
-        };
-        if is_array {
-            let dims: Vec<u32> = access
-                .iter()
-                .map(|a| match a {
-                    Access::ArrayAccess(expr) => match expr {
-                        Expression::Number(_, bigint) => bigint.to_u32().unwrap(),
-                        _ => 0,
-                    },
-                    Access::ComponentAccess(..) => unreachable!(),
-                })
-                .collect();
-            scope.set_var_dims(name, dims);
         }
     }
 }

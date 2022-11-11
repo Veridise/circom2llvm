@@ -1,14 +1,12 @@
-use crate::expression::infer_type;
+use crate::inferrence::{get_type_of_expr, infer_from_statement};
 
 use super::codegen::CodeGen;
-use super::expression::resolve_statement_initially;
 use super::namer::name_entry_block;
 use super::scope::{Scope, ScopeCodegenTrait, ScopeTrait};
 use super::statement::resolve_stmt;
 
 use inkwell::types::{BasicType, BasicTypeEnum};
 use inkwell::values::BasicValue;
-use inkwell::AddressSpace;
 use program_structure::ast::{Statement, VariableType};
 
 pub struct Function<'ctx> {
@@ -23,7 +21,7 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Function<'ctx> {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
                     // Variables
-                    resolve_statement_initially(codegen, stmt, &mut self.scope, &VariableType::Var);
+                    infer_from_statement(codegen, stmt, &mut self.scope, &VariableType::Var);
                 }
             }
             _ => unreachable!(),
@@ -46,11 +44,11 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Function<'ctx> {
                 for stmt in stmts {
                     match stmt {
                         Statement::Return { meta: _, value } => {
-                            let ret_ty_op = infer_type(codegen, value, &self.scope);
+                            let ret_ty_op = get_type_of_expr(codegen, value, &self.scope);
                             match ret_ty_op {
                                 Some(new_ret_ty) => {
                                     ret_ty = new_ret_ty;
-                                },
+                                }
                                 None => (),
                             }
                         }
@@ -63,15 +61,11 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Function<'ctx> {
 
         let mut param_tys = Vec::new();
         for name in &self.scope.args {
-            if self.scope.get_var_dims_len(name) == 0 {
-                param_tys.push(codegen.val_ty.into());
-            } else {
-                let array_ty = codegen.build_array_ty(self.scope.get_var_dims(name).unwrap());
-                param_tys.push(array_ty.ptr_type(AddressSpace::Generic).into());
-            }
+            let arg_ty = self.scope.get_var_ty_as_ptr(name).into();
+            param_tys.push(arg_ty);
         }
 
-        let fn_ty = ret_ty.fn_type(&param_tys, false);
+        let fn_ty = ret_ty.fn_type(&param_tys[0..], false);
         let fn_val = module.add_function(&fn_name, fn_ty, None);
         context.append_basic_block(fn_val, &name_entry_block());
         self.scope.set_main_fn(fn_val);
@@ -83,25 +77,27 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Function<'ctx> {
         codegen.builder.position_at_end(current_bb);
         // Bind args
         let mut i = 0;
-        for arg in &self.scope.args {
-            self.scope
-                .var2val
-                .insert(arg.to_string(), fn_val.get_nth_param(i).unwrap());
+        let args = self.scope.args.clone();
+        for arg in args {
+            let val = fn_val.get_nth_param(i).unwrap();
+            self.scope.bind_variable(codegen, &arg, val);
             i += 1;
         }
         // Initial arrays
-        for (name, dims) in &self.scope.var2dims {
-            let dims_len = self.scope.get_var_dims_len(name);
-            if dims_len == 0 {
-                continue;
-            }
+        // Initial arrays
+        for (name, ty) in &self.scope.var2ty {
             if self.scope.var2val.contains_key(name) {
-                let ptr = codegen
-                    .builder
-                    .build_alloca(codegen.build_array_ty(dims), name);
-                self.scope
-                    .var2val
-                    .insert(name.clone(), ptr.as_basic_value_enum());
+                continue;
+            } else {
+                match ty {
+                    BasicTypeEnum::ArrayType(arr_ty) => {
+                        let ptr = codegen.builder.build_alloca(arr_ty.clone(), name);
+                        self.scope
+                            .var2val
+                            .insert(name.clone(), ptr.as_basic_value_enum());
+                    }
+                    _ => (),
+                }
             }
         }
 

@@ -5,12 +5,12 @@ use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::{Linkage, Module};
-use inkwell::types::{ArrayType, FunctionType, IntType, PointerType, StringRadix, StructType};
+use inkwell::types::{FunctionType, IntType, PointerType, StringRadix, StructType};
 use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
     BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue,
-    PointerValue,
+    PointerValue, AnyValue,
 };
 
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
@@ -43,7 +43,8 @@ impl<'ctx> CodeGen<'ctx> {
         indexes: &[IntValue<'ctx>],
         name: &str,
     ) -> BasicValueEnum<'ctx> {
-        let assign_name = "array_ptr";
+        let assign_name = "array_getter";
+        println!("PTR: {}, TY: {}", array_ptr.print_to_string(), array_ptr.get_type().print_to_string());
         let res = unsafe {
             self.builder
                 .build_in_bounds_gep(array_ptr, indexes, assign_name)
@@ -116,7 +117,7 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn build_struct(&self, name: &str) -> (StructType<'ctx>, PointerType<'ctx>) {
-        let struct_ty = self.context.opaque_struct_type(&name.to_lowercase());
+        let struct_ty = self.context.opaque_struct_type(&name);
         let struct_ptr_ty = struct_ty.ptr_type(AddressSpace::Generic);
         return (struct_ty, struct_ptr_ty);
     }
@@ -127,7 +128,8 @@ impl<'ctx> CodeGen<'ctx> {
         index: u32,
         name: &str,
     ) -> BasicValueEnum<'ctx> {
-        let assign_name = "struct_ptr";
+        let assign_name = "struct_getter";
+        println!("PTR: {}, TY: {}", struct_ptr.print_to_string(), struct_ptr.get_type().print_to_string());
         let res = self
             .builder
             .build_struct_gep(struct_ptr, index, assign_name)
@@ -157,26 +159,6 @@ impl<'ctx> CodeGen<'ctx> {
         return ptr;
     }
 
-    pub fn build_array_ty(&self, dims: &Vec<u32>) -> ArrayType<'ctx> {
-        assert!(dims.len() > 0);
-        let mut i = 0;
-        let size = dims[dims.len() - 1];
-        let mut arr_ty = self.val_ty.array_type(size);
-        for d in dims.iter().rev() {
-            let mut size: u32 = *d;
-            if size == 0 {
-                size = MAX_ARRAYSIZE;
-            }
-            if i == 0 {
-                //Do nothing.
-            } else {
-                arr_ty = arr_ty.array_type(size);
-            }
-            i += 1;
-        }
-        return arr_ty;
-    }
-
     pub fn build_pow(&self, args: &[BasicMetadataValueEnum<'ctx>], name: &str) -> IntValue<'ctx> {
         return self
             .builder
@@ -186,15 +168,14 @@ impl<'ctx> CodeGen<'ctx> {
             .into_int_value();
     }
 
-    pub fn get_input_output_names(&self, templ_name: &String) -> &(Vec<String>, Vec<String>) {
-        return self._global_input_output_record.get(templ_name).unwrap();
+    pub fn get_input_output_names(&self, templ_name: &String) -> Option<&(Vec<String>, Vec<String>)> {
+        return self._global_input_output_record.get(templ_name);
     }
 
     pub fn set_input_output_names(&mut self, templ_name: &String, v: (Vec<String>, Vec<String>)) {
         self._global_input_output_record
             .insert(templ_name.clone(), v);
     }
-
 }
 
 pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {

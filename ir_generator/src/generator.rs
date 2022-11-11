@@ -10,20 +10,18 @@ use std::collections::HashMap;
 
 pub struct TestSetting {}
 
-pub fn resolve_dependence(
-    dependence_graph: &HashMap<String, Vec<String>>,
-) -> Result<Vec<String>, &str> {
+pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Vec<String> {
     let mut all = dependence_graph.len().clone();
     let mut output: Vec<String> = Vec::new();
     while all > 0 {
-        let last_all = all;
+        let last_all = all.clone();
         for (k, deps) in dependence_graph {
             if output.contains(&k) {
                 continue;
             }
             let mut satisfied = true;
             for dep in deps {
-                if !output.contains(&dep) {
+                if !output.contains(&dep) && dep != k {
                     satisfied = false;
                 }
             }
@@ -33,38 +31,30 @@ pub fn resolve_dependence(
             }
         }
         if last_all == all {
-            return Err("Cannot resolve dependences!");
-        }
-    }
-    return Ok(output);
-}
-
-pub fn gen_compile_order<'ctx> (
-    template_scopes: &Vec<(Template<'ctx>, &Statement)>,
-    function_scopes: &Vec<(Function<'ctx>, &Statement)>,
-) -> Vec<String> {
-    let mut dependence_graph: HashMap<String, Vec<String>> = HashMap::new();
-    for (t, _) in template_scopes {
-        let owned_deps = t.scope.deps().iter().map(|&s| {s.clone()}).collect();
-        dependence_graph.insert(t.scope.name.clone(), owned_deps);
-    }
-    for (f, _) in function_scopes {
-        let owned_deps = f.scope.deps().iter().map(|&s| {s.clone()}).collect();
-        dependence_graph.insert(f.scope.name.clone(), owned_deps);
-    }
-    let compile_order_res = resolve_dependence(&dependence_graph);
-    match compile_order_res {
-        Ok(compile_order) => {
-            return compile_order;
-        },
-        Err(err) => {
-            println!("Err: {}", err);
+            for (k, deps) in dependence_graph {
+                if output.contains(&k) {
+                    println!("Resolved: {}", k);
+                } else {
+                    let dep_strs: Vec<&str> = deps.iter().map(|s| s.as_str()).collect();
+                    println!(
+                        "UnResolved: {}, Deps: {}",
+                        k,
+                        dep_strs.join("-")
+                    );
+                }
+            }
+            println!("Err: Cannot resolve dependences!");
             unreachable!();
         }
     }
+    return output;
 }
 
-pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, test_setting: Option<TestSetting>) {
+pub fn generate(
+    definitions: Vec<&Definition>,
+    codegen: &mut CodeGen,
+    test_setting: Option<TestSetting>,
+) {
     let mut template_scopes: Vec<(Template, &Statement)> = Vec::new();
     let mut function_scopes: Vec<(Function, &Statement)> = Vec::new();
     for defin in definitions {
@@ -81,12 +71,12 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, test_setti
                 let scope = Scope {
                     name: name.clone(),
                     args: args.to_vec(),
-                    dep_comps: Vec::new(),
-                    dep_fns: Vec::new(),
+                    dependences: Vec::new(),
                     vars: Vec::new(),
-                    var2dims: HashMap::new(),
                     var2val: HashMap::new(),
                     var2ty: HashMap::new(),
+                    var2comp: HashMap::new(),
+                    val_ty: codegen.val_ty,
                     main_fn_val: None,
                 };
                 let mut template_scope = Template {
@@ -109,12 +99,12 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, test_setti
                 let scope = Scope {
                     name: name.clone(),
                     args: args.to_vec(),
-                    dep_comps: Vec::new(),
-                    dep_fns: Vec::new(),
+                    dependences: Vec::new(),
                     vars: Vec::new(),
-                    var2dims: HashMap::new(),
                     var2val: HashMap::new(),
                     var2ty: HashMap::new(),
+                    var2comp: HashMap::new(),
+                    val_ty: codegen.val_ty,
                     main_fn_val: None,
                 };
                 let mut function_scope = Function { scope };
@@ -123,7 +113,16 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, test_setti
             }
         }
     }
-    let compile_order = gen_compile_order(&template_scopes, &function_scopes);
+    let mut dependence_graph: HashMap<String, Vec<String>> = HashMap::new();
+    for (t, _) in &template_scopes {
+        let owned_deps = t.scope.deps().iter().map(|s| s.clone()).collect();
+        dependence_graph.insert(t.scope.name.clone(), owned_deps);
+    }
+    for (f, _) in &function_scopes {
+        let owned_deps = f.scope.deps().iter().map(|s| s.clone()).collect();
+        dependence_graph.insert(f.scope.name.clone(), owned_deps);
+    }
+    let compile_order = resolve_dependence(&dependence_graph);
     for c in compile_order {
         for (f, body) in &mut function_scopes[0..] {
             if f.scope.name == c {

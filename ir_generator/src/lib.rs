@@ -2,6 +2,7 @@ pub mod codegen;
 mod expression;
 mod function;
 pub mod generator;
+mod inferrence;
 mod namer;
 pub mod scope;
 mod statement;

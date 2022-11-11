@@ -15,9 +15,8 @@ pub fn resolve_stmt<'ctx>(
     stmt: &Statement,
 ) {
     match stmt {
-        Statement::Assert { .. } => {
-            println!("Statement: Assert");
-            unreachable!();
+        Statement::Assert { meta: _, arg: _ } => {
+            // Todo assert.
         }
         Statement::Block { meta: _, stmts } => {
             for stmt in stmts {
@@ -162,6 +161,13 @@ pub fn resolve_stmt<'ctx>(
             let ctrl_var_name = match cond {
                 Expression::InfixOp { lhe, .. } => match lhe.as_ref() {
                     Expression::Variable { name, .. } => name,
+                    Expression::InfixOp { lhe, rhe, .. } => match lhe.as_ref() {
+                        Expression::Variable { name, .. } => name,
+                        _ => match rhe.as_ref() {
+                            Expression::Variable { name, .. } => name,
+                            _ => unreachable!(),
+                        },
+                    },
                     _ => unreachable!(),
                 },
                 _ => unreachable!(),
