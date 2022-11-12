@@ -1,15 +1,18 @@
-use crate::inferrence::build_array_ty;
+use crate::inferrence::construct_uniform_array_ty;
+use crate::namer::name_template_struct;
 
 use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::namer::name_signal;
 use super::scope::ScopeTrait;
 
-use inkwell::types::{StringRadix, BasicType};
-use inkwell::values::{BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue};
-use inkwell::IntPredicate;
-use program_structure::ast::{Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode};
-
-use num_traits::cast::ToPrimitive;
+use inkwell::types::{BasicTypeEnum, StringRadix};
+use inkwell::values::{
+    ArrayValue, BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue,
+};
+use inkwell::{AddressSpace, IntPredicate};
+use program_structure::ast::{
+    Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement,
+};
 
 pub fn resolve_expr<'ctx>(
     codegen: &CodeGen<'ctx>,
@@ -21,16 +24,9 @@ pub fn resolve_expr<'ctx>(
             println!("Expr: AnonymousComp");
             unreachable!()
         }
-        Expression::ArrayInLine { meta: _, values } => {
-            if values.len() > MAX_ARRAYSIZE as usize {
-                println!("Err: max arraysize is {}", MAX_ARRAYSIZE);
-                unreachable!()
-            }
-            let mut res = Vec::new();
-            for val in values {
-                res.push(resolve_expr(codegen, val, scope).into_int_value());
-            }
-            return codegen.build_inline_array(&res).as_basic_value_enum();
+        Expression::ArrayInLine { .. } => {
+            let array_val = resolve_inline_array(codegen, expr, scope).into_array_value();
+            return codegen.build_inline_array(array_val).as_basic_value_enum();
         }
         Expression::Call { meta: _, id, args } => {
             return scope.call(codegen, id, args);
@@ -85,9 +81,7 @@ pub fn resolve_expr<'ctx>(
             unreachable!()
         }
         Expression::UniformArray { .. } => {
-            let mut dimensions = Vec::new();
-            let _ = resolve_uniform_array(codegen, expr, scope, &mut dimensions);
-            let arr_ty = build_array_ty(codegen.val_ty.as_basic_type_enum(), &dimensions);
+            let arr_ty = construct_uniform_array_ty(codegen, expr, scope);
             let ptr = codegen.builder.build_alloca(arr_ty, "uniform_array");
             return ptr.as_basic_value_enum();
         }
@@ -96,6 +90,41 @@ pub fn resolve_expr<'ctx>(
             name,
             access,
         } => scope.get_var(codegen, name, access),
+    }
+}
+
+fn resolve_inline_array<'ctx>(
+    codegen: &CodeGen<'ctx>,
+    expr: &Expression,
+    scope: &dyn ScopeTrait<'ctx>,
+) -> BasicValueEnum<'ctx> {
+    match expr {
+        Expression::ArrayInLine { meta: _, values } => {
+            if values.len() > MAX_ARRAYSIZE as usize {
+                println!("Err: max arraysize is {}", MAX_ARRAYSIZE);
+                unreachable!()
+            }
+            let mut array_values = Vec::new();
+            for val in values {
+                array_values.push(resolve_inline_array(codegen, val, scope));
+            }
+            let array_ty = array_values[0].get_type();
+            let array_val = match array_ty {
+                BasicTypeEnum::ArrayType(ty) => {
+                    let values: Vec<ArrayValue> =
+                        array_values.iter().map(|v| v.into_array_value()).collect();
+                    ty.const_array(&values)
+                }
+                BasicTypeEnum::IntType(ty) => {
+                    let values: Vec<IntValue> =
+                        array_values.iter().map(|v| v.into_int_value()).collect();
+                    ty.const_array(&values)
+                }
+                _ => unreachable!(),
+            };
+            return array_val.as_basic_value_enum();
+        }
+        _ => return resolve_expr(codegen, expr, scope),
     }
 }
 
@@ -197,7 +226,22 @@ pub fn read_signal_from_struct<'ctx>(
     let assign_name = name_signal(signal_name, templ_name, false, input, call_from_inner);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
-    return codegen.build_struct_getter(struct_ptr, index, &assign_name);
+    let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
+    let real_struct_ptr;
+    if strt_ty.count_fields() == 0 {
+        let real_strt_ty = codegen
+            .module
+            .get_struct_type(&name_template_struct(templ_name, "circuit"))
+            .unwrap();
+        real_struct_ptr = codegen.builder.build_pointer_cast(
+            struct_ptr,
+            real_strt_ty.ptr_type(AddressSpace::Generic),
+            "ptr_cast",
+        );
+    } else {
+        real_struct_ptr = struct_ptr;
+    }
+    return codegen.build_struct_getter(real_struct_ptr, index, &assign_name);
 }
 
 pub fn write_signal_to_struct<'ctx>(
@@ -229,28 +273,110 @@ pub fn write_signal_to_struct<'ctx>(
     return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);
 }
 
-pub fn resolve_uniform_array<'ctx>(
-    codegen: &CodeGen<'ctx>,
-    expr: &Expression,
-    scope: &dyn ScopeTrait<'ctx>,
-    dimensions: &mut Vec<u32>,
-) -> IntValue<'ctx> {
+pub fn flat_expressions<'ctx>(expr: &Expression) -> Vec<&Expression> {
+    let mut all_exprs: Vec<&Expression> = vec![expr];
     match expr {
+        Expression::AnonymousComp {
+            params, signals, ..
+        } => {
+            for p in params {
+                all_exprs.append(&mut flat_expressions(p));
+            }
+            for s in signals {
+                all_exprs.append(&mut flat_expressions(s));
+            }
+        }
+        Expression::ArrayInLine { values, .. } => {
+            for v in values {
+                all_exprs.append(&mut flat_expressions(v));
+            }
+        }
+        Expression::Call { args, .. } => {
+            for a in args {
+                all_exprs.append(&mut flat_expressions(a));
+            }
+        }
+        Expression::InfixOp { lhe, rhe, .. } => {
+            all_exprs.append(&mut flat_expressions(lhe.as_ref()));
+            all_exprs.append(&mut flat_expressions(rhe.as_ref()));
+        }
+        Expression::InlineSwitchOp {
+            meta: _,
+            cond,
+            if_true,
+            if_false,
+        } => {
+            all_exprs.append(&mut flat_expressions(cond.as_ref()));
+            all_exprs.append(&mut flat_expressions(if_true.as_ref()));
+            all_exprs.append(&mut flat_expressions(if_false.as_ref()));
+        }
+        Expression::Number(..) => (),
+        Expression::ParallelOp { meta: _, rhe } => {
+            all_exprs.append(&mut flat_expressions(rhe.as_ref()));
+        }
+        Expression::PrefixOp { rhe, .. } => {
+            all_exprs.append(&mut flat_expressions(rhe.as_ref()));
+        }
+        Expression::Tuple { meta: _, values } => {
+            for v in values {
+                all_exprs.append(&mut flat_expressions(v));
+            }
+        }
         Expression::UniformArray {
             meta: _,
             value,
             dimension,
         } => {
-            let size = match dimension.as_ref() {
-                Expression::Number(_, big_int) => big_int.to_u32().unwrap(),
-                _ => MAX_ARRAYSIZE,
-            };
-            dimensions.push(size);
-            return resolve_uniform_array(codegen, value, scope, dimensions);
+            all_exprs.append(&mut flat_expressions(value.as_ref()));
+            all_exprs.append(&mut flat_expressions(dimension.as_ref()));
         }
-        _ => {
-            let res = resolve_expr(codegen, expr, scope).into_int_value();
-            return res;
+        Expression::Variable { .. } => (),
+    }
+    return all_exprs;
+}
+
+pub fn flat_expressions_from_statement<'ctx>(stmt: &Statement) -> Vec<&Expression> {
+    let mut all_exprs: Vec<&Expression> = vec![];
+    match stmt {
+        Statement::Assert { meta: _, arg } => {
+            all_exprs.append(&mut flat_expressions(arg));
+        }
+        Statement::Block { .. } => (),
+        Statement::ConstraintEquality { meta: _, lhe, rhe } => {
+            all_exprs.append(&mut flat_expressions(lhe));
+            all_exprs.append(&mut flat_expressions(rhe));
+        }
+        Statement::Declaration { dimensions, .. } => {
+            for d in dimensions {
+                all_exprs.append(&mut flat_expressions(d));
+            }
+        }
+        Statement::IfThenElse { cond, .. } => {
+            all_exprs.append(&mut flat_expressions(cond));
+        }
+        Statement::InitializationBlock { .. } => (),
+        Statement::LogCall { .. } => (),
+        Statement::MultSubstitution { lhe, rhe, .. } => {
+            all_exprs.append(&mut flat_expressions(lhe));
+            all_exprs.append(&mut flat_expressions(rhe));
+        }
+        Statement::Return { meta: _, value } => {
+            all_exprs.append(&mut flat_expressions(value));
+        }
+        Statement::Substitution { access, rhe, .. } => {
+            for a in access {
+                match a {
+                    Access::ArrayAccess(expr) => {
+                        all_exprs.append(&mut flat_expressions(expr));
+                    }
+                    Access::ComponentAccess(..) => (),
+                }
+            }
+            all_exprs.append(&mut flat_expressions(rhe));
+        }
+        Statement::While { cond, .. } => {
+            all_exprs.append(&mut flat_expressions(cond));
         }
     }
+    return all_exprs;
 }

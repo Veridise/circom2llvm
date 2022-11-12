@@ -3,8 +3,8 @@ use ir_generator::codegen::init_codegen;
 use ir_generator::generator::generate;
 
 use clap::Parser;
-use program_structure::{error_definition::Report};
-use program_structure::ast::{AST};
+use program_structure::ast::AST;
+use program_structure::error_definition::Report;
 use std::{fs, path::PathBuf};
 
 #[derive(Parser, Debug)]
@@ -26,8 +26,14 @@ fn main() {
     if args.genall {
         for p in fs::read_dir(args.dir).unwrap() {
             let path = p.unwrap().path();
-            if path.extension().unwrap() == "circom" {
-                paths.push(path);
+            let extension_op = path.extension();
+            match extension_op {
+                Some(ext) => {
+                    if ext == "circom" {
+                        paths.push(path);
+                    }
+                }
+                _ => (),
             }
         }
         println!("Count: {}", paths.len());
@@ -38,7 +44,17 @@ fn main() {
         println!("Current file: {}", input_pathbuf.clone().to_str().unwrap());
         let context = Context::create();
         let mut codegen = init_codegen(&context);
-        let input_path = input_pathbuf.clone().into_os_string().into_string().unwrap();
+        let input_path = input_pathbuf
+            .clone()
+            .into_os_string()
+            .into_string()
+            .unwrap();
+        let output_path = input_pathbuf
+            .clone()
+            .with_extension("ll")
+            .into_os_string()
+            .into_string()
+            .unwrap();
         // Go to folder;
         input_pathbuf.pop();
         match parser::run_parser(input_path, Vec::new()) {
@@ -56,7 +72,11 @@ fn main() {
                     concludes.push(relative_path.clone());
                     let origin_pathbuf = pathbufs.pop().unwrap();
                     let mut include_input_pathbuf = origin_pathbuf.join(relative_path);
-                    let include_input_path = include_input_pathbuf.clone().into_os_string().into_string().unwrap();
+                    let include_input_path = include_input_pathbuf
+                        .clone()
+                        .into_os_string()
+                        .into_string()
+                        .unwrap();
                     include_input_pathbuf.pop();
                     let last_ast = match parser::run_parser(include_input_path, Vec::new()) {
                         Ok(ast) => ast,
@@ -81,11 +101,6 @@ fn main() {
                     }
                 }
                 generate(definitions, &mut codegen, None);
-                let output_path = input_pathbuf
-                    .with_extension("ll")
-                    .into_os_string()
-                    .into_string()
-                    .unwrap();
                 let result = codegen.module.print_to_file(output_path);
                 match result {
                     Ok(_) => {}

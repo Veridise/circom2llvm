@@ -2,7 +2,7 @@ use crate::scope::ScopeTrait;
 
 use super::codegen::CodeGen;
 use super::function::Function;
-use super::scope::{Scope, ScopeCodegenTrait};
+use super::scope::{CodegenStagesTrait, Scope};
 use super::template::Template;
 
 use program_structure::ast::{Definition, Statement};
@@ -35,11 +35,15 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
                 if output.contains(&k) {
                     println!("Resolved: {}", k);
                 } else {
-                    let dep_strs: Vec<&str> = deps.iter().map(|s| s.as_str()).collect();
+                    let dep_strs: Vec<&str> = deps
+                        .iter()
+                        .filter(|s| !output.contains(s))
+                        .map(|s| s.as_str())
+                        .collect();
                     println!(
-                        "UnResolved: {}, Deps: {}",
+                        "Err: UnResolved: {}, UnResolved-deps: {}",
                         k,
-                        dep_strs.join("-")
+                        dep_strs.join("  ")
                     );
                 }
             }
@@ -71,13 +75,17 @@ pub fn generate(
                 let scope = Scope {
                     name: name.clone(),
                     args: args.to_vec(),
+                    val_ty: codegen.val_ty,
+
                     dependences: Vec::new(),
+
                     vars: Vec::new(),
-                    var2val: HashMap::new(),
                     var2ty: HashMap::new(),
                     var2comp: HashMap::new(),
-                    val_ty: codegen.val_ty,
+
                     main_fn_val: None,
+
+                    var2val: HashMap::new(),
                 };
                 let mut template_scope = Template {
                     scope,
@@ -86,7 +94,7 @@ pub fn generate(
                     outputs: Vec::new(),
                     templ_struct_ptr: None,
                 };
-                template_scope.initial_info(codegen, &body);
+                template_scope.resolve_dependences(codegen, &body);
                 template_scopes.push((template_scope, &body));
             }
             Definition::Function {
@@ -99,16 +107,20 @@ pub fn generate(
                 let scope = Scope {
                     name: name.clone(),
                     args: args.to_vec(),
+                    val_ty: codegen.val_ty,
+
                     dependences: Vec::new(),
+
                     vars: Vec::new(),
                     var2val: HashMap::new(),
                     var2ty: HashMap::new(),
-                    var2comp: HashMap::new(),
-                    val_ty: codegen.val_ty,
+
                     main_fn_val: None,
+
+                    var2comp: HashMap::new(),
                 };
                 let mut function_scope = Function { scope };
-                function_scope.initial_info(codegen, &body);
+                function_scope.resolve_dependences(codegen, &body);
                 function_scopes.push((function_scope, &body));
             }
         }
@@ -123,16 +135,36 @@ pub fn generate(
         dependence_graph.insert(f.scope.name.clone(), owned_deps);
     }
     let compile_order = resolve_dependence(&dependence_graph);
-    for c in compile_order {
+    let mut compiled_file: Vec<&String> = Vec::new();
+    for c in &compile_order {
+        if compiled_file.contains(&c) {
+            continue;
+        }
         for (f, body) in &mut function_scopes[0..] {
-            if f.scope.name == c {
+            if &f.scope.name == c {
+                f.infer_types(codegen, body);
                 f.build_function(codegen, body);
+            }
+        }
+        for (t, body) in &mut template_scopes[0..] {
+            if &t.scope.name == c {
+                t.infer_types(codegen, body);
+                t.build_function(codegen, body);
+            }
+        }
+        compiled_file.push(c);
+    }
+    for c in &compile_order {
+        if compiled_file.contains(&c) {
+            continue;
+        }
+        for (f, body) in &mut function_scopes[0..] {
+            if &f.scope.name == c {
                 f.build_instrustions(codegen, body);
             }
         }
         for (t, body) in &mut template_scopes[0..] {
-            if t.scope.name == c {
-                t.build_function(codegen, body);
+            if &t.scope.name == c {
                 t.build_instrustions(codegen, body);
             }
         }

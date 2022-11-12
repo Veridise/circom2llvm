@@ -1,16 +1,19 @@
-use crate::inferrence::{build_array_ty, resolve_dimensions};
-
 use super::codegen::CodeGen;
-use super::expression::{read_signal_from_struct, write_signal_to_struct};
-use super::inferrence::infer_from_statement;
+use super::expression::{
+    flat_expressions_from_statement, read_signal_from_struct, write_signal_to_struct,
+};
+use super::inferrence::{
+    collect_signal, infer_depended_components, infer_dependences, infer_type_from_expression,
+    infer_type_from_statement,
+};
 use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_template_struct};
-use super::scope::{Scope, ScopeCodegenTrait, ScopeTrait};
-use super::statement::resolve_stmt;
+use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
+use super::statement::{flat_statements, resolve_stmt};
 
-use inkwell::types::{BasicType, BasicTypeEnum};
+use inkwell::types::BasicTypeEnum;
 use inkwell::values::{BasicValue, PointerValue};
 use inkwell::AddressSpace;
-use program_structure::ast::{SignalType, Statement, VariableType};
+use program_structure::ast::Statement;
 
 pub struct Template<'ctx> {
     pub scope: Scope<'ctx>,
@@ -22,89 +25,48 @@ pub struct Template<'ctx> {
 }
 
 impl<'ctx> Template<'ctx> {
-    fn _add_input(&mut self, v: &String) {
+    pub fn add_input(&mut self, v: &String) {
         self.inputs.push(v.clone());
     }
 
-    fn _add_intermediate(&mut self, v: &String) {
+    pub fn add_intermediate(&mut self, v: &String) {
         self.inters.push(v.clone());
     }
 
-    fn _add_output(&mut self, v: &String) {
+    pub fn add_output(&mut self, v: &String) {
         self.outputs.push(v.clone());
-    }
-
-    fn infer_signal_from_statement(&mut self, codegen: &CodeGen<'ctx>, stmt: &Statement) {
-        // We only handle signals here.
-        match stmt {
-            Statement::InitializationBlock {
-                meta: _,
-                xtype,
-                initializations,
-            } => match xtype {
-                VariableType::Signal(signal_type, _) => {
-                    for init in initializations {
-                        match init {
-                            Statement::Declaration {
-                                meta: _,
-                                xtype: _,
-                                name,
-                                dimensions,
-                                is_constant: _,
-                            } => {
-                                match signal_type {
-                                    SignalType::Input => {
-                                        self._add_input(name);
-                                    }
-                                    SignalType::Intermediate => {
-                                        self._add_intermediate(name);
-                                    }
-                                    SignalType::Output => {
-                                        self._add_output(name);
-                                    }
-                                };
-                                let dims = resolve_dimensions(dimensions);
-                                let dims_len = dims.len().clone();
-                                let var_ty;
-                                if dims_len == 0 {
-                                    var_ty = codegen.val_ty.as_basic_type_enum();
-                                } else {
-                                    var_ty =
-                                        build_array_ty(codegen.val_ty.as_basic_type_enum(), &dims)
-                                            .as_basic_type_enum();
-                                }
-                                self.scope.set_var_ty(name, var_ty);
-                            }
-                            _ => unreachable!(),
-                        }
-                    }
-                }
-                _ => (),
-            },
-            _ => (),
-        }
     }
 }
 
-impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
-    fn initial_info(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
-        // Collect variables, types, dimensions of array and dependences.
-        match body {
-            Statement::Block { meta: _, stmts } => {
-                for stmt in stmts {
-                    // Collect information from statements as more as possible;
-                    infer_from_statement(codegen, stmt, &mut self.scope, &VariableType::Var);
+impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
+    fn resolve_dependences(&mut self, _codegen: &mut CodeGen<'ctx>, body: &Statement) {
+        let stmts = flat_statements(body);
+        let mut exprs = Vec::new();
+        for stmt in stmts {
+            infer_depended_components(stmt, &mut self.scope);
+            exprs.append(&mut flat_expressions_from_statement(stmt));
+        }
+        for expr in exprs {
+            infer_dependences(expr, &mut self.scope);
+        }
+    }
 
-                    // We only handle signals here.
-                    self.infer_signal_from_statement(codegen, stmt);
-                }
-            }
-            _ => unreachable!(),
+    fn infer_types(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
+        let stmts = flat_statements(body);
+        let mut exprs = Vec::new();
+        for stmt in stmts {
+            infer_type_from_statement(codegen, stmt, &mut self.scope);
+            exprs.append(&mut flat_expressions_from_statement(stmt));
+            // We only handle signals here.
+            collect_signal(stmt, self);
         }
         codegen.set_input_output_names(
             &self.scope.name,
             (self.inputs.to_vec(), self.outputs.to_vec()),
         );
+        for expr in exprs {
+            infer_type_from_expression(codegen, expr, &mut self.scope);
+        }
     }
 
     fn build_function(&mut self, codegen: &CodeGen<'ctx>, _body: &Statement) {
@@ -237,7 +199,7 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Template<'ctx> {
         // Write-in output signals
         let exit_bb = codegen
             .context
-            .append_basic_block(self.scope.main_fn_val.unwrap(), &name_exit_block());
+            .append_basic_block(self.scope.get_main_fn(), &name_exit_block());
         codegen.builder.build_unconditional_branch(exit_bb);
         codegen.builder.position_at_end(exit_bb);
 

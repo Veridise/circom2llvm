@@ -10,7 +10,7 @@ use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
     BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue,
-    PointerValue, AnyValue,
+    PointerValue, ArrayValue,
 };
 
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
@@ -44,7 +44,6 @@ impl<'ctx> CodeGen<'ctx> {
         name: &str,
     ) -> BasicValueEnum<'ctx> {
         let assign_name = "array_getter";
-        println!("PTR: {}, TY: {}", array_ptr.print_to_string(), array_ptr.get_type().print_to_string());
         let res = unsafe {
             self.builder
                 .build_in_bounds_gep(array_ptr, indexes, assign_name)
@@ -129,7 +128,6 @@ impl<'ctx> CodeGen<'ctx> {
         name: &str,
     ) -> BasicValueEnum<'ctx> {
         let assign_name = "struct_getter";
-        println!("PTR: {}, TY: {}", struct_ptr.print_to_string(), struct_ptr.get_type().print_to_string());
         let res = self
             .builder
             .build_struct_gep(struct_ptr, index, assign_name)
@@ -151,8 +149,7 @@ impl<'ctx> CodeGen<'ctx> {
         return self.builder.build_store(res, value);
     }
 
-    pub fn build_inline_array(&self, values: &Vec<IntValue<'ctx>>) -> PointerValue<'ctx> {
-        let arr_val = self.val_ty.const_array(&values[0..]);
+    pub fn build_inline_array(&self, arr_val: ArrayValue<'ctx>) -> PointerValue<'ctx> {
         let assign_name = "inline_array";
         let ptr = self.builder.build_alloca(arr_val.get_type(), assign_name);
         self.builder.build_store(ptr, arr_val);

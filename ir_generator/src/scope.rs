@@ -1,7 +1,5 @@
-use crate::expression::write_signal_to_struct;
-
 use super::codegen::CodeGen;
-use super::expression::{read_signal_from_struct, resolve_expr};
+use super::expression::{read_signal_from_struct, resolve_expr, write_signal_to_struct};
 use super::namer::name_template_fn;
 
 use inkwell::values::{
@@ -68,8 +66,9 @@ pub trait ScopeTrait<'ctx> {
     fn bind_variable(&mut self, codegen: &CodeGen<'ctx>, name: &String, val: BasicValueEnum<'ctx>);
 }
 
-pub trait ScopeCodegenTrait<'ctx> {
-    fn initial_info(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement);
+pub trait CodegenStagesTrait<'ctx> {
+    fn resolve_dependences(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement);
+    fn infer_types(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement);
     fn build_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
     fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement);
 }
@@ -77,15 +76,21 @@ pub trait ScopeCodegenTrait<'ctx> {
 pub struct Scope<'ctx> {
     pub name: String,
     pub args: Vec<String>,
-    pub vars: Vec<String>,
-    pub var2ty: HashMap<String, BasicTypeEnum<'ctx>>,
-    pub var2val: HashMap<String, BasicValueEnum<'ctx>>,
+
+    pub val_ty: IntType<'ctx>,
+
+    // Stage 0: Resolve Dependences.
     pub dependences: Vec<String>,
 
+    //Stage 1: Type inferrence.
+    pub vars: Vec<String>,
+    pub var2ty: HashMap<String, BasicTypeEnum<'ctx>>,
     pub var2comp: HashMap<String, String>,
 
+    // Stage 2: Build Function.
     pub main_fn_val: Option<FunctionValue<'ctx>>,
-    pub val_ty: IntType<'ctx>,
+    // Stage 3: Build Instructions.
+    pub var2val: HashMap<String, BasicValueEnum<'ctx>>,
 }
 
 impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
@@ -183,21 +188,50 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                 Some(idx) => {
                     let comp = self.get_known_comp(name);
                     if idx == 0 {
-                        let arr_ptr = read_signal_from_struct(codegen, comp, &signal_name, ptr, false);
+                        let arr_ptr =
+                            read_signal_from_struct(codegen, comp, &signal_name, ptr, false);
+                        // if self.has_var_ty(&"in_out".to_string()) {
+                        //     let strt_ptr_ty = self.get_var_ty(&"in_out".to_string());
+                        //     println!("Ptr_ty: {}", strt_ptr_ty.print_to_string());
+                        //     println!("Strt: {}", strt_ptr_ty.into_pointer_type().get_element_type().print_to_string());
+                        // }
                         return self.get_from_array(codegen, &access[1..], arr_ptr, name);
-                    } else if idx == access.len() {
+                    } else if idx == access.len() - 1 {
                         let struct_ptr = self
-                            .get_from_array(codegen, &access[0..idx], ptr.as_basic_value_enum(), name)
+                            .get_from_array(
+                                codegen,
+                                &access[0..idx],
+                                ptr.as_basic_value_enum(),
+                                name,
+                            )
                             .into_pointer_value();
-                        return read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false);
+                        return read_signal_from_struct(
+                            codegen,
+                            comp,
+                            &signal_name,
+                            struct_ptr,
+                            false,
+                        );
                     } else {
                         let struct_ptr = self
-                            .get_from_array(codegen, &access[0..idx], ptr.as_basic_value_enum(), name)
+                            .get_from_array(
+                                codegen,
+                                &access[0..idx],
+                                ptr.as_basic_value_enum(),
+                                name,
+                            )
                             .into_pointer_value();
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
                                 .into_pointer_value();
-                        return self.get_from_array(codegen, &access[idx..], arr_ptr.as_basic_value_enum(), name);
+                        // println!("STRT_PTR1: {}", struct_ptr.get_type().print_to_string());
+                        // println!("ARR_PTR1: {}", arr_ptr.get_type().print_to_string());
+                        return self.get_from_array(
+                            codegen,
+                            &access[idx + 1..],
+                            arr_ptr.as_basic_value_enum(),
+                            name,
+                        );
                     }
                 }
                 None => {
@@ -225,8 +259,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                                 .build_store(ptr.into_pointer_value(), array_value);
                         }
                         None => {
-                            let ptr = codegen.builder.build_alloca(array_value.get_type(), name);
-                            codegen.builder.build_store(ptr, array_value);
+                            let ptr = codegen.build_inline_array(value.into_array_value());
                             self.var2val.insert(name.clone(), ptr.as_basic_value_enum());
                         }
                     }
@@ -256,8 +289,29 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                 Some(idx) => {
                     let comp = self.get_known_comp(name);
                     if idx == 0 {
+                        let strt_ptr = ptr.into_pointer_value();
+                        if access.len() == 1 {
+                            write_signal_to_struct(
+                                codegen,
+                                comp,
+                                &signal_name,
+                                strt_ptr,
+                                false,
+                                value,
+                            );
+                        } else {
+                            let arr_ptr = read_signal_from_struct(
+                                codegen,
+                                comp,
+                                &signal_name,
+                                strt_ptr,
+                                false,
+                            ).into_pointer_value();
+                            self.set_to_array(codegen, &access[1..], arr_ptr, name, value);
+                        }
+                    } else if idx == access.len() - 1 {
                         let struct_ptr = self
-                            .get_from_array(codegen, &access[1..], *ptr, name)
+                            .get_from_array(codegen, &access[0..idx], *ptr, name)
                             .into_pointer_value();
                         write_signal_to_struct(
                             codegen,
@@ -267,20 +321,16 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                             false,
                             value,
                         );
-                    } else if idx == access.len() {
-                        let arr_ptr =
-                            read_signal_from_struct(codegen, comp, &signal_name, ptr.into_pointer_value(), false)
-                                .into_pointer_value();
-                        self.set_to_array(codegen, &access[1..], arr_ptr, name, value);
                     } else {
-                        codegen.module.print_to_file("cache.txt");
                         let struct_ptr = self
                             .get_from_array(codegen, &access[0..idx], *ptr, name)
                             .into_pointer_value();
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
                                 .into_pointer_value();
-                        self.set_to_array(codegen, &access[idx..], arr_ptr, name, value);
+                        // println!("STRT_PTR: {}", struct_ptr.get_type().print_to_string());
+                        // println!("ARR_PTR: {}", arr_ptr.get_type().print_to_string());
+                        self.set_to_array(codegen, &access[idx+1..], arr_ptr, name, value);
                     }
                 }
                 None => {

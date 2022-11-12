@@ -222,3 +222,37 @@ pub fn resolve_stmt<'ctx>(
         }
     }
 }
+
+pub fn flat_statements(stmt: &Statement) -> Vec<&Statement> {
+    let mut all_stmts: Vec<&Statement> = vec![stmt];
+    match stmt {
+        Statement::Block { meta: _, stmts } => {
+            for _stmt in stmts {
+                all_stmts.append(&mut flat_statements(_stmt));
+            }
+        }
+        Statement::IfThenElse {
+            if_case, else_case, ..
+        } => {
+            all_stmts.append(&mut flat_statements(if_case.as_ref()));
+            match else_case.as_ref() {
+                Some(_stmt) => {
+                    all_stmts.append(&mut flat_statements(_stmt.as_ref()));
+                }
+                None => (),
+            }
+        }
+        Statement::InitializationBlock {
+            initializations, ..
+        } => {
+            for init in initializations {
+                all_stmts.append(&mut flat_statements(init));
+            }
+        }
+        Statement::While { stmt, .. } => {
+            all_stmts.append(&mut flat_statements(stmt.as_ref()));
+        }
+        _ => (),
+    }
+    return all_stmts;
+}

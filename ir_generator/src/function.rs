@@ -1,13 +1,18 @@
-use crate::inferrence::{get_type_of_expr, infer_from_statement};
+use crate::expression::flat_expressions_from_statement;
+use crate::inferrence::{
+    get_type_from_expr, infer_depended_components, infer_dependences, infer_type_from_expression,
+    infer_type_from_statement,
+};
+use crate::statement::flat_statements;
 
 use super::codegen::CodeGen;
 use super::namer::name_entry_block;
-use super::scope::{Scope, ScopeCodegenTrait, ScopeTrait};
+use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use super::statement::resolve_stmt;
 
 use inkwell::types::{BasicType, BasicTypeEnum};
 use inkwell::values::BasicValue;
-use program_structure::ast::{Statement, VariableType};
+use program_structure::ast::Statement;
 
 pub struct Function<'ctx> {
     pub scope: Scope<'ctx>,
@@ -15,48 +20,51 @@ pub struct Function<'ctx> {
 
 impl<'ctx> Function<'ctx> {}
 
-impl<'ctx> ScopeCodegenTrait<'ctx> for Function<'ctx> {
-    fn initial_info(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
-        match body {
-            Statement::Block { meta: _, stmts } => {
-                for stmt in stmts {
-                    // Variables
-                    infer_from_statement(codegen, stmt, &mut self.scope, &VariableType::Var);
-                }
-            }
-            _ => unreachable!(),
+impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
+    fn resolve_dependences(&mut self, _codegen: &mut CodeGen<'ctx>, body: &Statement) {
+        let stmts = flat_statements(body);
+        let mut exprs = Vec::new();
+        for stmt in stmts {
+            infer_depended_components(stmt, &mut self.scope);
+            exprs.append(&mut flat_expressions_from_statement(stmt));
+        }
+        for expr in exprs {
+            infer_dependences(expr, &mut self.scope);
+        }
+    }
+
+    fn infer_types(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
+        let stmts = flat_statements(body);
+        let mut exprs = Vec::new();
+        for stmt in stmts {
+            infer_type_from_statement(codegen, stmt, &mut self.scope);
+            exprs.append(&mut flat_expressions_from_statement(stmt));
+        }
+        for expr in exprs {
+            infer_type_from_expression(codegen, expr, &mut self.scope);
         }
     }
     fn build_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
         let CodeGen {
-            context,
-            module,
-            val_ty,
-            ..
+            context, module, ..
         } = codegen;
 
         let fn_name = &self.scope.name;
-        let mut ret_ty: BasicTypeEnum<'ctx> = val_ty.as_basic_type_enum();
-
-        // We assume we could infer the return type from the return statement;
-        match body {
-            Statement::Block { meta: _, stmts } => {
-                for stmt in stmts {
-                    match stmt {
-                        Statement::Return { meta: _, value } => {
-                            let ret_ty_op = get_type_of_expr(codegen, value, &self.scope);
-                            match ret_ty_op {
-                                Some(new_ret_ty) => {
-                                    ret_ty = new_ret_ty;
-                                }
-                                None => (),
-                            }
-                        }
-                        _ => (),
+        let mut ret_ty = codegen.val_ty.as_basic_type_enum();
+        let stmts = flat_statements(body);
+        for stmt in stmts {
+            match stmt {
+                Statement::Return { meta: _, value } => {
+                    let ret_ty_op = get_type_from_expr(codegen, value, &self.scope);
+                    match ret_ty_op {
+                        Some(_ret_ty) => {
+                            ret_ty = _ret_ty;
+                        },
+                        None => {},
                     }
                 }
+                _ => (),
             }
-            _ => unreachable!(),
         }
 
         let mut param_tys = Vec::new();
@@ -83,7 +91,6 @@ impl<'ctx> ScopeCodegenTrait<'ctx> for Function<'ctx> {
             self.scope.bind_variable(codegen, &arg, val);
             i += 1;
         }
-        // Initial arrays
         // Initial arrays
         for (name, ty) in &self.scope.var2ty {
             if self.scope.var2val.contains_key(name) {
