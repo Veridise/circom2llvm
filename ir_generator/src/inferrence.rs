@@ -89,7 +89,7 @@ pub fn infer_type_from_statement<'ctx>(
                 }
                 VariableType::Component => {
                     let comp_name = scope.get_known_comp(name);
-                    let strt_name = name_template_struct(comp_name, "circuit");
+                    let strt_name = name_template_struct(comp_name);
                     let strt_ty_op = codegen.module.get_struct_type(&strt_name);
                     let strt_ty = match strt_ty_op {
                         Some(strt_ty) => strt_ty,
@@ -167,7 +167,7 @@ fn get_type_from_access<'ctx>(
             }
             Access::ComponentAccess(_) => {
                 let comp_name = scope.get_known_comp(name);
-                let strt_name = name_template_struct(comp_name, "circuit");
+                let strt_name = name_template_struct(comp_name);
                 current_ty = codegen
                     .module
                     .get_struct_type(&strt_name)

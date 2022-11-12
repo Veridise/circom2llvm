@@ -5,12 +5,12 @@ use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::{Linkage, Module};
-use inkwell::types::{FunctionType, IntType, PointerType, StringRadix, StructType};
+use inkwell::types::{FunctionType, IntType, StringRadix};
 use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
-    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionValue, IntValue,
-    PointerValue, ArrayValue,
+    ArrayValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue,
+    InstructionValue, IntValue, PointerValue,
 };
 
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
@@ -33,7 +33,7 @@ pub struct CodeGen<'ctx> {
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_inlineswitch_fn_val: FunctionValue<'ctx>,
     _global_pow_fn_val: FunctionValue<'ctx>,
-    _global_input_output_record: HashMap<String, (Vec<String>, Vec<String>)>,
+    _global_input_output_record: HashMap<String, (Vec<String>, Vec<String>, Vec<String>)>,
 }
 
 impl<'ctx> CodeGen<'ctx> {
@@ -115,12 +115,6 @@ impl<'ctx> CodeGen<'ctx> {
         return value;
     }
 
-    pub fn build_struct(&self, name: &str) -> (StructType<'ctx>, PointerType<'ctx>) {
-        let struct_ty = self.context.opaque_struct_type(&name);
-        let struct_ptr_ty = struct_ty.ptr_type(AddressSpace::Generic);
-        return (struct_ty, struct_ptr_ty);
-    }
-
     pub fn build_struct_getter(
         &self,
         struct_ptr: PointerValue<'ctx>,
@@ -165,11 +159,18 @@ impl<'ctx> CodeGen<'ctx> {
             .into_int_value();
     }
 
-    pub fn get_input_output_names(&self, templ_name: &String) -> Option<&(Vec<String>, Vec<String>)> {
+    pub fn get_input_output_names(
+        &self,
+        templ_name: &String,
+    ) -> Option<&(Vec<String>, Vec<String>, Vec<String>)> {
         return self._global_input_output_record.get(templ_name);
     }
 
-    pub fn set_input_output_names(&mut self, templ_name: &String, v: (Vec<String>, Vec<String>)) {
+    pub fn set_input_output_names(
+        &mut self,
+        templ_name: &String,
+        v: (Vec<String>, Vec<String>, Vec<String>),
+    ) {
         self._global_input_output_record
             .insert(templ_name.clone(), v);
     }

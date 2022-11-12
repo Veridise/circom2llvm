@@ -45,18 +45,20 @@ pub fn name_template_fn(templ_name: &str, fn_name: &str) -> String {
     return format!("fn_template_{}_{}", fn_name, templ_name).to_lowercase();
 }
 
-pub fn name_template_struct(templ_name: &str, struct_name: &str) -> String {
-    return format!("struct_template_{}_{}", struct_name, templ_name).to_lowercase();
+pub fn name_template_struct(templ_name: &str) -> String {
+    return format!("struct_template_circuit_{}", templ_name).to_lowercase();
 }
 
-pub fn name_signal(signal_name: &str, templ_name: &str, is_read: bool, input: bool, inner: bool) -> String {
+pub fn name_signal(templ_name: &str, signal_name: &str, is_read: bool, is_arg: bool, is_input: bool, inner: bool) -> String {
     let mut name = "".to_string();
     if is_read {
         name = format!("read{}", name);
     } else {
         name = format!("write{}", name);
     }
-    if input {
+    if is_arg {
+        name = format!("{}_arg", name);
+    } else if is_input {
         name = format!("{}_input", name);
     } else {
         name = format!("{}_output", name);

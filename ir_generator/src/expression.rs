@@ -214,20 +214,28 @@ pub fn read_signal_from_struct<'ctx>(
 ) -> BasicValueEnum<'ctx> {
     let container: &Vec<String>;
     let offset;
-    let input;
-    let (inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
-    if inputs.contains(&signal_name) {
+    let is_arg;
+    let is_input;
+    let (args, inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
+    if args.contains(signal_name) {
+        container = args;
+        offset = 0;
+        is_arg = true;
+        is_input = false;
+    } else if inputs.contains(signal_name) {
         container = inputs;
-        offset = 2;
-        input = true;
-    } else if outputs.contains(&signal_name) {
+        offset = args.len() as u32;
+        is_arg = false;
+        is_input = true;
+    } else if outputs.contains(signal_name) {
         container = outputs;
-        offset = 2 + inputs.len() as u32;
-        input = false;
+        offset = (args.len() + inputs.len()) as u32;
+        is_arg = false;
+        is_input = false;
     } else {
         unreachable!()
     }
-    let assign_name = name_signal(signal_name, templ_name, false, input, call_from_inner);
+    let assign_name = name_signal(templ_name, signal_name, true, is_arg, is_input, call_from_inner);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
@@ -235,7 +243,7 @@ pub fn read_signal_from_struct<'ctx>(
     if strt_ty.count_fields() == 0 {
         let real_strt_ty = codegen
             .module
-            .get_struct_type(&name_template_struct(templ_name, "circuit"))
+            .get_struct_type(&name_template_struct(templ_name))
             .unwrap();
         real_struct_ptr = codegen.builder.build_pointer_cast(
             struct_ptr,
@@ -258,20 +266,28 @@ pub fn write_signal_to_struct<'ctx>(
 ) -> InstructionValue<'ctx> {
     let container: &Vec<String>;
     let offset;
-    let input;
-    let (inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
-    if inputs.contains(&signal_name) {
+    let is_arg;
+    let is_input;
+    let (args, inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
+    if args.contains(signal_name) {
+        container = args;
+        offset = 0;
+        is_arg = true;
+        is_input = false;
+    } else if inputs.contains(signal_name) {
         container = inputs;
-        offset = 2;
-        input = true;
-    } else if outputs.contains(&signal_name) {
+        offset = args.len() as u32;
+        is_arg = false;
+        is_input = true;
+    } else if outputs.contains(signal_name) {
         container = outputs;
-        offset = 2 + inputs.len() as u32;
-        input = false;
+        offset = (args.len() + inputs.len()) as u32;
+        is_arg = false;
+        is_input = false;
     } else {
         unreachable!()
     }
-    let assign_name = name_signal(signal_name, templ_name, false, input, call_from_inner);
+    let assign_name = name_signal( templ_name, signal_name, false, is_arg, is_input, call_from_inner);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);

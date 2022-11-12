@@ -80,17 +80,15 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
     }
 
     fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        let fn_val = &self.scope.get_main_fn();
+        let fn_val = self.scope.get_main_fn();
         let current_bb = fn_val.get_first_basic_block().unwrap();
         codegen.builder.position_at_end(current_bb);
         // Bind args
-        let mut i = 0;
-        let args = self.scope.args.clone();
-        for arg in args {
-            let val = fn_val.get_nth_param(i).unwrap();
-            self.scope.bind_variable(codegen, &arg, val);
-            i += 1;
+        for (idx, arg) in self.scope.args.clone().iter().enumerate() {
+            let val = fn_val.get_nth_param(idx as u32).unwrap();
+            self.scope.bind_variable(codegen, arg, val);
         }
+
         // Initial arrays
         for (name, ty) in &self.scope.var2ty {
             if self.scope.var2val.contains_key(name) {

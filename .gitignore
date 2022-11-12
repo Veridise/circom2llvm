@@ -14,4 +14,4 @@ Cargo.lock
 .vscode
 examples_c
 examples/*/**
-cache.*
+cache

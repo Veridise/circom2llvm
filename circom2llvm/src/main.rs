@@ -5,7 +5,11 @@ use ir_generator::generator::generate;
 use clap::Parser;
 use program_structure::ast::AST;
 use program_structure::error_definition::Report;
-use std::{env, fs, path::PathBuf};
+use std::{
+    env,
+    fs::{self, canonicalize},
+    path::PathBuf,
+};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -85,8 +89,14 @@ fn main() {
                 let mut include_pathbufs: Vec<PathBuf> = Vec::new();
                 let mut generated_includes: Vec<String> = Vec::new();
                 for i in &ast.includes {
+                    let abs_path = canonicalize(working_dir.join(i))
+                        .unwrap()
+                        .clone()
+                        .into_os_string()
+                        .into_string()
+                        .unwrap();
                     include_pathbufs.push(working_dir.join(i));
-                    generated_includes.push(i.clone());
+                    generated_includes.push(abs_path);
                 }
                 let mut ast_vec: Vec<AST> = vec![ast];
                 while include_pathbufs.len() > 0 {
@@ -106,10 +116,16 @@ fn main() {
                         }
                     };
                     for i in &last_ast.includes {
-                        if generated_includes.contains(&i) {
+                        let abs_path = canonicalize(working_dir.join(i))
+                            .unwrap()
+                            .clone()
+                            .into_os_string()
+                            .into_string()
+                            .unwrap();
+                        if generated_includes.contains(&abs_path) {
                             continue;
                         }
-                        generated_includes.push(i.clone());
+                        generated_includes.push(abs_path);
                         include_pathbufs.push(working_dir.join(i));
                     }
                     ast_vec.push(last_ast);

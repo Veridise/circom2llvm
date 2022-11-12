@@ -92,7 +92,6 @@ pub fn generate(
                     inputs: Vec::new(),
                     inters: Vec::new(),
                     outputs: Vec::new(),
-                    templ_struct_ptr: None,
                 };
                 template_scope.resolve_dependences(codegen, &body);
                 template_scopes.push((template_scope, &body));
