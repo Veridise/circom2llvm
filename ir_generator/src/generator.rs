@@ -135,11 +135,13 @@ pub fn generate(
         dependence_graph.insert(f.scope.name.clone(), owned_deps);
     }
     let compile_order = resolve_dependence(&dependence_graph);
-    let mut compiled_file: Vec<&String> = Vec::new();
-    for c in &compile_order {
-        if compiled_file.contains(&c) {
-            continue;
+    let mut unique_compile_order: Vec<String> = Vec::new();
+    for c in compile_order {
+        if !unique_compile_order.contains(&c) {
+            unique_compile_order.push(c);
         }
+    }
+    for c in &unique_compile_order {
         for (f, body) in &mut function_scopes[0..] {
             if &f.scope.name == c {
                 f.infer_types(codegen, body);
@@ -152,12 +154,8 @@ pub fn generate(
                 t.build_function(codegen, body);
             }
         }
-        compiled_file.push(c);
     }
-    for c in &compile_order {
-        if compiled_file.contains(&c) {
-            continue;
-        }
+    for c in &unique_compile_order {
         for (f, body) in &mut function_scopes[0..] {
             if &f.scope.name == c {
                 f.build_instrustions(codegen, body);
