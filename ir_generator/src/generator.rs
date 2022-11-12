@@ -31,9 +31,10 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
             }
         }
         if last_all == all {
+            println!("Error: Cannot resolve dependences! Perhaps some includes are missing.");
             for (k, deps) in dependence_graph {
                 if output.contains(&k) {
-                    println!("Resolved: {}", k);
+                    continue;
                 } else {
                     let dep_strs: Vec<&str> = deps
                         .iter()
@@ -41,13 +42,12 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
                         .map(|s| s.as_str())
                         .collect();
                     println!(
-                        "Err: UnResolved: {}, UnResolved-deps: {}",
+                        "Unresolved: {}, Unresolved dependences: {}.",
                         k,
                         dep_strs.join("  ")
                     );
                 }
             }
-            println!("Err: Cannot resolve dependences!");
             unreachable!();
         }
     }

@@ -21,7 +21,7 @@ pub fn resolve_expr<'ctx>(
 ) -> BasicValueEnum<'ctx> {
     match expr {
         Expression::AnonymousComp { .. } => {
-            println!("Expr: AnonymousComp");
+            println!("Error: AnonymousComp isn't supported now.");
             unreachable!()
         }
         Expression::ArrayInLine { .. } => {
@@ -64,7 +64,7 @@ pub fn resolve_expr<'ctx>(
             return val.unwrap().as_basic_value_enum();
         }
         Expression::ParallelOp { .. } => {
-            println!("Expr: ParallelOp");
+            println!("Error: ParallelOp isn't supported now.");
             unreachable!()
         }
         Expression::PrefixOp {
@@ -77,7 +77,7 @@ pub fn resolve_expr<'ctx>(
             return res.as_basic_value_enum();
         }
         Expression::Tuple { .. } => {
-            println!("Expr: Tuple");
+            println!("Error: Tuple isn't supported now.");
             unreachable!()
         }
         Expression::UniformArray { .. } => {
@@ -101,7 +101,11 @@ fn resolve_inline_array<'ctx>(
     match expr {
         Expression::ArrayInLine { meta: _, values } => {
             if values.len() > MAX_ARRAYSIZE as usize {
-                println!("Err: max arraysize is {}", MAX_ARRAYSIZE);
+                println!(
+                    "Error: Max arraysize is {}, current is {}.",
+                    MAX_ARRAYSIZE,
+                    values.len()
+                );
                 unreachable!()
             }
             let mut array_values = Vec::new();

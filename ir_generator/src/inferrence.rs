@@ -81,7 +81,7 @@ pub fn infer_type_from_statement<'ctx>(
             let val_ty: BasicTypeEnum;
             match xtype {
                 VariableType::AnonymousComponent => {
-                    println!("VariableType: AnonymousComponent");
+                    println!("Error: AnonymousComponent isn't supported now.");
                     unreachable!()
                 }
                 VariableType::Var => {
@@ -197,7 +197,7 @@ pub fn get_type_from_expr<'ctx>(
 ) -> Option<BasicTypeEnum<'ctx>> {
     match expr {
         Expression::AnonymousComp { .. } => {
-            println!("Expr: AnonymousComp");
+            println!("Error: AnonymousComp isn't supported now.");
             unreachable!();
         }
         Expression::ArrayInLine { meta: _, values } => {
@@ -233,7 +233,7 @@ pub fn get_type_from_expr<'ctx>(
             return get_type_from_expr(codegen, rhe.as_ref(), scope);
         }
         Expression::Tuple { .. } => {
-            println!("Expr: Tuple");
+            println!("Error: Tuple isn't supported now.");
             unreachable!();
         }
         Expression::UniformArray { .. } => {
@@ -260,7 +260,7 @@ fn construct_array_ty<'ctx>(val_ty: BasicTypeEnum<'ctx>, dims: &Vec<u32>) -> Arr
         }
         let size: u32 = *d;
         if size == 0 {
-            println!("Err: array size is zero");
+            println!("Error: Arraysize is zero.");
             unreachable!();
         }
         arr_ty = arr_ty.array_type(size);

@@ -33,7 +33,7 @@ fn main() {
                         let ext_op = p.extension();
                         match ext_op {
                             Some(ext) => ext == "circom",
-                            None => false,      
+                            None => false,
                         }
                     })
                     .collect();
@@ -55,7 +55,7 @@ fn main() {
     }
     if !output.is_dir() {
         println!(
-            "Error: output is NOT a directory, current is : {}",
+            "Error: output is NOT a directory, current is : {}.",
             output.display()
         );
         return;

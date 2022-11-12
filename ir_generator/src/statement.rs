@@ -94,12 +94,9 @@ pub fn resolve_stmt<'ctx>(
                 }
             }
         }
-        Statement::LogCall { .. } => {
-            println!("Statement: LogCall");
-            unreachable!();
-        }
+        Statement::LogCall { .. } => (),
         Statement::MultSubstitution { .. } => {
-            println!("Statement: MultSubstitution");
+            println!("Error: MultSubstitution isn't supported now.");
             unreachable!();
         }
         Statement::Return { meta: _, value } => {

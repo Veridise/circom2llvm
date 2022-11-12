@@ -190,11 +190,6 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     if idx == 0 {
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, ptr, false);
-                        // if self.has_var_ty(&"in_out".to_string()) {
-                        //     let strt_ptr_ty = self.get_var_ty(&"in_out".to_string());
-                        //     println!("Ptr_ty: {}", strt_ptr_ty.print_to_string());
-                        //     println!("Strt: {}", strt_ptr_ty.into_pointer_type().get_element_type().print_to_string());
-                        // }
                         return self.get_from_array(codegen, &access[1..], arr_ptr, name);
                     } else if idx == access.len() - 1 {
                         let struct_ptr = self
@@ -224,8 +219,6 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
                                 .into_pointer_value();
-                        // println!("STRT_PTR1: {}", struct_ptr.get_type().print_to_string());
-                        // println!("ARR_PTR1: {}", arr_ptr.get_type().print_to_string());
                         return self.get_from_array(
                             codegen,
                             &access[idx + 1..],
@@ -328,8 +321,6 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
                                 .into_pointer_value();
-                        // println!("STRT_PTR: {}", struct_ptr.get_type().print_to_string());
-                        // println!("ARR_PTR: {}", arr_ptr.get_type().print_to_string());
                         self.set_to_array(codegen, &access[idx+1..], arr_ptr, name, value);
                     }
                 }
@@ -448,7 +439,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                 self.var2val.insert(name.clone(), ptr.as_basic_value_enum());
             }
             _ => {
-                println!("Err: This case isn't supported now.");
+                println!("Error: Try to bind datatype that isn't supported.");
                 unreachable!();
             }
         }
