@@ -10,7 +10,7 @@ use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
     ArrayValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue,
-    InstructionValue, IntValue, PointerValue,
+    InstructionValue, IntValue, PointerValue, InstructionOpcode,
 };
 
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
@@ -173,6 +173,21 @@ impl<'ctx> CodeGen<'ctx> {
     ) {
         self._global_input_output_record
             .insert(templ_name.clone(), v);
+    }
+
+    pub fn build_block_transferring(&self, source_bb: BasicBlock<'ctx>, destination_bb: BasicBlock<'ctx>) {
+        self.builder.position_at_end(source_bb);
+        let last_inst_op = source_bb.get_last_instruction();
+        let has_return = match last_inst_op {
+            Some(last_inst) => {
+                last_inst.get_opcode() == InstructionOpcode::Return
+            }
+            None => false
+        };
+        if !has_return {
+            self.builder.build_unconditional_branch(destination_bb);
+        }
+        self.builder.position_at_end(destination_bb);
     }
 }
 

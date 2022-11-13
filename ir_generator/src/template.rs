@@ -205,9 +205,9 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         }
 
         // Write-in output signals
+        let current_bb = init_fn_val.get_last_basic_block().unwrap();
         let exit_bb = context.append_basic_block(init_fn_val, &name_exit_block());
-        codegen.builder.build_unconditional_branch(exit_bb);
-        codegen.builder.position_at_end(exit_bb);
+        codegen.build_block_transferring(current_bb, exit_bb);
 
         for output in &self.outputs {
             let val = self.scope.var2val.get(output).unwrap().to_owned();

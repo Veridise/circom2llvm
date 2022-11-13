@@ -71,3 +71,7 @@ pub fn name_signal(templ_name: &str, signal_name: &str, is_read: bool, is_arg: b
     name = format!("{}.{}.{}", name, templ_name, signal_name).to_lowercase();
     return name;
 }
+
+pub fn name_phi(source_variable_name: &String) -> String {
+    return format!("{}.phi", source_variable_name).to_lowercase();
+}

@@ -1,6 +1,6 @@
-use crate::namer::{name_if_block, name_loop_block};
+use crate::namer::{name_if_block, name_loop_block, name_phi};
 
-use super::codegen::{CodeGen, APPLY_MOD};
+use super::codegen::CodeGen;
 use super::expression::resolve_expr;
 use super::scope::ScopeTrait;
 
@@ -35,39 +35,35 @@ pub fn resolve_stmt<'ctx>(
             if_case,
             else_case,
         } => {
+            let CodeGen {
+                context, builder, ..
+            } = codegen;
             let current_fnc = scope.get_main_fn();
-            let current_bb = current_fnc.get_last_basic_block().unwrap();
-            let if_bb = codegen
-                .context
-                .append_basic_block(current_fnc, &name_if_block(true, false));
-            let else_bb = codegen
-                .context
-                .append_basic_block(current_fnc, &name_if_block(false, false));
-            let end_bb = codegen
-                .context
-                .append_basic_block(current_fnc, &name_if_block(false, true));
+            let if_bb = context.append_basic_block(current_fnc, &name_if_block(true, false));
+            let else_bb = context.append_basic_block(current_fnc, &name_if_block(false, false));
+
+            // current -> if.true
             let cond = resolve_expr(codegen, cond, scope).into_int_value();
+            builder.build_conditional_branch(cond, if_bb, else_bb);
 
-            // current -> if.body
-            codegen.builder.position_at_end(current_bb);
-            codegen
-                .builder
-                .build_conditional_branch(cond, if_bb, else_bb);
-
-            // if.body
-            codegen.builder.position_at_end(if_bb);
+            // if.true body
+            builder.position_at_end(if_bb);
             resolve_stmt(scope, codegen, &if_case.as_ref());
-            codegen.builder.build_unconditional_branch(end_bb);
 
-            // if.else
-            codegen.builder.position_at_end(else_bb);
-            if let Some(else_stmt) = else_case {
-                resolve_stmt(scope, codegen, &else_stmt.as_ref());
+            // if.false body
+            builder.position_at_end(else_bb);
+            match else_case {
+                Some(else_stmt) => {
+                    resolve_stmt(scope, codegen, &else_stmt.as_ref());
+                }
+                _ => (),
             }
-            codegen.builder.build_unconditional_branch(end_bb);
 
-            // if.end
-            codegen.builder.position_at_end(end_bb);
+            let end_bb = context.append_basic_block(current_fnc, &name_if_block(false, true));
+            // if.true -> if.end
+            codegen.build_block_transferring(if_bb, end_bb);
+            // if.false -> if.end
+            codegen.build_block_transferring(else_bb, end_bb);
         }
         Statement::InitializationBlock {
             meta: _,
@@ -140,12 +136,16 @@ pub fn resolve_stmt<'ctx>(
             cond,
             stmt,
         } => {
+            let CodeGen {
+                context,
+                builder,
+                val_ty,
+                ..
+            } = codegen;
             let current_func = scope.get_main_fn();
             let current_bb = current_func.get_last_basic_block().unwrap();
-            let loop_bb = codegen
-                .context
-                .append_basic_block(current_func, &name_loop_block(true, false, false, false));
 
+            // Get the body of while and the latch step of while.
             let (stmt_body, stmt_step) = match stmt.as_ref() {
                 Statement::Block { meta: _, stmts } => {
                     assert!(stmts.len() == 2, "Uncanonized while block!");
@@ -155,6 +155,8 @@ pub fn resolve_stmt<'ctx>(
                 _ => unreachable!(),
             };
 
+            // We need to get the name of the variable which controls the while loop. Thus we could bind it to the phi node.
+            // We don't implement the whole sub-scope mechanism, instead, we just try to find the variable.
             let ctrl_var_name = match cond {
                 Expression::InfixOp { lhe, .. } => match lhe.as_ref() {
                     Expression::Variable { name, .. } => name,
@@ -169,18 +171,15 @@ pub fn resolve_stmt<'ctx>(
                 },
                 _ => unreachable!(),
             };
+            let ctrl_var_entry = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
 
             // current -> loop.body
-            codegen.builder.position_at_end(current_bb);
-            let ctrl_var_entry = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
-            codegen.builder.build_unconditional_branch(loop_bb);
+            let loop_bb_name = name_loop_block(true, false, false, false);
+            let loop_bb = context.append_basic_block(current_func, &loop_bb_name);
+            codegen.build_block_transferring(current_bb, loop_bb);
 
             // loop.body
-            codegen.builder.position_at_end(loop_bb);
-            let phi = codegen.builder.build_phi(
-                codegen.val_ty.as_basic_type_enum(),
-                &name_loop_block(false, true, false, false),
-            );
+            let phi = builder.build_phi(val_ty.as_basic_type_enum(), &name_phi(ctrl_var_name));
             phi.add_incoming(&[(&ctrl_var_entry, current_bb)]);
             scope.set_var(
                 codegen,
@@ -190,26 +189,27 @@ pub fn resolve_stmt<'ctx>(
             );
 
             resolve_stmt(scope, codegen, stmt_body);
-            codegen.builder.position_at_end(loop_bb);
 
+            // loop.body -> loop.latch
+
+            let latch_bb_name = name_loop_block(false, false, true, false);
             let latch_bb = codegen
                 .context
-                .append_basic_block(current_func, &name_loop_block(false, false, true, false));
-            codegen.builder.build_unconditional_branch(latch_bb);
+                .append_basic_block(current_func, &latch_bb_name);
+            codegen.build_block_transferring(loop_bb, latch_bb);
 
             // loop.latch
-            codegen.builder.position_at_end(latch_bb);
-            unsafe { APPLY_MOD = false };
             resolve_stmt(scope, codegen, stmt_step);
-            unsafe { APPLY_MOD = true };
-            codegen.builder.position_at_end(latch_bb);
+
+            codegen.build_block_transferring(loop_bb, latch_bb);
             let ctrl_var_latch = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
             phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
             let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
 
+            let exit_bb_name = name_loop_block(false, false, false, true);
             let exit_bb = codegen
                 .context
-                .append_basic_block(current_func, &name_loop_block(false, false, false, true));
+                .append_basic_block(current_func, &exit_bb_name);
             codegen
                 .builder
                 .build_conditional_branch(cond_var, loop_bb, exit_bb);
