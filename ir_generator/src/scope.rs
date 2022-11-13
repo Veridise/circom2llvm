@@ -2,6 +2,7 @@ use super::codegen::CodeGen;
 use super::expression::{read_signal_from_struct, resolve_expr, write_signal_to_struct};
 use super::namer::name_template_fn;
 
+use inkwell::basic_block::BasicBlock;
 use inkwell::values::{
     BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue,
 };
@@ -55,6 +56,8 @@ pub trait ScopeTrait<'ctx> {
     fn has_var_ty(&self, name: &String) -> bool;
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
     fn set_main_fn(&mut self, fn_val: FunctionValue<'ctx>);
+    fn get_current_exit_block(&self) -> BasicBlock<'ctx>;
+    fn set_current_exit_block(&mut self, codegen: &CodeGen<'ctx>, bb: BasicBlock<'ctx>);
     fn call(
         &self,
         codegen: &CodeGen<'ctx>,
@@ -91,6 +94,7 @@ pub struct Scope<'ctx> {
     pub main_fn_val: Option<FunctionValue<'ctx>>,
     // Stage 3: Build Instructions.
     pub var2val: HashMap<String, BasicValueEnum<'ctx>>,
+    pub current_exit_block: Option<BasicBlock<'ctx>>,
 }
 
 impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
@@ -244,18 +248,8 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         if access.len() == 0 {
             match value {
                 BasicValueEnum::ArrayValue(array_value) => {
-                    let ptr_op = self.var2val.get(name);
-                    match ptr_op {
-                        Some(ptr) => {
-                            codegen
-                                .builder
-                                .build_store(ptr.into_pointer_value(), array_value);
-                        }
-                        None => {
-                            let ptr = codegen.build_inline_array(value.into_array_value());
-                            self.var2val.insert(name.clone(), ptr.as_basic_value_enum());
-                        }
-                    }
+                    let ptr = self.var2val.get(name).unwrap().into_pointer_value();
+                    codegen.builder.build_store(ptr, array_value);
                 }
                 _ => {
                     self.var2val
@@ -299,7 +293,8 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                                 &signal_name,
                                 strt_ptr,
                                 false,
-                            ).into_pointer_value();
+                            )
+                            .into_pointer_value();
                             self.set_to_array(codegen, &access[1..], arr_ptr, name, value);
                         }
                     } else if idx == access.len() - 1 {
@@ -321,7 +316,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
                                 .into_pointer_value();
-                        self.set_to_array(codegen, &access[idx+1..], arr_ptr, name, value);
+                        self.set_to_array(codegen, &access[idx + 1..], arr_ptr, name, value);
                     }
                 }
                 None => {
@@ -380,6 +375,15 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
 
     fn set_main_fn(&mut self, fn_val: FunctionValue<'ctx>) {
         self.main_fn_val = Some(fn_val);
+    }
+
+    fn get_current_exit_block(&self) -> BasicBlock<'ctx> {
+        return self.current_exit_block.unwrap();
+    }
+
+    fn set_current_exit_block(&mut self, codegen: &CodeGen<'ctx>, bb: BasicBlock<'ctx>) {
+        self.current_exit_block = Some(bb);
+        codegen.builder.position_at_end(bb);
     }
 
     fn call(

@@ -1,15 +1,18 @@
-use crate::inferrence::construct_uniform_array_ty;
-use crate::namer::name_template_struct;
+use std::ops::Div;
+
+use super::inferrence::{construct_array_ty, construct_uniform_array_ty};
+use super::namer::name_template_struct;
 
 use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::namer::name_signal;
 use super::scope::ScopeTrait;
 
-use inkwell::types::{BasicTypeEnum, StringRadix};
+use inkwell::types::{BasicType, BasicTypeEnum, StringRadix};
 use inkwell::values::{
     ArrayValue, BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue,
 };
 use inkwell::{AddressSpace, IntPredicate};
+use num_traits::ToPrimitive;
 use program_structure::ast::{
     Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement,
 };
@@ -25,8 +28,7 @@ pub fn resolve_expr<'ctx>(
             unreachable!()
         }
         Expression::ArrayInLine { .. } => {
-            let array_val = resolve_inline_array(codegen, expr, scope).into_array_value();
-            return codegen.build_inline_array(array_val).as_basic_value_enum();
+            return resolve_inline_array(codegen, expr, scope);
         }
         Expression::Call { meta: _, id, args } => {
             return scope.call(codegen, id, args);
@@ -98,37 +100,105 @@ fn resolve_inline_array<'ctx>(
     expr: &Expression,
     scope: &dyn ScopeTrait<'ctx>,
 ) -> BasicValueEnum<'ctx> {
-    match expr {
-        Expression::ArrayInLine { meta: _, values } => {
-            if values.len() > MAX_ARRAYSIZE as usize {
-                println!(
-                    "Error: Max arraysize is {}, current is {}.",
-                    MAX_ARRAYSIZE,
-                    values.len()
-                );
-                unreachable!()
-            }
-            let mut array_values = Vec::new();
-            for val in values {
-                array_values.push(resolve_inline_array(codegen, val, scope));
-            }
-            let array_ty = array_values[0].get_type();
-            let array_val = match array_ty {
-                BasicTypeEnum::ArrayType(ty) => {
-                    let values: Vec<ArrayValue> =
-                        array_values.iter().map(|v| v.into_array_value()).collect();
-                    ty.const_array(&values)
+    let mut dims: Vec<u32> = Vec::new();
+    let mut end = false;
+    let mut current_expr = expr;
+    let mut val_is_const = true;
+    while !end {
+        match current_expr {
+            Expression::ArrayInLine { meta: _, values } => {
+                if values.len() > MAX_ARRAYSIZE as usize {
+                    println!(
+                        "Error: Max arraysize is {}, current is {}.",
+                        MAX_ARRAYSIZE,
+                        values.len()
+                    );
+                    unreachable!()
                 }
-                BasicTypeEnum::IntType(ty) => {
-                    let values: Vec<IntValue> =
-                        array_values.iter().map(|v| v.into_int_value()).collect();
-                    ty.const_array(&values)
-                }
-                _ => unreachable!(),
-            };
-            return array_val.as_basic_value_enum();
+                dims.push(values.len() as u32);
+                current_expr = &values[0];
+            }
+            Expression::Number(_, _) => {
+                end = true;
+            }
+            _ => {
+                end = true;
+                val_is_const = false;
+            }
         }
-        _ => return resolve_expr(codegen, expr, scope),
+    }
+
+    fn convert_const_inline_array<'ctx>(
+        codegen: &CodeGen<'ctx>,
+        expr: &Expression,
+    ) -> BasicValueEnum<'ctx> {
+        match expr {
+            Expression::ArrayInLine { meta: _, values } => {
+                let mut array_values = Vec::new();
+                for val in values {
+                    array_values.push(convert_const_inline_array(codegen, val));
+                }
+                let array_ty = array_values[0].get_type();
+                let array_val = match array_ty {
+                    BasicTypeEnum::ArrayType(ty) => {
+                        let values: Vec<ArrayValue> =
+                            array_values.iter().map(|v| v.into_array_value()).collect();
+                        ty.const_array(&values)
+                    }
+                    BasicTypeEnum::IntType(ty) => {
+                        let values: Vec<IntValue> =
+                            array_values.iter().map(|v| v.into_int_value()).collect();
+                        ty.const_array(&values)
+                    }
+                    _ => unreachable!(),
+                };
+                return array_val.as_basic_value_enum();
+            }
+            Expression::Number(_, bigint) => {
+                let valid_u64 = bigint % u64::MAX;
+                let val_ty = codegen.val_ty.const_int(valid_u64.to_u64().unwrap(), false);
+                return val_ty.as_basic_value_enum();
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    fn convert_variable_inline_array<'ctx>(
+        codegen: &CodeGen<'ctx>,
+        expr: &Expression,
+        scope: &dyn ScopeTrait<'ctx>,
+        array_ptr: PointerValue<'ctx>,
+        mut indexes: Vec<IntValue<'ctx>>,
+    ) {
+        match expr {
+            Expression::ArrayInLine { meta: _, values } => {
+                for (idx, v) in values.iter().enumerate() {
+                    let mut new_indexes = indexes.clone();
+                    new_indexes.push(codegen.val_ty.const_int(idx as u64, false));
+                    convert_variable_inline_array(codegen, v, scope, array_ptr, new_indexes);
+                }
+            },
+            _ => {
+                let val = resolve_expr(codegen, expr, scope);
+                let name = "var_inline_array";
+                indexes.insert(0, codegen.const_zero);
+                codegen.build_array_setter(array_ptr, &indexes, name, val);
+            }
+        }
+    }
+
+    if val_is_const {
+        let arr_val = convert_const_inline_array(codegen, expr);
+        let arr_ptr = codegen
+            .builder
+            .build_alloca(arr_val.get_type(), "const_inline_array");
+        codegen.builder.build_store(arr_ptr, arr_val);
+        return arr_ptr.as_basic_value_enum();
+    } else {
+        let arr_ty = construct_array_ty(codegen.val_ty.as_basic_type_enum(), &dims);
+        let arr_ptr = codegen.builder.build_alloca(arr_ty, "var_inline_array");
+        convert_variable_inline_array(codegen, expr, scope, arr_ptr, Vec::new());
+        return arr_ptr.as_basic_value_enum();
     }
 }
 
@@ -137,10 +207,15 @@ fn resolve_prefix_op<'ctx>(
     prefix_op: &ExpressionPrefixOpcode,
     rval: IntValue<'ctx>,
 ) -> IntValue<'ctx> {
+    let CodeGen { builder, .. } = codegen;
     let zero = codegen.val_ty.const_zero();
     let temp = match prefix_op {
-        ExpressionPrefixOpcode::Sub => zero.const_sub(rval),
-        _ => unreachable!(),
+        ExpressionPrefixOpcode::Sub => builder.build_int_sub(zero, rval, "neg"),
+        ExpressionPrefixOpcode::BoolNot => builder.build_not(rval, "not"),
+        ExpressionPrefixOpcode::Complement => {
+            println!("Error: Complement isn't supported now.");
+            unreachable!();
+        }
     };
     return codegen.build_result_modulo(temp);
 }
@@ -235,7 +310,14 @@ pub fn read_signal_from_struct<'ctx>(
     } else {
         unreachable!()
     }
-    let assign_name = name_signal(templ_name, signal_name, true, is_arg, is_input, call_from_inner);
+    let assign_name = name_signal(
+        templ_name,
+        signal_name,
+        true,
+        is_arg,
+        is_input,
+        call_from_inner,
+    );
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
@@ -287,7 +369,14 @@ pub fn write_signal_to_struct<'ctx>(
     } else {
         unreachable!()
     }
-    let assign_name = name_signal( templ_name, signal_name, false, is_arg, is_input, call_from_inner);
+    let assign_name = name_signal(
+        templ_name,
+        signal_name,
+        false,
+        is_arg,
+        is_input,
+        call_from_inner,
+    );
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);

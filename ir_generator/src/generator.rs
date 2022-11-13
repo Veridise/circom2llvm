@@ -86,6 +86,7 @@ pub fn generate(
                     main_fn_val: None,
 
                     var2val: HashMap::new(),
+                    current_exit_block: None,
                 };
                 let mut template_scope = Template {
                     scope,
@@ -117,6 +118,7 @@ pub fn generate(
                     main_fn_val: None,
 
                     var2comp: HashMap::new(),
+                    current_exit_block: None,
                 };
                 let mut function_scope = Function { scope };
                 function_scope.resolve_dependences(codegen, &body);

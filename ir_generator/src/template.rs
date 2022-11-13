@@ -138,7 +138,7 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let build_fn_name = name_template_fn(templ_name, "build");
         let build_fn_val = module.get_function(&build_fn_name).unwrap();
         let current_bb = build_fn_val.get_first_basic_block().unwrap();
-        builder.position_at_end(current_bb);
+        self.scope.set_current_exit_block(codegen, current_bb);
 
         let templ_struct_name = &name_template_struct(templ_name);
         let templ_struct_ty = module.get_struct_type(templ_struct_name).unwrap();
@@ -156,7 +156,7 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let init_fn_name = name_template_fn(templ_name, "init");
         let init_fn_val = module.get_function(&init_fn_name).unwrap();
         let current_bb = init_fn_val.get_first_basic_block().unwrap();
-        builder.position_at_end(current_bb);
+        self.scope.set_current_exit_block(codegen, current_bb);
 
         let templ_struct_val_ptr = init_fn_val.get_first_param().unwrap().into_pointer_value();
 

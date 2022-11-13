@@ -250,7 +250,7 @@ pub fn get_type_from_expr<'ctx>(
     }
 }
 
-fn construct_array_ty<'ctx>(val_ty: BasicTypeEnum<'ctx>, dims: &Vec<u32>) -> ArrayType<'ctx> {
+pub fn construct_array_ty<'ctx>(val_ty: BasicTypeEnum<'ctx>, dims: &Vec<u32>) -> ArrayType<'ctx> {
     assert!(dims.len() > 0);
     let size = dims[dims.len() - 1];
     let mut arr_ty = val_ty.array_type(size);

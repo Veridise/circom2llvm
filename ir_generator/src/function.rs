@@ -10,6 +10,7 @@ use super::namer::name_entry_block;
 use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use super::statement::resolve_stmt;
 
+use inkwell::AddressSpace;
 use inkwell::types::{BasicType, BasicTypeEnum};
 use inkwell::values::BasicValue;
 use program_structure::ast::Statement;
@@ -62,9 +63,13 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
                         },
                         None => {},
                     }
+                    break;
                 }
                 _ => (),
             }
+        }
+        if ret_ty.is_array_type() {
+            ret_ty = ret_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
         }
 
         let mut param_tys = Vec::new();
@@ -82,7 +87,8 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
     fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
         let fn_val = self.scope.get_main_fn();
         let current_bb = fn_val.get_first_basic_block().unwrap();
-        codegen.builder.position_at_end(current_bb);
+        self.scope.set_current_exit_block(codegen, current_bb);
+
         // Bind args
         for (idx, arg) in self.scope.args.clone().iter().enumerate() {
             let val = fn_val.get_nth_param(idx as u32).unwrap();

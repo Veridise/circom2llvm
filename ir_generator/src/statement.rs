@@ -5,7 +5,7 @@ use super::expression::resolve_expr;
 use super::scope::ScopeTrait;
 
 use inkwell::types::BasicType;
-use inkwell::values::{BasicValue, BasicValueEnum};
+use inkwell::values::BasicValue;
 
 use program_structure::ast::{AssignOp, Expression, Statement};
 
@@ -46,24 +46,29 @@ pub fn resolve_stmt<'ctx>(
             let cond = resolve_expr(codegen, cond, scope).into_int_value();
             builder.build_conditional_branch(cond, if_bb, else_bb);
 
-            // if.true body
-            builder.position_at_end(if_bb);
-            resolve_stmt(scope, codegen, &if_case.as_ref());
+            // if.true
+            scope.set_current_exit_block(codegen, if_bb);
 
-            // if.false body
-            builder.position_at_end(else_bb);
+            resolve_stmt(scope, codegen, &if_case.as_ref());
+            let if_bb_end = scope.get_current_exit_block();
+
+            // if.false
+            scope.set_current_exit_block(codegen, else_bb);
             match else_case {
                 Some(else_stmt) => {
                     resolve_stmt(scope, codegen, &else_stmt.as_ref());
                 }
                 _ => (),
             }
+            let else_bb_end = scope.get_current_exit_block();
 
-            let end_bb = context.append_basic_block(current_fnc, &name_if_block(false, true));
-            // if.true -> if.end
-            codegen.build_block_transferring(if_bb, end_bb);
-            // if.false -> if.end
-            codegen.build_block_transferring(else_bb, end_bb);
+            let exit_bb = context.append_basic_block(current_fnc, &name_if_block(false, true));
+            // if.true -> if.exit
+            codegen.build_block_transferring(if_bb_end, exit_bb);
+            // if.false -> if.exit
+            codegen.build_block_transferring(else_bb_end, exit_bb);
+
+            scope.set_current_exit_block(codegen, exit_bb);
         }
         Statement::InitializationBlock {
             meta: _,
@@ -96,18 +101,7 @@ pub fn resolve_stmt<'ctx>(
             unreachable!();
         }
         Statement::Return { meta: _, value } => {
-            let mut rval = resolve_expr(codegen, value, scope).as_basic_value_enum();
-            match rval {
-                BasicValueEnum::ArrayValue(arr_val) => {
-                    let ptr = codegen
-                        .builder
-                        .build_malloc(arr_val.get_type(), "ret_array")
-                        .unwrap();
-                    codegen.builder.build_store(ptr, rval);
-                    rval = ptr.as_basic_value_enum();
-                }
-                _ => (),
-            }
+            let rval = resolve_expr(codegen, value, scope).as_basic_value_enum();
             codegen.builder.build_return(Some(&rval));
         }
         Statement::Substitution {
@@ -143,7 +137,6 @@ pub fn resolve_stmt<'ctx>(
                 ..
             } = codegen;
             let current_func = scope.get_main_fn();
-            let current_bb = current_func.get_last_basic_block().unwrap();
 
             // Get the body of while and the latch step of while.
             let (stmt_body, stmt_step) = match stmt.as_ref() {
@@ -173,10 +166,13 @@ pub fn resolve_stmt<'ctx>(
             };
             let ctrl_var_entry = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
 
+            let current_bb = scope.get_current_exit_block();
+
             // current -> loop.body
             let loop_bb_name = name_loop_block(true, false, false, false);
             let loop_bb = context.append_basic_block(current_func, &loop_bb_name);
             codegen.build_block_transferring(current_bb, loop_bb);
+            scope.set_current_exit_block(codegen, loop_bb);
 
             // loop.body
             let phi = builder.build_phi(val_ty.as_basic_type_enum(), &name_phi(ctrl_var_name));
@@ -189,19 +185,18 @@ pub fn resolve_stmt<'ctx>(
             );
 
             resolve_stmt(scope, codegen, stmt_body);
-
-            // loop.body -> loop.latch
+            let current_bb = scope.get_current_exit_block();
 
             let latch_bb_name = name_loop_block(false, false, true, false);
             let latch_bb = codegen
                 .context
                 .append_basic_block(current_func, &latch_bb_name);
-            codegen.build_block_transferring(loop_bb, latch_bb);
+            codegen.build_block_transferring(current_bb, latch_bb);
+            scope.set_current_exit_block(codegen, latch_bb);
 
             // loop.latch
             resolve_stmt(scope, codegen, stmt_step);
 
-            codegen.build_block_transferring(loop_bb, latch_bb);
             let ctrl_var_latch = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
             phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
             let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
@@ -215,7 +210,7 @@ pub fn resolve_stmt<'ctx>(
                 .build_conditional_branch(cond_var, loop_bb, exit_bb);
 
             //loop exit
-            codegen.builder.position_at_end(exit_bb);
+            scope.set_current_exit_block(codegen, exit_bb);
         }
     }
 }

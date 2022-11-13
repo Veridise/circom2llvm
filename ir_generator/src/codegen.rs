@@ -4,13 +4,13 @@ use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
-use inkwell::module::{Linkage, Module};
-use inkwell::types::{FunctionType, IntType, StringRadix};
+use inkwell::module::Module;
+use inkwell::types::{IntType, StringRadix};
 use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
-    ArrayValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue,
-    InstructionValue, IntValue, PointerValue, InstructionOpcode,
+    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue,
+    InstructionOpcode, InstructionValue, IntValue, PointerValue,
 };
 
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
@@ -57,9 +57,21 @@ impl<'ctx> CodeGen<'ctx> {
         indexes: &[IntValue<'ctx>],
         name: &str,
         value: V,
-    ) -> InstructionValue<'ctx> {
+    ) {
         let res = unsafe { self.builder.build_in_bounds_gep(array_ptr, indexes, name) };
-        return self.builder.build_store(res, value);
+        let val_ty = value.as_basic_value_enum().get_type();
+        if val_ty.is_pointer_type() && val_ty.into_pointer_type().get_element_type().is_array_type() {
+            let val_ptr = value.as_basic_value_enum().into_pointer_value();
+            let val_arr_ty = val_ty
+                .into_pointer_type()
+                .get_element_type()
+                .into_array_type();
+            _ = self
+                .builder
+                .build_memcpy(res, 4, val_ptr, 4, val_arr_ty.size_of().unwrap());
+        } else {
+            self.builder.build_store(res, value);
+        }
     }
 
     pub fn build_constraint(&self, lval: IntValue<'ctx>, rval: IntValue<'ctx>) {
@@ -86,21 +98,6 @@ impl<'ctx> CodeGen<'ctx> {
             assign_name,
         );
         return res.try_as_basic_value().left().unwrap().into_int_value();
-    }
-
-    pub fn build_func(
-        &self,
-        name: &str,
-        fn_ty: FunctionType<'ctx>,
-        linkage: Option<Linkage>,
-        switch: bool,
-    ) -> (FunctionValue<'ctx>, BasicBlock<'ctx>) {
-        let fn_val = self.module.add_function(name, fn_ty, linkage);
-        let entry_bb = self.context.append_basic_block(fn_val, &name_entry_block());
-        if switch {
-            self.builder.position_at_end(entry_bb);
-        }
-        return (fn_val, entry_bb);
     }
 
     pub fn build_result_modulo(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
@@ -143,13 +140,6 @@ impl<'ctx> CodeGen<'ctx> {
         return self.builder.build_store(res, value);
     }
 
-    pub fn build_inline_array(&self, arr_val: ArrayValue<'ctx>) -> PointerValue<'ctx> {
-        let assign_name = "inline_array";
-        let ptr = self.builder.build_alloca(arr_val.get_type(), assign_name);
-        self.builder.build_store(ptr, arr_val);
-        return ptr;
-    }
-
     pub fn build_pow(&self, args: &[BasicMetadataValueEnum<'ctx>], name: &str) -> IntValue<'ctx> {
         return self
             .builder
@@ -175,14 +165,16 @@ impl<'ctx> CodeGen<'ctx> {
             .insert(templ_name.clone(), v);
     }
 
-    pub fn build_block_transferring(&self, source_bb: BasicBlock<'ctx>, destination_bb: BasicBlock<'ctx>) {
+    pub fn build_block_transferring(
+        &self,
+        source_bb: BasicBlock<'ctx>,
+        destination_bb: BasicBlock<'ctx>,
+    ) {
         self.builder.position_at_end(source_bb);
         let last_inst_op = source_bb.get_last_instruction();
         let has_return = match last_inst_op {
-            Some(last_inst) => {
-                last_inst.get_opcode() == InstructionOpcode::Return
-            }
-            None => false
+            Some(last_inst) => last_inst.get_opcode() == InstructionOpcode::Return,
+            None => false,
         };
         if !has_return {
             self.builder.build_unconditional_branch(destination_bb);
@@ -263,7 +255,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     // Add pow function
     let pow_intrinsic = Intrinsic::find("llvm.powi").unwrap();
     let pow_fn_val = pow_intrinsic
-        .get_declaration(&module, &[val_ty.into(), context.i64_type().into()])
+        .get_declaration(&module, &[val_ty.into(), context.i128_type().into()])
         .unwrap();
 
     let codegen = CodeGen {
