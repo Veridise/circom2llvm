@@ -79,13 +79,12 @@ pub fn generate(
 
                     dependences: Vec::new(),
 
-                    vars: Vec::new(),
                     var2ty: HashMap::new(),
                     var2comp: HashMap::new(),
 
                     main_fn_val: None,
 
-                    var2val: HashMap::new(),
+                    var2ptr: HashMap::new(),
                     current_exit_block: None,
                 };
                 let mut template_scope = Template {
@@ -111,8 +110,7 @@ pub fn generate(
 
                     dependences: Vec::new(),
 
-                    vars: Vec::new(),
-                    var2val: HashMap::new(),
+                    var2ptr: HashMap::new(),
                     var2ty: HashMap::new(),
 
                     main_fn_val: None,

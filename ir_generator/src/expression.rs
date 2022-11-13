@@ -1,17 +1,16 @@
-use std::ops::Div;
+use crate::type_check::check_used_value;
 
 use super::inferrence::{construct_array_ty, construct_uniform_array_ty};
-use super::namer::name_template_struct;
 
 use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::namer::name_signal;
 use super::scope::ScopeTrait;
 
-use inkwell::types::{BasicType, BasicTypeEnum, StringRadix};
+use inkwell::types::{BasicType, BasicTypeEnum};
 use inkwell::values::{
     ArrayValue, BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue,
 };
-use inkwell::{AddressSpace, IntPredicate};
+use inkwell::IntPredicate;
 use num_traits::ToPrimitive;
 use program_structure::ast::{
     Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement,
@@ -22,17 +21,13 @@ pub fn resolve_expr<'ctx>(
     expr: &Expression,
     scope: &dyn ScopeTrait<'ctx>,
 ) -> BasicValueEnum<'ctx> {
-    match expr {
+    let res = match expr {
         Expression::AnonymousComp { .. } => {
             println!("Error: AnonymousComp isn't supported now.");
             unreachable!()
         }
-        Expression::ArrayInLine { .. } => {
-            return resolve_inline_array(codegen, expr, scope);
-        }
-        Expression::Call { meta: _, id, args } => {
-            return scope.call(codegen, id, args);
-        }
+        Expression::ArrayInLine { .. } => resolve_inline_array(codegen, expr, scope),
+        Expression::Call { meta: _, id, args } => scope.call(codegen, id, args),
         Expression::InfixOp {
             meta: _,
             lhe,
@@ -43,7 +38,7 @@ pub fn resolve_expr<'ctx>(
             let rval = resolve_expr(codegen, rhe.as_ref(), scope).into_int_value();
 
             let res = resolve_infix_op(codegen, infix_op, lval, rval);
-            return res.as_basic_value_enum();
+            res.as_basic_value_enum()
         }
         Expression::InlineSwitchOp {
             meta: _,
@@ -51,19 +46,17 @@ pub fn resolve_expr<'ctx>(
             if_true,
             if_false,
         } => {
-            return codegen
-                .build_inline_switch(
-                    resolve_expr(codegen, cond.as_ref(), scope).into_int_value(),
-                    resolve_expr(codegen, if_true.as_ref(), scope).into_int_value(),
-                    resolve_expr(codegen, if_false.as_ref(), scope).into_int_value(),
-                )
-                .as_basic_value_enum();
+            let cond = resolve_expr(codegen, cond.as_ref(), scope).into_int_value();
+            let lval = resolve_expr(codegen, if_true.as_ref(), scope).into_int_value();
+            let rval = resolve_expr(codegen, if_false.as_ref(), scope).into_int_value();
+            codegen
+                .build_inline_switch(cond, lval, rval)
+                .as_basic_value_enum()
         }
-        Expression::Number(_, num) => {
-            let val = codegen
-                .val_ty
-                .const_int_from_string(&num.to_string().to_owned(), StringRadix::Decimal);
-            return val.unwrap().as_basic_value_enum();
+        Expression::Number(_, bigint) => {
+            let valid_u64 = (bigint % u64::MAX).to_u64().unwrap();
+            let val = codegen.val_ty.const_int(valid_u64, false);
+            val.as_basic_value_enum()
         }
         Expression::ParallelOp { .. } => {
             println!("Error: ParallelOp isn't supported now.");
@@ -76,7 +69,7 @@ pub fn resolve_expr<'ctx>(
         } => {
             let rval = resolve_expr(codegen, rhe.as_ref(), scope).into_int_value();
             let res = resolve_prefix_op(codegen, prefix_op, rval);
-            return res.as_basic_value_enum();
+            res.as_basic_value_enum()
         }
         Expression::Tuple { .. } => {
             println!("Error: Tuple isn't supported now.");
@@ -85,14 +78,19 @@ pub fn resolve_expr<'ctx>(
         Expression::UniformArray { .. } => {
             let arr_ty = construct_uniform_array_ty(codegen, expr, scope);
             let ptr = codegen.builder.build_alloca(arr_ty, "uniform_array");
-            return ptr.as_basic_value_enum();
+            ptr.as_basic_value_enum()
         }
         Expression::Variable {
             meta: _,
             name,
             access,
-        } => scope.get_var(codegen, name, access),
-    }
+        } => {
+            let val = scope.get_var(codegen, name, access);
+            val
+        }
+    };
+    check_used_value(&res);
+    return res;
 }
 
 fn resolve_inline_array<'ctx>(
@@ -155,8 +153,8 @@ fn resolve_inline_array<'ctx>(
                 return array_val.as_basic_value_enum();
             }
             Expression::Number(_, bigint) => {
-                let valid_u64 = bigint % u64::MAX;
-                let val_ty = codegen.val_ty.const_int(valid_u64.to_u64().unwrap(), false);
+                let valid_u64 = (bigint % u64::MAX).to_u64().unwrap();
+                let val_ty = codegen.val_ty.const_int(valid_u64, false);
                 return val_ty.as_basic_value_enum();
             }
             _ => unreachable!(),
@@ -177,7 +175,7 @@ fn resolve_inline_array<'ctx>(
                     new_indexes.push(codegen.val_ty.const_int(idx as u64, false));
                     convert_variable_inline_array(codegen, v, scope, array_ptr, new_indexes);
                 }
-            },
+            }
             _ => {
                 let val = resolve_expr(codegen, expr, scope);
                 let name = "var_inline_array";
@@ -320,21 +318,7 @@ pub fn read_signal_from_struct<'ctx>(
     );
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
-    let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
-    let real_struct_ptr;
-    if strt_ty.count_fields() == 0 {
-        let real_strt_ty = codegen
-            .module
-            .get_struct_type(&name_template_struct(templ_name))
-            .unwrap();
-        real_struct_ptr = codegen.builder.build_pointer_cast(
-            struct_ptr,
-            real_strt_ty.ptr_type(AddressSpace::Generic),
-            "ptr_cast",
-        );
-    } else {
-        real_struct_ptr = struct_ptr;
-    }
+    let real_struct_ptr = codegen.get_real_strt_ptr(struct_ptr, templ_name);
     return codegen.build_struct_getter(real_struct_ptr, index, &assign_name);
 }
 
@@ -379,7 +363,8 @@ pub fn write_signal_to_struct<'ctx>(
     );
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
-    return codegen.build_struct_setter(struct_ptr, index, &assign_name, v);
+    let real_struct_ptr = codegen.get_real_strt_ptr(struct_ptr, templ_name);
+    return codegen.build_struct_setter(real_struct_ptr, index, &assign_name, v);
 }
 
 pub fn flat_expressions<'ctx>(expr: &Expression) -> Vec<&Expression> {

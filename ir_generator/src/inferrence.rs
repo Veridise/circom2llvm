@@ -106,7 +106,6 @@ pub fn infer_type_from_statement<'ctx>(
             }
             let ty = get_type_from_dimensions(val_ty, dims);
             scope.set_var_ty(name, ty);
-            scope.add_var(name);
         }
         _ => (),
     }
@@ -147,7 +146,13 @@ pub fn collect_signal<'ctx>(stmt: &Statement, template: &mut Template<'ctx>) {
 
 fn resolve_dim_expr<'ctx>(dim: &Expression) -> u32 {
     match dim {
-        Expression::Number(_, bigint) => bigint.to_u32().unwrap(),
+        Expression::Number(_, bigint) => {
+            let mut valid_u32 = bigint.to_u32().unwrap();
+            if valid_u32 == 0 {
+                valid_u32 = 1;
+            }
+            return valid_u32;
+        },
         _ => MAX_ARRAYSIZE,
     }
 }

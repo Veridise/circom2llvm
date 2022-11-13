@@ -1,13 +1,12 @@
-use crate::namer::{name_if_block, name_loop_block, name_phi};
+use crate::namer::{name_if_block, name_loop_block};
 
 use super::codegen::CodeGen;
 use super::expression::resolve_expr;
 use super::scope::ScopeTrait;
 
-use inkwell::types::BasicType;
 use inkwell::values::BasicValue;
 
-use program_structure::ast::{AssignOp, Expression, Statement};
+use program_structure::ast::{AssignOp, Statement};
 
 pub fn resolve_stmt<'ctx>(
     scope: &mut dyn ScopeTrait<'ctx>,
@@ -132,8 +131,6 @@ pub fn resolve_stmt<'ctx>(
         } => {
             let CodeGen {
                 context,
-                builder,
-                val_ty,
                 ..
             } = codegen;
             let current_func = scope.get_main_fn();
@@ -148,24 +145,6 @@ pub fn resolve_stmt<'ctx>(
                 _ => unreachable!(),
             };
 
-            // We need to get the name of the variable which controls the while loop. Thus we could bind it to the phi node.
-            // We don't implement the whole sub-scope mechanism, instead, we just try to find the variable.
-            let ctrl_var_name = match cond {
-                Expression::InfixOp { lhe, .. } => match lhe.as_ref() {
-                    Expression::Variable { name, .. } => name,
-                    Expression::InfixOp { lhe, rhe, .. } => match lhe.as_ref() {
-                        Expression::Variable { name, .. } => name,
-                        _ => match rhe.as_ref() {
-                            Expression::Variable { name, .. } => name,
-                            _ => unreachable!(),
-                        },
-                    },
-                    _ => unreachable!(),
-                },
-                _ => unreachable!(),
-            };
-            let ctrl_var_entry = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
-
             let current_bb = scope.get_current_exit_block();
 
             // current -> loop.body
@@ -173,34 +152,20 @@ pub fn resolve_stmt<'ctx>(
             let loop_bb = context.append_basic_block(current_func, &loop_bb_name);
             codegen.build_block_transferring(current_bb, loop_bb);
             scope.set_current_exit_block(codegen, loop_bb);
-
-            // loop.body
-            let phi = builder.build_phi(val_ty.as_basic_type_enum(), &name_phi(ctrl_var_name));
-            phi.add_incoming(&[(&ctrl_var_entry, current_bb)]);
-            scope.set_var(
-                codegen,
-                ctrl_var_name,
-                &mut Vec::new(),
-                phi.as_basic_value(),
-            );
-
             resolve_stmt(scope, codegen, stmt_body);
             let current_bb = scope.get_current_exit_block();
 
+            // loop.body -> loop.latch
             let latch_bb_name = name_loop_block(false, false, true, false);
             let latch_bb = codegen
                 .context
                 .append_basic_block(current_func, &latch_bb_name);
             codegen.build_block_transferring(current_bb, latch_bb);
             scope.set_current_exit_block(codegen, latch_bb);
-
-            // loop.latch
             resolve_stmt(scope, codegen, stmt_step);
-
-            let ctrl_var_latch = scope.get_var(codegen, ctrl_var_name, &mut Vec::new());
-            phi.add_incoming(&[(&ctrl_var_latch, latch_bb)]);
             let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
 
+            // loop.latch -> loop.exit
             let exit_bb_name = name_loop_block(false, false, false, true);
             let exit_bb = codegen
                 .context
@@ -209,7 +174,7 @@ pub fn resolve_stmt<'ctx>(
                 .builder
                 .build_conditional_branch(cond_var, loop_bb, exit_bb);
 
-            //loop exit
+            // loop.exit
             scope.set_current_exit_block(codegen, exit_bb);
         }
     }

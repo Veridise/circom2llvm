@@ -1,3 +1,5 @@
+use crate::type_check::{check_stored_value, check_used_type, check_used_value};
+
 use super::codegen::CodeGen;
 use super::expression::{read_signal_from_struct, resolve_expr, write_signal_to_struct};
 use super::namer::name_template_fn;
@@ -15,13 +17,20 @@ use std::collections::HashMap;
 use std::usize;
 
 pub trait ScopeTrait<'ctx> {
-    fn add_var(&mut self, name: &String);
+    fn is_initialized(&self, name: &String) -> bool;
     fn add_comp_var(&mut self, name: &String);
     fn is_comp_var(&self, name: &String) -> bool;
     fn get_known_comp(&self, name: &String) -> &String;
     fn set_known_comp(&mut self, name: &String, comp: &String);
     fn is_known_comp(&self, comp_or_fn: &String) -> bool;
     fn add_dependence(&mut self, v: &String);
+    fn initial_var(
+        &mut self,
+        codegen: &CodeGen<'ctx>,
+        name: &String,
+        ty: &BasicTypeEnum<'ctx>,
+        alloca: bool,
+    ) -> PointerValue<'ctx>;
     fn get_var(
         &self,
         codegen: &CodeGen<'ctx>,
@@ -66,7 +75,12 @@ pub trait ScopeTrait<'ctx> {
     ) -> BasicValueEnum<'ctx>;
     fn match_fn_val(&self, codegen: &CodeGen<'ctx>, id: &String) -> FunctionValue<'ctx>;
     fn deps(&self) -> &Vec<String>;
-    fn bind_variable(&mut self, codegen: &CodeGen<'ctx>, name: &String, val: BasicValueEnum<'ctx>);
+    fn bind_argument(
+        &mut self,
+        codegen: &CodeGen<'ctx>,
+        name: &String,
+        val: BasicValueEnum<'ctx>,
+    ) -> PointerValue<'ctx>;
 }
 
 pub trait CodegenStagesTrait<'ctx> {
@@ -86,22 +100,20 @@ pub struct Scope<'ctx> {
     pub dependences: Vec<String>,
 
     //Stage 1: Type inferrence.
-    pub vars: Vec<String>,
     pub var2ty: HashMap<String, BasicTypeEnum<'ctx>>,
     pub var2comp: HashMap<String, String>,
 
     // Stage 2: Build Function.
     pub main_fn_val: Option<FunctionValue<'ctx>>,
     // Stage 3: Build Instructions.
-    pub var2val: HashMap<String, BasicValueEnum<'ctx>>,
+    pub var2ptr: HashMap<String, PointerValue<'ctx>>,
     pub current_exit_block: Option<BasicBlock<'ctx>>,
 }
 
 impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
-    fn add_var(&mut self, name: &String) {
-        self.vars.push(name.clone());
+    fn is_initialized(&self, name: &String) -> bool {
+        return self.var2ptr.contains_key(name);
     }
-
     fn add_comp_var(&mut self, name: &String) {
         if !self.var2comp.contains_key(name) {
             self.var2comp.insert(name.clone(), "unknown".to_string());
@@ -166,17 +178,42 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         return self.var2ty.contains_key(name);
     }
 
+    fn initial_var(
+        &mut self,
+        codegen: &CodeGen<'ctx>,
+        name: &String,
+        ty: &BasicTypeEnum<'ctx>,
+        alloca: bool,
+    ) -> PointerValue<'ctx> {
+        let used_ty;
+        if ty.is_array_type() || ty.is_struct_type() {
+            used_ty = ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
+        } else {
+            used_ty = *ty;
+        }
+        check_used_type(&used_ty);
+        let ptr;
+        if alloca {
+            ptr = codegen.builder.build_alloca(used_ty, name);
+        } else {
+            ptr = codegen.builder.build_malloc(used_ty, name).unwrap();
+        }
+        self.var2ptr.insert(name.to_string(), ptr);
+        return ptr;
+    }
+
     fn get_var(
         &self,
         codegen: &CodeGen<'ctx>,
         name: &String,
         access: &Vec<Access>,
     ) -> BasicValueEnum<'ctx> {
-        let val_or_ptr = *self.var2val.get(name).unwrap();
+        let ptr = self.var2ptr.get(name).unwrap();
+        let val = codegen.builder.build_load(ptr.clone(), name);
+        let res;
         if access.len() == 0 {
-            return val_or_ptr;
+            res = val;
         } else {
-            let ptr = val_or_ptr.into_pointer_value();
             let mut idx_comp_access: Option<usize> = None;
             let mut signal_name = "".to_string();
             for (idx, a) in access.iter().enumerate() {
@@ -190,40 +227,28 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             }
             match idx_comp_access {
                 Some(idx) => {
+                    let strt_ptr = val.into_pointer_value();
                     let comp = self.get_known_comp(name);
                     if idx == 0 {
                         let arr_ptr =
-                            read_signal_from_struct(codegen, comp, &signal_name, ptr, false);
+                            read_signal_from_struct(codegen, comp, &signal_name, strt_ptr, false);
                         return self.get_from_array(codegen, &access[1..], arr_ptr, name);
                     } else if idx == access.len() - 1 {
+                        let arr_ptr = val;
                         let struct_ptr = self
-                            .get_from_array(
-                                codegen,
-                                &access[0..idx],
-                                ptr.as_basic_value_enum(),
-                                name,
-                            )
+                            .get_from_array(codegen, &access[0..idx], arr_ptr, name)
                             .into_pointer_value();
-                        return read_signal_from_struct(
-                            codegen,
-                            comp,
-                            &signal_name,
-                            struct_ptr,
-                            false,
-                        );
+                        res =
+                            read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false);
                     } else {
+                        let arr_ptr = val;
                         let struct_ptr = self
-                            .get_from_array(
-                                codegen,
-                                &access[0..idx],
-                                ptr.as_basic_value_enum(),
-                                name,
-                            )
+                            .get_from_array(codegen, &access[0..idx], arr_ptr, name)
                             .into_pointer_value();
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
                                 .into_pointer_value();
-                        return self.get_from_array(
+                        res = self.get_from_array(
                             codegen,
                             &access[idx + 1..],
                             arr_ptr.as_basic_value_enum(),
@@ -232,10 +257,12 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     }
                 }
                 None => {
-                    return self.get_from_array(codegen, access, ptr.as_basic_value_enum(), name);
+                    res = self.get_from_array(codegen, access, val, name);
                 }
             }
         }
+        check_used_value(&res);
+        return res;
     }
 
     fn set_var(
@@ -245,22 +272,16 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         access: &Vec<Access>,
         value: BasicValueEnum<'ctx>,
     ) {
+        check_used_value(&value);
         if access.len() == 0 {
-            match value {
-                BasicValueEnum::ArrayValue(array_value) => {
-                    let ptr = self.var2val.get(name).unwrap().into_pointer_value();
-                    codegen.builder.build_store(ptr, array_value);
-                }
-                _ => {
-                    self.var2val
-                        .insert(name.clone(), value.as_basic_value_enum());
-                }
-            }
-            if !self.vars.contains(&name) {
-                self.vars.push(name.clone());
-            }
+            let ptr = self.var2ptr.get(name).unwrap();
+            codegen.builder.build_store(*ptr, value);
         } else {
-            let ptr = self.var2val.get(name).unwrap();
+            let double_ptr = self.var2ptr.get(name).unwrap();
+            let ptr = codegen
+                .builder
+                .build_load(*double_ptr, "Load_Ptr")
+                .into_pointer_value();
             let mut idx_comp_access: Option<usize> = None;
             let mut signal_name = "".to_string();
             for (idx, a) in access.iter().enumerate() {
@@ -276,7 +297,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                 Some(idx) => {
                     let comp = self.get_known_comp(name);
                     if idx == 0 {
-                        let strt_ptr = ptr.into_pointer_value();
+                        let strt_ptr = ptr;
                         if access.len() == 1 {
                             write_signal_to_struct(
                                 codegen,
@@ -299,7 +320,12 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                         }
                     } else if idx == access.len() - 1 {
                         let struct_ptr = self
-                            .get_from_array(codegen, &access[0..idx], *ptr, name)
+                            .get_from_array(
+                                codegen,
+                                &access[0..idx],
+                                ptr.as_basic_value_enum(),
+                                name,
+                            )
                             .into_pointer_value();
                         write_signal_to_struct(
                             codegen,
@@ -311,7 +337,12 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                         );
                     } else {
                         let struct_ptr = self
-                            .get_from_array(codegen, &access[0..idx], *ptr, name)
+                            .get_from_array(
+                                codegen,
+                                &access[0..idx],
+                                ptr.as_basic_value_enum(),
+                                name,
+                            )
                             .into_pointer_value();
                         let arr_ptr =
                             read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
@@ -320,7 +351,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     }
                 }
                 None => {
-                    self.set_to_array(codegen, access, ptr.into_pointer_value(), name, value);
+                    self.set_to_array(codegen, access, ptr, name, value);
                 }
             }
         }
@@ -344,7 +375,19 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             })
             .collect();
         indexes.insert(0, codegen.const_zero);
-        return codegen.build_array_getter(arr_ptr.into_pointer_value(), &indexes[0..], name);
+        let mut res = codegen.build_array_getter(arr_ptr.into_pointer_value(), &indexes[0..], name);
+        match res {
+            BasicValueEnum::ArrayValue(arr_val) => {
+                let ptr = codegen
+                    .builder
+                    .build_alloca(arr_val.get_type(), "spice_inline_array");
+                codegen.builder.build_store(ptr, arr_val);
+                res = ptr.as_basic_value_enum();
+            }
+            _ => (),
+        }
+        check_used_value(&res);
+        return res;
     }
 
     fn set_to_array(
@@ -366,6 +409,14 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             })
             .collect();
         indexes.insert(0, codegen.const_zero);
+        if value.is_pointer_value() {
+            let strt_ptr = value.into_pointer_value();
+            if strt_ptr.get_type().get_element_type().is_struct_type() {
+                let real_struct_ptr = codegen.get_real_strt_ptr(strt_ptr, &self.name);
+                codegen.build_array_setter(arr_ptr, &indexes[0..], name, real_struct_ptr);
+                return;
+            }
+        }
         codegen.build_array_setter(arr_ptr, &indexes[0..], name, value);
     }
 
@@ -422,30 +473,17 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         return &self.dependences;
     }
 
-    fn bind_variable(&mut self, codegen: &CodeGen<'ctx>, name: &String, val: BasicValueEnum<'ctx>) {
-        let ty = self.get_var_ty(name);
-        match ty {
-            BasicTypeEnum::IntType(..) => {
-                self.var2val.insert(name.clone(), val);
-            }
-            BasicTypeEnum::PointerType(..) => {
-                self.var2val.insert(name.clone(), val);
-            }
-            BasicTypeEnum::ArrayType(arr_ty) => {
-                let ptr = codegen.builder.build_alloca(ty.clone(), name);
-                _ = codegen.builder.build_memcpy(
-                    ptr,
-                    4,
-                    val.into_pointer_value(),
-                    4,
-                    arr_ty.size_of().unwrap(),
-                );
-                self.var2val.insert(name.clone(), ptr.as_basic_value_enum());
-            }
-            _ => {
-                println!("Error: Try to bind datatype that isn't supported.");
-                unreachable!();
-            }
-        }
+    fn bind_argument(
+        &mut self,
+        codegen: &CodeGen<'ctx>,
+        name: &String,
+        val: BasicValueEnum<'ctx>,
+    ) -> PointerValue<'ctx> {
+        check_used_value(&val);
+        let alloca_name = format!("{}.bind", name);
+        let ptr = codegen.builder.build_alloca(val.get_type(), &alloca_name);
+        check_stored_value(&ptr);
+        self.var2ptr.insert(name.clone(), ptr);
+        return ptr;
     }
 }

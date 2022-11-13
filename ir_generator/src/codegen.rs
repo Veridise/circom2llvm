@@ -9,11 +9,13 @@ use inkwell::types::{IntType, StringRadix};
 use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
-    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue,
-    InstructionOpcode, InstructionValue, IntValue, PointerValue,
+    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionOpcode,
+    InstructionValue, IntValue, PointerValue,
 };
 
-use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
+use crate::namer::{
+    name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_template_struct,
+};
 
 const GLOBAL_P: &str = "12539295309507511577697735";
 pub static mut APPLY_MOD: bool = true;
@@ -60,7 +62,12 @@ impl<'ctx> CodeGen<'ctx> {
     ) {
         let res = unsafe { self.builder.build_in_bounds_gep(array_ptr, indexes, name) };
         let val_ty = value.as_basic_value_enum().get_type();
-        if val_ty.is_pointer_type() && val_ty.into_pointer_type().get_element_type().is_array_type() {
+        if val_ty.is_pointer_type()
+            && val_ty
+                .into_pointer_type()
+                .get_element_type()
+                .is_array_type()
+        {
             let val_ptr = value.as_basic_value_enum().into_pointer_value();
             let val_arr_ty = val_ty
                 .into_pointer_type()
@@ -180,6 +187,29 @@ impl<'ctx> CodeGen<'ctx> {
             self.builder.build_unconditional_branch(destination_bb);
         }
         self.builder.position_at_end(destination_bb);
+    }
+
+    pub fn get_real_strt_ptr(
+        &self,
+        struct_ptr: PointerValue<'ctx>,
+        templ_name: &str,
+    ) -> PointerValue<'ctx> {
+        let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
+        let real_struct_ptr;
+        if strt_ty.count_fields() == 0 {
+            let real_strt_ty = self
+                .module
+                .get_struct_type(&name_template_struct(templ_name))
+                .unwrap();
+            real_struct_ptr = self.builder.build_pointer_cast(
+                struct_ptr,
+                real_strt_ty.ptr_type(AddressSpace::Generic),
+                "ptr_cast",
+            );
+        } else {
+            real_struct_ptr = struct_ptr;
+        }
+        return real_struct_ptr;
     }
 }
 

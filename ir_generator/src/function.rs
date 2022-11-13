@@ -10,9 +10,8 @@ use super::namer::name_entry_block;
 use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use super::statement::resolve_stmt;
 
+use inkwell::types::BasicType;
 use inkwell::AddressSpace;
-use inkwell::types::{BasicType, BasicTypeEnum};
-use inkwell::values::BasicValue;
 use program_structure::ast::Statement;
 
 pub struct Function<'ctx> {
@@ -50,7 +49,7 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
             context, module, ..
         } = codegen;
 
-        let fn_name = &self.scope.name;
+        let fn_name = self.scope.name.clone();
         let mut ret_ty = codegen.val_ty.as_basic_type_enum();
         let stmts = flat_statements(body);
         for stmt in stmts {
@@ -60,8 +59,8 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
                     match ret_ty_op {
                         Some(_ret_ty) => {
                             ret_ty = _ret_ty;
-                        },
-                        None => {},
+                        }
+                        None => {}
                     }
                     break;
                 }
@@ -72,13 +71,14 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
             ret_ty = ret_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
         }
 
-        let mut param_tys = Vec::new();
-        for name in &self.scope.args {
-            let arg_ty = self.scope.get_var_ty_as_ptr(name).into();
-            param_tys.push(arg_ty);
+        let mut arg_tys = Vec::new();
+        for name in &self.scope.args.clone() {
+            let arg_ty = self.scope.get_var_ty_as_ptr(&name);
+            arg_tys.push(arg_ty.into());
+            self.scope.set_var_ty(&name, arg_ty);
         }
 
-        let fn_ty = ret_ty.fn_type(&param_tys[0..], false);
+        let fn_ty = ret_ty.fn_type(&arg_tys[0..], false);
         let fn_val = module.add_function(&fn_name, fn_ty, None);
         context.append_basic_block(fn_val, &name_entry_block());
         self.scope.set_main_fn(fn_val);
@@ -92,24 +92,15 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         // Bind args
         for (idx, arg) in self.scope.args.clone().iter().enumerate() {
             let val = fn_val.get_nth_param(idx as u32).unwrap();
-            self.scope.bind_variable(codegen, arg, val);
+            self.scope.bind_argument(codegen, arg, val);
         }
 
-        // Initial arrays
-        for (name, ty) in &self.scope.var2ty {
-            if self.scope.var2val.contains_key(name) {
+        // Initial variable
+        for (name, ty) in &self.scope.var2ty.clone() {
+            if self.scope.is_initialized(name) {
                 continue;
-            } else {
-                match ty {
-                    BasicTypeEnum::ArrayType(arr_ty) => {
-                        let ptr = codegen.builder.build_alloca(arr_ty.clone(), name);
-                        self.scope
-                            .var2val
-                            .insert(name.clone(), ptr.as_basic_value_enum());
-                    }
-                    _ => (),
-                }
-            }
+            };
+            self.scope.initial_var(codegen, name, ty, true);
         }
 
         match body {

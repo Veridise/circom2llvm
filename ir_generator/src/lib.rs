@@ -7,3 +7,4 @@ mod namer;
 pub mod scope;
 mod statement;
 mod template;
+mod type_check;
