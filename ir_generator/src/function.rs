@@ -10,8 +10,8 @@ use super::namer::name_entry_block;
 use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use super::statement::resolve_stmt;
 
-use inkwell::types::BasicType;
 use inkwell::AddressSpace;
+use inkwell::types::BasicType;
 use program_structure::ast::Statement;
 
 pub struct Function<'ctx> {
@@ -70,6 +70,11 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         if ret_ty.is_array_type() {
             ret_ty = ret_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
         }
+
+        if codegen.hacking_ret_ty.contains_key(&fn_name) {
+            ret_ty = codegen.hacking_ret_ty.get(&fn_name).unwrap().as_basic_type_enum();
+        }
+        
 
         let mut arg_tys = Vec::new();
         for name in &self.scope.args.clone() {

@@ -4,7 +4,7 @@ use super::template::Template;
 use super::codegen::{CodeGen, MAX_ARRAYSIZE};
 use super::scope::ScopeTrait;
 
-use inkwell::types::{ArrayType, BasicType, BasicTypeEnum};
+use inkwell::types::{ArrayType, BasicType, BasicTypeEnum, AnyTypeEnum};
 use inkwell::AddressSpace;
 use program_structure::ast::{Access, Expression, SignalType, Statement, VariableType};
 
@@ -58,6 +58,45 @@ pub fn infer_type_from_expression<'ctx>(
             }
             let ty = get_type_from_access(codegen, name, access, scope);
             scope.set_var_ty(name, ty);
+        },
+        Expression::Call { meta: _, id, args } => {
+            // Self-called function.
+            if id == scope.get_name() {
+                return;
+            }
+            let called_func = scope.match_fn_val(codegen, id);
+            for (idx, arg) in args.iter().enumerate() {
+                match arg {
+                    Expression::Variable { name, access, .. } => {
+                        let mut arg_ty = called_func.get_nth_param(idx as u32).unwrap().get_type();
+                        if scope.is_comp_var(name) {
+                            continue;
+                        }
+                        if arg_ty.is_pointer_type() {
+                            let real_ty = arg_ty.into_pointer_type().get_element_type();
+                            match real_ty {
+                                AnyTypeEnum::ArrayType(arr_ty) => {
+                                    arg_ty = arr_ty.as_basic_type_enum();
+                                },
+                                _ => (),
+                            }
+                        }
+                        for arg in access {
+                            match arg {
+                                Access::ArrayAccess(dim) => {
+                                    arg_ty = arg_ty.array_type(resolve_dim_expr(dim)).as_basic_type_enum();
+                                },
+                                Access::ComponentAccess(..) => {
+                                    println!("Error: Can't infer from struct as parameters.");
+                                    unreachable!();
+                                },
+                            }
+                        }
+                        scope.set_var_ty(name, arg_ty);
+                    },
+                    _ => (),
+                }
+            }
         }
         _ => (),
     }

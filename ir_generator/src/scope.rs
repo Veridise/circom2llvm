@@ -17,6 +17,7 @@ use std::collections::HashMap;
 use std::usize;
 
 pub trait ScopeTrait<'ctx> {
+    fn get_name(&self) -> &String;
     fn is_initialized(&self, name: &String) -> bool;
     fn add_comp_var(&mut self, name: &String);
     fn is_comp_var(&self, name: &String) -> bool;
@@ -111,6 +112,11 @@ pub struct Scope<'ctx> {
 }
 
 impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
+
+    fn get_name(&self) -> &String {
+        return &self.name;
+    }
+    
     fn is_initialized(&self, name: &String) -> bool {
         return self.var2ptr.contains_key(name);
     }
@@ -529,6 +535,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         let ptr = codegen.builder.build_alloca(val.get_type(), &alloca_name);
         check_stored_value(&ptr);
         self.var2ptr.insert(name.clone(), ptr);
+        self.set_var(codegen, name, &Vec::new(), val);
         return ptr;
     }
 }

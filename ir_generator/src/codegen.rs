@@ -5,7 +5,7 @@ use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::Module;
-use inkwell::types::{IntType, StringRadix};
+use inkwell::types::{IntType, PointerType, StringRadix};
 use inkwell::{AddressSpace, IntPredicate};
 
 use inkwell::values::{
@@ -13,6 +13,7 @@ use inkwell::values::{
     InstructionValue, IntValue, PointerValue,
 };
 
+use crate::hacking::assert_fn_ret_ty;
 use crate::namer::{
     name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_template_struct,
 };
@@ -30,6 +31,8 @@ pub struct CodeGen<'ctx> {
 
     pub const_p: IntValue<'ctx>,
     pub const_zero: IntValue<'ctx>,
+
+    pub hacking_ret_ty: HashMap<String, PointerType<'ctx>>,
 
     // Internal utils
     _global_constraint_fn_val: FunctionValue<'ctx>,
@@ -286,11 +289,38 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
     builder.position_at_end(inlineswitch_fn_f_bb);
     builder.build_return(Some(&inlineswitch_fn_val.get_nth_param(2).unwrap()));
 
-    // Add pow function
-    let pow_intrinsic = Intrinsic::find("llvm.powi").unwrap();
-    let pow_fn_val = pow_intrinsic
-        .get_declaration(&module, &[val_ty.into(), context.i128_type().into()])
+    // Add powi function
+    let powi_base_ty = context.f128_type();
+    let powi_power_ty = context.i32_type();
+    let powi_intrinsic = Intrinsic::find("llvm.powi").unwrap();
+    let powi_fn_val = powi_intrinsic
+        .get_declaration(
+            &module,
+            &[powi_base_ty.into(), powi_power_ty.into()],
+        )
         .unwrap();
+
+    let inlinepowi_fn_args_ty = [val_ty.into(), val_ty.into()];
+    let inlinepowi_fn_ret_ty = val_ty;
+    let inlinepowi_fn_ty = inlinepowi_fn_ret_ty.fn_type(&inlinepowi_fn_args_ty, false);
+    let inlinepowi_fn_name = name_intrinsinc_fn("inline_powi");
+    let inlinepowi_fn_val = module.add_function(&inlinepowi_fn_name, inlinepowi_fn_ty, None);
+    let inlinepowi_fn_entry_bb = context.append_basic_block(inlinepowi_fn_val, &name_entry_block());
+    builder.position_at_end(inlinepowi_fn_entry_bb);
+
+    let origin_base = inlinepowi_fn_val
+        .get_first_param()
+        .unwrap()
+        .into_int_value();
+    let origin_power = inlinepowi_fn_val.get_last_param().unwrap().into_int_value();
+    let base = builder.build_unsigned_int_to_float(origin_base, powi_base_ty, "inline_powi.base");
+    let power = builder.build_int_cast(origin_power, powi_power_ty, "inline_powi.power");
+    let powi = builder
+        .build_call(powi_fn_val, &[base.into(), power.into()], "inline_powi.cal")
+        .try_as_basic_value()
+        .unwrap_left();
+    let ret = builder.build_float_to_unsigned_int(powi.into_float_value(), val_ty, "inline_powi.ret");
+    builder.build_return(Some(&ret));
 
     let codegen = CodeGen {
         context,
@@ -301,9 +331,11 @@ pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
         const_p,
         const_zero,
 
+        hacking_ret_ty: assert_fn_ret_ty(val_ty),
+
         _global_constraint_fn_val: constraint_fn_val,
         _global_inlineswitch_fn_val: inlineswitch_fn_val,
-        _global_pow_fn_val: pow_fn_val,
+        _global_pow_fn_val: inlinepowi_fn_val,
         _global_input_output_record: HashMap::new(),
     };
     return codegen;
