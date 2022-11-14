@@ -139,13 +139,19 @@ fn resolve_inline_array<'ctx>(
                 let array_ty = array_values[0].get_type();
                 let array_val = match array_ty {
                     BasicTypeEnum::ArrayType(ty) => {
-                        let values: Vec<ArrayValue> =
+                        let mut values: Vec<ArrayValue> =
                             array_values.iter().map(|v| v.into_array_value()).collect();
+                        while values.len() < MAX_ARRAYSIZE as usize {
+                            values.push(values[0].get_type().const_zero());
+                        }
                         ty.const_array(&values)
                     }
                     BasicTypeEnum::IntType(ty) => {
-                        let values: Vec<IntValue> =
+                        let mut values: Vec<IntValue> =
                             array_values.iter().map(|v| v.into_int_value()).collect();
+                        while values.len() < MAX_ARRAYSIZE as usize {
+                            values.push(codegen.const_zero);
+                        }
                         ty.const_array(&values)
                     }
                     _ => unreachable!(),

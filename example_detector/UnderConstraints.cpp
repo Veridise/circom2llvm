@@ -14,7 +14,7 @@ struct UnderConstraints : public ModulePass {
     UnderConstraints() : ModulePass(ID) {}
 
     bool isTemplateInitFunc(llvm::Function &F) {
-        return F.getName().startswith_insensitive("t_fn_init_");
+        return F.getName().startswith_insensitive("fn_template_init");
     }
 
     std::vector<llvm::StoreInst *> locateOutputSignals(llvm::Function &F) {
@@ -44,7 +44,7 @@ struct UnderConstraints : public ModulePass {
                         if (llvm::LoadInst *load_inst =
                                 dyn_cast<llvm::LoadInst>(&inst)) {
                             if (load_inst->getName().startswith_insensitive(
-                                    "read_signal_input")) {
+                                    "read_input_inner")) {
                                 input_signals.push_back(load_inst);
                             }
                         }
@@ -66,7 +66,7 @@ struct UnderConstraints : public ModulePass {
                         if (call_inst->getCalledFunction()
                                 ->getName()
                                 .startswith_insensitive(
-                                    "intrinsic_add_constraint")) {
+                                    "fn_intrinsic_add_constraint")) {
                             constraints.push_back(call_inst);
                         }
                     }

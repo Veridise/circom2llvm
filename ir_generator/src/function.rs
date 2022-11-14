@@ -71,16 +71,15 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
             ret_ty = ret_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
         }
 
-        if codegen.hacking_ret_ty.contains_key(&fn_name) {
-            ret_ty = codegen.hacking_ret_ty.get(&fn_name).unwrap().as_basic_type_enum();
+        let hacking_key = format!("{}.return", fn_name);
+        if codegen.hacking_ret_ty.contains_key(&hacking_key) {
+            ret_ty = codegen.hacking_ret_ty.get(&hacking_key).unwrap().as_basic_type_enum();
         }
-        
 
         let mut arg_tys = Vec::new();
         for name in &self.scope.args.clone() {
             let arg_ty = self.scope.get_var_ty_as_ptr(&name);
             arg_tys.push(arg_ty.into());
-            self.scope.set_var_ty(&name, arg_ty);
         }
 
         let fn_ty = ret_ty.fn_type(&arg_tys[0..], false);

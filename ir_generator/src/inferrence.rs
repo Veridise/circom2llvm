@@ -137,7 +137,6 @@ pub fn infer_type_from_statement<'ctx>(
                     };
                     val_ty = strt_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
                 }
-                // We don't handle signals here because they are limited in template.
                 VariableType::Signal(..) => {
                     val_ty = codegen.val_ty.as_basic_type_enum();
                 }
@@ -183,6 +182,7 @@ pub fn collect_signal<'ctx>(stmt: &Statement, template: &mut Template<'ctx>) {
 }
 
 fn resolve_dim_expr<'ctx>(dim: &Expression) -> u32 {
+    // Todo: We only use MAX_ARRAYSIZE as array dimension now.
     // match dim {
     //     Expression::Number(_, bigint) => {
     //         let mut valid_u32 = bigint.to_u32().unwrap();
@@ -285,11 +285,18 @@ pub fn get_type_from_expr<'ctx>(
             return Some(arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum());
         }
         Expression::Variable { name, access, .. } => {
-            if access.len() == 0 {
-                return Some(scope.get_var_ty(name).as_basic_type_enum());
-            } else {
-                return None;
+            let mut var_ty = scope.get_var_ty(name);
+            for a in access {
+                match a {
+                    Access::ArrayAccess(..) => {
+                        var_ty = var_ty.into_array_type().get_element_type();
+                    }
+                    Access::ComponentAccess(..) => {
+                        return None;
+                    }
+                }
             }
+            return Some(var_ty);
         }
     }
 }

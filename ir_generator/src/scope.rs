@@ -122,6 +122,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
     }
     fn add_comp_var(&mut self, name: &String) {
         if !self.var2comp.contains_key(name) {
+            // Shortly use unknown, it will update by set_known_comp.
             self.var2comp.insert(name.clone(), "unknown".to_string());
         }
     }
@@ -177,7 +178,13 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
     }
 
     fn set_var_ty(&mut self, name: &String, ty: BasicTypeEnum<'ctx>) {
-        self.var2ty.insert(name.clone(), ty);
+        if !self.var2ty.contains_key(name) {
+            self.var2ty.insert(name.clone(), ty);
+        } else {
+            if *self.var2ty.get(name).unwrap() != ty {
+                println!("Debug: Different type!");
+            }
+        }
     }
 
     fn has_var_ty(&self, name: &String) -> bool {

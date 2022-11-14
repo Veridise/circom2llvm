@@ -55,7 +55,6 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         for stmt in stmts {
             infer_type_from_statement(codegen, stmt, &mut self.scope);
             exprs.append(&mut flat_expressions_from_statement(stmt));
-            // We only handle signals here.
             collect_signal(stmt, self);
         }
         codegen.set_input_output_names(
@@ -90,7 +89,6 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         for arg in &self.scope.args.clone() {
             let field_ty = self.scope.get_var_ty_as_ptr(arg).into();
             templ_struct_fields.push(field_ty);
-            self.scope.set_var_ty(&arg, field_ty);
         }
 
         for input in &self.inputs {
