@@ -1,6 +1,7 @@
 use inkwell::context::Context;
 use ir_generator::codegen::init_codegen;
 use ir_generator::generator::generate;
+use ir_generator::after_process::remove_opaque_struct_name;
 
 use clap::Parser;
 use program_structure::ast::AST;
@@ -137,9 +138,11 @@ fn main() {
                     }
                 }
                 generate(definitions, &mut codegen, None);
-                let result = codegen.module.print_to_file(output_path);
+                let result = codegen.module.print_to_file(&output_path);
                 match result {
-                    Ok(_) => {}
+                    Ok(_) => {
+                        remove_opaque_struct_name(&output_path);
+                    }
                     Err(err) => {
                         println!("Error: {}", err.to_string());
                     }

@@ -49,7 +49,7 @@ pub fn resolve_stmt<'ctx>(
             scope.set_current_exit_block(codegen, if_bb);
 
             resolve_stmt(scope, codegen, &if_case.as_ref());
-            let if_bb_end = scope.get_current_exit_block();
+            let if_end_bb = scope.get_current_exit_block();
 
             // if.false
             scope.set_current_exit_block(codegen, else_bb);
@@ -59,13 +59,17 @@ pub fn resolve_stmt<'ctx>(
                 }
                 _ => (),
             }
-            let else_bb_end = scope.get_current_exit_block();
+            let else_end_bb = scope.get_current_exit_block();
+
+            if codegen.ends_with_return(if_end_bb) && codegen.ends_with_return(else_end_bb) {
+                return;
+            };
 
             let exit_bb = context.append_basic_block(current_fnc, &name_if_block(false, true));
             // if.true -> if.exit
-            codegen.build_block_transferring(if_bb_end, exit_bb);
+            codegen.build_block_transferring(if_end_bb, exit_bb);
             // if.false -> if.exit
-            codegen.build_block_transferring(else_bb_end, exit_bb);
+            codegen.build_block_transferring(else_end_bb, exit_bb);
 
             scope.set_current_exit_block(codegen, exit_bb);
         }

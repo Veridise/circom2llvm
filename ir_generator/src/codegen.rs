@@ -88,7 +88,7 @@ impl<'ctx> CodeGen<'ctx> {
         self.builder.build_call(
             self._global_constraint_fn_val,
             &[lval.into(), rval.into(), gv.as_basic_value_enum().into()],
-            "",
+            &name_constraint(),
         );
     }
 
@@ -172,18 +172,22 @@ impl<'ctx> CodeGen<'ctx> {
             .insert(templ_name.clone(), v);
     }
 
+    pub fn ends_with_return(&self, bb: BasicBlock<'ctx>) -> bool {
+        let last_inst_op = bb.get_last_instruction();
+        let has_return = match last_inst_op {
+            Some(last_inst) => last_inst.get_opcode() == InstructionOpcode::Return,
+            None => false,
+        };
+        return has_return;
+    }
+
     pub fn build_block_transferring(
         &self,
         source_bb: BasicBlock<'ctx>,
         destination_bb: BasicBlock<'ctx>,
     ) {
-        self.builder.position_at_end(source_bb);
-        let last_inst_op = source_bb.get_last_instruction();
-        let has_return = match last_inst_op {
-            Some(last_inst) => last_inst.get_opcode() == InstructionOpcode::Return,
-            None => false,
-        };
-        if !has_return {
+        if !self.ends_with_return(source_bb) {
+            self.builder.position_at_end(source_bb);
             self.builder.build_unconditional_branch(destination_bb);
         }
         self.builder.position_at_end(destination_bb);

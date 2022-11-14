@@ -8,7 +8,6 @@ use inkwell::types::{ArrayType, BasicType, BasicTypeEnum};
 use inkwell::AddressSpace;
 use program_structure::ast::{Access, Expression, SignalType, Statement, VariableType};
 
-use num_traits::cast::ToPrimitive;
 
 pub fn infer_depended_components<'ctx>(stmt: &Statement, scope: &mut dyn ScopeTrait<'ctx>) {
     match stmt {
@@ -145,16 +144,17 @@ pub fn collect_signal<'ctx>(stmt: &Statement, template: &mut Template<'ctx>) {
 }
 
 fn resolve_dim_expr<'ctx>(dim: &Expression) -> u32 {
-    match dim {
-        Expression::Number(_, bigint) => {
-            let mut valid_u32 = bigint.to_u32().unwrap();
-            if valid_u32 == 0 {
-                valid_u32 = 1;
-            }
-            return valid_u32;
-        },
-        _ => MAX_ARRAYSIZE,
-    }
+    // match dim {
+    //     Expression::Number(_, bigint) => {
+    //         let mut valid_u32 = bigint.to_u32().unwrap();
+    //         if valid_u32 == 0 {
+    //             valid_u32 = 1;
+    //         }
+    //         return valid_u32;
+    //     },
+    //     _ => MAX_ARRAYSIZE,
+    // }
+    return MAX_ARRAYSIZE;
 }
 
 fn get_type_from_access<'ctx>(

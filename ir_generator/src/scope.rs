@@ -275,12 +275,57 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         check_used_value(&value);
         if access.len() == 0 {
             let ptr = self.var2ptr.get(name).unwrap();
-            codegen.builder.build_store(*ptr, value);
+            match value {
+                BasicValueEnum::IntValue(..) => {
+                    codegen.builder.build_store(*ptr, value);
+                }
+                BasicValueEnum::PointerValue(ptr_val) => {
+                    let src_ty = ptr_val.get_type().get_element_type();
+                    if src_ty.is_struct_type() {
+                        codegen.builder.build_store(*ptr, value);
+                    } else if src_ty.is_array_type() {
+                        let src_arr_ty = src_ty.into_array_type();
+                        let dest_arr_ty = ptr
+                            .get_type()
+                            .get_element_type()
+                            .into_pointer_type()
+                            .get_element_type()
+                            .into_array_type();
+                        let src_arr_size = format!("{}", src_arr_ty.size_of().unwrap());
+                        let dest_arr_size = format!("{}", dest_arr_ty.size_of().unwrap());
+                        if src_arr_size == dest_arr_size {
+                            codegen.builder.build_store(*ptr, value);
+                        } else {
+                            let dest_ptr = unsafe {
+                                codegen.builder.build_in_bounds_gep(
+                                    *ptr,
+                                    &[codegen.const_zero],
+                                    "memcpy_ptr",
+                                )
+                            };
+                            _ = codegen.builder.build_memcpy(
+                                dest_ptr,
+                                4,
+                                ptr_val,
+                                4,
+                                src_arr_ty.size_of().unwrap(),
+                            );
+                        }
+                    } else {
+                        println!(
+                            "Error: Unsupported used datatype, current is: {}",
+                            src_ty.print_to_string()
+                        );
+                        unreachable!();
+                    }
+                }
+                _ => unreachable!(),
+            }
         } else {
             let double_ptr = self.var2ptr.get(name).unwrap();
             let ptr = codegen
                 .builder
-                .build_load(*double_ptr, "Load_Ptr")
+                .build_load(*double_ptr, "ptr_getter")
                 .into_pointer_value();
             let mut idx_comp_access: Option<usize> = None;
             let mut signal_name = "".to_string();
