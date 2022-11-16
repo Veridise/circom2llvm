@@ -1,295 +1,273 @@
 Detecting: aliascheck
 
 Detecting: and
-Invalid output signal: write_output_inner.and.out
 
 Detecting: bigadd
-Invalid output signal: write_output_inner.bigadd.out
+Unconstrainted output signal: out
 
 Detecting: bigaddmodp
-Invalid output signal: write_output_inner.bigaddmodp.out
+Unconstrainted output signal: out
 
 Detecting: bigisequal
-Invalid output signal: write_output_inner.bigisequal.out
+Unconstrainted output signal: out
 
 Detecting: bigiszero
-Invalid output signal: write_output_inner.bigiszero.out
+Unconstrainted output signal: out
 
 Detecting: biglessthan
-Invalid output signal: write_output_inner.biglessthan.out
+Unconstrainted output signal: out
 
 Detecting: bigmod
-Invalid output signal: write_output_inner.bigmod.div
-Invalid output signal: write_output_inner.bigmod.mod
+Unconstrainted output signal: div
+Unconstrainted output signal: mod
 
 Detecting: bigmod2
-Invalid output signal: write_output_inner.bigmod2.div
-Invalid output signal: write_output_inner.bigmod2.mod
+Unconstrainted output signal: div
+Unconstrainted output signal: mod
 
 Detecting: bigmodinv
-Invalid output signal: write_output_inner.bigmodinv.out
+Unconstrainted output signal: out
 
 Detecting: bigmult
-Invalid output signal: write_output_inner.bigmult.out
+Unconstrainted output signal: out
 
 Detecting: bigmultmodp
-Invalid output signal: write_output_inner.bigmultmodp.out
+Unconstrainted output signal: out
 
 Detecting: bigmultshortlong
-Invalid output signal: write_output_inner.bigmultshortlong.out
+Unconstrainted output signal: out
 
 Detecting: bigmultshortlong2d
-Invalid output signal: write_output_inner.bigmultshortlong2d.out
+Unconstrainted output signal: out
 
 Detecting: bigmultshortlong2dunequal
-Invalid output signal: write_output_inner.bigmultshortlong2dunequal.out
+Unconstrainted output signal: out
 
 Detecting: bigmultshortlongunequal
-Invalid output signal: write_output_inner.bigmultshortlongunequal.out
+Unconstrainted output signal: out
 
 Detecting: bigsub
-Invalid output signal: write_output_inner.bigsub.out
-Invalid output signal: write_output_inner.bigsub.underflow
+Unconstrainted output signal: out
+Unconstrainted output signal: underflow
 
 Detecting: bigsubmodp
-Invalid output signal: write_output_inner.bigsubmodp.out
+Unconstrainted output signal: out
 
 Detecting: binsum
-Invalid output signal: write_output_inner.binsum.out
+Unconstrainted output signal: out
 
 Detecting: bits2num
-Invalid output signal: write_output_inner.bits2num.out
+Unconstrainted output signal: out
 
 Detecting: bits2num_strict
-Invalid output signal: write_output_inner.bits2num_strict.out
+Unconstrainted output signal: out
 
 Detecting: checkcarrymodp
 
 Detecting: checkcarrytozero
 
 Detecting: compconstant
-Invalid output signal: write_output_inner.compconstant.out
+Unconstrainted output signal: out
 
 Detecting: forceequalifenabled
 
 Detecting: fp12add
-Invalid output signal: write_output_inner.fp12add.out
+Unconstrainted output signal: out
 
 Detecting: fp12compress
-Invalid output signal: write_output_inner.fp12compress.out
+Unconstrainted output signal: out
 
 Detecting: fp12exp
-Invalid output signal: write_output_inner.fp12exp.out
+Unconstrainted output signal: out
 
 Detecting: fp12frobeniusmap
-Invalid output signal: write_output_inner.fp12frobeniusmap.out
 
 Detecting: fp12invert
-Invalid output signal: write_output_inner.fp12invert.out
+Unconstrainted output signal: out
 
 Detecting: fp12multiply
-Invalid output signal: write_output_inner.fp12multiply.out
+Unconstrainted output signal: out
 
 Detecting: fp12square
-Invalid output signal: write_output_inner.fp12square.out
+Unconstrainted output signal: out
 
 Detecting: fp2add
-Invalid output signal: write_output_inner.fp2add.out
+Unconstrainted output signal: out
 
 Detecting: fp2compress
-Invalid output signal: write_output_inner.fp2compress.out
+Unconstrainted output signal: out
 
 Detecting: fp2conjugate
-Invalid output signal: write_output_inner.fp2conjugate.out
 
 Detecting: fp2frobeniusmap
-Invalid output signal: write_output_inner.fp2frobeniusmap.out
 
 Detecting: fp2invert
-Invalid output signal: write_output_inner.fp2invert.out
+Unconstrainted output signal: out
 
 Detecting: fp2isequal
-Invalid output signal: write_output_inner.fp2isequal.out
+Unconstrainted output signal: out
 
 Detecting: fp2iszero
-Invalid output signal: write_output_inner.fp2iszero.out
+Unconstrainted output signal: out
 
 Detecting: fp2multiply
-Invalid output signal: write_output_inner.fp2multiply.out
+Unconstrainted output signal: out
 
 Detecting: fp2multiplythree
-Invalid output signal: write_output_inner.fp2multiplythree.out
+Unconstrainted output signal: out
 
 Detecting: fp2negate
-Invalid output signal: write_output_inner.fp2negate.out
+Unconstrainted output signal: out
 
 Detecting: fp2sgn0
-Invalid output signal: write_output_inner.fp2sgn0.out
+Unconstrainted output signal: out
 
 Detecting: fp2subtract
-Invalid output signal: write_output_inner.fp2subtract.out
+Unconstrainted output signal: out
 
 Detecting: fp6invert
-Invalid output signal: write_output_inner.fp6invert.real_out
+Unconstrainted output signal: real_out
 
 Detecting: fpadd
-Invalid output signal: write_output_inner.fpadd.out
+Unconstrainted output signal: out
 
 Detecting: fpisequal
-Invalid output signal: write_output_inner.fpisequal.out
+Unconstrainted output signal: out
 
 Detecting: fpiszero
-Invalid output signal: write_output_inner.fpiszero.out
+Unconstrainted output signal: out
 
 Detecting: fpmultiply
-Invalid output signal: write_output_inner.fpmultiply.out
+Unconstrainted output signal: out
 
 Detecting: fpnegate
-Invalid output signal: write_output_inner.fpnegate.out
+Unconstrainted output signal: out
 
 Detecting: fpsgn0
-Invalid output signal: write_output_inner.fpsgn0.out
 
 Detecting: fpsubtract
-Invalid output signal: write_output_inner.fpsubtract.out
+Unconstrainted output signal: out
 
 Detecting: greatereqthan
-Invalid output signal: write_output_inner.greatereqthan.out
+Unconstrainted output signal: out
 
 Detecting: greaterthan
-Invalid output signal: write_output_inner.greaterthan.out
+Unconstrainted output signal: out
 
 Detecting: isequal
-Invalid output signal: write_output_inner.isequal.out
+Unconstrainted output signal: out
 
 Detecting: iszero
-Invalid output signal: write_output_inner.iszero.out
 
 Detecting: lesseqthan
-Invalid output signal: write_output_inner.lesseqthan.out
+Unconstrainted output signal: out
 
 Detecting: lessthan
-Invalid output signal: write_output_inner.lessthan.out
+Unconstrainted output signal: out
 
 Detecting: longtoshortnoendcarry
-Invalid output signal: write_output_inner.longtoshortnoendcarry.out
+Unconstrainted output signal: out
 
 Detecting: modprod
-Invalid output signal: write_output_inner.modprod.prod
-Invalid output signal: write_output_inner.modprod.carry
+Unconstrainted output signal: prod
+Unconstrainted output signal: carry
 
 Detecting: modsub
-Invalid output signal: write_output_inner.modsub.out
-Invalid output signal: write_output_inner.modsub.borrow
+Unconstrainted output signal: borrow
 
 Detecting: modsubthree
-Invalid output signal: write_output_inner.modsubthree.out
-Invalid output signal: write_output_inner.modsubthree.borrow
+Unconstrainted output signal: borrow
 
 Detecting: modsum
-Invalid output signal: write_output_inner.modsum.sum
-Invalid output signal: write_output_inner.modsum.carry
+Unconstrainted output signal: carry
 
 Detecting: modsumfour
-Invalid output signal: write_output_inner.modsumfour.sum
-Invalid output signal: write_output_inner.modsumfour.carry
+Unconstrainted output signal: carry
 
 Detecting: modsumthree
-Invalid output signal: write_output_inner.modsumthree.sum
-Invalid output signal: write_output_inner.modsumthree.carry
+Unconstrainted output signal: carry
 
 Detecting: multiand
-Invalid output signal: write_output_inner.multiand.out
 
 Detecting: nand
-Invalid output signal: write_output_inner.nand.out
 
 Detecting: nor
-Invalid output signal: write_output_inner.nor.out
 
 Detecting: not
-Invalid output signal: write_output_inner.not.out
 
 Detecting: num2bits
-Invalid output signal: write_output_inner.num2bits.out
+Unconstrainted output signal: out
 
 Detecting: num2bits_strict
-Invalid output signal: write_output_inner.num2bits_strict.out
+Unconstrainted output signal: out
 
 Detecting: num2bitsneg
-Invalid output signal: write_output_inner.num2bitsneg.out
+Unconstrainted output signal: out
 
 Detecting: or
-Invalid output signal: write_output_inner.or.out
 
 Detecting: primereduce
-Invalid output signal: write_output_inner.primereduce.out
+Unconstrainted output signal: out
 
 Detecting: rangecheck2d
 
 Detecting: signedcheckcarrymodtozero
-Invalid output signal: write_output_inner.signedcheckcarrymodtozero.x
+Unconstrainted output signal: X
 
 Detecting: signedfp12carrymodp
-Invalid output signal: write_output_inner.signedfp12carrymodp.x
-Invalid output signal: write_output_inner.signedfp12carrymodp.out
+Unconstrainted output signal: X
+Unconstrainted output signal: out
 
 Detecting: signedfp12fp2multiplynocarry
-Invalid output signal: write_output_inner.signedfp12fp2multiplynocarry.out
+Unconstrainted output signal: out
 
 Detecting: signedfp12fp2multiplynocarryunequal
-Invalid output signal: write_output_inner.signedfp12fp2multiplynocarryunequal.out
+Unconstrainted output signal: out
 
 Detecting: signedfp12multiplynocarry
-Invalid output signal: write_output_inner.signedfp12multiplynocarry.out
+Unconstrainted output signal: out
 
 Detecting: signedfp12multiplynocarrycompress
-Invalid output signal: write_output_inner.signedfp12multiplynocarrycompress.out
+Unconstrainted output signal: out
 
 Detecting: signedfp12multiplynocarryunequal
-Invalid output signal: write_output_inner.signedfp12multiplynocarryunequal.out
+Unconstrainted output signal: out
 
 Detecting: signedfp12scalarmultiplynocarry
-Invalid output signal: write_output_inner.signedfp12scalarmultiplynocarry.out
+Unconstrainted output signal: out
 
 Detecting: signedfp12scalarmultiplynocarryunequal
-Invalid output signal: write_output_inner.signedfp12scalarmultiplynocarryunequal.out
+Unconstrainted output signal: out
 
 Detecting: signedfp2carrymodp
-Invalid output signal: write_output_inner.signedfp2carrymodp.x
-Invalid output signal: write_output_inner.signedfp2carrymodp.out
+Unconstrainted output signal: X
+Unconstrainted output signal: out
 
 Detecting: signedfp2compresscarry
-Invalid output signal: write_output_inner.signedfp2compresscarry.out
+Unconstrainted output signal: out
 
 Detecting: signedfp2divide
-Invalid output signal: write_output_inner.signedfp2divide.out
+Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarry
-Invalid output signal: write_output_inner.signedfp2multiplynocarry.out
+Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarrycompress
-Invalid output signal: write_output_inner.signedfp2multiplynocarrycompress.out
+Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarrycompressthree
-Invalid output signal: write_output_inner.signedfp2multiplynocarrycompressthree.out
+Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarryunequal
-Invalid output signal: write_output_inner.signedfp2multiplynocarryunequal.out
+Unconstrainted output signal: out
 
 Detecting: signedfpcarrymodp
-Invalid output signal: write_output_inner.signedfpcarrymodp.x
-Invalid output signal: write_output_inner.signedfpcarrymodp.out
+Unconstrainted output signal: X
+Unconstrainted output signal: out
 
 Detecting: split
-Invalid output signal: write_output_inner.split.small
-Invalid output signal: write_output_inner.split.big
 
 Detecting: splitthree
-Invalid output signal: write_output_inner.splitthree.small
-Invalid output signal: write_output_inner.splitthree.medium
-Invalid output signal: write_output_inner.splitthree.big
 
 Detecting: xor
-Invalid output signal: write_output_inner.xor.out
 

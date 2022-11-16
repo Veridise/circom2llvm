@@ -1,6 +1,9 @@
+#include <format>
 #include <iostream>
-#include <unordered_set>
+#include <regex>
 #include <string>
+#include <unordered_set>
+#include <vector>
 
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Module.h"
@@ -9,7 +12,15 @@
 
 using namespace llvm;
 
-bool compareFunction(llvm::Function* F1, llvm::Function* F2) {
+typedef llvm::LoadInst Signal;
+typedef std::vector<Signal *> Signals;
+
+typedef llvm::CallInst Constraint;
+typedef std::vector<Constraint *> Constraints;
+
+std::regex number_suffix("(\\d+$)");
+
+bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
     int i = F1->getName().str().compare(F2->getName().str());
     return i < 0;
 }
@@ -17,74 +28,156 @@ bool compareFunction(llvm::Function* F1, llvm::Function* F2) {
 namespace {
 struct UnderConstraints : public ModulePass {
     static char ID;
-    const char* fn_prefix = "fn_template_init_";
+    const std::string fn_template_prefix = "fn_template_init_";
+    const std::string fn_constraint_prefix = "fn_intrinsic_add_constraint";
+    const std::string input_signal_prefix = "read_input_inner.";
+    const std::string output_signal_prefix = "write_output_inner.";
+    std::string template_name;
+    Signals input_signals;
+    Signals output_signals;
+    Constraints constraints;
+
     UnderConstraints() : ModulePass(ID) {}
 
     bool isTemplateInitFunc(llvm::Function *F) {
-        return F->getName().startswith_insensitive(fn_prefix);
+        return F->getName().startswith_insensitive(fn_template_prefix);
     }
 
-    std::vector<llvm::StoreInst *> locateOutputSignals(llvm::Function *F) {
-        auto output_signals = std::vector<llvm::StoreInst *>();
+    Signals locateOutputSignals(llvm::Function *F) {
+        auto _output_signals = Signals();
         if (isTemplateInitFunc(F)) {
             for (auto &bb : F->getBasicBlockList()) {
                 if (bb.getName().startswith_insensitive("exit")) {
                     for (auto &inst : bb.getInstList()) {
-                        if (llvm::StoreInst *store_inst =
-                                dyn_cast<llvm::StoreInst>(&inst)) {
-                            output_signals.push_back(store_inst);
+                        if (isa<Signal>(&inst)) {
+                            Signal *signal = dyn_cast<Signal>(&inst);
+                            _output_signals.push_back(signal);
                         }
                     }
                 }
             }
         }
-        return output_signals;
+        return _output_signals;
     }
 
-    std::vector<llvm::LoadInst *> locateInputSignals(llvm::Function *F) {
-        auto input_signals = std::vector<llvm::LoadInst *>();
+    Signals locateInputSignals(llvm::Function *F) {
+        auto _input_signals = Signals();
         if (isTemplateInitFunc(F)) {
             for (auto &bb : F->getBasicBlockList()) {
                 if (bb.getName().startswith_insensitive("entry")) {
                     for (auto &inst : bb.getInstList()) {
-                        if (llvm::LoadInst *load_inst =
-                                dyn_cast<llvm::LoadInst>(&inst)) {
-                            if (load_inst->getName().startswith_insensitive(
-                                    "read_input_inner")) {
-                                input_signals.push_back(load_inst);
+                        if (isa<Signal>(&inst)) {
+                            Signal *potential_signal = dyn_cast<Signal>(&inst);
+                            if (potential_signal->getName()
+                                    .startswith_insensitive(
+                                        input_signal_prefix)) {
+                                _input_signals.push_back(potential_signal);
                             }
                         }
                     }
                 }
             }
         }
-        return input_signals;
+        return _input_signals;
     }
 
-    std::vector<llvm::CallInst *> locateConstraints(llvm::Function *F) {
-        auto constraints = std::vector<llvm::CallInst *>();
+    Constraints locateConstraints(llvm::Function *F) {
+        auto _constraints = Constraints();
         if (isTemplateInitFunc(F)) {
             for (auto &bb : F->getBasicBlockList()) {
                 for (auto &inst : bb.getInstList()) {
-                    if (llvm::CallInst *call_inst =
-                            dyn_cast<llvm::CallInst>(&inst)) {
-                        if (call_inst->getCalledFunction()
+                    if (isa<Constraint>(&inst)) {
+                        Constraint *potential_constraint =
+                            dyn_cast<Constraint>(&inst);
+                        if (potential_constraint->getCalledFunction()
                                 ->getName()
-                                .startswith_insensitive(
-                                    "fn_intrinsic_add_constraint")) {
-                            constraints.push_back(call_inst);
+                                .startswith_insensitive(fn_constraint_prefix)) {
+                            _constraints.push_back(potential_constraint);
                         }
                     }
                 }
             }
         }
-        return constraints;
+        return _constraints;
+    }
+
+    int indexOfInputSignal(std::string s) {
+        if (s == "") {
+            return -1;
+        }
+        int res = -1;
+        int index = 0;
+        s = canonicalize_name(s);
+        for (auto i : input_signals) {
+            if (i->getName().endswith_insensitive(s)) {
+                res = index;
+                break;
+            }
+            index += 1;
+        }
+        return res;
+    }
+
+    bool isInputSignal(std::string s) { return indexOfInputSignal(s) >= 0; }
+
+    std::string getNameInputSignal(size_t index) {
+        auto res = input_signals[index]->getName().str();
+        // read_input_inner.temp.in -> temp.in
+        res.replace(0, input_signal_prefix.length(), "");
+        // temp.in -> in
+        res.replace(0, template_name.length(), "");
+
+        return res;
+    }
+
+    int indexOfOutputSignal(std::string s) {
+        if (s == "") {
+            return -1;
+        }
+        int res = -1;
+        int index = 0;
+        s = canonicalize_name(s);
+        for (auto i : output_signals) {
+            if (i->getOperand(0)->getName().endswith_insensitive(s)) {
+                res = index;
+                break;
+            }
+            index += 1;
+        }
+        return res;
+    }
+
+    std::string getNameOutputSignal(size_t index) {
+        return output_signals[index]->getOperand(0)->getName().str();
+    }
+
+    bool isOutputSignal(std::string s) { return indexOfInputSignal(s) >= 0; }
+
+    std::string canonicalize_name(std::string s) {
+        // Remove number suffix
+        // E.g. out13 -> out
+        return std::regex_replace(s, number_suffix, "");
+    }
+
+    std::vector<llvm::Instruction *> track_value_as_expression(llvm::Value *v) {
+        auto res = std::vector<llvm::Instruction *>();
+        if (isa<llvm::Instruction>(v)) {
+            llvm::Instruction *inst = dyn_cast<llvm::Instruction>(v);
+            res.push_back(inst);
+            if (isa<llvm::BinaryOperator>(inst)) {
+                for (auto &opd : inst->operands()) {
+                    auto temp = track_value_as_expression(opd);
+                    res.insert(std::end(res), std::begin(temp), std::end(temp));
+                }
+            }
+        }
+        return res;
     }
 
     bool runOnModule(Module &M) override {
-        auto functions = std::vector<llvm::Function*>();
-        for (auto &F: M.functions()) {
-            llvm::Function* ptr = &F;
+        auto functions = std::vector<llvm::Function *>();
+        for (auto &F : M.functions()) {
+            llvm::Function *ptr = &F;
             functions.push_back(ptr);
         }
         llvm::sort(functions, compareFunction);
@@ -92,56 +185,65 @@ struct UnderConstraints : public ModulePass {
             if (!isTemplateInitFunc(F)) {
                 continue;
             }
-            auto output_signals = locateOutputSignals(F);
-            auto input_signals = locateInputSignals(F);
-            auto constraints = locateConstraints(F);
+            input_signals = locateInputSignals(F);
+            output_signals = locateOutputSignals(F);
+            constraints = locateConstraints(F);
 
-            std::cerr << "Detecting: ";
             std::string template_name = F->getName().str();
-            template_name.replace(0, 17, "");
+
+            template_name.replace(0, fn_template_prefix.length(), "");
+            std::cerr << "Detecting: ";
             std::cerr << template_name;
             std::cerr << "\n";
 
-            auto input_signal_names = std::unordered_set<std::string>();
-            for (auto &input_signal : input_signals) {
-                input_signal_names.insert(input_signal->getName().str());
-            };
+            auto constrainted_output_names = std::unordered_set<std::string>();
 
-            for (auto &output_signal : output_signals) {
-                bool under_constraint_from_input = false;
-                auto storeValue = output_signal->getValueOperand();
-                if (isa<Constant>(storeValue)) {
-                    continue;
-                }
-                for (auto &constraint : constraints) {
-                    auto constraint_to = constraint->getArgOperand(0);
-                    auto constraint_from = constraint->getArgOperand(1);
-                    if (constraint_to->getName() == storeValue->getName()) {
-                        for (auto use_iter = constraint_from->use_begin();
-                             use_iter != constraint_from->use_end();
-                             ++use_iter) {
-                            if (llvm::Instruction *inst =
-                                    dyn_cast<llvm::Instruction>(
-                                        use_iter->get())) {
-                                for (auto &opd : inst->operands()) {
-                                    auto opd_name = opd->getName().str();
-                                    if (input_signal_names.find(opd_name) !=
-                                        input_signal_names.end()) {
-                                        under_constraint_from_input = true;
-                                    }
-                                }
-                            }
+            for (auto &constraint : constraints) {
+                auto constraint_to = constraint->getArgOperand(0);
+                auto constraint_from = constraint->getArgOperand(1);
+
+                auto used_operands = track_value_as_expression(constraint_from);
+
+                auto to_name = constraint_to->getName().str();
+                to_name = canonicalize_name(to_name);
+
+                // Output signal is under a constraint from input signal
+                // Constraint_to: output signal
+                // Constraint_from: An expression using input signal
+                auto index = indexOfOutputSignal(to_name);
+                if (index >= 0) {
+                    auto o_name = getNameOutputSignal(index);
+                    for (auto &opd : used_operands) {
+                        auto opd_name = opd->getName().str();
+                        if (isInputSignal(opd_name)) {
+                            constrainted_output_names.insert(o_name);
+                            break;
                         }
                     }
                 }
-                if (!under_constraint_from_input) {
-                    std::cerr << "Invalid output signal: ";
-                    std::cerr
-                        << output_signal->getPointerOperand()->getName().str();
+
+                // Output signal is used to constrain the input signal
+                // Constraint_to: input signal
+                // Constraint_from: An expression using output signal
+                if (isInputSignal(to_name)) {
+                    for (auto &opd : used_operands) {
+                        auto opd_name = opd->getName().str();
+                        auto index = indexOfOutputSignal(opd_name);
+                        if (index >= 0) {
+                            auto o_name = getNameOutputSignal(index);
+                            constrainted_output_names.insert(o_name);
+                        }
+                    }
+                }
+            };
+            for (size_t i = 0; i < output_signals.size(); i++) {
+                auto output_signal_name = getNameOutputSignal(i);
+                if (!constrainted_output_names.count(output_signal_name)) {
+                    std::cerr << "Unconstrainted output signal: ";
+                    std::cerr << output_signal_name;
                     std::cerr << "\n";
                 };
             }
-
             std::cerr << "\n";
         }
         return false;

@@ -1,19 +1,18 @@
 ; ModuleID = 'main'
 source_filename = "main"
 
-%t_struct_and = type { %t_struct_param_and*, void (%t_struct_and*)*, i128, i128, i128 }
-%t_struct_param_and = type {}
+%struct_template_circuit_and = type { i128, i128, i128 }
 
 @constraint = external global i1
 
-define void @intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
+define void @fn_intrinsic_add_constraint(i128 %0, i128 %1, i1* %2) {
 entry:
   %constraint = icmp eq i128 %0, %1
   store i1 %constraint, i1* %2, align 1
   ret void
 }
 
-define i128 @intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
+define i128 @fn_intrinsic_inline_switch(i1 %0, i128 %1, i128 %2) {
 entry:
   br i1 %0, label %if.true, label %if.false
 
@@ -24,28 +23,48 @@ if.false:                                         ; preds = %entry
   ret i128 %2
 }
 
-define void @t_fn_init_and(%t_struct_and* %0) {
+; Function Attrs: nofree nosync nounwind readnone speculatable willreturn
+declare fp128 @llvm.powi.f128.i32(fp128, i32) #0
+
+define i128 @fn_intrinsic_inline_powi(i128 %0, i128 %1) {
 entry:
-  %struct_ptr = getelementptr inbounds %t_struct_and, %t_struct_and* %0, i32 0, i32 2
-  %read_signal_input.a = load i128, i128* %struct_ptr, align 4
-  %struct_ptr1 = getelementptr inbounds %t_struct_and, %t_struct_and* %0, i32 0, i32 3
-  %read_signal_input.b = load i128, i128* %struct_ptr1, align 4
-  %mul = mul i128 %read_signal_input.a, %read_signal_input.b
-  call void @intrinsic_add_constraint(i128 %mul, i128 %mul, i1* @constraint)
+  %inline_powi.base = uitofp i128 %0 to fp128
+  %inline_powi.power = trunc i128 %1 to i32
+  %inline_powi.cal = call fp128 @llvm.powi.f128.i32(fp128 %inline_powi.base, i32 %inline_powi.power)
+  %inline_powi.ret = fptoui fp128 %inline_powi.cal to i128
+  ret i128 %inline_powi.ret
+}
+
+define void @fn_template_init_and(%struct_template_circuit_and* %0) {
+entry:
+  %struct_getter = getelementptr inbounds %struct_template_circuit_and, %struct_template_circuit_and* %0, i32 0, i32 0
+  %read_input_inner.and.a = load i128, i128* %struct_getter, align 4
+  %a.bind = alloca i128, align 8
+  store i128 %read_input_inner.and.a, i128* %a.bind, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_and, %struct_template_circuit_and* %0, i32 0, i32 1
+  %read_input_inner.and.b = load i128, i128* %struct_getter1, align 4
+  %b.bind = alloca i128, align 8
+  store i128 %read_input_inner.and.b, i128* %b.bind, align 4
+  %out = alloca i128, align 8
+  %a = load i128, i128* %a.bind, align 4
+  %b = load i128, i128* %b.bind, align 4
+  %mul = mul i128 %a, %b
+  store i128 %mul, i128* %out, align 4
+  %out2 = load i128, i128* %out, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out2, i128 %mul, i1* @constraint)
   br label %exit
 
 exit:                                             ; preds = %entry
-  %write_signal_output.out = getelementptr inbounds %t_struct_and, %t_struct_and* %0, i32 0, i32 4
-  store i128 %mul, i128* %write_signal_output.out, align 4
+  %out3 = load i128, i128* %out, align 4
+  %write_output_inner.and.out = getelementptr inbounds %struct_template_circuit_and, %struct_template_circuit_and* %0, i32 0, i32 2
+  store i128 %out3, i128* %write_output_inner.and.out, align 4
   ret void
 }
 
-define %t_struct_and* @t_fn_build_and(%t_struct_param_and* %0) {
+define %struct_template_circuit_and* @fn_template_build_and() {
 entry:
-  %1 = alloca %t_struct_and, align 8
-  %param = getelementptr inbounds %t_struct_and, %t_struct_and* %1, i32 0, i32 0
-  store %t_struct_param_and* %0, %t_struct_param_and** %param, align 8
-  %init_fn = getelementptr inbounds %t_struct_and, %t_struct_and* %1, i32 0, i32 1
-  store void (%t_struct_and*)* @t_fn_init_and, void (%t_struct_and*)** %init_fn, align 8
-  ret %t_struct_and* %1
+  %struct_template_circuit_and = alloca %struct_template_circuit_and, align 8
+  ret %struct_template_circuit_and* %struct_template_circuit_and
 }
+
+attributes #0 = { nofree nosync nounwind readnone speculatable willreturn }
