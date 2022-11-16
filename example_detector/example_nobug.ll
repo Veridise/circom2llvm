@@ -1,5 +1,5 @@
-; ModuleID = 'main'
-source_filename = "main"
+; ModuleID = 'example_nobug.circom'
+source_filename = "/Users/hongbo/code/circom2llvm/example_detector/example_nobug.circom"
 
 %struct_template_circuit_and = type { i128, i128, i128 }
 

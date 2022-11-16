@@ -8,7 +8,6 @@ use super::template::Template;
 use program_structure::ast::{Definition, Statement};
 use std::collections::HashMap;
 
-pub struct TestSetting {}
 
 pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Vec<String> {
     let mut all = dependence_graph.len().clone();
@@ -57,7 +56,6 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
 pub fn generate(
     definitions: Vec<&Definition>,
     codegen: &mut CodeGen,
-    test_setting: Option<TestSetting>,
 ) {
     let mut template_scopes: Vec<(Template, &Statement)> = Vec::new();
     let mut function_scopes: Vec<(Function, &Statement)> = Vec::new();

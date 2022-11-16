@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
@@ -220,8 +221,11 @@ impl<'ctx> CodeGen<'ctx> {
     }
 }
 
-pub fn init_codegen<'ctx>(context: &'ctx Context) -> CodeGen<'ctx> {
-    let module = context.create_module("main");
+pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGen<'ctx> {
+    let file_path = input_path.as_os_str().to_str().unwrap();
+    let file_name = input_path.file_name().unwrap().to_str().unwrap();
+    let module = context.create_module(file_name);
+    module.set_source_file_name(file_path);
     let builder = context.create_builder();
 
     // Value Types

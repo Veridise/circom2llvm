@@ -1,3 +1,3 @@
-/Users/hongbo/app/llvm-project/build/bin/opt: ./cache/extra_field_circuits.ll:14744:59: error: '@fn_template_build_bigmultshortlong' defined with type '%struct_template_circuit_bigmultshortlong* (i128, i128, i128)*' but expected '%struct_template_circuit_bigmultshortlong* (i128, i128)*'
-  %call = call %struct_template_circuit_bigmultshortlong* @fn_template_build_bigmultshortlong(i128 %n, i128 %k)
+/Users/hongbo/app/llvm-project/build/bin/opt: ./cache/extra_field_circuits.ll:12680:59: error: '@fn_template_build_bigmultshortlong' defined with type '%struct_template_circuit_bigmultshortlong* (i128, i128, i128)*' but expected '%struct_template_circuit_bigmultshortlong* (i128, i128)*'
+  %call = call %struct_template_circuit_bigmultshortlong* @fn_template_build_bigmultshortlong(i128 1, i128 %add67)
                                                           ^

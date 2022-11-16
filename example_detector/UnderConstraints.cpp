@@ -175,6 +175,8 @@ struct UnderConstraints : public ModulePass {
     }
 
     bool runOnModule(Module &M) override {
+        std::cerr << M.getSourceFileName();
+        std::cerr << "\n";
         auto functions = std::vector<llvm::Function *>();
         for (auto &F : M.functions()) {
             llvm::Function *ptr = &F;

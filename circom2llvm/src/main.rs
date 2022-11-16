@@ -67,8 +67,6 @@ fn main() {
     }
 
     for input_pathbuf in input_paths {
-        let context = Context::create();
-        let mut codegen = init_codegen(&context);
         let input_path = input_pathbuf
             .clone()
             .into_os_string()
@@ -81,6 +79,8 @@ fn main() {
             .into_os_string()
             .into_string()
             .unwrap();
+        let context = Context::create();
+        let mut codegen = init_codegen(&context, input_pathbuf.clone());
         println!("Compiling: {}", input_path);
         println!("Output: {}", output_path);
         let mut working_dir = input_pathbuf.clone();
@@ -137,7 +137,7 @@ fn main() {
                         definitions.push(def);
                     }
                 }
-                generate(definitions, &mut codegen, None);
+                generate(definitions, &mut codegen);
                 let result = codegen.module.print_to_file(&output_path);
                 match result {
                     Ok(_) => {
