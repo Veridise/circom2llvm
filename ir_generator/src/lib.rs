@@ -7,6 +7,7 @@ mod inferrence;
 mod namer;
 pub mod scope;
 mod statement;
+pub mod summarygen;
 mod template;
 mod type_check;
 pub mod hacking;

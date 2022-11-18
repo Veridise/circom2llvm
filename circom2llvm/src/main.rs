@@ -1,5 +1,5 @@
 use inkwell::context::Context;
-use ir_generator::codegen::init_codegen;
+use ir_generator::{codegen::init_codegen, summarygen::init_summarygen};
 use ir_generator::generator::generate;
 use ir_generator::after_process::remove_opaque_struct_name;
 
@@ -79,8 +79,10 @@ fn main() {
             .into_os_string()
             .into_string()
             .unwrap();
+        let output_summary_path = output.join(input_filename).with_extension("json");
         let context = Context::create();
         let mut codegen = init_codegen(&context, input_pathbuf.clone());
+        let mut summarygen = init_summarygen();
         println!("Compiling: {}", input_path);
         println!("Output: {}", output_path);
         let mut working_dir = input_pathbuf.clone();
@@ -137,7 +139,14 @@ fn main() {
                         definitions.push(def);
                     }
                 }
-                generate(definitions, &mut codegen);
+                generate(definitions, &mut codegen, &mut summarygen);
+                let json_result = summarygen.print_to_file(output_summary_path);
+                match json_result {
+                    Ok(..) => (),
+                    Err(err) => {
+                        println!("Error: {}", err);
+                    }
+                }
                 let result = codegen.module.print_to_file(&output_path);
                 match result {
                     Ok(_) => {

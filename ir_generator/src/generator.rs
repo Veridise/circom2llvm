@@ -1,4 +1,5 @@
 use crate::scope::ScopeTrait;
+use crate::summarygen::SummaryGen;
 
 use super::codegen::CodeGen;
 use super::function::Function;
@@ -56,6 +57,7 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
 pub fn generate(
     definitions: Vec<&Definition>,
     codegen: &mut CodeGen,
+    summarygen: &mut SummaryGen,
 ) {
     let mut template_scopes: Vec<(Template, &Statement)> = Vec::new();
     let mut function_scopes: Vec<(Function, &Statement)> = Vec::new();
@@ -73,6 +75,7 @@ pub fn generate(
                 let scope = Scope {
                     name: name.clone(),
                     args: args.to_vec(),
+                    arg_tys: Vec::new(),
                     val_ty: codegen.val_ty,
 
                     dependences: Vec::new(),
@@ -104,6 +107,7 @@ pub fn generate(
                 let scope = Scope {
                     name: name.clone(),
                     args: args.to_vec(),
+                    arg_tys: Vec::new(),
                     val_ty: codegen.val_ty,
 
                     dependences: Vec::new(),
@@ -156,11 +160,13 @@ pub fn generate(
         for (f, body) in &mut function_scopes[0..] {
             if &f.scope.name == c {
                 f.build_instrustions(codegen, body);
+                summarygen.add_function(f);
             }
         }
         for (t, body) in &mut template_scopes[0..] {
             if &t.scope.name == c {
                 t.build_instrustions(codegen, body);
+                summarygen.add_component(t);
             }
         }
     }

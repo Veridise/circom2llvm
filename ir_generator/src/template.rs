@@ -10,7 +10,6 @@ use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_tem
 use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use super::statement::{flat_statements, resolve_stmt};
 
-use inkwell::types::BasicMetadataTypeEnum;
 use inkwell::AddressSpace;
 use program_structure::ast::Statement;
 
@@ -82,8 +81,9 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let mut templ_struct_fields = Vec::new();
 
         for arg in &self.scope.args {
-            let arg_meta_ty: BasicMetadataTypeEnum = self.scope.get_var_ty_as_ptr(arg).into();
-            templ_build_arg_tys.push(arg_meta_ty);
+            let arg_meta_ty = self.scope.get_var_ty_as_ptr(arg);
+            templ_build_arg_tys.push(arg_meta_ty.into());
+            self.scope.arg_tys.push(arg_meta_ty);
         }
 
         for arg in &self.scope.args.clone() {

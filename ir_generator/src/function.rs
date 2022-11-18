@@ -79,6 +79,7 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         let mut arg_tys = Vec::new();
         for name in &self.scope.args.clone() {
             let arg_ty = self.scope.get_var_ty_as_ptr(&name);
+            self.scope.arg_tys.push(arg_ty);
             arg_tys.push(arg_ty.into());
         }
 

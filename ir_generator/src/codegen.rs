@@ -19,8 +19,8 @@ use crate::namer::{
     name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_template_struct,
 };
 
-const GLOBAL_P: &str = "12539295309507511577697735";
-pub static mut APPLY_MOD: bool = true;
+pub const GLOBAL_P: &str = "12539295309507511577697735";
+pub const APPLY_MOD: bool = false;
 pub const MAX_ARRAYSIZE: u32 = 256;
 
 pub struct CodeGen<'ctx> {

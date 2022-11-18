@@ -94,6 +94,7 @@ pub trait CodegenStagesTrait<'ctx> {
 pub struct Scope<'ctx> {
     pub name: String,
     pub args: Vec<String>,
+    pub arg_tys: Vec<BasicTypeEnum<'ctx>>,
 
     pub val_ty: IntType<'ctx>,
 
