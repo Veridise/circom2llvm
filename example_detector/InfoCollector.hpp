@@ -28,7 +28,8 @@ bool isTemplateInitFunc(llvm::Function *F);
 bool isBuildFunc(llvm::Function *F);
 bool isInputSiganlDefinedInst(llvm::Value *v);
 bool isOutputSiganlDefinedInst(llvm::Value *v);
-bool isComponent(llvm::Value *v);
+bool isComponent(llvm::Instruction *inst);
+bool isConstraint(llvm::Instruction *inst);
 std::string canonicalizeTemplateName(llvm::Function *F);
 std::string canonicalizeValueName(std::string s);
 

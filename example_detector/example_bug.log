@@ -1,2 +1,3 @@
+/Users/hongbo/code/circom2llvm/example_detector/example_bug.circom
 Detecting: and
-Unconstrainted output signal: out
+Unconstrainted signal: out

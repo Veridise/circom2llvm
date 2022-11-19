@@ -51,7 +51,7 @@ ConstraintGraph::ConstraintGraph(
 
     for (auto &c : this->_collector->components) {
         std::string c_name = canonicalizeTemplateName(c->getCalledFunction());
-        this->outputs.insert(c_name);
+        this->components.insert(c_name);
         this->createNode(NodeType::ComponentNode, c_name);
     }
 
@@ -61,13 +61,10 @@ ConstraintGraph::ConstraintGraph(
         auto constraint_from = constraint->getArgOperand(1);
         auto to_name = constraint_to->getName().str();
         to_name = canonicalizeValueName(to_name);
-        if (!this->inputs.count(to_name) || !this->outputs.count(to_name)) {
-            std::cerr << "Strange Constrain: ";
-            std::cerr << constraint->getNameOrAsOperand();
-            std::cerr << "\n";
+        if (!this->inputs.count(to_name) && !this->outputs.count(to_name)) {
             continue;
         }
-        ConstraintNode* node;
+        ConstraintNode *node;
         if (this->inputs.count(to_name)) {
             node = this->getNode(NodeType::InputSignalNode, to_name);
         } else {
@@ -83,6 +80,7 @@ ConstraintGraph::ConstraintGraph(
 
 ConstraintNode *ConstraintGraph::createNode(NodeType type, std::string name) {
     auto node = new ConstraintNode(type, name);
+    this->nodes.push_back(node);
     return node;
 }
 
@@ -91,6 +89,7 @@ ConstraintEdge *ConstraintGraph::createEdge(ConstraintNode *from,
     auto edge = new ConstraintEdge(from, to);
     from->addEdge(edge);
     to->addEdge(edge);
+    this->edges.push_back(edge);
     return edge;
 }
 
@@ -100,8 +99,10 @@ ConstraintNode *ConstraintGraph::getNode(NodeType type, std::string name) {
             return n;
         }
     }
-    std::cerr << "Couldn't find the node: ";
+    std::cerr << "Couldn't find the node";
+    std::cerr << "Type: ";
     std::cerr << type;
+    std::cerr << "Name: ";
     std::cerr << name;
     std::cerr << "\n";
 }
@@ -120,7 +121,8 @@ std::vector<ConstraintNode *> ConstraintGraph::trackValueSource(
             res.push_back(node);
         } else if (isComponent(inst)) {
             auto calledInst = dyn_cast<ComponentInstance>(inst);
-            auto templ_name = canonicalizeTemplateName(calledInst->getCalledFunction());
+            auto templ_name =
+                canonicalizeTemplateName(calledInst->getCalledFunction());
             auto node = this->getNode(NodeType::ComponentNode, name);
             res.push_back(node);
         } else if (isa<llvm::BinaryOperator>(inst)) {
@@ -138,7 +140,7 @@ std::vector<ConstraintNode *> ConstraintGraph::trackValueSource(
 }
 
 bool ConstraintGraph::calculate() {
-    for (auto n: this->tail_nodes) {
+    for (auto n : this->tail_nodes) {
         if (n->type == NodeType::InputSignalNode) {
             for (auto d : n->depends) {
                 auto from = d->from;
@@ -202,29 +204,32 @@ struct UnderConstraints : public ModulePass {
         }
 
         while (!isFixed) {
-            isFixed = true;
+            auto prev_satisfied_components = std::unordered_set<std::string>();
+            for (auto e: this->satisfied_components) {
+                prev_satisfied_components.insert(e);
+            }
             for (auto &g : this->graphs) {
                 if (!g->statusConfirmed) {
                     if (!g->calculate()) {
-                        isFixed = false;
                         this->satisfied_components.erase(g->name);
                     }
                 }
             }
+            isFixed = prev_satisfied_components == this->satisfied_components;
         }
 
-        for (auto g: graphs) {
+        for (auto g : graphs) {
             std::cerr << "Detecting: ";
             std::cerr << g->name;
             std::cerr << "\n";
-            for (auto o: g->outputs) {
+            for (auto o : g->outputs) {
                 if (!g->satisfied_outputs.count(o)) {
-                    std::cerr << "Unconstrainted signal: ";
+                    std::cerr << "Unconstrainted output signal: ";
                     std::cerr << o;
                     std::cerr << "\n";
                 }
             }
-            
+            std::cerr << "\n";
         }
 
         return false;

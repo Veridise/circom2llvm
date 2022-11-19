@@ -19,12 +19,12 @@ Detecting: biglessthan
 Unconstrainted output signal: out
 
 Detecting: bigmod
-Unconstrainted output signal: div
 Unconstrainted output signal: mod
+Unconstrainted output signal: div
 
 Detecting: bigmod2
-Unconstrainted output signal: div
 Unconstrainted output signal: mod
+Unconstrainted output signal: div
 
 Detecting: bigmodinv
 Unconstrainted output signal: out
@@ -48,8 +48,8 @@ Detecting: bigmultshortlongunequal
 Unconstrainted output signal: out
 
 Detecting: bigsub
-Unconstrainted output signal: out
 Unconstrainted output signal: underflow
+Unconstrainted output signal: out
 
 Detecting: bigsubmodp
 Unconstrainted output signal: out
@@ -170,8 +170,8 @@ Detecting: longtoshortnoendcarry
 Unconstrainted output signal: out
 
 Detecting: modprod
-Unconstrainted output signal: prod
 Unconstrainted output signal: carry
+Unconstrainted output signal: prod
 
 Detecting: modsub
 Unconstrainted output signal: borrow
@@ -216,8 +216,8 @@ Detecting: signedcheckcarrymodtozero
 Unconstrainted output signal: X
 
 Detecting: signedfp12carrymodp
-Unconstrainted output signal: X
 Unconstrainted output signal: out
+Unconstrainted output signal: X
 
 Detecting: signedfp12fp2multiplynocarry
 Unconstrainted output signal: out
@@ -241,8 +241,8 @@ Detecting: signedfp12scalarmultiplynocarryunequal
 Unconstrainted output signal: out
 
 Detecting: signedfp2carrymodp
-Unconstrainted output signal: X
 Unconstrainted output signal: out
+Unconstrainted output signal: X
 
 Detecting: signedfp2compresscarry
 Unconstrainted output signal: out
@@ -263,8 +263,8 @@ Detecting: signedfp2multiplynocarryunequal
 Unconstrainted output signal: out
 
 Detecting: signedfpcarrymodp
-Unconstrainted output signal: X
 Unconstrainted output signal: out
+Unconstrainted output signal: X
 
 Detecting: split
 

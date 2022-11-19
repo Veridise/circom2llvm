@@ -5,12 +5,11 @@
 #include <unordered_set>
 #include <vector>
 
+#include "InfoCollector.hpp"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Pass.h"
-
-#include "InfoCollector.hpp"
 
 // Definition
 
