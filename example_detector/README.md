@@ -27,7 +27,7 @@ Do NOT compile the LLVM with this pass, instead, compile this pass after LLVM co
 cmake -S llvm -B build -G Ninja \
 -DLLVM_ENABLE_PROJECTS='clang;lld' \
 -DLLVM_TARGETS_TO_BUILD="X86;ARM" \
--DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_BUILD_TYPE=Debug \
 -DLLVM_ENABLE_ASSERTIONS=ON \
 -DLLVM_PARALLEL_LINK_JOBS=1 \
 -DLLVM_OPTIMIZED_TABLEGEN=ON \

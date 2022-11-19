@@ -1,24 +1,163 @@
-#include <format>
-#include <iostream>
-#include <regex>
-#include <string>
-#include <unordered_set>
-#include <vector>
+#include "UnderConstraints.hpp"
 
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Value.h"
-#include "llvm/Pass.h"
+ConstraintNode::ConstraintNode(NodeType type, std::string name) {
+    this->type = type;
+    this->name = name;
+    this->limits = std::vector<ConstraintEdge *>();
+    this->depends = std::vector<ConstraintEdge *>();
+}
 
-using namespace llvm;
+void ConstraintNode::addEdge(ConstraintEdge *edge) {
+    if (this == edge->from) {
+        this->limits.push_back(edge);
+    } else {
+        this->depends.push_back(edge);
+    }
+}
 
-typedef llvm::LoadInst Signal;
-typedef std::vector<Signal *> Signals;
+bool ConstraintNode::operator==(ConstraintNode *b) {
+    return this->name == b->name && this->type == b->type;
+}
 
-typedef llvm::CallInst Constraint;
-typedef std::vector<Constraint *> Constraints;
+ConstraintEdge::ConstraintEdge(ConstraintNode *from, ConstraintNode *to) {
+    this->from = from;
+    this->to = to;
+}
 
-std::regex number_suffix("(\\d+$)");
+ConstraintGraph::ConstraintGraph(
+    std::unordered_set<std::string> *satisfied_components, Function *F) {
+    this->satisfied_components = satisfied_components;
+    this->_collector = new Collector(F);
+    this->nodes = std::vector<ConstraintNode *>();
+    this->edges = std::vector<ConstraintEdge *>();
+    this->inputs = std::unordered_set<std::string>();
+    this->outputs = std::unordered_set<std::string>();
+    this->components = std::unordered_set<std::string>();
+    this->tail_nodes = std::vector<ConstraintNode *>();
+    this->statusConfirmed = false;
+    this->name = this->_collector->template_name;
+
+    for (auto &i : this->_collector->input_signals) {
+        std::string i_name = this->_collector->getNameOfInputSignal(i);
+        this->inputs.insert(i_name);
+        this->createNode(NodeType::InputSignalNode, i_name);
+    }
+
+    for (auto &o : this->_collector->output_signals) {
+        std::string o_name = this->_collector->getNameOfOutputSignal(o);
+        this->outputs.insert(o_name);
+        this->createNode(NodeType::OutputSignalNode, o_name);
+    }
+
+    for (auto &c : this->_collector->components) {
+        std::string c_name = canonicalizeTemplateName(c->getCalledFunction());
+        this->outputs.insert(c_name);
+        this->createNode(NodeType::ComponentNode, c_name);
+    }
+
+    // Build graph
+    for (auto &constraint : this->_collector->constraints) {
+        auto constraint_to = constraint->getArgOperand(0);
+        auto constraint_from = constraint->getArgOperand(1);
+        auto to_name = constraint_to->getName().str();
+        to_name = canonicalizeValueName(to_name);
+        if (!this->inputs.count(to_name) || !this->outputs.count(to_name)) {
+            std::cerr << "Strange Constrain: ";
+            std::cerr << constraint->getNameOrAsOperand();
+            std::cerr << "\n";
+            continue;
+        }
+        ConstraintNode* node;
+        if (this->inputs.count(to_name)) {
+            node = this->getNode(NodeType::InputSignalNode, to_name);
+        } else {
+            node = this->getNode(NodeType::OutputSignalNode, to_name);
+        };
+        this->tail_nodes.push_back(node);
+        auto depends = this->trackValueSource(constraint_from);
+        for (auto d : depends) {
+            this->createEdge(d, node);
+        }
+    };
+}
+
+ConstraintNode *ConstraintGraph::createNode(NodeType type, std::string name) {
+    auto node = new ConstraintNode(type, name);
+    return node;
+}
+
+ConstraintEdge *ConstraintGraph::createEdge(ConstraintNode *from,
+                                            ConstraintNode *to) {
+    auto edge = new ConstraintEdge(from, to);
+    from->addEdge(edge);
+    to->addEdge(edge);
+    return edge;
+}
+
+ConstraintNode *ConstraintGraph::getNode(NodeType type, std::string name) {
+    for (auto &n : this->nodes) {
+        if (n->type == type && n->name == name) {
+            return n;
+        }
+    }
+    std::cerr << "Couldn't find the node: ";
+    std::cerr << type;
+    std::cerr << name;
+    std::cerr << "\n";
+}
+
+std::vector<ConstraintNode *> ConstraintGraph::trackValueSource(
+    llvm::Value *v) {
+    auto res = std::vector<ConstraintNode *>();
+    if (isa<llvm::Instruction>(v)) {
+        llvm::Instruction *inst = dyn_cast<llvm::Instruction>(v);
+        auto name = canonicalizeValueName(inst->getName().str());
+        if (this->inputs.count(name)) {
+            auto node = this->getNode(NodeType::InputSignalNode, name);
+            res.push_back(node);
+        } else if (this->outputs.count(name)) {
+            auto node = this->getNode(NodeType::OutputSignalNode, name);
+            res.push_back(node);
+        } else if (isComponent(inst)) {
+            auto calledInst = dyn_cast<ComponentInstance>(inst);
+            auto templ_name = canonicalizeTemplateName(calledInst->getCalledFunction());
+            auto node = this->getNode(NodeType::ComponentNode, name);
+            res.push_back(node);
+        } else if (isa<llvm::BinaryOperator>(inst)) {
+            for (auto &opd : inst->operands()) {
+                auto temp = ConstraintGraph::trackValueSource(opd);
+                res.insert(std::end(res), std::begin(temp), std::end(temp));
+            }
+        } else {
+            // Other value sources, such as constants and arguments.
+        }
+    } else {
+        // Arguments.
+    }
+    return res;
+}
+
+bool ConstraintGraph::calculate() {
+    for (auto n: this->tail_nodes) {
+        if (n->type == NodeType::InputSignalNode) {
+            for (auto d : n->depends) {
+                auto from = d->from;
+                if (from->type == NodeType::OutputSignalNode) {
+                    this->satisfied_outputs.insert(from->name);
+                }
+            }
+        }
+        if (n->type == NodeType::OutputSignalNode) {
+            for (auto d : n->depends) {
+                auto from = d->from;
+                if (from->type == NodeType::InputSignalNode) {
+                    this->satisfied_outputs.insert(n->name);
+                }
+            }
+        }
+    }
+    return this->satisfied_outputs == this->outputs;
+}
 
 bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
     int i = F1->getName().str().compare(F2->getName().str());
@@ -28,226 +167,66 @@ bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
 namespace {
 struct UnderConstraints : public ModulePass {
     static char ID;
-    const std::string fn_template_prefix = "fn_template_init_";
-    const std::string fn_constraint_prefix = "fn_intrinsic_add_constraint";
-    const std::string input_signal_prefix = "read_input_inner.";
-    const std::string output_signal_prefix = "write_output_inner.";
-    std::string template_name;
-    Signals input_signals;
-    Signals output_signals;
-    Constraints constraints;
+
+    // Status
+    std::unordered_set<std::string> satisfied_components;
+    std::vector<llvm::Function *> ordered_functions;
+    std::vector<ConstraintGraph *> graphs;
+    bool isFixed;
 
     UnderConstraints() : ModulePass(ID) {}
-
-    bool isTemplateInitFunc(llvm::Function *F) {
-        return F->getName().startswith_insensitive(fn_template_prefix);
-    }
-
-    Signals locateOutputSignals(llvm::Function *F) {
-        auto _output_signals = Signals();
-        if (isTemplateInitFunc(F)) {
-            for (auto &bb : F->getBasicBlockList()) {
-                if (bb.getName().startswith_insensitive("exit")) {
-                    for (auto &inst : bb.getInstList()) {
-                        if (isa<Signal>(&inst)) {
-                            Signal *signal = dyn_cast<Signal>(&inst);
-                            _output_signals.push_back(signal);
-                        }
-                    }
-                }
-            }
-        }
-        return _output_signals;
-    }
-
-    Signals locateInputSignals(llvm::Function *F) {
-        auto _input_signals = Signals();
-        if (isTemplateInitFunc(F)) {
-            for (auto &bb : F->getBasicBlockList()) {
-                if (bb.getName().startswith_insensitive("entry")) {
-                    for (auto &inst : bb.getInstList()) {
-                        if (isa<Signal>(&inst)) {
-                            Signal *potential_signal = dyn_cast<Signal>(&inst);
-                            if (potential_signal->getName()
-                                    .startswith_insensitive(
-                                        input_signal_prefix)) {
-                                _input_signals.push_back(potential_signal);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return _input_signals;
-    }
-
-    Constraints locateConstraints(llvm::Function *F) {
-        auto _constraints = Constraints();
-        if (isTemplateInitFunc(F)) {
-            for (auto &bb : F->getBasicBlockList()) {
-                for (auto &inst : bb.getInstList()) {
-                    if (isa<Constraint>(&inst)) {
-                        Constraint *potential_constraint =
-                            dyn_cast<Constraint>(&inst);
-                        if (potential_constraint->getCalledFunction()
-                                ->getName()
-                                .startswith_insensitive(fn_constraint_prefix)) {
-                            _constraints.push_back(potential_constraint);
-                        }
-                    }
-                }
-            }
-        }
-        return _constraints;
-    }
-
-    int indexOfInputSignal(std::string s) {
-        if (s == "") {
-            return -1;
-        }
-        int res = -1;
-        int index = 0;
-        s = canonicalize_name(s);
-        for (auto i : input_signals) {
-            if (i->getName().endswith_insensitive(s)) {
-                res = index;
-                break;
-            }
-            index += 1;
-        }
-        return res;
-    }
-
-    bool isInputSignal(std::string s) { return indexOfInputSignal(s) >= 0; }
-
-    std::string getNameInputSignal(size_t index) {
-        auto res = input_signals[index]->getName().str();
-        // read_input_inner.temp.in -> temp.in
-        res.replace(0, input_signal_prefix.length(), "");
-        // temp.in -> in
-        res.replace(0, template_name.length(), "");
-
-        return res;
-    }
-
-    int indexOfOutputSignal(std::string s) {
-        if (s == "") {
-            return -1;
-        }
-        int res = -1;
-        int index = 0;
-        s = canonicalize_name(s);
-        for (auto i : output_signals) {
-            if (i->getOperand(0)->getName().endswith_insensitive(s)) {
-                res = index;
-                break;
-            }
-            index += 1;
-        }
-        return res;
-    }
-
-    std::string getNameOutputSignal(size_t index) {
-        return output_signals[index]->getOperand(0)->getName().str();
-    }
-
-    bool isOutputSignal(std::string s) { return indexOfInputSignal(s) >= 0; }
-
-    std::string canonicalize_name(std::string s) {
-        // Remove number suffix
-        // E.g. out13 -> out
-        return std::regex_replace(s, number_suffix, "");
-    }
-
-    std::vector<llvm::Instruction *> track_value_as_expression(llvm::Value *v) {
-        auto res = std::vector<llvm::Instruction *>();
-        if (isa<llvm::Instruction>(v)) {
-            llvm::Instruction *inst = dyn_cast<llvm::Instruction>(v);
-            res.push_back(inst);
-            if (isa<llvm::BinaryOperator>(inst)) {
-                for (auto &opd : inst->operands()) {
-                    auto temp = track_value_as_expression(opd);
-                    res.insert(std::end(res), std::begin(temp), std::end(temp));
-                }
-            }
-        }
-        return res;
-    }
 
     bool runOnModule(Module &M) override {
         std::cerr << M.getSourceFileName();
         std::cerr << "\n";
-        auto functions = std::vector<llvm::Function *>();
+
+        this->ordered_functions = std::vector<llvm::Function *>();
         for (auto &F : M.functions()) {
             llvm::Function *ptr = &F;
-            functions.push_back(ptr);
+            ordered_functions.push_back(ptr);
         }
-        llvm::sort(functions, compareFunction);
-        for (auto F : functions) {
+        llvm::sort(this->ordered_functions, compareFunction);
+
+        this->graphs = std::vector<ConstraintGraph *>();
+        this->satisfied_components = std::unordered_set<std::string>();
+        this->isFixed = false;
+        auto *ptr = &this->satisfied_components;
+
+        for (auto F : this->ordered_functions) {
             if (!isTemplateInitFunc(F)) {
                 continue;
             }
-            input_signals = locateInputSignals(F);
-            output_signals = locateOutputSignals(F);
-            constraints = locateConstraints(F);
-
-            std::string template_name = F->getName().str();
-
-            template_name.replace(0, fn_template_prefix.length(), "");
-            std::cerr << "Detecting: ";
-            std::cerr << template_name;
-            std::cerr << "\n";
-
-            auto constrainted_output_names = std::unordered_set<std::string>();
-
-            for (auto &constraint : constraints) {
-                auto constraint_to = constraint->getArgOperand(0);
-                auto constraint_from = constraint->getArgOperand(1);
-
-                auto used_operands = track_value_as_expression(constraint_from);
-
-                auto to_name = constraint_to->getName().str();
-                to_name = canonicalize_name(to_name);
-
-                // Output signal is under a constraint from input signal
-                // Constraint_to: output signal
-                // Constraint_from: An expression using input signal
-                auto index = indexOfOutputSignal(to_name);
-                if (index >= 0) {
-                    auto o_name = getNameOutputSignal(index);
-                    for (auto &opd : used_operands) {
-                        auto opd_name = opd->getName().str();
-                        if (isInputSignal(opd_name)) {
-                            constrainted_output_names.insert(o_name);
-                            break;
-                        }
-                    }
-                }
-
-                // Output signal is used to constrain the input signal
-                // Constraint_to: input signal
-                // Constraint_from: An expression using output signal
-                if (isInputSignal(to_name)) {
-                    for (auto &opd : used_operands) {
-                        auto opd_name = opd->getName().str();
-                        auto index = indexOfOutputSignal(opd_name);
-                        if (index >= 0) {
-                            auto o_name = getNameOutputSignal(index);
-                            constrainted_output_names.insert(o_name);
-                        }
-                    }
-                }
-            };
-            for (size_t i = 0; i < output_signals.size(); i++) {
-                auto output_signal_name = getNameOutputSignal(i);
-                if (!constrainted_output_names.count(output_signal_name)) {
-                    std::cerr << "Unconstrainted output signal: ";
-                    std::cerr << output_signal_name;
-                    std::cerr << "\n";
-                };
-            }
-            std::cerr << "\n";
+            auto g = new ConstraintGraph(ptr, F);
+            this->satisfied_components.insert(g->name);
+            this->graphs.push_back(g);
         }
+
+        while (!isFixed) {
+            isFixed = true;
+            for (auto &g : this->graphs) {
+                if (!g->statusConfirmed) {
+                    if (!g->calculate()) {
+                        isFixed = false;
+                        this->satisfied_components.erase(g->name);
+                    }
+                }
+            }
+        }
+
+        for (auto g: graphs) {
+            std::cerr << "Detecting: ";
+            std::cerr << g->name;
+            std::cerr << "\n";
+            for (auto o: g->outputs) {
+                if (!g->satisfied_outputs.count(o)) {
+                    std::cerr << "Unconstrainted signal: ";
+                    std::cerr << o;
+                    std::cerr << "\n";
+                }
+            }
+            
+        }
+
         return false;
     };
 };
