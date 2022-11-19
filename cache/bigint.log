@@ -1,22 +1,39 @@
 https://github.com/yi-sun/circom-pairing/tree/master/circuits/bigint.circom
+Strange constraint on: out_poly206Result size: 0
+Strange constraint on: out_poly314Result size: 0
+Strange constraint on: out_poly333Result size: 0
+Strange constraint on: out_poly205Result size: 0
+Strange constraint on: flag39Result size: 0
+Strange constraint on: tmp94Result size: 0
+Strange constraint on: mul43Result size: 2
+Strange constraint on: lin62Result size: 0
+Strange constraint on: parts50Result size: 0
+Strange constraint on: parts82Result size: 0
+Strange constraint on: parts107Result size: 0
+Strange constraint on: parts122Result size: 0
+Strange constraint on: sout143Result size: 0
+Strange constraint on: mulResult size: 2
+Strange constraint on: mul7Result size: 2
+Strange constraint on: mulResult size: 0
+Strange constraint on: mul235Result size: 0
+Strange constraint on: runningCarry262Result size: 0
+Strange constraint on: b_plus_c5Result size: 0
+Strange constraint on: mulResult size: 2
+Strange constraint on: lc127Result size: 0
+Strange constraint on: mulResult size: 2
 Detecting: aliascheck
 
 Detecting: and
 
 Detecting: bigadd
-Unconstrainted output signal: out
 
 Detecting: bigaddmodp
-Unconstrainted output signal: out
 
 Detecting: bigisequal
-Unconstrainted output signal: out
 
 Detecting: bigiszero
-Unconstrainted output signal: out
 
 Detecting: biglessthan
-Unconstrainted output signal: out
 
 Detecting: bigmod
 Unconstrainted output signal: mod
@@ -30,7 +47,6 @@ Detecting: bigmodinv
 Unconstrainted output signal: out
 
 Detecting: bigmult
-Unconstrainted output signal: out
 
 Detecting: bigmultmodp
 Unconstrainted output signal: out
@@ -48,11 +64,8 @@ Detecting: bigmultshortlongunequal
 Unconstrainted output signal: out
 
 Detecting: bigsub
-Unconstrainted output signal: underflow
-Unconstrainted output signal: out
 
 Detecting: bigsubmodp
-Unconstrainted output signal: out
 
 Detecting: binsum
 Unconstrainted output signal: out
@@ -66,26 +79,20 @@ Unconstrainted output signal: out
 Detecting: checkcarrytozero
 
 Detecting: compconstant
-Unconstrainted output signal: out
 
 Detecting: forceequalifenabled
 
 Detecting: greatereqthan
-Unconstrainted output signal: out
 
 Detecting: greaterthan
-Unconstrainted output signal: out
 
 Detecting: isequal
-Unconstrainted output signal: out
 
 Detecting: iszero
 
 Detecting: lesseqthan
-Unconstrainted output signal: out
 
 Detecting: lessthan
-Unconstrainted output signal: out
 
 Detecting: longtoshortnoendcarry
 Unconstrainted output signal: out
@@ -95,19 +102,14 @@ Unconstrainted output signal: carry
 Unconstrainted output signal: prod
 
 Detecting: modsub
-Unconstrainted output signal: borrow
 
 Detecting: modsubthree
-Unconstrainted output signal: borrow
 
 Detecting: modsum
-Unconstrainted output signal: carry
 
 Detecting: modsumfour
-Unconstrainted output signal: carry
 
 Detecting: modsumthree
-Unconstrainted output signal: carry
 
 Detecting: multiand
 

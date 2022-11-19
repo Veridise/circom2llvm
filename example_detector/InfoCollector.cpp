@@ -32,7 +32,7 @@ bool isOutputSiganlDefinedInst(llvm::Value *v) {
     }
 }
 
-bool isComponent(llvm::Instruction *inst) {
+bool isComponentDefinedInst(llvm::Instruction *inst) {
     if (isa<ComponentInstance>(inst)) {
         ComponentInstance *called_inst = dyn_cast<ComponentInstance>(inst);
         return called_inst->getCalledFunction()
@@ -43,7 +43,7 @@ bool isComponent(llvm::Instruction *inst) {
     }
 }
 
-bool isConstraint(llvm::Instruction *inst) {
+bool isConstraintDefinedInst(llvm::Instruction *inst) {
     if (isa<Constraint>(inst)) {
         Constraint *called_inst = dyn_cast<Constraint>(inst);
         return called_inst->getCalledFunction()
@@ -167,7 +167,7 @@ void Collector::locateConstraints() {
     this->constraints = Constraints();
     for (auto &bb : F->getBasicBlockList()) {
         for (auto &inst : bb.getInstList()) {
-            if (isConstraint(&inst)) {
+            if (isConstraintDefinedInst(&inst)) {
                 Constraint *constraint = dyn_cast<Constraint>(&inst);
                 this->constraints.push_back(constraint);
             }
@@ -179,7 +179,7 @@ void Collector::locateComponents() {
     this->components = Components();
     for (auto &bb : F->getBasicBlockList()) {
         for (auto &inst : bb.getInstList()) {
-            if (isComponent(&inst)) {
+            if (isComponentDefinedInst(&inst)) {
                 ComponentInstance *component = dyn_cast<Constraint>(&inst);
                 this->components.push_back(component);
             }

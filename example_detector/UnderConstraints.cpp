@@ -1,5 +1,20 @@
 #include "UnderConstraints.hpp"
 
+std::vector<std::string> stringSplit(std::string s, std::string splitor) {
+    auto res = std::vector<std::string>();
+    size_t pos = 0;
+    while ((pos = s.find(splitor)) != std::string::npos) {
+        res.push_back(s.substr(0, pos));
+        s.erase(0, pos + splitor.length());
+    }
+    return res;
+}
+
+bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
+    int i = F1->getName().str().compare(F2->getName().str());
+    return i < 0;
+}
+
 ConstraintNode::ConstraintNode(NodeType type, std::string name) {
     this->type = type;
     this->name = name;
@@ -59,21 +74,20 @@ ConstraintGraph::ConstraintGraph(
     for (auto &constraint : this->_collector->constraints) {
         auto constraint_to = constraint->getArgOperand(0);
         auto constraint_from = constraint->getArgOperand(1);
-        auto to_name = constraint_to->getName().str();
-        to_name = canonicalizeValueName(to_name);
-        if (!this->inputs.count(to_name) && !this->outputs.count(to_name)) {
+        auto nodes = trackValueSource(constraint_to);
+        if (nodes.size() != 1) {
+            std::cerr << "Strange constraint on: ";
+            std::cerr << constraint_to->getName().str();
+            std::cerr << "Result size: ";
+            std::cerr << nodes.size();
+            std::cerr << "\n";
             continue;
         }
-        ConstraintNode *node;
-        if (this->inputs.count(to_name)) {
-            node = this->getNode(NodeType::InputSignalNode, to_name);
-        } else {
-            node = this->getNode(NodeType::OutputSignalNode, to_name);
-        };
-        this->tail_nodes.push_back(node);
+        auto tail_node = nodes[0];
+        this->tail_nodes.push_back(tail_node);
         auto depends = this->trackValueSource(constraint_from);
         for (auto d : depends) {
-            this->createEdge(d, node);
+            this->createEdge(d, tail_node);
         }
     };
 }
@@ -119,27 +133,35 @@ std::vector<ConstraintNode *> ConstraintGraph::trackValueSource(
         } else if (this->outputs.count(name)) {
             auto node = this->getNode(NodeType::OutputSignalNode, name);
             res.push_back(node);
-        } else if (isComponent(inst)) {
-            auto calledInst = dyn_cast<ComponentInstance>(inst);
-            auto templ_name =
-                canonicalizeTemplateName(calledInst->getCalledFunction());
-            auto node = this->getNode(NodeType::ComponentNode, name);
+        } else if (inst->getName().startswith_insensitive(
+                       "read_output_outter")) {
+            auto templ_name = canonicalizeValueName(stringSplit(name, ".")[1]);
+            auto node = this->getNode(NodeType::ComponentNode, templ_name);
+            res.push_back(node);
+        } else if (inst->getName().startswith_insensitive(
+                       "read_input_outter")) {
+            auto templ_name = canonicalizeValueName(stringSplit(name, ".")[1]);
+            auto node = this->getNode(NodeType::ComponentNode, templ_name);
             res.push_back(node);
         } else if (isa<llvm::BinaryOperator>(inst)) {
             for (auto &opd : inst->operands()) {
                 auto temp = ConstraintGraph::trackValueSource(opd);
                 res.insert(std::end(res), std::begin(temp), std::end(temp));
             }
-        } else {
-            // Other value sources, such as constants and arguments.
+        } else if (isa<LoadInst>(inst)) {
+            auto temp = ConstraintGraph::trackValueSource(inst->getOperand(0));
+            res.insert(std::end(res), std::begin(temp), std::end(temp));
+        } else if (isa<GetElementPtrInst>(inst)) {
+            auto temp = ConstraintGraph::trackValueSource(inst->getOperand(0));
+            res.insert(std::end(res), std::begin(temp), std::end(temp));
         }
     } else {
-        // Arguments.
+        // Constant.
     }
     return res;
 }
 
-bool ConstraintGraph::calculate() {
+bool ConstraintGraph::calculate(std::vector<ConstraintGraph *> graphs) {
     for (auto n : this->tail_nodes) {
         if (n->type == NodeType::InputSignalNode) {
             for (auto d : n->depends) {
@@ -155,15 +177,25 @@ bool ConstraintGraph::calculate() {
                 if (from->type == NodeType::InputSignalNode) {
                     this->satisfied_outputs.insert(n->name);
                 }
+                if (from->type == NodeType::ComponentNode) {
+                    if (this->satisfied_components->count(from->name)) {
+                        this->satisfied_outputs.insert(n->name);
+                    }
+                }
+            }
+        }
+    }
+    this->statusConfirmed = true;
+    for (auto c : this->components) {
+        for (auto g : graphs) {
+            if (c == g->name) {
+                if (!g->statusConfirmed) {
+                    this->statusConfirmed = false;
+                }
             }
         }
     }
     return this->satisfied_outputs == this->outputs;
-}
-
-bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
-    int i = F1->getName().str().compare(F2->getName().str());
-    return i < 0;
 }
 
 namespace {
@@ -205,12 +237,12 @@ struct UnderConstraints : public ModulePass {
 
         while (!isFixed) {
             auto prev_satisfied_components = std::unordered_set<std::string>();
-            for (auto e: this->satisfied_components) {
+            for (auto e : this->satisfied_components) {
                 prev_satisfied_components.insert(e);
             }
             for (auto &g : this->graphs) {
                 if (!g->statusConfirmed) {
-                    if (!g->calculate()) {
+                    if (!g->calculate(this->graphs)) {
                         this->satisfied_components.erase(g->name);
                     }
                 }

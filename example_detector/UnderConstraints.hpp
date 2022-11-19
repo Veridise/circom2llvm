@@ -73,5 +73,5 @@ class ConstraintGraph {
     ConstraintEdge *createEdge(ConstraintNode *from, ConstraintNode *to);
     ConstraintNode *getNode(NodeType type, std::string name);
     std::vector<ConstraintNode *> trackValueSource(llvm::Value *v);
-    bool calculate();
+    bool calculate(std::vector<ConstraintGraph*> graphs);
 };
