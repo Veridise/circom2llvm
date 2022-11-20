@@ -54,24 +54,21 @@ class ConstraintEdge {
 
 class ConstraintGraph {
    private:
-    Collector *_collector;
-
    public:
+    Collector *collector;
     std::unordered_set<std::string> *satisfied_components;
     std::unordered_set<std::string> satisfied_outputs;
     std::vector<ConstraintNode *> nodes;
     std::vector<ConstraintEdge *> edges;
-    std::unordered_set<std::string> inputs;
-    std::unordered_set<std::string> outputs;
-    std::unordered_set<std::string> components;
     std::vector<ConstraintNode *> tail_nodes;
     bool statusConfirmed;
-    std::string name;
+    std::string graph_name;
     ConstraintGraph(std::unordered_set<std::string> *satisfied_components,
                     Function *F);
     ConstraintNode *createNode(NodeType type, std::string name);
     ConstraintEdge *createEdge(ConstraintNode *from, ConstraintNode *to);
     ConstraintNode *getNode(NodeType type, std::string name);
-    std::vector<ConstraintNode *> trackValueSource(llvm::Value *v);
-    bool calculate(std::vector<ConstraintGraph*> graphs);
+    ConstraintNode *determineValueSource(llvm::Instruction *inst);
+    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v);
+    bool calculate(std::vector<ConstraintGraph *> graphs);
 };

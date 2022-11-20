@@ -46,10 +46,10 @@ entry:
   %in.bind = alloca [256 x i128]*, align 8
   store [256 x i128]* %read_input_inner.bits2num.in, [256 x i128]** %in.bind, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32))
-  %i = bitcast i8* %malloccall to i128*
-  %out = alloca i128, align 8
+  %e2 = bitcast i8* %malloccall to i128*
   %malloccall2 = tail call i8* @malloc(i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32))
-  %e2 = bitcast i8* %malloccall2 to i128*
+  %i = bitcast i8* %malloccall2 to i128*
+  %out = alloca i128, align 8
   %malloccall3 = tail call i8* @malloc(i32 ptrtoint (i128* getelementptr (i128, i128* null, i32 1) to i32))
   %lc1 = bitcast i8* %malloccall3 to i128*
   store i128 0, i128* %lc1, align 4

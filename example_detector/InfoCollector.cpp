@@ -65,10 +65,15 @@ std::string canonicalizeTemplateName(llvm::Function *F) {
     return template_name;
 }
 
-std::string canonicalizeValueName(std::string s) {
-    // Remove number suffix
-    // E.g. out13 -> out
-    return std::regex_replace(s, number_suffix, "");
+std::vector<std::string> stringSplit(std::string s, std::string splitor) {
+    auto res = std::vector<std::string>();
+    size_t pos = 0;
+    while ((pos = s.find(splitor)) != std::string::npos) {
+        res.push_back(s.substr(0, pos));
+        s.erase(0, pos + splitor.length());
+    }
+    res.push_back(s);
+    return res;
 }
 
 Collector::Collector(llvm::Function *F) {
@@ -78,6 +83,14 @@ Collector::Collector(llvm::Function *F) {
         std::cerr << "Error: This function isn't template function!";
     }
     this->template_name = canonicalizeTemplateName(F);
+    this->input_signals = Signals();
+    this->output_signals = Signals();
+    this->constraints = Constraints();
+    this->components = Components();
+    this->input_signal_names = NameSet();
+    this->output_signal_names = NameSet();
+    this->component_names = NameSet();
+
     this->locateInputSignals();
     this->locateOutputSignals();
     this->locateConstraints();
@@ -85,36 +98,16 @@ Collector::Collector(llvm::Function *F) {
 }
 
 void Collector::locateInputSignals() {
-    this->input_signals = Signals();
     for (auto &bb : F->getBasicBlockList()) {
         for (auto &inst : bb.getInstList()) {
             if (isInputSiganlDefinedInst(&inst)) {
                 Signal *signal = dyn_cast<Signal>(&inst);
                 this->input_signals.push_back(signal);
+                this->input_signal_names.insert(
+                    this->getNameOfInputSignal(signal));
             }
         }
     }
-}
-
-int Collector::indexOfInputSignal(std::string s) {
-    if (s == "") {
-        return -1;
-    }
-    int res = -1;
-    int index = 0;
-    s = canonicalizeValueName(s);
-    for (auto i : this->input_signals) {
-        if (i->getName().endswith_insensitive(s)) {
-            res = index;
-            break;
-        }
-        index += 1;
-    }
-    return res;
-}
-
-bool Collector::isInputSignal(std::string s) {
-    return this->indexOfInputSignal(s) >= 0;
 }
 
 std::string Collector::getNameOfInputSignal(Signal *i) {
@@ -127,44 +120,24 @@ std::string Collector::getNameOfInputSignal(Signal *i) {
 }
 
 void Collector::locateOutputSignals() {
-    this->output_signals = Signals();
     for (auto &bb : F->getBasicBlockList()) {
         for (auto &inst : bb.getInstList()) {
             if (isOutputSiganlDefinedInst(&inst)) {
                 Signal *signal = dyn_cast<Signal>(&inst);
                 this->output_signals.push_back(signal);
+                this->output_signal_names.insert(
+                    this->getNameOfOutputSignal(signal));
             }
         }
     }
 }
 
-int Collector::indexOfOutputSignal(std::string s) {
-    if (s == "") {
-        return -1;
-    }
-    int res = -1;
-    int index = 0;
-    s = canonicalizeValueName(s);
-    for (auto i : output_signals) {
-        if (i->getOperand(0)->getName().endswith_insensitive(s)) {
-            res = index;
-            break;
-        }
-        index += 1;
-    }
-    return res;
-}
-
-bool Collector::isOutputSignal(std::string s) {
-    return indexOfInputSignal(s) >= 0;
-}
-
 std::string Collector::getNameOfOutputSignal(Signal *o) {
+    // %out1 = load i128, i128* %out, align 4
     return o->getOperand(0)->getName().str();
 }
 
 void Collector::locateConstraints() {
-    this->constraints = Constraints();
     for (auto &bb : F->getBasicBlockList()) {
         for (auto &inst : bb.getInstList()) {
             if (isConstraintDefinedInst(&inst)) {
@@ -182,7 +155,77 @@ void Collector::locateComponents() {
             if (isComponentDefinedInst(&inst)) {
                 ComponentInstance *component = dyn_cast<Constraint>(&inst);
                 this->components.push_back(component);
+                this->component_names.insert(
+                    this->getNameOfTemplate(component));
             }
         }
+    }
+}
+
+std::string Collector::getNameOfTemplate(ComponentInstance *c) {
+    // %call = call %struct_template_circuit_num2bits*
+    // @fn_template_build_num2bits(i128 %add)
+    auto origin_name = c->getCalledFunction()->getName().str();
+    auto res = stringSplit(origin_name, "_")[3];
+    return res;
+}
+
+std::string Collector::canonicalizeInput(llvm::Value *v) {
+    for (auto i : this->input_signal_names) {
+        if (v->getName().startswith_insensitive(i)) {
+            return i;
+        }
+    }
+    return "";
+}
+
+std::string Collector::canonicalizeOutput(llvm::Value *v) {
+    for (auto i : this->output_signal_names) {
+        if (v->getName().startswith_insensitive(i)) {
+            return i;
+        }
+    }
+    return "";
+}
+
+std::pair<std::string, std::string> Collector::canonicalizeSignalOfComponent(
+    llvm::Value *v) {
+    auto v_name_sec = stringSplit(v->getName().str(), ".");
+    if (v_name_sec.size() != 3) {
+        return {"", ""};
+    }
+    for (auto i : this->component_names) {
+        if (v_name_sec[1] == i) {
+            return {v_name_sec[1], v_name_sec[2]};
+        }
+    }
+    return {"", ""};
+}
+
+bool Collector::isInputSignal(llvm::Value *v) {
+    return this->canonicalizeInput(v) != "";
+}
+
+bool Collector::isOutputSignal(llvm::Value *v) {
+    return this->canonicalizeOutput(v) != "";
+}
+
+bool Collector::isSignalOfComponent(llvm::Value *v) {
+    return this->canonicalizeSignalOfComponent(v).first != "";
+}
+
+void Collector::print() {
+    std::cerr << "Template: " << this->template_name << "\n";
+    std::cerr << "Inputs: \n";
+    for (auto &i: this->input_signal_names) {
+        std::cerr << i << "\n";
+    }
+    std::cerr << "Outputs: \n";
+    for (auto &i: this->output_signal_names) {
+        std::cerr << i << "\n";
+    }
+    std::cerr << "Components: \n";
+    for (auto &i: this->component_names) {
+        std::cerr << i << "\n";
     }
 }

@@ -1,5 +1,7 @@
 #include <regex>
 #include <string>
+#include <unordered_set>
+#include <utility>
 #include <vector>
 
 #include "llvm/IR/Instructions.h"
@@ -18,6 +20,8 @@ using Constraints = std::vector<Constraint *>;
 using ComponentInstance = llvm::CallInst;
 using Components = std::vector<ComponentInstance *>;
 
+using NameSet = std::unordered_set<std::string>;
+
 const std::string fn_template_prefix = "fn_template_init_";
 const std::string fn_build_prefix = "fn_template_build_";
 const std::string fn_constraint_prefix = "fn_intrinsic_add_constraint";
@@ -31,7 +35,7 @@ bool isOutputSiganlDefinedInst(llvm::Value *v);
 bool isComponentDefinedInst(llvm::Instruction *inst);
 bool isConstraintDefinedInst(llvm::Instruction *inst);
 std::string canonicalizeTemplateName(llvm::Function *F);
-std::string canonicalizeValueName(std::string s);
+std::vector<std::string> stringSplit(std::string s, std::string splitor);
 
 class Collector {
    private:
@@ -40,18 +44,29 @@ class Collector {
     void locateConstraints();
     void locateComponents();
 
+    std::string getNameOfInputSignal(Signal *i);
+    std::string getNameOfOutputSignal(Signal *o);
+    std::string getNameOfTemplate(ComponentInstance *c);
+
    public:
     llvm::Function *F;
     Signals input_signals;
     Signals output_signals;
     Constraints constraints;
     Components components;
+
+    NameSet input_signal_names;
+    NameSet output_signal_names;
+    NameSet component_names;
+
     std::string template_name;
     Collector(llvm::Function *F);
-    int indexOfInputSignal(std::string s);
-    bool isInputSignal(std::string s);
-    std::string getNameOfInputSignal(Signal *i);
-    int indexOfOutputSignal(std::string s);
-    bool isOutputSignal(std::string s);
-    std::string getNameOfOutputSignal(Signal *o);
+    std::string canonicalizeInput(llvm::Value *v);
+    std::string canonicalizeOutput(llvm::Value *v);
+    std::pair<std::string, std::string> canonicalizeSignalOfComponent(
+        llvm::Value *v);
+    bool isInputSignal(llvm::Value *v);
+    bool isOutputSignal(llvm::Value *v);
+    bool isSignalOfComponent(llvm::Value *v);
+    void print();
 };

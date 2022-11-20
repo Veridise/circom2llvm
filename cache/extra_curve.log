@@ -1,932 +1,40 @@
 https://github.com/yi-sun/circom-pairing/tree/master/circuits/extra_curve.circom
-Strange Constraints: compConstant
-Strange Constraints: read_output_outter.compconstant.out
-Strange Constraints: read_input_outter.modsum.a
-Strange Constraints: read_input_outter.modsum.b
-Strange Constraints: read_input_outter.modsumthree.a
-Strange Constraints: read_input_outter.modsumthree.b
-Strange Constraints: read_input_outter.modsumthree.c
-Strange Constraints: read_input_outter.modsumthree.c
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: isEquals
-Strange Constraints: isEquals
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: eq
-Strange Constraints: eq
-Strange Constraints: read_input_outter.and.a
-Strange Constraints: read_input_outter.and.b
-Strange Constraints: read_input_outter.and.a
-Strange Constraints: read_input_outter.and.b
-Strange Constraints: read_input_outter.or.a
-Strange Constraints: read_input_outter.or.b
-Strange Constraints: read_input_outter.and.a
-Strange Constraints: read_input_outter.and.b
-Strange Constraints: read_input_outter.and.a
-Strange Constraints: read_input_outter.and.b
-Strange Constraints: read_input_outter.or.a
-Strange Constraints: read_input_outter.or.b
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: mul
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: mod
-Strange Constraints: mod
-Strange Constraints: mod
-Strange Constraints: mod
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: longshort
-Strange Constraints: big_mult
-Strange Constraints: big_mult
-Strange Constraints: big_mod
-Strange Constraints: big_mod
-Strange Constraints: out_poly
-Strange Constraints: out_poly
-Strange Constraints: out_poly
-Strange Constraints: out_poly
-Strange Constraints: read_input_outter.modsub.a
-Strange Constraints: read_input_outter.modsub.b
-Strange Constraints: read_input_outter.modsubthree.a
-Strange Constraints: read_input_outter.modsubthree.b
-Strange Constraints: read_input_outter.modsubthree.c
-Strange Constraints: read_input_outter.modsubthree.c
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: flag
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: tmp
-Strange Constraints: mul
-Strange Constraints: lin
-Strange Constraints: b2n
-Strange Constraints: aliasCheck
-Strange Constraints: fx
-Strange Constraints: fx
-Strange Constraints: fx
-Strange Constraints: fx
-Strange Constraints: fx
-Strange Constraints: fx
-Strange Constraints: fx4l
-Strange Constraints: fx4l
-Strange Constraints: fx4l
-Strange Constraints: fx4l
-Strange Constraints: inv
-Strange Constraints: fr
-Strange Constraints: fr
-Strange Constraints: pX
-Strange Constraints: pX
-Strange Constraints: carry_check
-Strange Constraints: carry_check
-Strange Constraints: add
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: add
-Strange Constraints: parts
-Strange Constraints: parts
-Strange Constraints: parts
-Strange Constraints: parts
-Strange Constraints: sout
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: x_equal
-Strange Constraints: x_equal
-Strange Constraints: y_equal
-Strange Constraints: y_equal
-Strange Constraints: add_is_double
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: doub
-Strange Constraints: ab
-Strange Constraints: anegb
-Strange Constraints: tmp
-Strange Constraints: tmp
-Strange Constraints: tmp
-Strange Constraints: x_equal
-Strange Constraints: x_equal
-Strange Constraints: y_equal
-Strange Constraints: y_equal
-Strange Constraints: add_is_double
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: doub
-Strange Constraints: ab
-Strange Constraints: anegb
-Strange Constraints: tmp
-Strange Constraints: tmp
-Strange Constraints: tmp
-Strange Constraints: dx_sq
-Strange Constraints: dx_sq
-Strange Constraints: dy_sq
-Strange Constraints: dy_sq
-Strange Constraints: cubic
-Strange Constraints: cubic
-Strange Constraints: cubic_red
-Strange Constraints: cubic_red
-Strange Constraints: cubic_mod
-Strange Constraints: y_constraint
-Strange Constraints: y_constraint
-Strange Constraints: y_constraint
-Strange Constraints: range_check
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambdasq
-Strange Constraints: lambdasq
-Strange Constraints: lambdasq
-Strange Constraints: out0_pre
-Strange Constraints: out0_pre
-Strange Constraints: out0_pre
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambdasq
-Strange Constraints: lambdasq
-Strange Constraints: lambdasq
-Strange Constraints: out0_pre
-Strange Constraints: out0_pre
-Strange Constraints: out0_pre
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: dx_sq
-Strange Constraints: dx_sq
-Strange Constraints: dy_sq
-Strange Constraints: dy_sq
-Strange Constraints: cubic
-Strange Constraints: cubic
-Strange Constraints: cubic
-Strange Constraints: cubic
-Strange Constraints: cubic_red
-Strange Constraints: cubic_red
-Strange Constraints: cubic_red
-Strange Constraints: cubic_red
-Strange Constraints: cubic_mod
-Strange Constraints: cubic_mod
-Strange Constraints: y_constraint
-Strange Constraints: y_constraint
-Strange Constraints: y_constraint
-Strange Constraints: range_check
-Strange Constraints: range_check
-Strange Constraints: range_check
-Strange Constraints: point_on_tangent
-Strange Constraints: point_on_tangent
-Strange Constraints: point_on_curve
-Strange Constraints: x3_eq_x
-Strange Constraints: x3_eq_x
-Strange Constraints: read_output_outter.fpisequal.out
-Strange Constraints: in0_sq
-Strange Constraints: in0_sq
-Strange Constraints: in0_sq
-Strange Constraints: numer
-Strange Constraints: numer
-Strange Constraints: numer
-Strange Constraints: numer
-Strange Constraints: numer
-Strange Constraints: numer
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambda_check
-Strange Constraints: lambdasq
-Strange Constraints: lambdasq
-Strange Constraints: lambdasq
-Strange Constraints: out0_pre
-Strange Constraints: out0_pre
-Strange Constraints: out0_pre
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: out1_
-Strange Constraints: range_check
-Strange Constraints: range_check
-Strange Constraints: point_on_tangent
-Strange Constraints: point_on_tangent
-Strange Constraints: point_on_tangent
-Strange Constraints: point_on_tangent
-Strange Constraints: point_on_curve
-Strange Constraints: point_on_curve
-Strange Constraints: x3_eq_x
-Strange Constraints: x3_eq_x
-Strange Constraints: read_output_outter.fp2isequal.out
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: x_cu
-Strange Constraints: x_cu
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: carry
-Strange Constraints: P
-Strange Constraints: R
-Strange Constraints: R_isO
-Strange Constraints: Pdouble
-Strange Constraints: R
-Strange Constraints: R_isO
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: read_input_outter.ellipticcurveadd.aisinfinity
-Strange Constraints: read_input_outter.ellipticcurveadd.bisinfinity
-Strange Constraints: R_isO
-Strange Constraints: R
-Strange Constraints: P
-Strange Constraints: R
-Strange Constraints: R_isO
-Strange Constraints: Pdouble
-Strange Constraints: R
-Strange Constraints: R_isO
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: read_input_outter.ellipticcurveaddfp2.aisinfinity
-Strange Constraints: read_input_outter.ellipticcurveaddfp2.bisinfinity
-Strange Constraints: R_isO
-Strange Constraints: R
-Strange Constraints: R
-Strange Constraints: Pdouble
-Strange Constraints: R
-Strange Constraints: add_exception
-Strange Constraints: add_exception
-Strange Constraints: read_output_outter.fpisequal.out
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: R
-Strange Constraints: R
-Strange Constraints: Pdouble
-Strange Constraints: R
-Strange Constraints: add_exception
-Strange Constraints: add_exception
-Strange Constraints: read_output_outter.fp2isequal.out
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: R
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: mul
-Strange Constraints: adders
-Strange Constraints: adders
-Strange Constraints: reduce
-Strange Constraints: g2IsZero
-Strange Constraints: g5sq
-Strange Constraints: g5sq
-Strange Constraints: g4sq
-Strange Constraints: g4sq
-Strange Constraints: g1num
-Strange Constraints: g1num
-Strange Constraints: g1numRed
-Strange Constraints: g1_
-Strange Constraints: g1_
-Strange Constraints: twog4g
-Strange Constraints: twog4g
-Strange Constraints: g1_
-Strange Constraints: g1_
-Strange Constraints: twog1sq
-Strange Constraints: twog1sq
-Strange Constraints: g2g
-Strange Constraints: g2g
-Strange Constraints: threeg3g
-Strange Constraints: threeg3g
-Strange Constraints: compress
-Strange Constraints: carry_mod
-Strange Constraints: g0_
-Strange Constraints: twog1_0sq
-Strange Constraints: twog1_0sq
-Strange Constraints: compress
-Strange Constraints: carry_mod
-Strange Constraints: g0_
-Strange Constraints: Cin
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: Dpow
-Strange Constraints: first
-Strange Constraints: first
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: sq
-Strange Constraints: sqRed
-Strange Constraints: sqMod
-Strange Constraints: pow
-Strange Constraints: pow
-Strange Constraints: first
-Strange Constraints: first
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: mult_even
-Strange Constraints: mult_even
-Strange Constraints: mult_even
-Strange Constraints: mult_even
-Strange Constraints: in_frob
-Strange Constraints: in_frob
-Strange Constraints: mult_odd
-Strange Constraints: mult_odd
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: in_out
-Strange Constraints: in_out
-Strange Constraints: in_out
-Strange Constraints: in_out
-Strange Constraints: no_carry
-Strange Constraints: no_carry
-Strange Constraints: carry_mod
-Strange Constraints: line
-Strange Constraints: line
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: reduce
-Strange Constraints: carry
-Strange Constraints: line
-Strange Constraints: line
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: reduce
-Strange Constraints: carry
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: adders
-Strange Constraints: adders
-Strange Constraints: c
-Strange Constraints: neg
-Strange Constraints: neg
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: in_out
-Strange Constraints: in_out
-Strange Constraints: in_out
-Strange Constraints: in_out
-Strange Constraints: lta
-Strange Constraints: lta
-Strange Constraints: ltb
-Strange Constraints: ltb
-Strange Constraints: isEquals
-Strange Constraints: isEquals
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: c
-Strange Constraints: c
-Strange Constraints: c
-Strange Constraints: c
-Strange Constraints: carry_mod
-Strange Constraints: compress
-Strange Constraints: compress
-Strange Constraints: compress
-Strange Constraints: carry_mod
-Strange Constraints: neg
-Strange Constraints: sgn
-Strange Constraints: isZero
-Strange Constraints: sgn
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: isEqual
-Strange Constraints: isEqual
-Strange Constraints: isEqual
-Strange Constraints: isEqual
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: isZero
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: red
-Strange Constraints: big_mod
-Strange Constraints: neg
-Strange Constraints: neg
-Strange Constraints: is_zero
-Strange Constraints: read_output_outter.bigsub.underflow
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_output_outter.biglessthan.out
-Strange Constraints: mul
-Strange Constraints: sub
-Strange Constraints: sub
-Strange Constraints: flag
-Strange Constraints: add
-Strange Constraints: add
-Strange Constraints: tmp
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: mul
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: reduce
-Strange Constraints: carry
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: reduce
-Strange Constraints: carry
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: reduce
-Strange Constraints: carry
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: reduce
-Strange Constraints: carry
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mul
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mul
-Strange Constraints: runningCarry
-Strange Constraints: f
-Strange Constraints: Pintermed
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: line
-Strange Constraints: line
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: compress
-Strange Constraints: fdouble
-Strange Constraints: Pdouble
-Strange Constraints: f
-Strange Constraints: Pintermed
-Strange Constraints: fadd_pre
-Strange Constraints: fadd_pre
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: f
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: Pintermed
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: Pintermed
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: line
-Strange Constraints: line
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: compress
-Strange Constraints: fdouble
-Strange Constraints: Pdouble
-Strange Constraints: f
-Strange Constraints: Pintermed
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: f
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: Pintermed
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: R
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: line
-Strange Constraints: line
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: compress
-Strange Constraints: fdouble
-Strange Constraints: Pdouble
-Strange Constraints: f
-Strange Constraints: R
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: f
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: R
-Strange Constraints: f
-Strange Constraints: f
-Strange Constraints: R
-Strange Constraints: square
-Strange Constraints: square
-Strange Constraints: line
-Strange Constraints: line
-Strange Constraints: Pdouble
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: compress
-Strange Constraints: fdouble_
-Strange Constraints: fdouble
-Strange Constraints: fdouble
-Strange Constraints: f
-Strange Constraints: R
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: fadd
-Strange Constraints: Padd
-Strange Constraints: Padd
-Strange Constraints: R
-Strange Constraints: f
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: b2n
-Strange Constraints: b2n
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: b_plus_c
-Strange Constraints: lt
-Strange Constraints: lt
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.and.a
-Strange Constraints: read_input_outter.and.b
-Strange Constraints: ands
-Strange Constraints: ands
-Strange Constraints: read_input_outter.and.a
-Strange Constraints: read_input_outter.and.b
-Strange Constraints: mul
-Strange Constraints: lc
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: aliasCheck
-Strange Constraints: mul
-Strange Constraints: read_input_outter.iszero.in
-Strange Constraints: add
-Strange Constraints: neg
-Strange Constraints: negP
-Strange Constraints: negP
-Strange Constraints: miller
-Strange Constraints: miller
-Strange Constraints: finalexp
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: y_sq
-Strange Constraints: y_sq
-Strange Constraints: x_cu
-Strange Constraints: x_cu
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: y_sq_red
-Strange Constraints: constraint
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: y_sq
-Strange Constraints: y_sq
-Strange Constraints: x_cu
-Strange Constraints: x_cu
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: cu_red
-Strange Constraints: y_sq_red
-Strange Constraints: constraint
-Strange Constraints: constraint
-Strange Constraints: left
-Strange Constraints: left
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: diff_red
-Strange Constraints: diff_mod
-Strange Constraints: left
-Strange Constraints: left
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: diff_red
-Strange Constraints: diff_red
-Strange Constraints: diff_mod
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: left
-Strange Constraints: left
-Strange Constraints: diff_red
-Strange Constraints: diff_red
-Strange Constraints: constraint
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: right
-Strange Constraints: left
-Strange Constraints: left
-Strange Constraints: left
-Strange Constraints: left
-Strange Constraints: diff_red
-Strange Constraints: diff_red
-Strange Constraints: constraint
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mod_check
-Strange Constraints: mod_check
-Strange Constraints: mod_check
-Strange Constraints: carry
-Strange Constraints: B
-Strange Constraints: B
-Strange Constraints: B
-Strange Constraints: B
-Strange Constraints: A
-Strange Constraints: A
-Strange Constraints: A
-Strange Constraints: A
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: abi
-Strange Constraints: abi
-Strange Constraints: ab
-Strange Constraints: abi
-Strange Constraints: ab
-Strange Constraints: abi
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: nocarry
-Strange Constraints: nocarry
-Strange Constraints: reduce
-Strange Constraints: a0b
-Strange Constraints: a0b
-Strange Constraints: a1b
-Strange Constraints: a1b
-Strange Constraints: a0b
-Strange Constraints: a1b
-Strange Constraints: a0b
-Strange Constraints: a1b
-Strange Constraints: X
-Strange Constraints: X
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: carry
-Strange Constraints: compress
-Strange Constraints: carry
-Strange Constraints: check
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mod_check
-Strange Constraints: mod_check
-Strange Constraints: mod_check
-Strange Constraints: mult
-Strange Constraints: mult
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: compress
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: abc
-Strange Constraints: abc
-Strange Constraints: compress
-Strange Constraints: ab
-Strange Constraints: ab
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: mod_check
-Strange Constraints: mod_check
-Strange Constraints: mod_check
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: Xmult
-Strange Constraints: Xmult
-Strange Constraints: Xmult
-Strange Constraints: Ymult
-Strange Constraints: Ymult
-Strange Constraints: Ymult
-Strange Constraints: x_sq
-Strange Constraints: x_sq
-Strange Constraints: x_cu
-Strange Constraints: x_cu
-Strange Constraints: x_cu
-Strange Constraints: x_cu
-Strange Constraints: y_sq
-Strange Constraints: y_sq
-Strange Constraints: Xmult
-Strange Constraints: Xmult
-Strange Constraints: Xmult
-Strange Constraints: Xmult
-Strange Constraints: Ymult
-Strange Constraints: Ymult
-Strange Constraints: Ymult
-Strange Constraints: Ymult
-Strange Constraints: Xmult
-Strange Constraints: Ymult
-Strange Constraints: Xmult
-Strange Constraints: Ymult
-Strange Constraints: x1y
-Strange Constraints: x1y
-Strange Constraints: x2y
-Strange Constraints: x2y
-Strange Constraints: Xmult
-Strange Constraints: Ymult
-Strange Constraints: Xmult
-Strange Constraints: Xmult
-Strange Constraints: Ymult
-Strange Constraints: Ymult
-Strange Constraints: x1y
-Strange Constraints: x1y
-Strange Constraints: x2y
-Strange Constraints: x2y
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: read_input_outter.num2bits.in
-Strange Constraints: miller
-Strange Constraints: miller
-Strange Constraints: finalexp
 Detecting: aliascheck
 
 Detecting: and
-Unconstrainted output signal: out
 
 Detecting: bigadd
-Unconstrainted output signal: out
 
 Detecting: bigaddmodp
-Unconstrainted output signal: out
 
 Detecting: bigisequal
-Unconstrainted output signal: out
 
 Detecting: bigiszero
-Unconstrainted output signal: out
 
 Detecting: biglessthan
-Unconstrainted output signal: out
 
 Detecting: bigmod
-Unconstrainted output signal: mod
-Unconstrainted output signal: div
 
 Detecting: bigmod2
-Unconstrainted output signal: mod
-Unconstrainted output signal: div
 
 Detecting: bigmodinv
 Unconstrainted output signal: out
 
 Detecting: bigmult
-Unconstrainted output signal: out
 
 Detecting: bigmultmodp
-Unconstrainted output signal: out
 
 Detecting: bigmultshortlong
-Unconstrainted output signal: out
 
 Detecting: bigmultshortlong2d
-Unconstrainted output signal: out
 
 Detecting: bigmultshortlong2dunequal
-Unconstrainted output signal: out
 
 Detecting: bigmultshortlongunequal
-Unconstrainted output signal: out
 
 Detecting: bigsub
-Unconstrainted output signal: underflow
-Unconstrainted output signal: out
 
 Detecting: bigsubmodp
-Unconstrainted output signal: out
 
 Detecting: binsum
 Unconstrainted output signal: out
@@ -938,54 +46,38 @@ Detecting: bits2num_strict
 Unconstrainted output signal: out
 
 Detecting: blsmillerloop
-Unconstrainted output signal: out
 
 Detecting: checkcarrymodp
 
 Detecting: checkcarrytozero
 
 Detecting: compconstant
-Unconstrainted output signal: out
 
 Detecting: ellipticcurveadd
-Unconstrainted output signal: isInfinity
-Unconstrainted output signal: out
 
 Detecting: ellipticcurveaddfp2
-Unconstrainted output signal: isInfinity
-Unconstrainted output signal: out
 
 Detecting: ellipticcurveaddunequal
-Unconstrainted output signal: out
 
 Detecting: ellipticcurveaddunequal3reg
-Unconstrainted output signal: out
 
 Detecting: ellipticcurveaddunequal4reg
-Unconstrainted output signal: out
 
 Detecting: ellipticcurveaddunequalfp2
-Unconstrainted output signal: out
 
 Detecting: ellipticcurvedouble
 Unconstrainted output signal: out
 
 Detecting: ellipticcurvedouble0
-Unconstrainted output signal: out
 
 Detecting: ellipticcurvedoublefp2
 Unconstrainted output signal: out
 
 Detecting: ellipticcurvefunction
-Unconstrainted output signal: out
 
 Detecting: ellipticcurvescalarmultiply
-Unconstrainted output signal: isInfinity
-Unconstrainted output signal: out
 
 Detecting: ellipticcurvescalarmultiplyfp2
-Unconstrainted output signal: isInfinity
-Unconstrainted output signal: out
 
 Detecting: ellipticcurvescalarmultiplyunequal
 Unconstrainted output signal: out
@@ -994,150 +86,104 @@ Detecting: ellipticcurvescalarmultiplyunequalfp2
 Unconstrainted output signal: out
 
 Detecting: finalexpeasypart
-Unconstrainted output signal: out
 
 Detecting: finalexphardpart
-Unconstrainted output signal: out
 
 Detecting: finalexponentiate
-Unconstrainted output signal: out
 
 Detecting: forceequalifenabled
 
 Detecting: fp12add
-Unconstrainted output signal: out
 
 Detecting: fp12compress
-Unconstrainted output signal: out
 
 Detecting: fp12cyclotomiccompress
-Unconstrainted output signal: out
 
 Detecting: fp12cyclotomicdecompress
-Unconstrainted output signal: out
 
 Detecting: fp12cyclotomicexp
-Unconstrainted output signal: out
 
 Detecting: fp12cyclotomicsquare
-Unconstrainted output signal: out
 
 Detecting: fp12exp
-Unconstrainted output signal: out
 
 Detecting: fp12frobeniusmap
-Unconstrainted output signal: out
 
 Detecting: fp12invert
-Unconstrainted output signal: out
 
 Detecting: fp12multiply
-Unconstrainted output signal: out
 
 Detecting: fp12multiplywithlineunequal
-Unconstrainted output signal: out
 
 Detecting: fp12multiplywithlineunequalfp2
-Unconstrainted output signal: out
 
 Detecting: fp12square
-Unconstrainted output signal: out
 
 Detecting: fp2add
-Unconstrainted output signal: out
 
 Detecting: fp2compress
-Unconstrainted output signal: out
 
 Detecting: fp2conjugate
-Unconstrainted output signal: out
 
 Detecting: fp2frobeniusmap
-Unconstrainted output signal: out
 
 Detecting: fp2invert
-Unconstrainted output signal: out
 
 Detecting: fp2isequal
-Unconstrainted output signal: out
 
 Detecting: fp2iszero
-Unconstrainted output signal: out
 
 Detecting: fp2multiply
-Unconstrainted output signal: out
 
 Detecting: fp2multiplythree
-Unconstrainted output signal: out
 
 Detecting: fp2negate
-Unconstrainted output signal: out
 
 Detecting: fp2sgn0
-Unconstrainted output signal: out
 
 Detecting: fp2subtract
-Unconstrainted output signal: out
 
 Detecting: fp6invert
 Unconstrainted output signal: real_out
 
 Detecting: fpadd
-Unconstrainted output signal: out
 
 Detecting: fpisequal
-Unconstrainted output signal: out
 
 Detecting: fpiszero
-Unconstrainted output signal: out
 
 Detecting: fpmultiply
-Unconstrainted output signal: out
 
 Detecting: fpnegate
-Unconstrainted output signal: out
 
 Detecting: fpsgn0
-Unconstrainted output signal: out
 
 Detecting: fpsubtract
-Unconstrainted output signal: out
 
 Detecting: greatereqthan
-Unconstrainted output signal: out
 
 Detecting: greaterthan
-Unconstrainted output signal: out
 
 Detecting: isequal
-Unconstrainted output signal: out
 
 Detecting: iszero
-Unconstrainted output signal: out
 
 Detecting: lesseqthan
-Unconstrainted output signal: out
 
 Detecting: lessthan
-Unconstrainted output signal: out
 
 Detecting: linefunctionequal
-Unconstrainted output signal: out
 
 Detecting: linefunctionequalfp2
-Unconstrainted output signal: out
 
 Detecting: linefunctionunequal
-Unconstrainted output signal: out
 
 Detecting: linefunctionunequalfp2
-Unconstrainted output signal: out
 
 Detecting: longtoshortnoendcarry
 Unconstrainted output signal: out
 
 Detecting: millerloop
-Unconstrainted output signal: xP
 Unconstrainted output signal: out
 
 Detecting: millerloop1
@@ -1156,35 +202,25 @@ Unconstrainted output signal: prod
 
 Detecting: modsub
 Unconstrainted output signal: borrow
-Unconstrainted output signal: out
 
 Detecting: modsubthree
 Unconstrainted output signal: borrow
-Unconstrainted output signal: out
 
 Detecting: modsum
-Unconstrainted output signal: carry
-Unconstrainted output signal: sum
 
 Detecting: modsumfour
 Unconstrainted output signal: carry
-Unconstrainted output signal: sum
 
 Detecting: modsumthree
 Unconstrainted output signal: carry
-Unconstrainted output signal: sum
 
 Detecting: multiand
-Unconstrainted output signal: out
 
 Detecting: nand
-Unconstrainted output signal: out
 
 Detecting: nor
-Unconstrainted output signal: out
 
 Detecting: not
-Unconstrainted output signal: out
 
 Detecting: num2bits
 Unconstrainted output signal: out
@@ -1196,10 +232,8 @@ Detecting: num2bitsneg
 Unconstrainted output signal: out
 
 Detecting: optimalatepairing
-Unconstrainted output signal: out
 
 Detecting: or
-Unconstrainted output signal: out
 
 Detecting: pointoncurve
 
@@ -1222,83 +256,54 @@ Detecting: signedcheckcarrymodtozero
 Unconstrainted output signal: X
 
 Detecting: signedfp12carrymodp
-Unconstrainted output signal: out
-Unconstrainted output signal: X
 
 Detecting: signedfp12cyclotomicsquarenocarry
-Unconstrainted output signal: out
 
 Detecting: signedfp12fp2multiplynocarry
-Unconstrainted output signal: out
 
 Detecting: signedfp12fp2multiplynocarryunequal
-Unconstrainted output signal: out
 
 Detecting: signedfp12multiplynocarry
-Unconstrainted output signal: out
 
 Detecting: signedfp12multiplynocarrycompress
-Unconstrainted output signal: out
 
 Detecting: signedfp12multiplynocarryunequal
-Unconstrainted output signal: out
 
 Detecting: signedfp12scalarmultiplynocarry
-Unconstrainted output signal: out
 
 Detecting: signedfp12scalarmultiplynocarryunequal
-Unconstrainted output signal: out
 
 Detecting: signedfp2carrymodp
-Unconstrainted output signal: out
-Unconstrainted output signal: X
 
 Detecting: signedfp2compresscarry
-Unconstrainted output signal: out
 
 Detecting: signedfp2divide
-Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarry
-Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarrycompress
-Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarrycompressthree
-Unconstrainted output signal: out
 
 Detecting: signedfp2multiplynocarryunequal
-Unconstrainted output signal: out
 
 Detecting: signedfpcarrymodp
 Unconstrainted output signal: out
 Unconstrainted output signal: X
 
 Detecting: signedlinefunctionequalnocarry
-Unconstrainted output signal: out
 
 Detecting: signedlinefunctionequalnocarryfp2
-Unconstrainted output signal: out
 
 Detecting: signedlinefunctionunequalnocarry
-Unconstrainted output signal: out
 
 Detecting: signedlinefunctionunequalnocarryfp2
-Unconstrainted output signal: out
 
 Detecting: split
-Unconstrainted output signal: big
-Unconstrainted output signal: small
 
 Detecting: splitthree
-Unconstrainted output signal: big
-Unconstrainted output signal: medium
-Unconstrainted output signal: small
 
 Detecting: tatepairing
-Unconstrainted output signal: out
 
 Detecting: xor
-Unconstrainted output signal: out
 
