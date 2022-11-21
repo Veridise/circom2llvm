@@ -58,18 +58,20 @@ class ConstraintGraph {
     Collector *collector;
     NameSet *satisfied_components;
     NameSet satisfied_outputs;
+    NameSet satisfied_nodes;
+    NameSet visited_nodes;
+    NameSet tracked_phis;
     std::vector<ConstraintNode *> nodes;
     std::vector<ConstraintEdge *> edges;
-    std::vector<ConstraintNode *> tail_nodes;
-    bool statusConfirmed;
+    bool status_confirmed;
     std::string graph_name;
     ConstraintGraph(NameSet *satisfied_components,
                     Function *F);
     ConstraintNode *createNode(NodeType type, std::string name);
     ConstraintEdge *createEdge(ConstraintNode *from, ConstraintNode *to);
     ConstraintNode *getNode(NodeType type, std::string name);
-    ConstraintNode *determineValueSource(llvm::Instruction *inst);
-    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v, NameSet trackedPHI);
+    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v);
     bool calculate(std::vector<ConstraintGraph *> graphs);
+    bool connectedToInput(ConstraintNode * n);
     void print();
 };
