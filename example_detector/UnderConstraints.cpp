@@ -30,7 +30,7 @@ ConstraintEdge::ConstraintEdge(ConstraintNode *from, ConstraintNode *to) {
 }
 
 ConstraintGraph::ConstraintGraph(
-    std::unordered_set<std::string> *satisfied_components, Function *F) {
+    NameSet *satisfied_components, Function *F) {
     this->satisfied_components = satisfied_components;
     this->collector = new Collector(F);
     this->nodes = std::vector<ConstraintNode *>();
@@ -53,6 +53,10 @@ ConstraintGraph::ConstraintGraph(
 
     // Build graph
     for (auto &constraint : this->collector->constraints) {
+        if (!isa<llvm::Instruction>(constraint->getArgOperand(0))) {
+            // Very rare status, a signal which is initialized by constraint.
+            continue;
+        }
         auto constraint_to =
             dyn_cast<llvm::Instruction>(constraint->getArgOperand(0));
         auto tail_node = this->determineValueSource(constraint_to);
@@ -61,9 +65,9 @@ ConstraintGraph::ConstraintGraph(
         }
         this->tail_nodes.push_back(tail_node);
 
+        auto trackedPHI = NameSet();
         auto constraint_from = constraint->getArgOperand(1);
-
-        auto depends = this->determineValueDepends(constraint_from);
+        auto depends = this->determineValueDepends(constraint_from, trackedPHI);
         for (auto d : depends) {
             this->createEdge(d, tail_node);
         }
@@ -91,7 +95,8 @@ ConstraintNode *ConstraintGraph::getNode(NodeType type, std::string name) {
             return n;
         }
     }
-    std::cerr << "Couldn't find the node, type: " << type << ", name: " << name << "\n";
+    std::cerr << "Couldn't find the node, type: " << type << ", name: " << name
+              << "\n";
 }
 
 ConstraintNode *ConstraintGraph::determineValueSource(llvm::Instruction *inst) {
@@ -109,19 +114,19 @@ ConstraintNode *ConstraintGraph::determineValueSource(llvm::Instruction *inst) {
         auto signal_name = p.second;
         return this->getNode(NodeType::ComponentNode, templ_name);
     }
-    if (isa<LoadInst>(inst)) {
-        auto next = dyn_cast<llvm::Instruction>(inst->getOperand(0));
-        return this->determineValueSource(next);
-    }
-    if (isa<GetElementPtrInst>(inst)) {
-        auto next = dyn_cast<llvm::Instruction>(inst->getOperand(0));
-        return this->determineValueSource(next);
+    if (isa<llvm::LoadInst>(inst) || isa<llvm::GetElementPtrInst>(inst)) {
+        if (isa<llvm::Instruction>(inst->getOperand(0))) {
+            auto next = dyn_cast<llvm::Instruction>(inst->getOperand(0));
+            return this->determineValueSource(next);
+        } else {
+            return nullptr;
+        }
     }
     return nullptr;
 }
 
 std::vector<ConstraintNode *> ConstraintGraph::determineValueDepends(
-    llvm::Value *v) {
+    llvm::Value *v, NameSet trackedPHI) {
     auto res = std::vector<ConstraintNode *>();
     if (!isa<llvm::Instruction>(v)) {
         return res;
@@ -141,15 +146,18 @@ std::vector<ConstraintNode *> ConstraintGraph::determineValueDepends(
         auto signal_name = p.second;
         auto node = this->getNode(NodeType::ComponentNode, templ_name);
         res.push_back(node);
-    } else if (isa<LoadInst>(inst)) {
-        auto temp = this->determineValueDepends(inst->getOperand(0));
-        res.insert(res.end(), temp.begin(), temp.end());
-    } else if (isa<GetElementPtrInst>(inst)) {
-        auto temp = this->determineValueDepends(inst->getOperand(0));
+    } else if (isa<LoadInst>(inst) || isa<GetElementPtrInst>(inst)) {
+        auto temp = this->determineValueDepends(inst->getOperand(0), trackedPHI);
         res.insert(res.end(), temp.begin(), temp.end());
     } else if (isa<BinaryOperator>(inst)) {
         for (auto &opd : inst->operands()) {
-            auto temp = this->determineValueDepends(opd);
+            auto temp = this->determineValueDepends(opd, trackedPHI);
+            res.insert(res.end(), temp.begin(), temp.end());
+        }
+    } else if (isa<PHINode>(inst) && !trackedPHI.count(inst->getName().str())) {
+        trackedPHI.insert(inst->getName().str());
+        for (auto &opd : inst->operands()) {
+            auto temp = this->determineValueDepends(opd, trackedPHI);
             res.insert(res.end(), temp.begin(), temp.end());
         }
     }
@@ -193,12 +201,19 @@ bool ConstraintGraph::calculate(std::vector<ConstraintGraph *> graphs) {
     return this->satisfied_outputs == this->collector->output_signal_names;
 }
 
+void ConstraintGraph::print() {
+    for (auto e : this->edges) {
+        std::cerr << e->from->name << " --> " << e->to->name << "\n";
+        std::cerr << "\n";
+    };
+}
+
 namespace {
 struct UnderConstraints : public ModulePass {
     static char ID;
 
     // Status
-    std::unordered_set<std::string> satisfied_components;
+    NameSet satisfied_components;
     std::vector<llvm::Function *> ordered_functions;
     std::vector<ConstraintGraph *> graphs;
     bool isFixed;
@@ -216,9 +231,11 @@ struct UnderConstraints : public ModulePass {
         llvm::sort(this->ordered_functions, compareFunction);
 
         this->graphs = std::vector<ConstraintGraph *>();
-        this->satisfied_components = std::unordered_set<std::string>();
+        this->satisfied_components = NameSet();
         this->isFixed = false;
         auto *ptr = &this->satisfied_components;
+
+        auto hacking_satisfied_components = NameSet();
 
         for (auto F : this->ordered_functions) {
             if (!isTemplateInitFunc(F)) {
@@ -230,13 +247,14 @@ struct UnderConstraints : public ModulePass {
         }
 
         while (!isFixed) {
-            auto prev_satisfied_components = std::unordered_set<std::string>();
+            auto prev_satisfied_components = NameSet();
             for (auto e : this->satisfied_components) {
                 prev_satisfied_components.insert(e);
             }
             for (auto &g : this->graphs) {
                 if (!g->statusConfirmed) {
-                    if (!g->calculate(this->graphs)) {
+                    if (!g->calculate(this->graphs) &&
+                        !hacking_satisfied_components.count(g->graph_name)) {
                         this->satisfied_components.erase(g->graph_name);
                     }
                 }
@@ -245,12 +263,16 @@ struct UnderConstraints : public ModulePass {
         }
 
         for (auto g : graphs) {
+            if (hacking_satisfied_components.count(g->graph_name)) {
+                continue;
+            }
             std::cerr << "Detecting: " << g->graph_name << "\n";
             for (auto o : g->collector->output_signal_names) {
                 if (!g->satisfied_outputs.count(o)) {
                     std::cerr << "Unconstrainted output signal: " << o << "\n";
                 }
             }
+            g->print();
             std::cerr << "\n";
         }
 

@@ -56,19 +56,20 @@ class ConstraintGraph {
    private:
    public:
     Collector *collector;
-    std::unordered_set<std::string> *satisfied_components;
-    std::unordered_set<std::string> satisfied_outputs;
+    NameSet *satisfied_components;
+    NameSet satisfied_outputs;
     std::vector<ConstraintNode *> nodes;
     std::vector<ConstraintEdge *> edges;
     std::vector<ConstraintNode *> tail_nodes;
     bool statusConfirmed;
     std::string graph_name;
-    ConstraintGraph(std::unordered_set<std::string> *satisfied_components,
+    ConstraintGraph(NameSet *satisfied_components,
                     Function *F);
     ConstraintNode *createNode(NodeType type, std::string name);
     ConstraintEdge *createEdge(ConstraintNode *from, ConstraintNode *to);
     ConstraintNode *getNode(NodeType type, std::string name);
     ConstraintNode *determineValueSource(llvm::Instruction *inst);
-    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v);
+    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v, NameSet trackedPHI);
     bool calculate(std::vector<ConstraintGraph *> graphs);
+    void print();
 };

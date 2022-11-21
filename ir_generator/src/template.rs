@@ -174,8 +174,9 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
             if self.scope.is_initialized(name) {
                 continue;
             };
+            let alloca = !self.outputs.contains(&name);
             self.scope
-                .initial_var(codegen, name, &ty, self.outputs.contains(&name));
+                .initial_var(codegen, name, &ty, alloca);
         }
 
         match body {

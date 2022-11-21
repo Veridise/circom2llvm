@@ -115,7 +115,6 @@ pub fn resolve_stmt<'ctx>(
             rhe,
         } => {
             let res = resolve_expr(codegen, rhe, scope);
-            scope.set_var(codegen, var, access, res.as_basic_value_enum());
             match op {
                 AssignOp::AssignConstraintSignal => {
                     let lval = scope.get_var(codegen, var, access).into_int_value();
@@ -124,6 +123,7 @@ pub fn resolve_stmt<'ctx>(
                 }
                 _ => (),
             };
+            scope.set_var(codegen, var, access, res.as_basic_value_enum());
             match access {
                 _ => (),
             }

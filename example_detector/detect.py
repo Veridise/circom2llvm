@@ -29,6 +29,18 @@ def _main():
     else:
         file_paths = [input_path]
     for f in file_paths:
+        ssa_path = f.replace(".ll", "_ssa.ll")
+        cmds = [
+            "~/app/llvm-project/build/bin/opt",
+            "-f",
+            "-S",
+            "-mem2reg",
+            f,
+            f"1> {ssa_path}",
+        ]
+        cmd = " ".join(cmds)
+        print(cmd)
+        os.system(cmd)
         log_path = f.replace(".ll", ".log")
         cmds = [
             "~/app/llvm-project/build/bin/opt",
@@ -36,13 +48,14 @@ def _main():
             "-enable-new-pm=0",
             "--load ~/app/llvm-project/build/lib/UnderConstraints.dylib",
             "--UnderConstraints",
-            f,
+            ssa_path,
             "1> /dev/null",
             f"2> {log_path}",
         ]
         cmd = " ".join(cmds)
         print(cmd)
         os.system(cmd)
+        os.remove(ssa_path)
         replace_source_file_to_github(log_path)
 
 

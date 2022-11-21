@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-std::regex number_suffix("(\\d+$)");
+std::regex number_suffix("^\\d*$");
 
 bool isTemplateInitFunc(llvm::Function *F) {
     return F->getName().startswith_insensitive(fn_template_prefix);
@@ -95,6 +95,8 @@ Collector::Collector(llvm::Function *F) {
     this->locateOutputSignals();
     this->locateConstraints();
     this->locateComponents();
+
+    // this->print();
 }
 
 void Collector::locateInputSignals() {
@@ -171,9 +173,22 @@ std::string Collector::getNameOfTemplate(ComponentInstance *c) {
 }
 
 std::string Collector::canonicalizeInput(llvm::Value *v) {
+    llvm::StringRef canonicalizeName;
+    // read_input_inner.and.a
+    if (v->getName().startswith_insensitive(input_signal_prefix)) {
+        auto pair = v->getName().split(".");
+        canonicalizeName = pair.second.split(".").second;
+    } else {
+        canonicalizeName = v->getName();
+    }
     for (auto i : this->input_signal_names) {
-        if (v->getName().startswith_insensitive(i)) {
-            return i;
+        if (canonicalizeName.startswith_insensitive(i)) {
+            auto left_str = canonicalizeName.ltrim(i).str();
+            if (std::regex_match(left_str, number_suffix)) {
+                return i;
+            } else {
+                return "";
+            }
         }
     }
     return "";
@@ -182,7 +197,12 @@ std::string Collector::canonicalizeInput(llvm::Value *v) {
 std::string Collector::canonicalizeOutput(llvm::Value *v) {
     for (auto i : this->output_signal_names) {
         if (v->getName().startswith_insensitive(i)) {
-            return i;
+            auto left_str = v->getName().ltrim(i).str();
+            if (std::regex_match(left_str, number_suffix)) {
+                return i;
+            } else {
+                return "";
+            }
         }
     }
     return "";
@@ -217,15 +237,15 @@ bool Collector::isSignalOfComponent(llvm::Value *v) {
 void Collector::print() {
     std::cerr << "Template: " << this->template_name << "\n";
     std::cerr << "Inputs: \n";
-    for (auto &i: this->input_signal_names) {
+    for (auto &i : this->input_signal_names) {
         std::cerr << i << "\n";
     }
     std::cerr << "Outputs: \n";
-    for (auto &i: this->output_signal_names) {
+    for (auto &i : this->output_signal_names) {
         std::cerr << i << "\n";
     }
     std::cerr << "Components: \n";
-    for (auto &i: this->component_names) {
+    for (auto &i : this->component_names) {
         std::cerr << i << "\n";
     }
 }

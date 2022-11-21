@@ -212,6 +212,18 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         } else {
             ptr = codegen.builder.build_malloc(used_ty, name).unwrap();
         }
+        if ty.is_array_type() {
+            let arr_ptr;
+            if alloca {
+                arr_ptr = codegen.builder.build_alloca(ty.as_basic_type_enum(), name);
+            } else {
+                arr_ptr = codegen.builder.build_malloc(ty.as_basic_type_enum(), name).unwrap();
+            }
+            codegen.builder.build_store(ptr, arr_ptr);
+        }
+        if ty.is_int_type() {
+            codegen.builder.build_store(ptr, codegen.const_zero);
+        }
         self.var2ptr.insert(name.to_string(), ptr);
         return ptr;
     }

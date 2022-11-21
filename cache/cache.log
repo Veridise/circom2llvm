@@ -1,3 +1,0 @@
-/Users/hongbo/app/llvm-project/build/bin/opt: ./cache/cache.ll:243:9: error: stored value and pointer type do not match
-  store [256 x [256 x i128]]* %uniform_array, [256 x [256 x i128]]* %prod_val, align 8
-        ^
