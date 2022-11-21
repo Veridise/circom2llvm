@@ -1,0 +1,994 @@
+https://github.com/yi-sun/circom-pairing/tree/master/circuits/extra_curve.circom
+Detecting: aliascheck
+in --> compconstant
+
+Detecting: and
+a --> out
+b --> out
+
+Detecting: bigadd
+a --> modsum
+b --> modsum
+modsum --> out
+a --> modsumthree
+b --> modsumthree
+modsum --> modsumthree
+modsumthree --> modsumthree
+modsumthree --> out
+
+Detecting: bigaddmodp
+a --> bigadd
+b --> bigadd
+bigadd --> biglessthan
+p --> biglessthan
+bigadd --> bigsub
+biglessthan --> bigsub
+p --> bigsub
+bigsub --> out
+
+Detecting: bigisequal
+a --> isequal
+b --> isequal
+isequal --> iszero
+iszero --> out
+
+Detecting: bigiszero
+in --> iszero
+iszero --> iszero
+iszero --> out
+
+Detecting: biglessthan
+a --> lessthan
+b --> lessthan
+a --> isequal
+b --> isequal
+isequal --> and
+lessthan --> and
+lessthan --> or
+and --> or
+and --> and
+or --> or
+or --> out
+
+Detecting: bigmod
+div --> num2bits
+mod --> num2bits
+div --> bigmult
+b --> bigmult
+bigmult --> bigadd
+mod --> bigadd
+a --> bigadd
+mod --> biglessthan
+b --> biglessthan
+
+Detecting: bigmod2
+div --> num2bits
+mod --> num2bits
+div --> bigmult
+b --> bigmult
+bigmult --> bigadd
+mod --> bigadd
+a --> bigadd
+mod --> biglessthan
+b --> biglessthan
+
+Detecting: bigmodinv
+Unconstrainted output signal: out
+out --> num2bits
+in --> bigmult
+out --> bigmult
+bigmult --> bigmod
+p --> bigmod
+
+Detecting: bigmult
+Unconstrainted output signal: out
+a --> bigmultshortlong
+b --> bigmultshortlong
+bigmultshortlong --> longtoshortnoendcarry
+longtoshortnoendcarry --> out
+
+Detecting: bigmultmodp
+a --> bigmult
+b --> bigmult
+bigmult --> bigmod
+p --> bigmod
+bigmod --> out
+
+Detecting: bigmultshortlong
+Unconstrainted output signal: out
+
+Detecting: bigmultshortlong2d
+Unconstrainted output signal: out
+
+Detecting: bigmultshortlong2dunequal
+Unconstrainted output signal: out
+
+Detecting: bigmultshortlongunequal
+Unconstrainted output signal: out
+
+Detecting: bigsub
+a --> modsub
+b --> modsub
+modsub --> out
+a --> modsubthree
+b --> modsubthree
+modsub --> modsubthree
+modsubthree --> modsubthree
+modsubthree --> out
+modsubthree --> underflow
+
+Detecting: bigsubmodp
+a --> bigsub
+b --> bigsub
+bigsub --> bigadd
+p --> bigadd
+bigsub --> out
+bigadd --> out
+
+Detecting: binsum
+out --> in
+
+Detecting: bits2num_strict
+in --> bits2num
+in --> aliascheck
+bits2num --> out
+
+Detecting: blsmillerloop
+Unconstrainted output signal: out
+p --> millerloop
+millerloop --> millerloop
+q --> millerloop
+millerloop --> fp12multiplywithlineunequal
+p --> fp12multiplywithlineunequal
+q --> fp12multiplywithlineunequal
+millerloop --> fp12invert
+fp12multiplywithlineunequal --> fp12multiply
+fp12invert --> fp12multiply
+fp12multiply --> out
+
+Detecting: checkcarrymodp
+x --> bigmultshortlongunequal
+in --> checkcarrytozero
+bigmultshortlongunequal --> checkcarrytozero
+y --> checkcarrytozero
+
+Detecting: checkcarrytozero
+
+Detecting: compconstant
+Unconstrainted output signal: out
+num2bits --> out
+
+Detecting: ellipticcurveadd
+a --> fpisequal
+b --> fpisequal
+b --> iszero
+a --> ellipticcurveaddunequal
+b --> ellipticcurveaddunequal
+fpisequal --> ellipticcurveaddunequal
+iszero --> ellipticcurveaddunequal
+a --> ellipticcurvedouble
+aisinfinity --> isInfinity
+bisinfinity --> isInfinity
+fpisequal --> isInfinity
+isInfinity --> out
+a --> out
+
+Detecting: ellipticcurveaddfp2
+a --> fp2isequal
+b --> fp2isequal
+b --> iszero
+a --> ellipticcurveaddunequalfp2
+b --> ellipticcurveaddunequalfp2
+fp2isequal --> ellipticcurveaddunequalfp2
+iszero --> ellipticcurveaddunequalfp2
+a --> ellipticcurvedoublefp2
+aisinfinity --> isInfinity
+bisinfinity --> isInfinity
+fp2isequal --> isInfinity
+isInfinity --> out
+a --> out
+
+Detecting: ellipticcurveaddunequal
+b --> bigmultshortlong
+a --> bigmultshortlong
+a --> bigmultshortlongunequal
+b --> bigmultshortlongunequal
+out --> bigmultshortlongunequal
+bigmultshortlong --> bigmultshortlongunequal
+bigmultshortlongunequal --> primereduce
+bigmultshortlong --> primereduce
+primereduce --> signedcheckcarrymodtozero
+a --> pointonline
+b --> pointonline
+out --> pointonline
+out --> rangecheck2d
+
+Detecting: ellipticcurveaddunequal3reg
+b --> bigsubmodp
+a --> bigsubmodp
+bigsubmodp --> bigmultmodp
+bigmultmodp --> bigsubmodp
+bigsubmodp --> out
+b --> out
+out --> out
+out --> bigsubmodp
+bigmultmodp --> out
+a --> out
+
+Detecting: ellipticcurveaddunequal4reg
+b --> bigsubmodp
+a --> bigsubmodp
+bigsubmodp --> bigmultmodp
+bigmultmodp --> bigsubmodp
+bigsubmodp --> out
+b --> out
+out --> out
+out --> bigsubmodp
+bigmultmodp --> out
+a --> out
+
+Detecting: ellipticcurveaddunequalfp2
+b --> bigmultshortlong2d
+a --> bigmultshortlong2d
+a --> bigmultshortlong2dunequal
+b --> bigmultshortlong2dunequal
+out --> bigmultshortlong2dunequal
+bigmultshortlong2d --> bigmultshortlong2dunequal
+bigmultshortlong2dunequal --> primereduce
+bigmultshortlong2d --> primereduce
+primereduce --> signedcheckcarrymodtozero
+a --> pointonlinefp2
+b --> pointonlinefp2
+out --> pointonlinefp2
+out --> rangecheck2d
+
+Detecting: ellipticcurvedouble
+out --> rangecheck2d
+in --> pointontangent
+out --> pointontangent
+out --> pointoncurve
+out --> fpisequal
+in --> fpisequal
+
+Detecting: ellipticcurvedouble0
+in --> bigmultmodp
+bigmultmodp --> bigmultmodp
+bigmultmodp --> bigaddmodp
+bigaddmodp --> bigmultmodp
+bigmultmodp --> bigsubmodp
+in --> bigsubmodp
+bigsubmodp --> out
+in --> out
+out --> out
+out --> bigsubmodp
+bigsubmodp --> bigmultmodp
+bigmultmodp --> out
+
+Detecting: ellipticcurvedoublefp2
+out --> rangecheck2d
+in --> pointontangentfp2
+out --> pointontangentfp2
+out --> pointoncurvefp2
+out --> fp2isequal
+in --> fp2isequal
+
+Detecting: ellipticcurvefunction
+Unconstrainted output signal: out
+in --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> primereduce
+in --> primereduce
+primereduce --> signedfp2carrymodp
+signedfp2carrymodp --> out
+
+Detecting: ellipticcurvescalarmultiply
+ellipticcurvedouble --> ellipticcurveadd
+inisinfinity --> isInfinity
+isInfinity --> out
+in --> out
+
+Detecting: ellipticcurvescalarmultiplyfp2
+ellipticcurvedoublefp2 --> ellipticcurveaddfp2
+inisinfinity --> isInfinity
+isInfinity --> out
+in --> out
+
+Detecting: ellipticcurvescalarmultiplyunequal
+Unconstrainted output signal: out
+ellipticcurvedouble --> fpisequal
+in --> fpisequal
+ellipticcurvedouble --> ellipticcurveaddunequal
+in --> ellipticcurveaddunequal
+
+Detecting: ellipticcurvescalarmultiplyunequalfp2
+Unconstrainted output signal: out
+ellipticcurvedoublefp2 --> fp2isequal
+in --> fp2isequal
+ellipticcurvedoublefp2 --> ellipticcurveaddunequalfp2
+in --> ellipticcurveaddunequalfp2
+
+Detecting: finalexpeasypart
+Unconstrainted output signal: out
+in --> fp12frobeniusmap
+in --> fp12invert
+fp12frobeniusmap --> fp12multiply
+fp12invert --> fp12multiply
+fp12multiply --> fp12frobeniusmap
+fp12multiply --> fp12multiply
+fp12multiply --> out
+
+Detecting: finalexphardpart
+Unconstrainted output signal: out
+in --> fp12cyclotomicexp
+fp12cyclotomicexp --> fp12cyclotomicexp
+fp12cyclotomicexp --> fp12frobeniusmap
+fp12frobeniusmap --> fp12cyclotomicexp
+fp12cyclotomicexp --> fp12multiply
+fp12frobeniusmap --> fp12multiply
+fp12multiply --> fp12cyclotomicexp
+fp12multiply --> fp12frobeniusmap
+fp12multiply --> fp12multiply
+in --> fp12multiply
+fp12multiply --> out
+
+Detecting: finalexponentiate
+Unconstrainted output signal: out
+in --> finalexpeasypart
+finalexpeasypart --> finalexphardpart
+finalexphardpart --> out
+
+Detecting: forceequalifenabled
+in --> iszero
+
+Detecting: fp12add
+a --> fpadd
+b --> fpadd
+fpadd --> out
+
+Detecting: fp12compress
+Unconstrainted output signal: out
+in --> primereduce
+primereduce --> out
+
+Detecting: fp12cyclotomiccompress
+in --> out
+
+Detecting: fp12cyclotomicdecompress
+in --> out
+in --> fp2iszero
+in --> signedfp2multiplynocarry
+fp2compress --> signedfp2divide
+in --> signedfp2divide
+in --> signedfp2multiplynocarrycompress
+signedfp2multiplynocarrycompress --> signedfp2divide
+signedfp2divide --> out
+fp2iszero --> out
+signedfp2divide --> signedfp2multiplynocarry
+fp2compress --> signedfp2carrymodp
+
+Detecting: fp12cyclotomicexp
+Unconstrainted output signal: out
+in --> fp12cyclotomiccompress
+fp12cyclotomiccompress --> fp12cyclotomicsquare
+fp12cyclotomicsquare --> fp12cyclotomicsquare
+fp12cyclotomicsquare --> fp12cyclotomicdecompress
+fp12cyclotomicdecompress --> fp12multiply
+fp12multiply --> fp12multiply
+fp12multiply --> out
+
+Detecting: fp12cyclotomicsquare
+Unconstrainted output signal: out
+in --> signedfp12cyclotomicsquarenocarry
+signedfp12cyclotomicsquarenocarry --> fp2compress
+fp2compress --> signedfp2carrymodp
+signedfp2carrymodp --> out
+
+Detecting: fp12exp
+Unconstrainted output signal: out
+in --> fp12square
+fp12square --> fp12square
+fp12square --> fp12multiply
+fp12multiply --> fp12multiply
+fp12multiply --> out
+
+Detecting: fp12frobeniusmap
+in --> out
+in --> fpmultiply
+fpmultiply --> out
+in --> fp2frobeniusmap
+fp2frobeniusmap --> out
+fp2frobeniusmap --> fp2multiply
+fp2multiply --> out
+
+Detecting: fp12invert
+Unconstrainted output signal: out
+out --> num2bits
+in --> fp12multiply
+out --> fp12multiply
+
+Detecting: fp12multiply
+Unconstrainted output signal: out
+a --> signedfp12multiplynocarrycompress
+b --> signedfp12multiplynocarrycompress
+signedfp12multiplynocarrycompress --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: fp12multiplywithlineunequal
+Unconstrainted output signal: out
+p --> signedlinefunctionunequalnocarry
+q --> signedlinefunctionunequalnocarry
+g --> signedfp12multiplynocarryunequal
+signedlinefunctionunequalnocarry --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> fp12compress
+fp12compress --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: fp12multiplywithlineunequalfp2
+Unconstrainted output signal: out
+p --> signedlinefunctionunequalnocarryfp2
+q --> signedlinefunctionunequalnocarryfp2
+g --> signedfp12multiplynocarryunequal
+signedlinefunctionunequalnocarryfp2 --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> fp12compress
+fp12compress --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: fp12square
+Unconstrainted output signal: out
+in --> fp12multiply
+fp12multiply --> out
+
+Detecting: fp2add
+a --> fpadd
+b --> fpadd
+fpadd --> out
+
+Detecting: fp2compress
+Unconstrainted output signal: out
+in --> primereduce
+primereduce --> out
+
+Detecting: fp2conjugate
+in --> fpnegate
+in --> out
+fpnegate --> out
+
+Detecting: fp2frobeniusmap
+in --> out
+in --> fpnegate
+fpnegate --> out
+
+Detecting: fp2invert
+Unconstrainted output signal: out
+out --> num2bits
+in --> fp2multiply
+out --> fp2multiply
+
+Detecting: fp2isequal
+a --> biglessthan
+b --> biglessthan
+a --> isequal
+b --> isequal
+isequal --> iszero
+iszero --> out
+
+Detecting: fp2iszero
+in --> biglessthan
+in --> iszero
+iszero --> iszero
+iszero --> out
+
+Detecting: fp2multiply
+Unconstrainted output signal: out
+a --> signedfp2multiplynocarrycompress
+b --> signedfp2multiplynocarrycompress
+signedfp2multiplynocarrycompress --> signedfp2carrymodp
+signedfp2carrymodp --> out
+
+Detecting: fp2multiplythree
+Unconstrainted output signal: out
+a --> signedfp2multiplynocarrycompressthree
+b --> signedfp2multiplynocarrycompressthree
+c --> signedfp2multiplynocarrycompressthree
+signedfp2multiplynocarrycompressthree --> signedfp2carrymodp
+signedfp2carrymodp --> out
+
+Detecting: fp2negate
+in --> fpnegate
+fpnegate --> out
+
+Detecting: fp2sgn0
+in --> fpsgn0
+in --> bigiszero
+fpsgn0 --> out
+bigiszero --> out
+
+Detecting: fp2subtract
+a --> fpsubtract
+b --> fpsubtract
+fpsubtract --> out
+
+Detecting: fp6invert
+Unconstrainted output signal: real_out
+
+Detecting: fpadd
+a --> bigadd
+b --> bigadd
+bigadd --> biglessthan
+bigadd --> bigsub
+biglessthan --> bigsub
+bigsub --> out
+
+Detecting: fpisequal
+in --> biglessthan
+in --> isequal
+isequal --> isequal
+isequal --> out
+
+Detecting: fpiszero
+in --> biglessthan
+in --> bigiszero
+bigiszero --> out
+
+Detecting: fpmultiply
+Unconstrainted output signal: out
+a --> bigmultshortlong
+b --> bigmultshortlong
+bigmultshortlong --> primereduce
+primereduce --> signedfpcarrymodp
+signedfpcarrymodp --> out
+
+Detecting: fpnegate
+in --> bigsub
+in --> bigiszero
+bigiszero --> out
+bigsub --> out
+
+Detecting: fpsgn0
+in --> biglessthan
+in --> in
+out --> in
+
+Detecting: fpsubtract
+a --> bigsub
+b --> bigsub
+bigsub --> bigadd
+bigsub --> out
+bigadd --> out
+
+Detecting: greatereqthan
+in --> lessthan
+lessthan --> out
+
+Detecting: greaterthan
+in --> lessthan
+lessthan --> out
+
+Detecting: isequal
+in --> iszero
+iszero --> out
+
+Detecting: iszero
+in --> out
+
+Detecting: lesseqthan
+in --> lessthan
+lessthan --> out
+
+Detecting: lessthan
+in --> num2bits
+num2bits --> out
+
+Detecting: linefunctionequal
+Unconstrainted output signal: out
+p --> signedlinefunctionequalnocarry
+q --> signedlinefunctionequalnocarry
+signedlinefunctionequalnocarry --> primereduce
+primereduce --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: linefunctionequalfp2
+Unconstrainted output signal: out
+p --> signedlinefunctionequalnocarryfp2
+q --> signedlinefunctionequalnocarryfp2
+signedlinefunctionequalnocarryfp2 --> primereduce
+primereduce --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: linefunctionunequal
+Unconstrainted output signal: out
+p --> signedlinefunctionunequalnocarry
+q --> signedlinefunctionunequalnocarry
+signedlinefunctionunequalnocarry --> primereduce
+primereduce --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: linefunctionunequalfp2
+Unconstrainted output signal: out
+p --> signedlinefunctionunequalnocarryfp2
+q --> signedlinefunctionunequalnocarryfp2
+signedlinefunctionunequalnocarryfp2 --> primereduce
+primereduce --> signedfp12carrymodp
+signedfp12carrymodp --> out
+
+Detecting: longtoshortnoendcarry
+Unconstrainted output signal: out
+out --> num2bits
+
+Detecting: millerloop
+Unconstrainted output signal: xP
+Unconstrainted output signal: out
+q --> linefunctionequal
+signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
+linefunctionequal --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> fp12compress
+fp12compress --> signedfp12carrymodp
+signedfp12carrymodp --> fp12multiply
+in --> fp12multiply
+fp12multiply --> fp12multiplywithlineunequal
+ellipticcurvedouble --> fp12multiplywithlineunequal
+p --> fp12multiplywithlineunequal
+q --> fp12multiplywithlineunequal
+ellipticcurvedouble --> ellipticcurveaddunequal
+p --> ellipticcurveaddunequal
+
+Detecting: millerloop1
+Unconstrainted output signal: out
+q --> linefunctionequal
+signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
+linefunctionequal --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> fp12compress
+fp12compress --> signedfp12carrymodp
+signedfp12carrymodp --> fp12multiplywithlineunequal
+ellipticcurvedouble --> fp12multiplywithlineunequal
+p --> fp12multiplywithlineunequal
+q --> fp12multiplywithlineunequal
+ellipticcurvedouble --> ellipticcurveaddunequal
+p --> ellipticcurveaddunequal
+
+Detecting: millerloopfp2
+Unconstrainted output signal: xP
+Unconstrainted output signal: out
+q --> linefunctionequalfp2
+signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
+linefunctionequalfp2 --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> fp12compress
+fp12compress --> signedfp12carrymodp
+signedfp12carrymodp --> fp12multiplywithlineunequalfp2
+ellipticcurvedoublefp2 --> fp12multiplywithlineunequalfp2
+p --> fp12multiplywithlineunequalfp2
+q --> fp12multiplywithlineunequalfp2
+ellipticcurvedoublefp2 --> ellipticcurveaddunequalfp2
+p --> ellipticcurveaddunequalfp2
+
+Detecting: millerloopfp2two
+Unconstrainted output signal: out
+q --> linefunctionequalfp2
+signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
+linefunctionequalfp2 --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> fp12compress
+fp12compress --> signedfp12carrymodp
+signedfp12carrymodp --> fp12multiply
+linefunctionequalfp2 --> fp12multiply
+fp12multiply --> fp12multiplywithlineunequalfp2
+fp12multiplywithlineunequalfp2 --> fp12multiplywithlineunequalfp2
+ellipticcurvedoublefp2 --> fp12multiplywithlineunequalfp2
+p --> fp12multiplywithlineunequalfp2
+q --> fp12multiplywithlineunequalfp2
+ellipticcurvedoublefp2 --> ellipticcurveaddunequalfp2
+p --> ellipticcurveaddunequalfp2
+
+Detecting: modprod
+a --> num2bits
+b --> num2bits
+num2bits --> bits2num
+bits2num --> prod
+bits2num --> carry
+
+Detecting: modsub
+a --> lessthan
+b --> lessthan
+lessthan --> borrow
+borrow --> out
+a --> out
+b --> out
+
+Detecting: modsubthree
+a --> lessthan
+b --> lessthan
+c --> lessthan
+lessthan --> borrow
+borrow --> out
+a --> out
+b --> out
+c --> out
+
+Detecting: modsum
+a --> num2bits
+b --> num2bits
+num2bits --> carry
+a --> sum
+b --> sum
+carry --> sum
+
+Detecting: modsumfour
+a --> num2bits
+b --> num2bits
+c --> num2bits
+d --> num2bits
+num2bits --> carry
+a --> sum
+b --> sum
+c --> sum
+d --> sum
+carry --> sum
+
+Detecting: modsumthree
+a --> num2bits
+b --> num2bits
+c --> num2bits
+num2bits --> carry
+a --> sum
+b --> sum
+c --> sum
+carry --> sum
+
+Detecting: multiand
+in --> out
+in --> and
+and --> out
+in --> multiand
+multiand --> and
+
+Detecting: nand
+a --> out
+b --> out
+
+Detecting: nor
+a --> out
+b --> out
+
+Detecting: not
+in --> out
+
+Detecting: num2bits_strict
+in --> num2bits
+num2bits --> out
+num2bits --> aliascheck
+
+Detecting: num2bitsneg
+in --> iszero
+in --> out
+
+Detecting: optimalatepairing
+Unconstrainted output signal: out
+p --> fpnegate
+q --> millerloopfp2
+millerloopfp2 --> finalexponentiate
+finalexponentiate --> out
+
+Detecting: or
+a --> out
+b --> out
+
+Detecting: pointoncurve
+in --> bigmultshortlong
+bigmultshortlong --> bigmultshortlongunequal
+in --> bigmultshortlongunequal
+bigmultshortlongunequal --> primereduce
+in --> primereduce
+bigmultshortlong --> primereduce
+primereduce --> signedcheckcarrymodtozero
+
+Detecting: pointoncurvefp2
+in --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> primereduce
+in --> primereduce
+primereduce --> signedcheckcarrymodtozero
+
+Detecting: pointonline
+in --> bigmultshortlong
+bigmultshortlong --> primereduce
+primereduce --> signedcheckcarrymodtozero
+
+Detecting: pointonlinefp2
+in --> bigmultshortlong2d
+bigmultshortlong2d --> primereduce
+primereduce --> signedcheckcarrymodtozero
+
+Detecting: pointontangent
+in --> bigmultshortlong
+bigmultshortlong --> bigmultshortlongunequal
+in --> bigmultshortlongunequal
+bigmultshortlongunequal --> primereduce
+bigmultshortlong --> primereduce
+primereduce --> signedcheckcarrymodtozero
+
+Detecting: pointontangentfp2
+in --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> primereduce
+primereduce --> signedcheckcarrymodtozero
+
+Detecting: primereduce
+Unconstrainted output signal: out
+
+Detecting: rangecheck2d
+in --> num2bits
+
+Detecting: signedcheckcarrymodtozero
+X --> num2bits
+in --> checkcarrymodp
+X --> checkcarrymodp
+
+Detecting: signedfp12carrymodp
+in --> signedfpcarrymodp
+signedfpcarrymodp --> X
+signedfpcarrymodp --> out
+
+Detecting: signedfp12cyclotomicsquarenocarry
+in --> signedfp2multiplynocarry
+in --> out
+signedfp2multiplynocarry --> out
+
+Detecting: signedfp12fp2multiplynocarry
+Unconstrainted output signal: out
+a --> bigmultshortlong
+b --> bigmultshortlong
+bigmultshortlong --> out
+
+Detecting: signedfp12fp2multiplynocarryunequal
+Unconstrainted output signal: out
+a --> bigmultshortlongunequal
+b --> bigmultshortlongunequal
+bigmultshortlongunequal --> out
+
+Detecting: signedfp12multiplynocarry
+Unconstrainted output signal: out
+a --> signedfp12multiplynocarryunequal
+b --> signedfp12multiplynocarryunequal
+signedfp12multiplynocarryunequal --> out
+
+Detecting: signedfp12multiplynocarrycompress
+Unconstrainted output signal: out
+a --> signedfp12multiplynocarry
+b --> signedfp12multiplynocarry
+signedfp12multiplynocarry --> fp12compress
+fp12compress --> out
+
+Detecting: signedfp12multiplynocarryunequal
+Unconstrainted output signal: out
+a --> bigmultshortlong2dunequal
+b --> bigmultshortlong2dunequal
+
+Detecting: signedfp12scalarmultiplynocarry
+Unconstrainted output signal: out
+a --> bigmultshortlong
+b --> bigmultshortlong
+bigmultshortlong --> out
+
+Detecting: signedfp12scalarmultiplynocarryunequal
+Unconstrainted output signal: out
+a --> bigmultshortlongunequal
+b --> bigmultshortlongunequal
+bigmultshortlongunequal --> out
+
+Detecting: signedfp2carrymodp
+in --> signedfpcarrymodp
+signedfpcarrymodp --> X
+signedfpcarrymodp --> out
+
+Detecting: signedfp2compresscarry
+Unconstrainted output signal: out
+in --> fp2compress
+fp2compress --> signedfp2carrymodp
+signedfp2carrymodp --> out
+
+Detecting: signedfp2divide
+Unconstrainted output signal: out
+out --> rangecheck2d
+out --> signedfp2multiplynocarrycompress
+b --> signedfp2multiplynocarrycompress
+signedfp2multiplynocarrycompress --> checkcarrymodp
+a --> checkcarrymodp
+
+Detecting: signedfp2multiplynocarry
+Unconstrainted output signal: out
+a --> signedfp2multiplynocarryunequal
+b --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> out
+
+Detecting: signedfp2multiplynocarrycompress
+Unconstrainted output signal: out
+a --> signedfp2multiplynocarry
+b --> signedfp2multiplynocarry
+signedfp2multiplynocarry --> fp2compress
+fp2compress --> out
+
+Detecting: signedfp2multiplynocarrycompressthree
+Unconstrainted output signal: out
+a --> signedfp2multiplynocarry
+b --> signedfp2multiplynocarry
+signedfp2multiplynocarry --> signedfp2multiplynocarryunequal
+c --> signedfp2multiplynocarryunequal
+signedfp2multiplynocarryunequal --> fp2compress
+fp2compress --> out
+
+Detecting: signedfp2multiplynocarryunequal
+Unconstrainted output signal: out
+a --> bigmultshortlongunequal
+b --> bigmultshortlongunequal
+bigmultshortlongunequal --> out
+
+Detecting: signedfpcarrymodp
+out --> num2bits
+X --> num2bits
+in --> checkcarrymodp
+out --> checkcarrymodp
+X --> checkcarrymodp
+
+Detecting: signedlinefunctionequalnocarry
+Unconstrainted output signal: out
+p --> bigmultshortlong
+bigmultshortlong --> signedfp12scalarmultiplynocarryunequal
+p --> signedfp12scalarmultiplynocarryunequal
+q --> signedfp12scalarmultiplynocarryunequal
+p --> signedfp12scalarmultiplynocarry
+q --> signedfp12scalarmultiplynocarry
+signedfp12scalarmultiplynocarryunequal --> out
+signedfp12scalarmultiplynocarry --> out
+
+Detecting: signedlinefunctionequalnocarryfp2
+Unconstrainted output signal: out
+p --> bigmultshortlong2d
+p --> bigmultshortlong2dunequal
+bigmultshortlong2d --> bigmultshortlong2dunequal
+bigmultshortlong2d --> signedfp2multiplynocarryunequal
+q --> signedfp2multiplynocarryunequal
+p --> signedfp2multiplynocarryunequal
+bigmultshortlong2dunequal --> out
+bigmultshortlong2d --> out
+signedfp2multiplynocarryunequal --> out
+
+Detecting: signedlinefunctionunequalnocarry
+Unconstrainted output signal: out
+p --> signedfp12scalarmultiplynocarry
+q --> signedfp12scalarmultiplynocarry
+p --> bigmultshortlong
+signedfp12scalarmultiplynocarry --> out
+bigmultshortlong --> out
+
+Detecting: signedlinefunctionunequalnocarryfp2
+Unconstrainted output signal: out
+p --> signedfp2multiplynocarry
+q --> signedfp2multiplynocarry
+p --> bigmultshortlong2d
+bigmultshortlong2d --> out
+signedfp2multiplynocarry --> out
+
+Detecting: split
+small --> num2bits
+big --> num2bits
+small --> in
+big --> in
+
+Detecting: splitthree
+small --> num2bits
+medium --> num2bits
+big --> num2bits
+small --> in
+medium --> in
+big --> in
+
+Detecting: tatepairing
+Unconstrainted output signal: out
+p --> blsmillerloop
+q --> blsmillerloop
+blsmillerloop --> finalexponentiate
+finalexponentiate --> out
+
+Detecting: xor
+a --> out
+b --> out
+
