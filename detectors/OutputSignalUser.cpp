@@ -45,7 +45,9 @@ struct OutputSignalUser : public ModulePass {
                 auto c_collector = collectors[c];
                 for (auto o : c_collector->output_signal_names) {
                     auto key = c + o;
-                    if (!satisfied_component_output_signals.count(key)) {
+                    if (satisfied_component_output_signals.count(key)) {
+                        std::cerr << "    Used output signal: " << o << "\n";
+                    } else {
                         std::cerr << "    Unused output signal: " << o << "\n";
                     }
                 }
