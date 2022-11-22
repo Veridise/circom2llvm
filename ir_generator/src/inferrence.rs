@@ -1,13 +1,10 @@
-use super::namer::name_template_struct;
-use super::template::Template;
-
-use super::codegen::{CodeGen, MAX_ARRAYSIZE};
-use super::scope::ScopeTrait;
-
-use inkwell::types::{ArrayType, BasicType, BasicTypeEnum, AnyTypeEnum};
+use crate::codegen::{CodeGen, MAX_ARRAYSIZE};
+use crate::namer::{name_opaque_struct, name_template_struct};
+use crate::scope::ScopeTrait;
+use crate::template::Template;
+use inkwell::types::{AnyTypeEnum, ArrayType, BasicType, BasicTypeEnum};
 use inkwell::AddressSpace;
 use program_structure::ast::{Access, Expression, SignalType, Statement, VariableType};
-
 
 pub fn infer_depended_components<'ctx>(stmt: &Statement, scope: &mut dyn ScopeTrait<'ctx>) {
     match stmt {
@@ -58,7 +55,7 @@ pub fn infer_type_from_expression<'ctx>(
             }
             let ty = get_type_from_access(codegen, name, access, scope);
             scope.set_var_ty(name, ty);
-        },
+        }
         Expression::Call { meta: _, id, args } => {
             // Self-called function.
             if id == scope.get_name() {
@@ -77,23 +74,25 @@ pub fn infer_type_from_expression<'ctx>(
                             match real_ty {
                                 AnyTypeEnum::ArrayType(arr_ty) => {
                                     arg_ty = arr_ty.as_basic_type_enum();
-                                },
+                                }
                                 _ => (),
                             }
                         }
                         for arg in access {
                             match arg {
                                 Access::ArrayAccess(dim) => {
-                                    arg_ty = arg_ty.array_type(resolve_dim_expr(dim)).as_basic_type_enum();
-                                },
+                                    arg_ty = arg_ty
+                                        .array_type(resolve_dim_expr(dim))
+                                        .as_basic_type_enum();
+                                }
                                 Access::ComponentAccess(..) => {
                                     println!("Error: Can't infer from struct as parameters.");
                                     unreachable!();
-                                },
+                                }
                             }
                         }
                         scope.set_var_ty(name, arg_ty);
-                    },
+                    }
                     _ => (),
                 }
             }
@@ -133,7 +132,7 @@ pub fn infer_type_from_statement<'ctx>(
                         Some(strt_ty) => strt_ty,
                         None => codegen
                             .context
-                            .opaque_struct_type(&format!("{}.opaque", strt_name)),
+                            .opaque_struct_type(&name_opaque_struct(&strt_name)),
                     };
                     val_ty = strt_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
                 }

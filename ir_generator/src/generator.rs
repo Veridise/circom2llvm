@@ -1,14 +1,10 @@
-use crate::scope::ScopeTrait;
+use crate::codegen::CodeGen;
+use crate::function::Function;
+use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::summarygen::SummaryGen;
-
-use super::codegen::CodeGen;
-use super::function::Function;
-use super::scope::{CodegenStagesTrait, Scope};
-use super::template::Template;
-
+use crate::template::Template;
 use program_structure::ast::{Definition, Statement};
 use std::collections::HashMap;
-
 
 pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Vec<String> {
     let mut all = dependence_graph.len().clone();
@@ -54,11 +50,7 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
     return output;
 }
 
-pub fn generate(
-    definitions: Vec<&Definition>,
-    codegen: &mut CodeGen,
-    summarygen: &mut SummaryGen,
-) {
+pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, summarygen: &mut SummaryGen) {
     let mut template_scopes: Vec<(Template, &Statement)> = Vec::new();
     let mut function_scopes: Vec<(Function, &Statement)> = Vec::new();
     for defin in definitions {

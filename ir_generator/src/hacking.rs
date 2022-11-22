@@ -1,10 +1,8 @@
-use std::collections::HashMap;
-
 use inkwell::{
     types::{ArrayType, IntType, PointerType},
     AddressSpace,
 };
-
+use std::collections::HashMap;
 
 // Hacking is useless now.
 pub fn assert_fn_ret_ty(val_ty: IntType) -> HashMap<String, PointerType> {

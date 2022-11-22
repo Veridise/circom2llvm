@@ -1,9 +1,12 @@
+use crate::namer::name_opaque_struct;
 use std::fs::File;
 use std::io::{self, BufRead, LineWriter, Write};
 use std::path::Path;
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where P: AsRef<Path>, {
+where
+    P: AsRef<Path>,
+{
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
 }
@@ -23,7 +26,7 @@ pub fn remove_opaque_struct_name(output_path: &String) {
                     continue;
                 }
                 for s_n in &remaining_opaque_structs {
-                    let opaque_n = format!("{}.opaque", s_n);
+                    let opaque_n = name_opaque_struct(s_n);
                     if l.contains(&opaque_n) {
                         l = l.replace(&opaque_n, s_n);
                         break;

@@ -1,12 +1,9 @@
+use crate::codegen::CodeGen;
+use crate::expression::resolve_expr;
 use crate::namer::{name_if_block, name_loop_block};
-
-use super::codegen::CodeGen;
-use super::expression::resolve_expr;
-use super::scope::ScopeTrait;
-
+use crate::scope::ScopeTrait;
 use inkwell::values::BasicValue;
-
-use program_structure::ast::{AssignOp, Statement};
+use program_structure::ast::{Access, AssignOp, Statement};
 
 pub fn resolve_stmt<'ctx>(
     scope: &mut dyn ScopeTrait<'ctx>,
@@ -120,23 +117,52 @@ pub fn resolve_stmt<'ctx>(
                     let lval = scope.get_var(codegen, var, access).into_int_value();
                     let rval = res.into_int_value();
                     codegen.build_constraint(lval, rval);
+                    if access.len() == 0 {
+                        let self_comp_name = scope.get_name().clone();
+                        let _access = vec![Access::ComponentAccess(var.clone())];
+                        // Write in signal
+                        scope.set_var(
+                            codegen,
+                            &self_comp_name,
+                            &_access,
+                            res.as_basic_value_enum(),
+                        );
+                        let new_var = scope.get_var(codegen, &self_comp_name, &_access);
+                        // Read signal to local
+                        scope.set_var(codegen, var, access, new_var);
+                    } else {
+                        scope.set_var(codegen, var, access, res.as_basic_value_enum());
+                    }
                 }
-                _ => (),
+                AssignOp::AssignSignal => {
+                    if access.len() == 0 {
+                        let self_comp_name = scope.get_name().clone();
+                        let _access = vec![Access::ComponentAccess(var.clone())];
+                        // Write in signal
+                        scope.set_var(
+                            codegen,
+                            &self_comp_name,
+                            &_access,
+                            res.as_basic_value_enum(),
+                        );
+                        let new_var = scope.get_var(codegen, &self_comp_name, &_access);
+                        // Read signal to local
+                        scope.set_var(codegen, var, access, new_var);
+                    } else {
+                        scope.set_var(codegen, var, access, res.as_basic_value_enum());
+                    }
+                }
+                AssignOp::AssignVar => {
+                    scope.set_var(codegen, var, access, res.as_basic_value_enum());
+                }
             };
-            scope.set_var(codegen, var, access, res.as_basic_value_enum());
-            match access {
-                _ => (),
-            }
         }
         Statement::While {
             meta: _,
             cond,
             stmt,
         } => {
-            let CodeGen {
-                context,
-                ..
-            } = codegen;
+            let CodeGen { context, .. } = codegen;
             let current_func = scope.get_main_fn();
 
             // Get the body of while and the latch step of while.

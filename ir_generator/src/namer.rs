@@ -49,7 +49,40 @@ pub fn name_template_struct(templ_name: &str) -> String {
     return format!("struct_template_circuit_{}", templ_name).to_lowercase();
 }
 
-pub fn name_signal(templ_name: &str, signal_name: &str, is_read: bool, is_arg: bool, is_input: bool, inner: bool) -> String {
+pub fn name_initial_var(
+    templ_name: &str,
+    signal_name: &str,
+    is_arg: bool,
+    is_input: bool,
+    is_inter: bool,
+) -> String {
+    let mut name = "declare".to_string();
+    if is_arg {
+        name = format!("{}_arg", name);
+    } else if is_input {
+        name = format!("{}_input", name);
+    } else if is_inter {
+        name = format!("{}_inter", name);
+    } else {
+        name = format!("{}_output", name);
+    }
+    name = format!("{}.{}.{}", templ_name, signal_name, name).to_lowercase();
+    return name;
+}
+
+pub fn name_opaque_struct(struct_name: &str) -> String {
+    return format!("{}.opaque", struct_name).to_lowercase();
+}
+
+pub fn name_signal(
+    templ_name: &str,
+    signal_name: &str,
+    is_read: bool,
+    is_arg: bool,
+    is_input: bool,
+    is_inter: bool,
+    inner: bool,
+) -> String {
     let mut name = "".to_string();
     if is_read {
         name = format!("read{}", name);
@@ -60,6 +93,8 @@ pub fn name_signal(templ_name: &str, signal_name: &str, is_read: bool, is_arg: b
         name = format!("{}_arg", name);
     } else if is_input {
         name = format!("{}_input", name);
+    } else if is_inter {
+        name = format!("{}_inter", name);
     } else {
         name = format!("{}_output", name);
     }
@@ -68,6 +103,6 @@ pub fn name_signal(templ_name: &str, signal_name: &str, is_read: bool, is_arg: b
     } else {
         name = format!("{}_outter", name);
     }
-    name = format!("{}.{}.{}", name, templ_name, signal_name).to_lowercase();
+    name = format!("{}.{}.{}", templ_name, signal_name, name).to_lowercase();
     return name;
 }

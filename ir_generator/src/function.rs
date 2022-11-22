@@ -1,17 +1,14 @@
+use crate::codegen::CodeGen;
 use crate::expression::flat_expressions_from_statement;
 use crate::inferrence::{
     get_type_from_expr, infer_depended_components, infer_dependences, infer_type_from_expression,
     infer_type_from_statement,
 };
-use crate::statement::flat_statements;
-
-use super::codegen::CodeGen;
-use super::namer::name_entry_block;
-use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
-use super::statement::resolve_stmt;
-
-use inkwell::AddressSpace;
+use crate::namer::{name_entry_block, name_initial_var};
+use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
+use crate::statement::{flat_statements, resolve_stmt};
 use inkwell::types::BasicType;
+use inkwell::AddressSpace;
 use program_structure::ast::Statement;
 
 pub struct Function<'ctx> {
@@ -73,7 +70,11 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
 
         let hacking_key = format!("{}.return", fn_name);
         if codegen.hacking_ret_ty.contains_key(&hacking_key) {
-            ret_ty = codegen.hacking_ret_ty.get(&hacking_key).unwrap().as_basic_type_enum();
+            ret_ty = codegen
+                .hacking_ret_ty
+                .get(&hacking_key)
+                .unwrap()
+                .as_basic_type_enum();
         }
 
         let mut arg_tys = Vec::new();
@@ -97,7 +98,8 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         // Bind args
         for (idx, arg) in self.scope.args.clone().iter().enumerate() {
             let val = fn_val.get_nth_param(idx as u32).unwrap();
-            self.scope.bind_argument(codegen, arg, val);
+            let alloca_name = name_initial_var(&self.scope.name, arg, true, false, false);
+            self.scope.bind_argument(codegen, arg, &alloca_name, val);
         }
 
         // Initial variable
@@ -105,7 +107,8 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
             if self.scope.is_initialized(name) {
                 continue;
             };
-            self.scope.initial_var(codegen, name, ty, true);
+            let alloca_name = name;
+            self.scope.initial_var(codegen, name, alloca_name, ty, true);
         }
 
         match body {

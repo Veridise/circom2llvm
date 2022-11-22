@@ -12,7 +12,13 @@ Cargo.lock
 # Dev
 
 .vscode
-examples/*/**
-example_detector/*.ll
-example_detector/*.log
-example_detector/*.json
+
+cache/**
+
+examples/**
+
+detectors/examples/*.ll
+detectors/examples/*.json
+detectors/examples/*.log
+
+auditing/*.log

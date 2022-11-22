@@ -1,17 +1,15 @@
-use std::{path::PathBuf, fs::File};
-
-use inkwell::types::{
-    AnyTypeEnum, ArrayType, BasicTypeEnum, IntType, PointerType, StructType, VoidType,
-};
-use serde::{Deserialize, Serialize};
-
-use super::{
+use crate::{
     codegen::{APPLY_MOD, GLOBAL_P, MAX_ARRAYSIZE},
     function::Function,
     namer::name_template_fn,
     scope::ScopeTrait,
     template::Template,
 };
+use inkwell::types::{
+    AnyTypeEnum, ArrayType, BasicTypeEnum, IntType, PointerType, StructType, VoidType,
+};
+use serde::{Deserialize, Serialize};
+use std::{fs::File, path::PathBuf};
 
 #[derive(Serialize, Deserialize)]
 pub struct SummaryGen {

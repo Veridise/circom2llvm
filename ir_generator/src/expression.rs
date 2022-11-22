@@ -1,11 +1,8 @@
+use crate::codegen::{CodeGen, MAX_ARRAYSIZE};
+use crate::inferrence::{construct_array_ty, construct_uniform_array_ty};
+use crate::namer::name_signal;
+use crate::scope::ScopeTrait;
 use crate::type_check::check_used_value;
-
-use super::inferrence::{construct_array_ty, construct_uniform_array_ty};
-
-use super::codegen::{CodeGen, MAX_ARRAYSIZE};
-use super::namer::name_signal;
-use super::scope::ScopeTrait;
-
 use inkwell::types::{BasicType, BasicTypeEnum};
 use inkwell::values::{
     ArrayValue, BasicValue, BasicValueEnum, InstructionValue, IntValue, PointerValue,
@@ -292,25 +289,26 @@ pub fn read_signal_from_struct<'ctx>(
     call_from_inner: bool,
 ) -> BasicValueEnum<'ctx> {
     let container: &Vec<String>;
-    let offset;
-    let is_arg;
-    let is_input;
-    let (args, inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
+    let offset: u32;
+    let mut is_arg = false;
+    let mut is_input = false;
+    let mut is_inter = false;
+    let (args, inputs, inters, outputs) = codegen.get_template_fields(templ_name).unwrap();
     if args.contains(signal_name) {
         container = args;
-        offset = 0;
         is_arg = true;
-        is_input = false;
+        offset = 0;
     } else if inputs.contains(signal_name) {
         container = inputs;
         offset = args.len() as u32;
-        is_arg = false;
         is_input = true;
+    } else if inters.contains(signal_name) {
+        container = inters;
+        offset = (args.len() + inputs.len()) as u32;
+        is_inter = true;
     } else if outputs.contains(signal_name) {
         container = outputs;
-        offset = (args.len() + inputs.len()) as u32;
-        is_arg = false;
-        is_input = false;
+        offset = (args.len() + inputs.len() + inters.len()) as u32;
     } else {
         unreachable!()
     }
@@ -320,6 +318,7 @@ pub fn read_signal_from_struct<'ctx>(
         true,
         is_arg,
         is_input,
+        is_inter,
         call_from_inner,
     );
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
@@ -337,25 +336,26 @@ pub fn write_signal_to_struct<'ctx>(
     v: BasicValueEnum<'ctx>,
 ) -> InstructionValue<'ctx> {
     let container: &Vec<String>;
-    let offset;
-    let is_arg;
-    let is_input;
-    let (args, inputs, outputs) = codegen.get_input_output_names(templ_name).unwrap();
+    let offset: u32;
+    let mut is_arg = false;
+    let mut is_input = false;
+    let mut is_inter = false;
+    let (args, inputs, inters, outputs) = codegen.get_template_fields(templ_name).unwrap();
     if args.contains(signal_name) {
         container = args;
-        offset = 0;
         is_arg = true;
-        is_input = false;
+        offset = 0;
     } else if inputs.contains(signal_name) {
         container = inputs;
         offset = args.len() as u32;
-        is_arg = false;
         is_input = true;
+    } else if inters.contains(signal_name) {
+        container = inters;
+        offset = (args.len() + inputs.len()) as u32;
+        is_inter = true;
     } else if outputs.contains(signal_name) {
         container = outputs;
-        offset = (args.len() + inputs.len()) as u32;
-        is_arg = false;
-        is_input = false;
+        offset = (args.len() + inputs.len() + inters.len()) as u32;
     } else {
         unreachable!()
     }
@@ -365,6 +365,7 @@ pub fn write_signal_to_struct<'ctx>(
         false,
         is_arg,
         is_input,
+        is_inter,
         call_from_inner,
     );
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;

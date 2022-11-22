@@ -1,5 +1,7 @@
-use inkwell::{values::{BasicValueEnum, PointerValue}, types::{AnyTypeEnum, BasicTypeEnum, PointerType}};
-
+use inkwell::{
+    types::{AnyTypeEnum, BasicTypeEnum, PointerType},
+    values::{BasicValueEnum, PointerValue},
+};
 
 pub fn check_used_value(val: &BasicValueEnum) {
     check_used_type(&val.get_type());

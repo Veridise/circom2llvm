@@ -1,17 +1,13 @@
+use crate::codegen::CodeGen;
+use crate::expression::{read_signal_from_struct, resolve_expr, write_signal_to_struct};
+use crate::namer::name_template_fn;
 use crate::type_check::{check_stored_value, check_used_type, check_used_value};
-
-use super::codegen::CodeGen;
-use super::expression::{read_signal_from_struct, resolve_expr, write_signal_to_struct};
-use super::namer::name_template_fn;
-
 use inkwell::basic_block::BasicBlock;
+use inkwell::types::{BasicType, BasicTypeEnum, IntType};
 use inkwell::values::{
     BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue,
 };
 use inkwell::AddressSpace;
-
-use inkwell::types::{BasicType, BasicTypeEnum, IntType};
-
 use program_structure::ast::{Access, Expression, Statement};
 use std::collections::HashMap;
 use std::usize;
@@ -29,6 +25,7 @@ pub trait ScopeTrait<'ctx> {
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &String,
+        alloca_name: &String,
         ty: &BasicTypeEnum<'ctx>,
         alloca: bool,
     ) -> PointerValue<'ctx>;
@@ -80,6 +77,7 @@ pub trait ScopeTrait<'ctx> {
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &String,
+        alloca_name: &String,
         val: BasicValueEnum<'ctx>,
     ) -> PointerValue<'ctx>;
 }
@@ -113,11 +111,10 @@ pub struct Scope<'ctx> {
 }
 
 impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
-
     fn get_name(&self) -> &String {
         return &self.name;
     }
-    
+
     fn is_initialized(&self, name: &String) -> bool {
         return self.var2ptr.contains_key(name);
     }
@@ -133,6 +130,9 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
     }
 
     fn get_known_comp(&self, name: &String) -> &String {
+        if name == &self.name {
+            return &self.name;
+        }
         return &self.var2comp[name];
     }
 
@@ -196,6 +196,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &String,
+        alloca_name: &String,
         ty: &BasicTypeEnum<'ctx>,
         alloca: bool,
     ) -> PointerValue<'ctx> {
@@ -206,24 +207,24 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             used_ty = *ty;
         }
         check_used_type(&used_ty);
-        let ptr;
-        if alloca {
-            ptr = codegen.builder.build_alloca(used_ty, name);
-        } else {
-            ptr = codegen.builder.build_malloc(used_ty, name).unwrap();
-        }
+        let ptr = codegen.builder.build_alloca(used_ty, &alloca_name);
         if ty.is_array_type() {
             let arr_ptr;
             if alloca {
                 arr_ptr = codegen.builder.build_alloca(ty.as_basic_type_enum(), name);
             } else {
-                arr_ptr = codegen.builder.build_malloc(ty.as_basic_type_enum(), name).unwrap();
+                arr_ptr = codegen
+                    .builder
+                    .build_malloc(ty.as_basic_type_enum(), name)
+                    .unwrap();
             }
             codegen.builder.build_store(ptr, arr_ptr);
         }
         if ty.is_int_type() {
-            codegen.builder.build_store(ptr, codegen.const_zero);
+            let init = codegen.build_initial_var(name);
+            codegen.builder.build_store(ptr, init);
         }
+        check_stored_value(&ptr);
         self.var2ptr.insert(name.to_string(), ptr);
         return ptr;
     }
@@ -256,24 +257,39 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                     let strt_ptr = val.into_pointer_value();
                     let comp = self.get_known_comp(name);
                     if idx == 0 {
-                        let arr_ptr =
-                            read_signal_from_struct(codegen, comp, &signal_name, strt_ptr, false);
+                        let arr_ptr = read_signal_from_struct(
+                            codegen,
+                            comp,
+                            &signal_name,
+                            strt_ptr,
+                            comp == self.get_name(),
+                        );
                         return self.get_from_array(codegen, &access[1..], arr_ptr, name);
                     } else if idx == access.len() - 1 {
                         let arr_ptr = val;
                         let struct_ptr = self
                             .get_from_array(codegen, &access[0..idx], arr_ptr, name)
                             .into_pointer_value();
-                        res =
-                            read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false);
+                        res = read_signal_from_struct(
+                            codegen,
+                            comp,
+                            &signal_name,
+                            struct_ptr,
+                            comp == self.get_name(),
+                        );
                     } else {
                         let arr_ptr = val;
                         let struct_ptr = self
                             .get_from_array(codegen, &access[0..idx], arr_ptr, name)
                             .into_pointer_value();
-                        let arr_ptr =
-                            read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
-                                .into_pointer_value();
+                        let arr_ptr = read_signal_from_struct(
+                            codegen,
+                            comp,
+                            &signal_name,
+                            struct_ptr,
+                            comp == self.get_name(),
+                        )
+                        .into_pointer_value();
                         res = self.get_from_array(
                             codegen,
                             &access[idx + 1..],
@@ -375,7 +391,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                                 comp,
                                 &signal_name,
                                 strt_ptr,
-                                false,
+                                comp == self.get_name(),
                                 value,
                             );
                         } else {
@@ -384,7 +400,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                                 comp,
                                 &signal_name,
                                 strt_ptr,
-                                false,
+                                comp == self.get_name(),
                             )
                             .into_pointer_value();
                             self.set_to_array(codegen, &access[1..], arr_ptr, name, value);
@@ -403,7 +419,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                             comp,
                             &signal_name,
                             struct_ptr,
-                            false,
+                            comp == self.get_name(),
                             value,
                         );
                     } else {
@@ -415,9 +431,14 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
                                 name,
                             )
                             .into_pointer_value();
-                        let arr_ptr =
-                            read_signal_from_struct(codegen, comp, &signal_name, struct_ptr, false)
-                                .into_pointer_value();
+                        let arr_ptr = read_signal_from_struct(
+                            codegen,
+                            comp,
+                            &signal_name,
+                            struct_ptr,
+                            comp == self.get_name(),
+                        )
+                        .into_pointer_value();
                         self.set_to_array(codegen, &access[idx + 1..], arr_ptr, name, value);
                     }
                 }
@@ -548,10 +569,10 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         &mut self,
         codegen: &CodeGen<'ctx>,
         name: &String,
+        alloca_name: &String,
         val: BasicValueEnum<'ctx>,
     ) -> PointerValue<'ctx> {
         check_used_value(&val);
-        let alloca_name = format!("{}.bind", name);
         let ptr = codegen.builder.build_alloca(val.get_type(), &alloca_name);
         check_stored_value(&ptr);
         self.var2ptr.insert(name.clone(), ptr);

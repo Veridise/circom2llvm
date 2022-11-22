@@ -1,15 +1,17 @@
-use super::codegen::CodeGen;
-use super::expression::{
+use crate::codegen::CodeGen;
+use crate::expression::{
     flat_expressions_from_statement, read_signal_from_struct, write_signal_to_struct,
 };
-use super::inferrence::{
+use crate::inferrence::{
     collect_signal, infer_depended_components, infer_dependences, infer_type_from_expression,
     infer_type_from_statement,
 };
-use super::namer::{name_entry_block, name_exit_block, name_template_fn, name_template_struct};
-use super::scope::{CodegenStagesTrait, Scope, ScopeTrait};
-use super::statement::{flat_statements, resolve_stmt};
-
+use crate::namer::{
+    name_entry_block, name_exit_block, name_initial_var, name_template_fn, name_template_struct,
+};
+use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
+use crate::statement::{flat_statements, resolve_stmt};
+use inkwell::values::BasicValue;
 use inkwell::AddressSpace;
 use program_structure::ast::Statement;
 
@@ -56,11 +58,12 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
             exprs.append(&mut flat_expressions_from_statement(stmt));
             collect_signal(stmt, self);
         }
-        codegen.set_input_output_names(
+        codegen.set_template_fields(
             &self.scope.name,
             (
                 self.scope.args.to_vec(),
                 self.inputs.to_vec(),
+                self.inters.to_vec(),
                 self.outputs.to_vec(),
             ),
         );
@@ -95,6 +98,12 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
             let field_ty = self.scope.get_var_ty_as_ptr(input);
             templ_struct_fields.push(field_ty);
         }
+
+        for inter in &self.inters {
+            let field_ty = self.scope.get_var_ty_as_ptr(inter);
+            templ_struct_fields.push(field_ty);
+        }
+
         for output in &self.outputs {
             let field_ty = self.scope.get_var_ty_as_ptr(output);
             templ_struct_fields.push(field_ty);
@@ -156,17 +165,27 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
 
         let templ_struct_val_ptr = init_fn_val.get_first_param().unwrap().into_pointer_value();
 
+        // Bind struct
+        self.scope.bind_argument(
+            codegen,
+            templ_name,
+            templ_name,
+            templ_struct_val_ptr.as_basic_value_enum(),
+        );
+
         // Bind args
         for arg in &self.scope.args.clone() {
             let val = read_signal_from_struct(codegen, templ_name, arg, templ_struct_val_ptr, true);
-            self.scope.bind_argument(codegen, arg, val);
+            let alloca_name = name_initial_var(&templ_name, arg, true, false, false);
+            self.scope.bind_argument(codegen, arg, &alloca_name, val);
         }
 
         // Bind input signals
         for input in &self.inputs {
             let val =
                 read_signal_from_struct(codegen, templ_name, input, templ_struct_val_ptr, true);
-            self.scope.bind_argument(codegen, input, val);
+            let alloca_name = name_initial_var(&templ_name, &input, false, true, false);
+            self.scope.bind_argument(codegen, input, &alloca_name, val);
         }
 
         // Initial variables
@@ -174,9 +193,17 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
             if self.scope.is_initialized(name) {
                 continue;
             };
-            let alloca = !self.outputs.contains(&name);
+            let alloca = !(self.outputs.contains(&name) || self.inters.contains(&name));
+            let alloca_name: String;
+            if self.inters.contains(&name) {
+                alloca_name = name_initial_var(&templ_name, name, false, false, true);
+            } else if self.outputs.contains(&name) {
+                alloca_name = name_initial_var(&templ_name, name, false, false, false);
+            } else {
+                alloca_name = name.clone();
+            }
             self.scope
-                .initial_var(codegen, name, &ty, alloca);
+                .initial_var(codegen, name, &alloca_name, &ty, alloca);
         }
 
         match body {
@@ -192,6 +219,12 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let current_bb = init_fn_val.get_last_basic_block().unwrap();
         let exit_bb = context.append_basic_block(init_fn_val, &name_exit_block());
         codegen.build_block_transferring(current_bb, exit_bb);
+
+        // Notice that the name is perhaps been modified by index.
+        for inter in &self.inters {
+            let val = self.scope.get_var(codegen, inter, &Vec::new());
+            write_signal_to_struct(codegen, templ_name, inter, templ_struct_val_ptr, true, val);
+        }
 
         for output in &self.outputs {
             let val = self.scope.get_var(codegen, output, &Vec::new());

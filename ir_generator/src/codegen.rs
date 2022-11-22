@@ -1,27 +1,26 @@
-use std::collections::HashMap;
-use std::path::PathBuf;
-
+use crate::hacking::assert_fn_ret_ty;
+use crate::namer::{
+    name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_template_struct,
+};
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::Module;
 use inkwell::types::{IntType, PointerType, StringRadix};
-use inkwell::{AddressSpace, IntPredicate};
-
 use inkwell::values::{
     BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionOpcode,
     InstructionValue, IntValue, PointerValue,
 };
-
-use crate::hacking::assert_fn_ret_ty;
-use crate::namer::{
-    name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_template_struct,
-};
+use inkwell::{AddressSpace, IntPredicate};
+use std::collections::HashMap;
+use std::path::PathBuf;
 
 pub const GLOBAL_P: &str = "12539295309507511577697735";
 pub const APPLY_MOD: bool = false;
 pub const MAX_ARRAYSIZE: u32 = 256;
+
+type Fields = (Vec<String>, Vec<String>, Vec<String>, Vec<String>);
 
 pub struct CodeGen<'ctx> {
     pub context: &'ctx Context,
@@ -39,7 +38,8 @@ pub struct CodeGen<'ctx> {
     _global_constraint_fn_val: FunctionValue<'ctx>,
     _global_inlineswitch_fn_val: FunctionValue<'ctx>,
     _global_pow_fn_val: FunctionValue<'ctx>,
-    _global_input_output_record: HashMap<String, (Vec<String>, Vec<String>, Vec<String>)>,
+    _global_init_fn_val: FunctionValue<'ctx>,
+    _global_template_fields: HashMap<String, Fields>,
 }
 
 impl<'ctx> CodeGen<'ctx> {
@@ -111,6 +111,12 @@ impl<'ctx> CodeGen<'ctx> {
         return res.try_as_basic_value().left().unwrap().into_int_value();
     }
 
+    // Prevent constant folding
+    pub fn build_initial_var(&self, var: &String) -> BasicValueEnum<'ctx> {
+        let res = self.builder.build_call(self._global_init_fn_val, &[], var);
+        return res.try_as_basic_value().left().unwrap();
+    }
+
     pub fn build_result_modulo(&self, value: IntValue<'ctx>) -> IntValue<'ctx> {
         // if unsafe { APPLY_MOD } {
         //     let name = &format!("{}.mod", value.get_name().to_str().unwrap())[0..];
@@ -160,20 +166,12 @@ impl<'ctx> CodeGen<'ctx> {
             .into_int_value();
     }
 
-    pub fn get_input_output_names(
-        &self,
-        templ_name: &String,
-    ) -> Option<&(Vec<String>, Vec<String>, Vec<String>)> {
-        return self._global_input_output_record.get(templ_name);
+    pub fn get_template_fields(&self, templ_name: &String) -> Option<&Fields> {
+        return self._global_template_fields.get(templ_name);
     }
 
-    pub fn set_input_output_names(
-        &mut self,
-        templ_name: &String,
-        v: (Vec<String>, Vec<String>, Vec<String>),
-    ) {
-        self._global_input_output_record
-            .insert(templ_name.clone(), v);
+    pub fn set_template_fields(&mut self, templ_name: &String, v: Fields) {
+        self._global_template_fields.insert(templ_name.clone(), v);
     }
 
     pub fn ends_with_return(&self, bb: BasicBlock<'ctx>) -> bool {
@@ -298,10 +296,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
     let powi_power_ty = context.i32_type();
     let powi_intrinsic = Intrinsic::find("llvm.powi").unwrap();
     let powi_fn_val = powi_intrinsic
-        .get_declaration(
-            &module,
-            &[powi_base_ty.into(), powi_power_ty.into()],
-        )
+        .get_declaration(&module, &[powi_base_ty.into(), powi_power_ty.into()])
         .unwrap();
 
     let inlinepowi_fn_args_ty = [val_ty.into(), val_ty.into()];
@@ -323,8 +318,17 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
         .build_call(powi_fn_val, &[base.into(), power.into()], "inline_powi.cal")
         .try_as_basic_value()
         .unwrap_left();
-    let ret = builder.build_float_to_unsigned_int(powi.into_float_value(), val_ty, "inline_powi.ret");
+    let ret =
+        builder.build_float_to_unsigned_int(powi.into_float_value(), val_ty, "inline_powi.ret");
     builder.build_return(Some(&ret));
+
+    let inlineinit_fn_ret_ty = val_ty;
+    let inlineinit_fn_ty = inlineinit_fn_ret_ty.fn_type(&[], false);
+    let inlineinit_fn_name = name_intrinsinc_fn("inline_init");
+    let inlineinit_fn_val = module.add_function(&inlineinit_fn_name, inlineinit_fn_ty, None);
+    let inlineinit_fn_entry_bb = context.append_basic_block(inlineinit_fn_val, &name_entry_block());
+    builder.position_at_end(inlineinit_fn_entry_bb);
+    builder.build_return(Some(&const_zero));
 
     let codegen = CodeGen {
         context,
@@ -340,7 +344,8 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
         _global_constraint_fn_val: constraint_fn_val,
         _global_inlineswitch_fn_val: inlineswitch_fn_val,
         _global_pow_fn_val: inlinepowi_fn_val,
-        _global_input_output_record: HashMap::new(),
+        _global_init_fn_val: inlineinit_fn_val,
+        _global_template_fields: HashMap::new(),
     };
     return codegen;
 }
