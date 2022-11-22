@@ -1,0 +1,382 @@
+https://github.com/yi-sun/circom-pairing/tree/master/circuits/extra_field_circuits.circom
+Detecting: aliascheck
+Component: compconstant
+
+Detecting: and
+
+Detecting: bigadd
+Component: modsumthree
+Component: modsum
+
+Detecting: bigaddmodp
+Component: bigsub
+    Unused output signal: underflow
+Component: biglessthan
+Component: bigadd
+
+Detecting: bigisequal
+Component: iszero
+Component: isequal
+
+Detecting: bigiszero
+Component: iszero
+
+Detecting: biglessthan
+Component: or
+Component: and
+Component: isequal
+Component: lessthan
+
+Detecting: bigmod
+Component: biglessthan
+Component: bigadd
+Component: bigmult
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmod2
+Component: biglessthan
+Component: bigadd
+Component: bigmult
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmodinv
+Component: bigmod
+    Unused output signal: div
+Component: bigmult
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmult
+Component: longtoshortnoendcarry
+Component: bigmultshortlong
+
+Detecting: bigmultmodp
+Component: bigmod
+    Unused output signal: div
+Component: bigmult
+
+Detecting: bigmultshortlong
+
+Detecting: bigmultshortlong2d
+
+Detecting: bigmultshortlong2dunequal
+
+Detecting: bigmultshortlongunequal
+
+Detecting: bigsub
+Component: modsubthree
+Component: modsub
+
+Detecting: bigsubmodp
+Component: bigadd
+Component: bigsub
+
+Detecting: binsum
+
+Detecting: bits2num
+
+Detecting: bits2num_strict
+Component: bits2num
+Component: aliascheck
+
+Detecting: checkcarrymodp
+Component: checkcarrytozero
+Component: bigmultshortlongunequal
+
+Detecting: checkcarrytozero
+Component: num2bits
+    Unused output signal: out
+
+Detecting: compconstant
+Component: num2bits
+
+Detecting: fieldadd2d
+Component: bigaddmodp
+
+Detecting: forceequalifenabled
+Component: iszero
+
+Detecting: fp12add
+Component: fpadd
+
+Detecting: fp12compress
+Component: primereduce
+
+Detecting: fp12exp
+Component: fp12multiply
+Component: fp12square
+
+Detecting: fp12frobeniusmap
+Component: fp2multiply
+Component: fp2frobeniusmap
+Component: fpmultiply
+
+Detecting: fp12invert
+Component: fp12multiply
+Component: num2bits
+    Unused output signal: out
+
+Detecting: fp12multiply
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: signedfp12multiplynocarrycompress
+
+Detecting: fp12multiplythree
+Component: num2bits
+    Unused output signal: out
+Component: bigmultshortlong2dunequal
+Component: checkcarrytozero
+Component: bigmultshortlong2d
+Component: biglessthan
+Component: bigmultshortlongunequal
+
+Detecting: fp12square
+Component: fp12multiply
+
+Detecting: fp2add
+Component: fpadd
+
+Detecting: fp2compress
+Component: primereduce
+
+Detecting: fp2conjugate
+Component: fpnegate
+
+Detecting: fp2frobeniusmap
+Component: fpnegate
+
+Detecting: fp2invert
+Component: fp2multiply
+Component: num2bits
+    Unused output signal: out
+
+Detecting: fp2isequal
+Component: iszero
+Component: isequal
+Component: biglessthan
+
+Detecting: fp2iszero
+Component: iszero
+Component: biglessthan
+
+Detecting: fp2multiply
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: signedfp2multiplynocarrycompress
+
+Detecting: fp2multiply1
+Component: fp2polynomialreduce
+Component: bigmod
+    Unused output signal: div
+Component: longtoshortnoendcarry
+Component: bigmultshortlong2d
+
+Detecting: fp2multiplynocarry
+Component: bigmultshortlong
+
+Detecting: fp2multiplythree
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: signedfp2multiplynocarrycompressthree
+
+Detecting: fp2negate
+Component: fpnegate
+
+Detecting: fp2polynomialreduce
+Component: fpsubtract
+
+Detecting: fp2sgn0
+Component: bigiszero
+Component: fpsgn0
+
+Detecting: fp2square
+Component: bigmod2
+    Unused output signal: div
+Component: bigsubmodp
+Component: bigmult
+Component: bigadd
+
+Detecting: fp2subtract
+Component: fpsubtract
+
+Detecting: fp6invert
+
+Detecting: fpadd
+Component: bigsub
+    Unused output signal: underflow
+Component: biglessthan
+Component: bigadd
+
+Detecting: fpisequal
+Component: isequal
+Component: biglessthan
+
+Detecting: fpiszero
+Component: bigiszero
+Component: biglessthan
+
+Detecting: fpmultiply
+Component: signedfpcarrymodp
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong
+
+Detecting: fpnegate
+Component: bigiszero
+Component: bigsub
+
+Detecting: fpsgn0
+Component: biglessthan
+
+Detecting: fpsubtract
+Component: bigadd
+Component: bigsub
+
+Detecting: greatereqthan
+Component: lessthan
+
+Detecting: greaterthan
+Component: lessthan
+
+Detecting: isequal
+Component: iszero
+
+Detecting: iszero
+
+Detecting: lesseqthan
+Component: lessthan
+
+Detecting: lessthan
+Component: num2bits
+
+Detecting: longtoshortnoendcarry
+Component: num2bits
+    Unused output signal: out
+
+Detecting: modprod
+Component: bits2num
+Component: num2bits
+
+Detecting: modsub
+Component: lessthan
+
+Detecting: modsubthree
+Component: lessthan
+
+Detecting: modsum
+Component: num2bits
+
+Detecting: modsumfour
+Component: num2bits
+
+Detecting: modsumthree
+Component: num2bits
+
+Detecting: multiand
+Component: multiand
+    Unused output signal: out
+Component: and
+
+Detecting: nand
+
+Detecting: nor
+
+Detecting: not
+
+Detecting: num2bits
+
+Detecting: num2bits_strict
+Component: num2bits
+Component: aliascheck
+
+Detecting: num2bitsneg
+Component: iszero
+
+Detecting: or
+
+Detecting: polynomialreduce
+Component: bigmultshortlong
+
+Detecting: primereduce
+
+Detecting: rangecheck2d
+Component: num2bits
+    Unused output signal: out
+
+Detecting: signedcheckcarrymodtozero
+Component: checkcarrymodp
+Component: num2bits
+    Unused output signal: out
+
+Detecting: signedfp12carrymodp
+Component: signedfpcarrymodp
+
+Detecting: signedfp12fp2multiplynocarry
+Component: bigmultshortlong
+
+Detecting: signedfp12fp2multiplynocarryunequal
+Component: bigmultshortlongunequal
+
+Detecting: signedfp12multiplynocarry
+Component: signedfp12multiplynocarryunequal
+
+Detecting: signedfp12multiplynocarrycompress
+Component: fp12compress
+Component: signedfp12multiplynocarry
+
+Detecting: signedfp12multiplynocarryunequal
+Component: bigmultshortlong2dunequal
+
+Detecting: signedfp12scalarmultiplynocarry
+Component: bigmultshortlong
+
+Detecting: signedfp12scalarmultiplynocarryunequal
+Component: bigmultshortlongunequal
+
+Detecting: signedfp2carrymodp
+Component: signedfpcarrymodp
+
+Detecting: signedfp2compresscarry
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: fp2compress
+
+Detecting: signedfp2divide
+Component: num2bits
+    Unused output signal: out
+Component: signedfp2multiplynocarrycompress
+Component: checkcarrymodp
+Component: rangecheck2d
+
+Detecting: signedfp2multiplynocarry
+Component: signedfp2multiplynocarryunequal
+
+Detecting: signedfp2multiplynocarrycompress
+Component: fp2compress
+Component: signedfp2multiplynocarry
+
+Detecting: signedfp2multiplynocarrycompressthree
+Component: signedfp2multiplynocarryunequal
+Component: fp2compress
+Component: signedfp2multiplynocarry
+
+Detecting: signedfp2multiplynocarryunequal
+Component: bigmultshortlongunequal
+
+Detecting: signedfpcarrymodp
+Component: checkcarrymodp
+Component: num2bits
+    Unused output signal: out
+
+Detecting: split
+Component: num2bits
+    Unused output signal: out
+
+Detecting: splitthree
+Component: num2bits
+    Unused output signal: out
+
+Detecting: xor
+

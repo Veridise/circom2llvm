@@ -1,0 +1,598 @@
+https://github.com/yi-sun/circom-pairing/tree/master/circuits/pairing.circom
+Detecting: aliascheck
+Component: compconstant
+
+Detecting: and
+
+Detecting: bigadd
+Component: modsumthree
+Component: modsum
+
+Detecting: bigaddmodp
+Component: bigsub
+    Unused output signal: underflow
+Component: biglessthan
+Component: bigadd
+
+Detecting: bigisequal
+Component: iszero
+Component: isequal
+
+Detecting: bigiszero
+Component: iszero
+
+Detecting: biglessthan
+Component: or
+Component: and
+Component: isequal
+Component: lessthan
+
+Detecting: bigmod
+Component: biglessthan
+Component: bigadd
+Component: bigmult
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmod2
+Component: biglessthan
+Component: bigadd
+Component: bigmult
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmodinv
+Component: bigmod
+    Unused output signal: div
+Component: bigmult
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmult
+Component: longtoshortnoendcarry
+Component: bigmultshortlong
+
+Detecting: bigmultmodp
+Component: bigmod
+    Unused output signal: div
+Component: bigmult
+
+Detecting: bigmultshortlong
+
+Detecting: bigmultshortlong2d
+
+Detecting: bigmultshortlong2dunequal
+
+Detecting: bigmultshortlongunequal
+
+Detecting: bigsub
+Component: modsubthree
+Component: modsub
+
+Detecting: bigsubmodp
+Component: bigadd
+Component: bigsub
+
+Detecting: binsum
+
+Detecting: bits2num
+
+Detecting: bits2num_strict
+Component: bits2num
+Component: aliascheck
+
+Detecting: blsmillerloop
+Component: fp12multiply
+Component: fp12multiplywithlineunequal
+Component: fp12invert
+Component: millerloop
+
+Detecting: checkcarrymodp
+Component: checkcarrytozero
+Component: bigmultshortlongunequal
+
+Detecting: checkcarrytozero
+Component: num2bits
+    Unused output signal: out
+
+Detecting: compconstant
+Component: num2bits
+
+Detecting: ellipticcurveadd
+Component: ellipticcurvedouble
+Component: ellipticcurveaddunequal
+Component: iszero
+Component: fpisequal
+
+Detecting: ellipticcurveaddfp2
+Component: ellipticcurveaddunequalfp2
+Component: iszero
+Component: ellipticcurvedoublefp2
+Component: fp2isequal
+
+Detecting: ellipticcurveaddunequal
+Component: rangecheck2d
+Component: pointonline
+Component: bigmultshortlongunequal
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong
+
+Detecting: ellipticcurveaddunequalfp2
+Component: rangecheck2d
+Component: bigmultshortlong2dunequal
+Component: pointonlinefp2
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong2d
+
+Detecting: ellipticcurvedouble
+Component: fpisequal
+Component: pointoncurve
+Component: pointontangent
+Component: rangecheck2d
+
+Detecting: ellipticcurvedoublefp2
+Component: fp2isequal
+Component: pointoncurvefp2
+Component: pointontangentfp2
+Component: rangecheck2d
+
+Detecting: ellipticcurvefunction
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: primereduce
+Component: signedfp2multiplynocarryunequal
+
+Detecting: ellipticcurvescalarmultiply
+Component: ellipticcurveadd
+Component: ellipticcurvedouble
+
+Detecting: ellipticcurvescalarmultiplyfp2
+Component: ellipticcurveaddfp2
+Component: ellipticcurvedoublefp2
+
+Detecting: ellipticcurvescalarmultiplyunequal
+Component: ellipticcurveaddunequal
+Component: fpisequal
+Component: ellipticcurvedouble
+
+Detecting: ellipticcurvescalarmultiplyunequalfp2
+Component: ellipticcurveaddunequalfp2
+Component: fp2isequal
+Component: ellipticcurvedoublefp2
+
+Detecting: finalexpeasypart
+Component: fp12invert
+Component: fp12multiply
+Component: fp12frobeniusmap
+
+Detecting: finalexphardpart
+Component: fp12multiply
+Component: fp12frobeniusmap
+Component: fp12cyclotomicexp
+
+Detecting: finalexponentiate
+Component: finalexphardpart
+Component: finalexpeasypart
+
+Detecting: forceequalifenabled
+Component: iszero
+
+Detecting: fp12add
+Component: fpadd
+
+Detecting: fp12compress
+Component: primereduce
+
+Detecting: fp12cyclotomiccompress
+
+Detecting: fp12cyclotomicdecompress
+Component: signedfp2multiplynocarrycompress
+Component: fp2iszero
+Component: signedfp2divide
+Component: fp2compress
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: signedfp2multiplynocarry
+
+Detecting: fp12cyclotomicexp
+Component: fp12multiply
+Component: fp12cyclotomicdecompress
+Component: fp12cyclotomicsquare
+Component: fp12cyclotomiccompress
+
+Detecting: fp12cyclotomicsquare
+Component: fp2compress
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: signedfp12cyclotomicsquarenocarry
+
+Detecting: fp12exp
+Component: fp12multiply
+Component: fp12square
+
+Detecting: fp12frobeniusmap
+Component: fp2multiply
+Component: fp2frobeniusmap
+Component: fpmultiply
+
+Detecting: fp12invert
+Component: fp12multiply
+Component: num2bits
+    Unused output signal: out
+
+Detecting: fp12multiply
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: signedfp12multiplynocarrycompress
+
+Detecting: fp12multiplywithlineunequal
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: fp12compress
+Component: signedfp12multiplynocarryunequal
+Component: signedlinefunctionunequalnocarry
+
+Detecting: fp12multiplywithlineunequalfp2
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: fp12compress
+Component: signedfp12multiplynocarryunequal
+Component: signedlinefunctionunequalnocarryfp2
+
+Detecting: fp12square
+Component: fp12multiply
+
+Detecting: fp2add
+Component: fpadd
+
+Detecting: fp2compress
+Component: primereduce
+
+Detecting: fp2conjugate
+Component: fpnegate
+
+Detecting: fp2frobeniusmap
+Component: fpnegate
+
+Detecting: fp2invert
+Component: fp2multiply
+Component: num2bits
+    Unused output signal: out
+
+Detecting: fp2isequal
+Component: iszero
+Component: isequal
+Component: biglessthan
+
+Detecting: fp2iszero
+Component: iszero
+Component: biglessthan
+
+Detecting: fp2multiply
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: signedfp2multiplynocarrycompress
+
+Detecting: fp2multiplythree
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: signedfp2multiplynocarrycompressthree
+
+Detecting: fp2negate
+Component: fpnegate
+
+Detecting: fp2sgn0
+Component: bigiszero
+Component: fpsgn0
+
+Detecting: fp2subtract
+Component: fpsubtract
+
+Detecting: fp6invert
+
+Detecting: fpadd
+Component: bigsub
+    Unused output signal: underflow
+Component: biglessthan
+Component: bigadd
+
+Detecting: fpisequal
+Component: isequal
+Component: biglessthan
+
+Detecting: fpiszero
+Component: bigiszero
+Component: biglessthan
+
+Detecting: fpmultiply
+Component: signedfpcarrymodp
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong
+
+Detecting: fpnegate
+Component: bigiszero
+Component: bigsub
+
+Detecting: fpsgn0
+Component: biglessthan
+
+Detecting: fpsubtract
+Component: bigadd
+Component: bigsub
+
+Detecting: greatereqthan
+Component: lessthan
+
+Detecting: greaterthan
+Component: lessthan
+
+Detecting: isequal
+Component: iszero
+
+Detecting: iszero
+
+Detecting: lesseqthan
+Component: lessthan
+
+Detecting: lessthan
+Component: num2bits
+
+Detecting: linefunctionequal
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: primereduce
+Component: signedlinefunctionequalnocarry
+
+Detecting: linefunctionequalfp2
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: primereduce
+Component: signedlinefunctionequalnocarryfp2
+
+Detecting: linefunctionunequal
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: primereduce
+Component: signedlinefunctionunequalnocarry
+
+Detecting: linefunctionunequalfp2
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: primereduce
+Component: signedlinefunctionunequalnocarryfp2
+
+Detecting: longtoshortnoendcarry
+Component: num2bits
+    Unused output signal: out
+
+Detecting: millerloop
+Component: fp12multiplywithlineunequal
+Component: fp12multiply
+Component: ellipticcurvedouble
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: ellipticcurveaddunequal
+Component: fp12compress
+Component: signedfp12multiplynocarryunequal
+Component: linefunctionequal
+Component: signedfp12multiplynocarry
+
+Detecting: millerloopfp2
+Component: ellipticcurveaddunequalfp2
+Component: fp12multiplywithlineunequalfp2
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: fp12compress
+Component: signedfp12multiplynocarryunequal
+Component: linefunctionequalfp2
+Component: ellipticcurvedoublefp2
+Component: signedfp12multiplynocarry
+
+Detecting: millerloopfp2two
+Component: ellipticcurveaddunequalfp2
+Component: fp12multiplywithlineunequalfp2
+Component: fp12multiply
+Component: signedfp12carrymodp
+    Unused output signal: x
+Component: fp12compress
+Component: signedfp12multiplynocarryunequal
+Component: signedfp12multiplynocarry
+Component: ellipticcurvedoublefp2
+Component: linefunctionequalfp2
+
+Detecting: modprod
+Component: bits2num
+Component: num2bits
+
+Detecting: modsub
+Component: lessthan
+
+Detecting: modsubthree
+Component: lessthan
+
+Detecting: modsum
+Component: num2bits
+
+Detecting: modsumfour
+Component: num2bits
+
+Detecting: modsumthree
+Component: num2bits
+
+Detecting: multiand
+Component: multiand
+    Unused output signal: out
+Component: and
+
+Detecting: nand
+
+Detecting: nor
+
+Detecting: not
+
+Detecting: num2bits
+
+Detecting: num2bits_strict
+Component: num2bits
+Component: aliascheck
+
+Detecting: num2bitsneg
+Component: iszero
+
+Detecting: optimalatepairing
+Component: finalexponentiate
+Component: millerloopfp2
+    Unused output signal: xp
+Component: fpnegate
+
+Detecting: or
+
+Detecting: pointoncurve
+Component: bigmultshortlongunequal
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong
+
+Detecting: pointoncurvefp2
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: signedfp2multiplynocarryunequal
+
+Detecting: pointonline
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong
+
+Detecting: pointonlinefp2
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong2d
+
+Detecting: pointontangent
+Component: bigmultshortlongunequal
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: bigmultshortlong
+
+Detecting: pointontangentfp2
+Component: signedcheckcarrymodtozero
+    Unused output signal: x
+Component: primereduce
+Component: signedfp2multiplynocarryunequal
+
+Detecting: primereduce
+
+Detecting: rangecheck2d
+Component: num2bits
+    Unused output signal: out
+
+Detecting: signedcheckcarrymodtozero
+Component: checkcarrymodp
+Component: num2bits
+    Unused output signal: out
+
+Detecting: signedfp12carrymodp
+Component: signedfpcarrymodp
+
+Detecting: signedfp12cyclotomicsquarenocarry
+Component: signedfp2multiplynocarry
+
+Detecting: signedfp12fp2multiplynocarry
+Component: bigmultshortlong
+
+Detecting: signedfp12fp2multiplynocarryunequal
+Component: bigmultshortlongunequal
+
+Detecting: signedfp12multiplynocarry
+Component: signedfp12multiplynocarryunequal
+
+Detecting: signedfp12multiplynocarrycompress
+Component: fp12compress
+Component: signedfp12multiplynocarry
+
+Detecting: signedfp12multiplynocarryunequal
+Component: bigmultshortlong2dunequal
+
+Detecting: signedfp12scalarmultiplynocarry
+Component: bigmultshortlong
+
+Detecting: signedfp12scalarmultiplynocarryunequal
+Component: bigmultshortlongunequal
+
+Detecting: signedfp2carrymodp
+Component: signedfpcarrymodp
+
+Detecting: signedfp2compresscarry
+Component: signedfp2carrymodp
+    Unused output signal: x
+Component: fp2compress
+
+Detecting: signedfp2divide
+Component: num2bits
+    Unused output signal: out
+Component: signedfp2multiplynocarrycompress
+Component: checkcarrymodp
+Component: rangecheck2d
+
+Detecting: signedfp2multiplynocarry
+Component: signedfp2multiplynocarryunequal
+
+Detecting: signedfp2multiplynocarrycompress
+Component: fp2compress
+Component: signedfp2multiplynocarry
+
+Detecting: signedfp2multiplynocarrycompressthree
+Component: signedfp2multiplynocarryunequal
+Component: fp2compress
+Component: signedfp2multiplynocarry
+
+Detecting: signedfp2multiplynocarryunequal
+Component: bigmultshortlongunequal
+
+Detecting: signedfpcarrymodp
+Component: checkcarrymodp
+Component: num2bits
+    Unused output signal: out
+
+Detecting: signedlinefunctionequalnocarry
+Component: signedfp12scalarmultiplynocarry
+Component: signedfp12scalarmultiplynocarryunequal
+Component: bigmultshortlong
+
+Detecting: signedlinefunctionequalnocarryfp2
+Component: signedfp2multiplynocarryunequal
+Component: bigmultshortlong2dunequal
+Component: bigmultshortlong2d
+
+Detecting: signedlinefunctionunequalnocarry
+Component: bigmultshortlong
+Component: signedfp12scalarmultiplynocarry
+
+Detecting: signedlinefunctionunequalnocarryfp2
+Component: bigmultshortlong2d
+Component: signedfp2multiplynocarry
+
+Detecting: split
+Component: num2bits
+    Unused output signal: out
+
+Detecting: splitthree
+Component: num2bits
+    Unused output signal: out
+
+Detecting: tatepairing
+Component: finalexponentiate
+Component: blsmillerloop
+
+Detecting: xor
+
