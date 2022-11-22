@@ -1,6 +1,26 @@
 # Circom2LLVM
 Compile circom code to LLVM IR and detect potential bugs.
 
+# Dependencies
+## LLVM Installation
+```bash
+git clone --depth 1 --branch release/13.x git@github.com:llvm/llvm-project.git
+cd ./llvm-project
+cmake -S llvm -B build -G Ninja \
+-DLLVM_TARGETS_TO_BUILD="X86;ARM" \
+-DCMAKE_BUILD_TYPE=Release \
+-DLLVM_PARALLEL_LINK_JOBS=1 \
+-DLLVM_OPTIMIZED_TABLEGEN=ON \
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+cmake --build build/
+export LLVM_PATH=path/to/llvm-project
+export PATH=$PATH:$LLVM_PATH/build/bin
+```
+
+## Rust & Cargo
+This repo works on rustc & cargo 1.64.0, and all of the crates dependencies will be installed automatically.
+
+
 ## Compiler
 ### Core Idea
 1. One circom File => One LLVM .ll file, with a module named `main`.
@@ -16,11 +36,15 @@ Compile circom code to LLVM IR and detect potential bugs.
 3. Function construction.
 4. Instructions generation.
 
+### Build
+```bash
+git clone https://github.com/Veridise/circom2llvm path/to/circom2llvm
+cd path/to/circom2llvm
+cargo build --bin=circom2llvm --package=circom2llvm
+```
+
 ### Usage
 ```bash
-git clone this repo to $FILEDIR.
-cd $FILEDIR
-cargo build --bin=circom2llvm --package=circom2llvm
 circom2llvm --input path/to/circomfile_or_dir --output path/to/output
 ```
 
@@ -38,37 +62,25 @@ circom2llvm --input path/to/circomfile_or_dir --output path/to/output
 ### Description
 A group of LLVM Pass to detect potential bugs in circuits.
 
-### Build
-```bash
-git clone --depth 1 --branch release/13.x git@github.com:llvm/llvm-project.git
-cd ./llvm-project
-cmake -S llvm -B build -G Ninja \
--DLLVM_TARGETS_TO_BUILD="X86;ARM" \
--DCMAKE_BUILD_TYPE=Release \
--DLLVM_PARALLEL_LINK_JOBS=1 \
--DLLVM_OPTIMIZED_TABLEGEN=ON \
--DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-cmake --build build/
-export LLVM_PATH=path/to/llvm-project
-```
-
-Then
-```bash
-ln -s {this-folder} ./llvm/lib/Transforms/Detectors
-echo "add_subdirectory(Detectors)" >> ./llvm/lib/Transforms/CMakeLists.txt
-cmake --build build/
-```
-
 ### Detectors
 1. `detectors/InfoCollector.cpp`: Provide an information collector to the generated IR file to be used.
 2. `detectors/UnderConstraints.cpp`: Detect whether every output signal is under the constraint matters at least one input signal.
 3. `detectors/OutputSignalUser.cpp`: Detect whether all of output signals in a component are used or not.
 
+### Build
+Make sure the LLVM is installed.
+```bash
+cd $LLVM_PATH
+ln -s path/to/circom2llvm/detectors ./llvm/lib/Transforms/Detectors
+echo "add_subdirectory(Detectors)" >> ./llvm/lib/Transforms/CMakeLists.txt
+cmake --build build/
+```
+
 ### Usage
 Linux: .so || Mac: .dylib
 ```bash
-opt -f -load -enable-new-pm=0 path-to-lib/Detectors{.so||.dylib} --UnderConstraints input.ssa.ll 1> /dev/null 2> output.uc.log
-opt -f -load -enable-new-pm=0 path-to-lib/Detectors{.so||.dylib} --OutputSignalUser input.ssa.ll 1> /dev/null 2> output.osu.log
+opt -f -load -enable-new-pm=0 $LLVM_PATH/build/lib/Detectors{.so||.dylib} --UnderConstraints input.ssa.ll 1> /dev/null 2> output.uc.log
+opt -f -load -enable-new-pm=0 $LLVM_PATH/build/lib/Detectors{.so||.dylib} --OutputSignalUser input.ssa.ll 1> /dev/null 2> output.osu.log
 ```
 
 Or use the script:
