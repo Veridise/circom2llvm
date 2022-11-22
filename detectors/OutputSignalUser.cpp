@@ -42,6 +42,9 @@ struct OutputSignalUser : public ModulePass {
             }
             for (auto c : collector->component_names) {
                 std::cerr << "Component: " << c << "\n";
+                if (c == "num2bits") {
+                    continue;
+                }
                 auto c_collector = collectors[c];
                 for (auto o : c_collector->output_signal_names) {
                     auto key = c + o;

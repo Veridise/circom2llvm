@@ -50,7 +50,6 @@ Component: bigadd
 Component: bigmult
     Used output signal: out
 Component: num2bits
-    Unused output signal: out
 
 Detecting: bigmod2
 Component: biglessthan
@@ -60,7 +59,6 @@ Component: bigadd
 Component: bigmult
     Used output signal: out
 Component: num2bits
-    Unused output signal: out
 
 Detecting: bigmodinv
 Component: bigmod
@@ -69,7 +67,6 @@ Component: bigmod
 Component: bigmult
     Used output signal: out
 Component: num2bits
-    Unused output signal: out
 
 Detecting: bigmult
 Component: longtoshortnoendcarry
@@ -123,11 +120,9 @@ Component: bigmultshortlongunequal
 
 Detecting: checkcarrytozero
 Component: num2bits
-    Unused output signal: out
 
 Detecting: compconstant
 Component: num2bits
-    Used output signal: out
 
 Detecting: forceequalifenabled
 Component: iszero
@@ -159,7 +154,6 @@ Detecting: fp12invert
 Component: fp12multiply
     Used output signal: out
 Component: num2bits
-    Unused output signal: out
 
 Detecting: fp12multiply
 Component: signedfp12carrymodp
@@ -192,7 +186,6 @@ Detecting: fp2invert
 Component: fp2multiply
     Used output signal: out
 Component: num2bits
-    Unused output signal: out
 
 Detecting: fp2isequal
 Component: iszero
@@ -306,17 +299,14 @@ Component: lessthan
 
 Detecting: lessthan
 Component: num2bits
-    Used output signal: out
 
 Detecting: longtoshortnoendcarry
 Component: num2bits
-    Unused output signal: out
 
 Detecting: modprod
 Component: bits2num
     Used output signal: out
 Component: num2bits
-    Used output signal: out
 
 Detecting: modsub
 Component: lessthan
@@ -328,15 +318,12 @@ Component: lessthan
 
 Detecting: modsum
 Component: num2bits
-    Used output signal: out
 
 Detecting: modsumfour
 Component: num2bits
-    Used output signal: out
 
 Detecting: modsumthree
 Component: num2bits
-    Used output signal: out
 
 Detecting: multiand
 Component: multiand
@@ -354,7 +341,6 @@ Detecting: num2bits
 
 Detecting: num2bits_strict
 Component: num2bits
-    Used output signal: out
 Component: aliascheck
 
 Detecting: num2bitsneg
@@ -367,12 +353,10 @@ Detecting: primereduce
 
 Detecting: rangecheck2d
 Component: num2bits
-    Unused output signal: out
 
 Detecting: signedcheckcarrymodtozero
 Component: checkcarrymodp
 Component: num2bits
-    Unused output signal: out
 
 Detecting: signedfp12carrymodp
 Component: signedfpcarrymodp
@@ -423,7 +407,6 @@ Component: fp2compress
 
 Detecting: signedfp2divide
 Component: num2bits
-    Unused output signal: out
 Component: signedfp2multiplynocarrycompress
     Used output signal: out
 Component: checkcarrymodp
@@ -454,15 +437,12 @@ Component: bigmultshortlongunequal
 Detecting: signedfpcarrymodp
 Component: checkcarrymodp
 Component: num2bits
-    Unused output signal: out
 
 Detecting: split
 Component: num2bits
-    Unused output signal: out
 
 Detecting: splitthree
 Component: num2bits
-    Unused output signal: out
 
 Detecting: xor
 
