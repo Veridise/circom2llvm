@@ -1,0 +1,137 @@
+/Users/hongbo/code/zk-light-client-main/circuits/circuits/sha256_bytes.circom
+Detecting: aliascheck
+Component: compconstant
+    Used output signal: out
+
+Detecting: bigsigma
+Component: xor3
+    Used output signal: out
+Component: rotr
+    Used output signal: out
+
+Detecting: binsum
+
+Detecting: bits2num
+
+Detecting: bits2num_strict
+Component: bits2num
+    Used output signal: out
+Component: aliascheck
+
+Detecting: ch_t
+
+Detecting: compconstant
+Component: num2bits
+    Used output signal: out
+
+Detecting: forceequalifenabled
+Component: iszero
+    Used output signal: out
+
+Detecting: greatereqthan
+Component: lessthan
+    Used output signal: out
+
+Detecting: greaterthan
+Component: lessthan
+    Used output signal: out
+
+Detecting: h
+
+Detecting: isequal
+Component: iszero
+    Used output signal: out
+
+Detecting: iszero
+
+Detecting: k
+
+Detecting: lesseqthan
+Component: lessthan
+    Used output signal: out
+
+Detecting: lessthan
+Component: num2bits
+    Used output signal: out
+
+Detecting: maj_t
+
+Detecting: num2bits
+
+Detecting: num2bits_strict
+Component: num2bits
+    Used output signal: out
+Component: aliascheck
+
+Detecting: num2bitsneg
+Component: iszero
+    Used output signal: out
+
+Detecting: rotr
+
+Detecting: sha256
+Component: sha256compression
+    Used output signal: out
+Component: h
+    Used output signal: out
+
+Detecting: sha256bytes
+Component: bits2num
+    Used output signal: out
+Component: sha256
+    Used output signal: out
+Component: num2bits
+    Used output signal: out
+
+Detecting: sha256compression
+Component: binsum
+    Used output signal: out
+Component: t2
+    Used output signal: out
+Component: t1
+    Used output signal: out
+Component: k
+    Used output signal: out
+Component: sigmaplus
+    Used output signal: out
+
+Detecting: shr
+
+Detecting: sigmaplus
+Component: binsum
+    Used output signal: out
+Component: smallsigma
+    Used output signal: out
+
+Detecting: smallsigma
+Component: xor3
+    Used output signal: out
+Component: shr
+    Used output signal: out
+Component: rotr
+    Used output signal: out
+
+Detecting: t1
+Component: binsum
+    Used output signal: out
+Component: bigsigma
+    Used output signal: out
+Component: ch
+PLEASE submit a bug report to https://bugs.llvm.org/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /Users/hongbo/app/llvm-project/build/bin/opt -f -enable-new-pm=0 --load /Users/hongbo/app/llvm-project/build/lib/Detectors.dylib --OutputSignalUser ./auditing/zk-light-client/sha256_bytes.ssa.ll
+1.	Running pass 'Detect whether all of output signals in a component are used or not.' on module './auditing/zk-light-client/sha256_bytes.ssa.ll'.
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+0  opt                      0x0000000105d12d84 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) + 72
+1  opt                      0x0000000105d132e0 PrintStackTraceSignalHandler(void*) + 28
+2  opt                      0x0000000105d113f0 llvm::sys::RunSignalHandlers() + 136
+3  opt                      0x0000000105d14d84 SignalHandler(int) + 252
+4  libsystem_platform.dylib 0x00000001c48074a4 _sigtramp + 56
+5  Detectors.dylib          0x0000000114e463ec std::__1::__hash_table<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::hash<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::equal_to<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >::begin() + 28
+6  Detectors.dylib          0x0000000114e3fd4c std::__1::unordered_set<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::hash<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::equal_to<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >::begin() + 24
+7  Detectors.dylib          0x0000000114e3e074 (anonymous namespace)::OutputSignalUser::runOnModule(llvm::Module&) + 960
+8  opt                      0x0000000104922084 (anonymous namespace)::MPPassManager::runOnModule(llvm::Module&) + 664
+9  opt                      0x0000000104921c24 llvm::legacy::PassManagerImpl::run(llvm::Module&) + 280
+10 opt                      0x0000000104928e74 llvm::legacy::PassManager::run(llvm::Module&) + 36
+11 opt                      0x0000000102b849cc main + 9576
+12 dyld                     0x0000000114d8d08c start + 520

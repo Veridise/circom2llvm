@@ -1,0 +1,282 @@
+https://github.com/yi-sun/circom-pairing/tree/master/circuits/fp.circom
+Detecting: aliascheck
+Component: compconstant
+    Used output signal: out
+
+Detecting: and
+
+Detecting: bigadd
+Component: modsumthree
+    Used output signal: carry
+    Used output signal: sum
+Component: modsum
+    Used output signal: carry
+    Used output signal: sum
+
+Detecting: bigaddmodp
+Component: bigsub
+    Unused output signal: underflow
+    Used output signal: out
+Component: biglessthan
+    Used output signal: out
+Component: bigadd
+    Used output signal: out
+
+Detecting: bigisequal
+Component: iszero
+    Used output signal: out
+Component: isequal
+    Used output signal: out
+
+Detecting: bigiszero
+Component: iszero
+    Used output signal: out
+
+Detecting: biglessthan
+Component: or
+    Used output signal: out
+Component: and
+    Used output signal: out
+Component: isequal
+    Used output signal: out
+Component: lessthan
+    Used output signal: out
+
+Detecting: bigmod
+Component: biglessthan
+    Used output signal: out
+Component: bigadd
+    Used output signal: out
+Component: bigmult
+    Used output signal: out
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmod2
+Component: biglessthan
+    Used output signal: out
+Component: bigadd
+    Used output signal: out
+Component: bigmult
+    Used output signal: out
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmodinv
+Component: bigmod
+    Used output signal: mod
+    Unused output signal: div
+Component: bigmult
+    Used output signal: out
+Component: num2bits
+    Unused output signal: out
+
+Detecting: bigmult
+Component: longtoshortnoendcarry
+    Used output signal: out
+Component: bigmultshortlong
+    Used output signal: out
+
+Detecting: bigmultmodp
+Component: bigmod
+    Used output signal: mod
+    Unused output signal: div
+Component: bigmult
+    Used output signal: out
+
+Detecting: bigmultshortlong
+
+Detecting: bigmultshortlong2d
+
+Detecting: bigmultshortlong2dunequal
+
+Detecting: bigmultshortlongunequal
+
+Detecting: bigsub
+Component: modsubthree
+    Used output signal: borrow
+    Used output signal: out
+Component: modsub
+    Used output signal: borrow
+    Used output signal: out
+
+Detecting: bigsubmodp
+Component: bigadd
+    Used output signal: out
+Component: bigsub
+    Used output signal: underflow
+    Used output signal: out
+
+Detecting: binsum
+
+Detecting: bits2num
+
+Detecting: bits2num_strict
+Component: bits2num
+    Used output signal: out
+Component: aliascheck
+
+Detecting: checkcarrymodp
+Component: checkcarrytozero
+Component: bigmultshortlongunequal
+    Used output signal: out
+
+Detecting: checkcarrytozero
+Component: num2bits
+    Unused output signal: out
+
+Detecting: compconstant
+Component: num2bits
+    Used output signal: out
+
+Detecting: forceequalifenabled
+Component: iszero
+    Used output signal: out
+
+Detecting: fpadd
+Component: bigsub
+    Unused output signal: underflow
+    Used output signal: out
+Component: biglessthan
+    Used output signal: out
+Component: bigadd
+    Used output signal: out
+
+Detecting: fpisequal
+Component: isequal
+    Used output signal: out
+Component: biglessthan
+    Used output signal: out
+
+Detecting: fpiszero
+Component: bigiszero
+    Used output signal: out
+Component: biglessthan
+    Used output signal: out
+
+Detecting: fpmultiply
+Component: signedfpcarrymodp
+    Used output signal: out
+    Unused output signal: x
+Component: primereduce
+    Used output signal: out
+Component: bigmultshortlong
+    Used output signal: out
+
+Detecting: fpnegate
+Component: bigiszero
+    Used output signal: out
+Component: bigsub
+    Used output signal: underflow
+    Used output signal: out
+
+Detecting: fpsgn0
+Component: biglessthan
+    Used output signal: out
+
+Detecting: fpsubtract
+Component: bigadd
+    Used output signal: out
+Component: bigsub
+    Used output signal: underflow
+    Used output signal: out
+
+Detecting: greatereqthan
+Component: lessthan
+    Used output signal: out
+
+Detecting: greaterthan
+Component: lessthan
+    Used output signal: out
+
+Detecting: isequal
+Component: iszero
+    Used output signal: out
+
+Detecting: iszero
+
+Detecting: lesseqthan
+Component: lessthan
+    Used output signal: out
+
+Detecting: lessthan
+Component: num2bits
+    Used output signal: out
+
+Detecting: longtoshortnoendcarry
+Component: num2bits
+    Unused output signal: out
+
+Detecting: modprod
+Component: bits2num
+    Used output signal: out
+Component: num2bits
+    Used output signal: out
+
+Detecting: modsub
+Component: lessthan
+    Used output signal: out
+
+Detecting: modsubthree
+Component: lessthan
+    Used output signal: out
+
+Detecting: modsum
+Component: num2bits
+    Used output signal: out
+
+Detecting: modsumfour
+Component: num2bits
+    Used output signal: out
+
+Detecting: modsumthree
+Component: num2bits
+    Used output signal: out
+
+Detecting: multiand
+Component: multiand
+    Unused output signal: out
+Component: and
+    Used output signal: out
+
+Detecting: nand
+
+Detecting: nor
+
+Detecting: not
+
+Detecting: num2bits
+
+Detecting: num2bits_strict
+Component: num2bits
+    Used output signal: out
+Component: aliascheck
+
+Detecting: num2bitsneg
+Component: iszero
+    Used output signal: out
+
+Detecting: or
+
+Detecting: primereduce
+
+Detecting: signedcheckcarrymodtozero
+Component: checkcarrymodp
+Component: num2bits
+    Unused output signal: out
+
+Detecting: signedfpcarrymodp
+Component: checkcarrymodp
+Component: num2bits
+    Unused output signal: out
+
+Detecting: split
+Component: num2bits
+    Unused output signal: out
+
+Detecting: splitthree
+Component: num2bits
+    Unused output signal: out
+
+Detecting: xor
+

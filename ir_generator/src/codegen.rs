@@ -18,7 +18,7 @@ use std::path::PathBuf;
 
 pub const GLOBAL_P: &str = "12539295309507511577697735";
 pub const APPLY_MOD: bool = false;
-pub const MAX_ARRAYSIZE: u32 = 256;
+pub const MAX_ARRAYSIZE: u32 = 4096;
 
 type Fields = (Vec<String>, Vec<String>, Vec<String>, Vec<String>);
 
