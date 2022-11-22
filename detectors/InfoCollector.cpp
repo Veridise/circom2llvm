@@ -93,6 +93,21 @@ std::vector<std::string> stringSplit(std::string s, std::string splitor) {
     return res;
 }
 
+bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
+    int i = F1->getName().str().compare(F2->getName().str());
+    return i < 0;
+}
+
+std::vector<llvm::Function *> getOrderedFunctions(llvm::Module *M) {
+    auto ordered_functions = std::vector<llvm::Function *>();
+    for (auto &F : M->functions()) {
+        llvm::Function *ptr = &F;
+        ordered_functions.push_back(ptr);
+    }
+    llvm::sort(ordered_functions, compareFunction);
+    return ordered_functions;
+}
+
 Collector::Collector(llvm::Function *F) {
     if (isTemplateInitFunc(F)) {
         this->F = F;
@@ -203,7 +218,8 @@ void Collector::locateComponents() {
 }
 
 std::string Collector::getNameOfTemplate(ComponentInstance *c) {
-    // %call = call %struct_template_circuit_temp* @fn_template_build_temp(i128 %0)
+    // %call = call %struct_template_circuit_temp* @fn_template_build_temp(i128
+    // %0)
     auto origin_name = c->getCalledFunction()->getName().str();
     auto res = stringSplit(origin_name, "_")[3];
     return res;

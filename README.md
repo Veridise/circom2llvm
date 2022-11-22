@@ -53,7 +53,7 @@ cmake --build build/
 
 Then
 ```bash
-cp -r {this-folder} ./llvm/lib/Transforms/Detectors
+ln -s {this-folder} ./llvm/lib/Transforms/Detectors
 echo "add_subdirectory(Detectors)" >> ./llvm/lib/Transforms/CMakeLists.txt
 cmake --build build/
 ```

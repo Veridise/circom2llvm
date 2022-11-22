@@ -1,10 +1,5 @@
 #include "UnderConstraints.hpp"
 
-bool compareFunction(llvm::Function *F1, llvm::Function *F2) {
-    int i = F1->getName().str().compare(F2->getName().str());
-    return i < 0;
-}
-
 ConstraintNode::ConstraintNode(NodeType type, std::string name) {
     this->type = type;
     this->name = name;
@@ -217,7 +212,6 @@ struct UnderConstraints : public ModulePass {
 
     // Status
     NameSet satisfied_components;
-    std::vector<llvm::Function *> ordered_functions;
     std::vector<ConstraintGraph *> graphs;
     bool isFixed;
 
@@ -226,21 +220,16 @@ struct UnderConstraints : public ModulePass {
     bool runOnModule(Module &M) override {
         std::cerr << M.getSourceFileName() << "\n";
 
-        this->ordered_functions = std::vector<llvm::Function *>();
-        for (auto &F : M.functions()) {
-            llvm::Function *ptr = &F;
-            ordered_functions.push_back(ptr);
-        }
-        llvm::sort(this->ordered_functions, compareFunction);
-
         this->graphs = std::vector<ConstraintGraph *>();
         this->satisfied_components = NameSet();
         this->isFixed = false;
         auto *ptr = &this->satisfied_components;
 
+        auto ordered_functions = getOrderedFunctions(&M);
+
         auto hacking_satisfied_components = NameSet();
 
-        for (auto F : this->ordered_functions) {
+        for (auto F : ordered_functions) {
             if (!isTemplateInitFunc(F)) {
                 continue;
             }
