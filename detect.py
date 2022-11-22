@@ -4,11 +4,17 @@ import platform
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--input", help="Input path")
-parser.add_argument("-uc",
-                    "--underconstraint",
-                    help="Detect whether every output signal is \
-    under the constraint matters at least one input signal",
-                    action="store_true")
+parser.add_argument(
+    "-uc",
+    "--underconstraint",
+    help=
+    "Detect whether every output signal is under the constraint matters at least one input signal.",
+    action="store_true")
+parser.add_argument(
+    "-osu",
+    "--outputsignaluser",
+    help="Detect whether all of output signals in a component are used or not.",
+    action="store_true")
 
 LLVM_PATH = os.environ.get("LLVM_PATH", "/Users/hongbo/app/llvm-project")
 SOURCE_FILEPATH = os.environ.get("SOURCE_FILEPATH",
@@ -34,6 +40,10 @@ def _main():
     opt_path = os.path.join(LLVM_PATH, "build/bin/opt")
     if not os.path.exists(opt_path):
         raise FileNotFoundError(f"Cannot find opt at: {opt_path}")
+    pass_libpath = os.path.join(
+        LLVM_PATH, f"build/lib/Detectors{lib_suffix}")
+    if not os.path.exists(pass_libpath):
+        raise FileNotFoundError(f"Cannot find lib at: {opt_path}")
     if os.path.isdir(input_path):
         for file_name in os.listdir(input_path):
             if not file_name.endswith(".ll") or file_name.endswith(".ssa.ll"):
@@ -44,32 +54,48 @@ def _main():
         file_paths = [input_path]
     for f in file_paths:
         ssa_path = f.replace(".ll", ".ssa.ll")
-        print("Generating SSA IR.")
-        cmds = [
-            opt_path,
-            "-O0",
-            "-f",
-            "-S",
-            "-mem2reg",
-            f,
-            f"1> {ssa_path}",
-        ]
-        cmd = " ".join(cmds)
-        print(cmd)
-        os.system(cmd)
+        if os.path.exists(ssa_path):
+            print("Using SSA IR Cache.")
+        else:
+            print("Generating SSA IR.")
+            cmds = [
+                opt_path,
+                "-O0",
+                "-f",
+                "-S",
+                "-mem2reg",
+                f,
+                f"1> {ssa_path}",
+            ]
+            cmd = " ".join(cmds)
+            print(cmd)
+            os.system(cmd)
         if args.underconstraint:
             print("Detecting UnderConstraint.")
             log_path = f.replace(".ll", ".uc.log")
-            pass_libpath = os.path.join(
-                LLVM_PATH, f"build/lib/UnderConstraints{lib_suffix}")
-            if not os.path.exists(pass_libpath):
-                raise FileNotFoundError(f"Cannot find lib at: {opt_path}")
             cmds = [
                 opt_path,
                 "-f",
                 "-enable-new-pm=0",
                 f"--load {pass_libpath}",
                 "--UnderConstraints",
+                ssa_path,
+                "1> /dev/null",
+                f"2> {log_path}",
+            ]
+            cmd = " ".join(cmds)
+            print(cmd)
+            os.system(cmd)
+            replace_source_file_to_github(log_path)
+        if args.outputsignaluser:
+            print("Detecting OutputSignalUser.")
+            log_path = f.replace(".ll", ".osu.log")
+            cmds = [
+                opt_path,
+                "-f",
+                "-enable-new-pm=0",
+                f"--load {pass_libpath}",
+                "--OutputSignalUser",
                 ssa_path,
                 "1> /dev/null",
                 f"2> {log_path}",

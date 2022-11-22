@@ -273,4 +273,4 @@ struct UnderConstraints : public ModulePass {
 char UnderConstraints::ID = 0;
 static RegisterPass<UnderConstraints> X(
     "UnderConstraints",
-    "Check whether all of output signals are under constraints.", false, false);
+    "Detect whether every output signal is under the constraint matters at least one input signal.", false, false);

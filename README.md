@@ -49,6 +49,7 @@ cmake -S llvm -B build -G Ninja \
 -DLLVM_OPTIMIZED_TABLEGEN=ON \
 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 cmake --build build/
+export LLVM_PATH=path/to/llvm-project
 ```
 
 Then
@@ -58,23 +59,24 @@ echo "add_subdirectory(Detectors)" >> ./llvm/lib/Transforms/CMakeLists.txt
 cmake --build build/
 ```
 
-### Usage
-Linux
-```bash
-opt -f -load -enable-new-pm=0 path-to-lib/UnderConstraints.so --UnderConstraints input.ll 1> /dev/null 2> output.log
-```
-
-Mac
-```bash
-opt -f -load -enable-new-pm=0 path-to-lib/UnderConstraints.dylib --UnderConstraints input.ll 1> /dev/null 2> output.log
-```
-
-### Hints
+### Detectors
 1. `detectors/InfoCollector.cpp`: Provide an information collector to the generated IR file to be used.
 2. `detectors/UnderConstraints.cpp`: Detect whether every output signal is under the constraint matters at least one input signal.
+3. `detectors/OutputSignalUser.cpp`: Detect whether all of output signals in a component are used or not.
 
+### Usage
+Linux: .so || Mac: .dylib
+```bash
+opt -f -load -enable-new-pm=0 path-to-lib/Detectors{.so||.dylib} --UnderConstraints input.ssa.ll 1> /dev/null 2> output.uc.log
+opt -f -load -enable-new-pm=0 path-to-lib/Detectors{.so||.dylib} --OutputSignalUser input.ssa.ll 1> /dev/null 2> output.osu.log
 ```
-python ./detect.py --input ./auditing
+
+Or use the script:
+
+```bash
+python ./detect.py --help
+python ./detect.py -uc --input ./auditing
+python ./detect.py -osu --input ./auditing
 ```
 
 ### Debug
