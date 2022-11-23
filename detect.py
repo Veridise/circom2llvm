@@ -37,11 +37,11 @@ def _main():
     input_path = args.input
     file_paths = []
     lib_suffix = ".so" if platform.system() == "Linux" else ".dylib"
-    opt_path = os.path.join(LLVM_PATH, "build/bin/opt")
+    opt_path = os.path.join(LLVM_PATH, "bin/opt")
     if not os.path.exists(opt_path):
         raise FileNotFoundError(f"Cannot find opt at: {opt_path}")
     pass_libpath = os.path.join(
-        LLVM_PATH, f"build/lib/Detectors{lib_suffix}")
+        LLVM_PATH, f"lib/Detectors{lib_suffix}")
     if not os.path.exists(pass_libpath):
         raise FileNotFoundError(f"Cannot find lib at: {opt_path}")
     if os.path.isdir(input_path):

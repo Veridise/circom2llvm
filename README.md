@@ -3,22 +3,28 @@ Compile circom code to LLVM IR and detect potential bugs.
 
 # Dependencies
 ## LLVM Installation
+Use `Ninja` as the build tool default, so you need to install one before building LLVM.
+If you don't have, please follow the offcial guide from LLVM at: https://github.com/llvm/llvm-project/tree/release/13.x .
+**NOTICE** that the building command used by us is different from the standard one.
+**NOTICE** the path/to/llvm-project should be an abstract path, such as /User/You/app/llvm-project.
+**NOTICE** DLLVM_TARGETS_TO_BUILD depends on your architecture.
 ```bash
 git clone --depth 1 --branch release/13.x git@github.com:llvm/llvm-project.git
 cd ./llvm-project
 cmake -S llvm -B build -G Ninja \
--DLLVM_TARGETS_TO_BUILD="X86;ARM" \
--DCMAKE_BUILD_TYPE=Release \
+-DLLVM_TARGETS_TO_BUILD="{X86||ARM||RISCV}" \
+-DCMAKE_BUILD_TYPE=Debug \
 -DLLVM_PARALLEL_LINK_JOBS=1 \
 -DLLVM_OPTIMIZED_TABLEGEN=ON \
 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 cmake --build build/
-export LLVM_PATH=path/to/llvm-project
-export PATH=$PATH:$LLVM_PATH/build/bin
+export LLVM_PATH=path/to/llvm-project/build
+export PATH=$PATH:$LLVM_PATH/bin
+export LLVM_SYS_130_PREFIX=$LLVM_PATH
 ```
 
 ## Rust & Cargo
-This repo works on rustc & cargo 1.64.0, and all of the crates dependencies will be installed automatically.
+This repo works on `rustc & cargo 1.64.0`, and all of the crates dependencies will be installed automatically.
 
 
 ## Compiler
@@ -45,7 +51,7 @@ cargo build --bin=circom2llvm --package=circom2llvm
 
 ### Usage
 ```bash
-circom2llvm --input path/to/circomfile_or_dir --output path/to/output
+./target/debug/circom2llvm --input path/to/circomfile_or_dir --output path/to/output
 ```
 
 ### Hints
@@ -68,7 +74,7 @@ A group of LLVM Pass to detect potential bugs in circuits.
 3. `detectors/OutputSignalUser.cpp`: Detect whether all of output signals in a component are used or not.
 
 ### Build
-Make sure the LLVM is installed.
+**Make sure the LLVM is installed.**
 ```bash
 cd $LLVM_PATH
 ln -s path/to/circom2llvm/detectors ./llvm/lib/Transforms/Detectors
