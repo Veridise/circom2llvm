@@ -13,7 +13,7 @@ git clone --depth 1 --branch release/13.x git@github.com:llvm/llvm-project.git
 cd ./llvm-project
 cmake -S llvm -B build -G Ninja \
 -DLLVM_TARGETS_TO_BUILD="{X86||ARM||RISCV}" \
--DCMAKE_BUILD_TYPE=Debug \
+-DCMAKE_BUILD_TYPE=Release \
 -DLLVM_PARALLEL_LINK_JOBS=1 \
 -DLLVM_OPTIMIZED_TABLEGEN=ON \
 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
