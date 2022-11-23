@@ -14,9 +14,6 @@ Component: modsum
     Used output signal: sum
 
 Detecting: bigaddmodp
-Component: bigsub
-    Unused output signal: underflow
-    Used output signal: out
 Component: biglessthan
     Used output signal: out
 Component: bigadd
@@ -49,7 +46,6 @@ Component: bigadd
     Used output signal: out
 Component: bigmult
     Used output signal: out
-Component: num2bits
 
 Detecting: bigmod2
 Component: biglessthan
@@ -58,15 +54,10 @@ Component: bigadd
     Used output signal: out
 Component: bigmult
     Used output signal: out
-Component: num2bits
 
 Detecting: bigmodinv
-Component: bigmod
-    Used output signal: mod
-    Unused output signal: div
 Component: bigmult
     Used output signal: out
-Component: num2bits
 
 Detecting: bigmult
 Component: longtoshortnoendcarry
@@ -75,9 +66,6 @@ Component: bigmultshortlong
     Used output signal: out
 
 Detecting: bigmultmodp
-Component: bigmod
-    Used output signal: mod
-    Unused output signal: div
 Component: bigmult
     Used output signal: out
 
@@ -99,9 +87,6 @@ Component: modsub
 
 Detecting: bigsubmodp
 Component: bigadd
-    Used output signal: out
-Component: bigsub
-    Used output signal: underflow
     Used output signal: out
 
 Detecting: binsum
@@ -130,10 +115,8 @@ Component: bigmultshortlongunequal
     Used output signal: out
 
 Detecting: checkcarrytozero
-Component: num2bits
 
 Detecting: compconstant
-Component: num2bits
 
 Detecting: ellipticcurveadd
 Component: ellipticcurvedouble
@@ -160,8 +143,6 @@ Component: rangecheck2d
 Component: pointonline
 Component: bigmultshortlongunequal
     Used output signal: out
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong
@@ -172,7 +153,6 @@ Component: bigmultmodp
     Used output signal: out
 Component: biglessthan
     Used output signal: out
-Component: num2bits
 Component: bigsubmodp
     Used output signal: out
 
@@ -181,7 +161,6 @@ Component: bigmultmodp
     Used output signal: out
 Component: biglessthan
     Used output signal: out
-Component: num2bits
 Component: bigsubmodp
     Used output signal: out
 
@@ -190,8 +169,6 @@ Component: rangecheck2d
 Component: bigmultshortlong2dunequal
     Used output signal: out
 Component: pointonlinefp2
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong2d
@@ -207,7 +184,6 @@ Component: rangecheck2d
 Detecting: ellipticcurvedouble0
 Component: bigsubmodp
     Used output signal: out
-Component: num2bits
 Component: bigaddmodp
     Used output signal: out
 Component: biglessthan
@@ -223,9 +199,6 @@ Component: pointontangentfp2
 Component: rangecheck2d
 
 Detecting: ellipticcurvefunction
-Component: signedfp2carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedfp2multiplynocarryunequal
@@ -306,9 +279,6 @@ Component: signedfp2divide
     Used output signal: out
 Component: fp2compress
     Used output signal: out
-Component: signedfp2carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: signedfp2multiplynocarry
     Used output signal: out
 
@@ -325,9 +295,6 @@ Component: fp12cyclotomiccompress
 Detecting: fp12cyclotomicsquare
 Component: fp2compress
     Used output signal: out
-Component: signedfp2carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: signedfp12cyclotomicsquarenocarry
     Used output signal: out
 
@@ -348,19 +315,12 @@ Component: fpmultiply
 Detecting: fp12invert
 Component: fp12multiply
     Used output signal: out
-Component: num2bits
 
 Detecting: fp12multiply
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: signedfp12multiplynocarrycompress
     Used output signal: out
 
 Detecting: fp12multiplywithlineunequal
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: fp12compress
     Used output signal: out
 Component: signedfp12multiplynocarryunequal
@@ -369,9 +329,6 @@ Component: signedlinefunctionunequalnocarry
     Used output signal: out
 
 Detecting: fp12multiplywithlineunequalfp2
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: fp12compress
     Used output signal: out
 Component: signedfp12multiplynocarryunequal
@@ -402,7 +359,6 @@ Component: fpnegate
 Detecting: fp2invert
 Component: fp2multiply
     Used output signal: out
-Component: num2bits
 
 Detecting: fp2isequal
 Component: iszero
@@ -419,16 +375,10 @@ Component: biglessthan
     Used output signal: out
 
 Detecting: fp2multiply
-Component: signedfp2carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: signedfp2multiplynocarrycompress
     Used output signal: out
 
 Detecting: fp2multiplythree
-Component: signedfp2carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: signedfp2multiplynocarrycompressthree
     Used output signal: out
 
@@ -449,9 +399,6 @@ Component: fpsubtract
 Detecting: fp6invert
 
 Detecting: fpadd
-Component: bigsub
-    Unused output signal: underflow
-    Used output signal: out
 Component: biglessthan
     Used output signal: out
 Component: bigadd
@@ -470,9 +417,6 @@ Component: biglessthan
     Used output signal: out
 
 Detecting: fpmultiply
-Component: signedfpcarrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong
@@ -481,9 +425,6 @@ Component: bigmultshortlong
 Detecting: fpnegate
 Component: bigiszero
     Used output signal: out
-Component: bigsub
-    Used output signal: underflow
-    Used output signal: out
 
 Detecting: fpsgn0
 Component: biglessthan
@@ -491,9 +432,6 @@ Component: biglessthan
 
 Detecting: fpsubtract
 Component: bigadd
-    Used output signal: out
-Component: bigsub
-    Used output signal: underflow
     Used output signal: out
 
 Detecting: greatereqthan
@@ -515,46 +453,32 @@ Component: lessthan
     Used output signal: out
 
 Detecting: lessthan
-Component: num2bits
 
 Detecting: linefunctionequal
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedlinefunctionequalnocarry
     Used output signal: out
 
 Detecting: linefunctionequalfp2
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedlinefunctionequalnocarryfp2
     Used output signal: out
 
 Detecting: linefunctionunequal
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedlinefunctionunequalnocarry
     Used output signal: out
 
 Detecting: linefunctionunequalfp2
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedlinefunctionunequalnocarryfp2
     Used output signal: out
 
 Detecting: longtoshortnoendcarry
-Component: num2bits
 
 Detecting: millerloop
 Component: fp12multiplywithlineunequal
@@ -563,9 +487,6 @@ Component: fp12multiply
     Used output signal: out
 Component: ellipticcurvedouble
     Used output signal: out
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: ellipticcurveaddunequal
     Used output signal: out
 Component: fp12compress
@@ -582,9 +503,6 @@ Component: fp12multiplywithlineunequal
     Used output signal: out
 Component: ellipticcurvedouble
     Used output signal: out
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: ellipticcurveaddunequal
     Used output signal: out
 Component: fp12compress
@@ -601,9 +519,6 @@ Component: ellipticcurveaddunequalfp2
     Used output signal: out
 Component: fp12multiplywithlineunequalfp2
     Used output signal: out
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: fp12compress
     Used output signal: out
 Component: signedfp12multiplynocarryunequal
@@ -622,9 +537,6 @@ Component: fp12multiplywithlineunequalfp2
     Used output signal: out
 Component: fp12multiply
     Used output signal: out
-Component: signedfp12carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: fp12compress
     Used output signal: out
 Component: signedfp12multiplynocarryunequal
@@ -639,7 +551,6 @@ Component: linefunctionequalfp2
 Detecting: modprod
 Component: bits2num
     Used output signal: out
-Component: num2bits
 
 Detecting: modsub
 Component: lessthan
@@ -650,17 +561,12 @@ Component: lessthan
     Used output signal: out
 
 Detecting: modsum
-Component: num2bits
 
 Detecting: modsumfour
-Component: num2bits
 
 Detecting: modsumthree
-Component: num2bits
 
 Detecting: multiand
-Component: multiand
-    Unused output signal: out
 Component: and
     Used output signal: out
 
@@ -673,7 +579,6 @@ Detecting: not
 Detecting: num2bits
 
 Detecting: num2bits_strict
-Component: num2bits
 Component: aliascheck
 
 Detecting: num2bitsneg
@@ -683,9 +588,6 @@ Component: iszero
 Detecting: optimalatepairing
 Component: finalexponentiate
     Used output signal: out
-Component: millerloopfp2
-    Unused output signal: xp
-    Used output signal: out
 Component: fpnegate
     Used output signal: out
 
@@ -694,32 +596,24 @@ Detecting: or
 Detecting: pointoncurve
 Component: bigmultshortlongunequal
     Used output signal: out
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong
     Used output signal: out
 
 Detecting: pointoncurvefp2
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedfp2multiplynocarryunequal
     Used output signal: out
 
 Detecting: pointonline
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong
     Used output signal: out
 
 Detecting: pointonlinefp2
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong2d
@@ -728,16 +622,12 @@ Component: bigmultshortlong2d
 Detecting: pointontangent
 Component: bigmultshortlongunequal
     Used output signal: out
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: bigmultshortlong
     Used output signal: out
 
 Detecting: pointontangentfp2
-Component: signedcheckcarrymodtozero
-    Unused output signal: x
 Component: primereduce
     Used output signal: out
 Component: signedfp2multiplynocarryunequal
@@ -746,16 +636,11 @@ Component: signedfp2multiplynocarryunequal
 Detecting: primereduce
 
 Detecting: rangecheck2d
-Component: num2bits
 
 Detecting: signedcheckcarrymodtozero
 Component: checkcarrymodp
-Component: num2bits
 
 Detecting: signedfp12carrymodp
-Component: signedfpcarrymodp
-    Used output signal: out
-    Used output signal: x
 
 Detecting: signedfp12cyclotomicsquarenocarry
 Component: signedfp2multiplynocarry
@@ -792,19 +677,12 @@ Component: bigmultshortlongunequal
     Used output signal: out
 
 Detecting: signedfp2carrymodp
-Component: signedfpcarrymodp
-    Used output signal: out
-    Used output signal: x
 
 Detecting: signedfp2compresscarry
-Component: signedfp2carrymodp
-    Used output signal: out
-    Unused output signal: x
 Component: fp2compress
     Used output signal: out
 
 Detecting: signedfp2divide
-Component: num2bits
 Component: signedfp2multiplynocarrycompress
     Used output signal: out
 Component: checkcarrymodp
@@ -834,7 +712,6 @@ Component: bigmultshortlongunequal
 
 Detecting: signedfpcarrymodp
 Component: checkcarrymodp
-Component: num2bits
 
 Detecting: signedlinefunctionequalnocarry
 Component: signedfp12scalarmultiplynocarry
@@ -865,10 +742,8 @@ Component: signedfp2multiplynocarry
     Used output signal: out
 
 Detecting: split
-Component: num2bits
 
 Detecting: splitthree
-Component: num2bits
 
 Detecting: tatepairing
 Component: finalexponentiate

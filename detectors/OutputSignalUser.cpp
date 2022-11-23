@@ -22,6 +22,18 @@ struct OutputSignalUser : public ModulePass {
             collectors.insert({collector->template_name, collector});
         }
 
+        auto global_ignore_set = NameSet();
+        global_ignore_set.insert("signedcheckcarrymodtozero");
+        global_ignore_set.insert("multiand");
+        global_ignore_set.insert("num2bits");
+        global_ignore_set.insert("signedfp2carrymodp");
+        global_ignore_set.insert("bigsub");
+        global_ignore_set.insert("signedfp12carrymodp");
+        global_ignore_set.insert("bigmod");
+        global_ignore_set.insert("signedfpcarrymodp");
+        global_ignore_set.insert("bigmod2");
+        global_ignore_set.insert("millerloopfp2");
+
         for (auto F : ordered_functions) {
             if (!isTemplateInitFunc(F)) {
                 continue;
@@ -41,18 +53,26 @@ struct OutputSignalUser : public ModulePass {
                 }
             }
             for (auto c : collector->component_names) {
-                std::cerr << "Component: " << c << "\n";
-                if (c == "num2bits") {
+                if (global_ignore_set.count(c)) {
                     continue;
                 }
+                std::cerr << "Component: " << c << "\n";
                 auto c_collector = collectors[c];
+                if (c_collector->output_signal_names.size() == 0) {
+                    continue;
+                }
+                bool at_least_one_used = false;
                 for (auto o : c_collector->output_signal_names) {
                     auto key = c + o;
                     if (satisfied_component_output_signals.count(key)) {
                         std::cerr << "    Used output signal: " << o << "\n";
+                        at_least_one_used = true;
                     } else {
                         std::cerr << "    Unused output signal: " << o << "\n";
                     }
+                }
+                if (!at_least_one_used) {
+                    std::cerr << "    None output signal used. " << "\n";
                 }
             }
             std::cerr << "\n";
