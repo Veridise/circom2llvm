@@ -2,10 +2,8 @@ use crate::codegen::CodeGen;
 use crate::expression::{
     flat_expressions_from_statement, read_signal_from_struct, write_signal_to_struct,
 };
-use crate::inferrence::{
-    collect_signal, infer_depended_components, infer_dependences, infer_type_from_expression,
-    infer_type_from_statement,
-};
+use crate::inferrence::{infer_type_from_expression, infer_type_from_statement};
+use crate::info_collector::{collect_depended_components, collect_dependences, collect_signal};
 use crate::namer::{
     name_entry_block, name_exit_block, name_initial_var, name_template_fn, name_template_struct,
 };
@@ -42,11 +40,11 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let stmts = flat_statements(body);
         let mut exprs = Vec::new();
         for stmt in stmts {
-            infer_depended_components(stmt, &mut self.scope);
+            collect_depended_components(stmt, &mut self.scope);
             exprs.append(&mut flat_expressions_from_statement(stmt));
         }
         for expr in exprs {
-            infer_dependences(expr, &mut self.scope);
+            collect_dependences(expr, &mut self.scope);
         }
     }
 

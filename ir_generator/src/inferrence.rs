@@ -1,41 +1,9 @@
 use crate::codegen::{CodeGen, MAX_ARRAYSIZE};
 use crate::namer::{name_opaque_struct, name_template_struct};
 use crate::scope::ScopeTrait;
-use crate::template::Template;
 use inkwell::types::{AnyTypeEnum, ArrayType, BasicType, BasicTypeEnum};
 use inkwell::AddressSpace;
-use num_traits::ToPrimitive;
-use program_structure::ast::{Access, Expression, SignalType, Statement, VariableType};
-
-pub fn infer_depended_components<'ctx>(stmt: &Statement, scope: &mut dyn ScopeTrait<'ctx>) {
-    match stmt {
-        Statement::Declaration { xtype, name, .. } => match xtype {
-            VariableType::Component => {
-                scope.add_comp_var(name);
-            }
-            _ => (),
-        },
-        Statement::Substitution { var, rhe, .. } => match rhe {
-            Expression::Call { id, .. } => {
-                if scope.is_comp_var(var) {
-                    scope.set_known_comp(var, id);
-                }
-                scope.add_dependence(id);
-            }
-            _ => (),
-        },
-        _ => (),
-    }
-}
-
-pub fn infer_dependences<'ctx>(expr: &Expression, scope: &mut dyn ScopeTrait<'ctx>) {
-    match expr {
-        Expression::Call { id, .. } => {
-            scope.add_dependence(id);
-        }
-        _ => (),
-    }
-}
+use program_structure::ast::{Access, Expression, Statement, VariableType};
 
 pub fn infer_type_from_expression<'ctx>(
     codegen: &CodeGen<'ctx>,
@@ -144,39 +112,6 @@ pub fn infer_type_from_statement<'ctx>(
             let ty = get_type_from_dimensions(val_ty, dims);
             scope.set_var_ty(name, ty);
         }
-        _ => (),
-    }
-}
-
-pub fn collect_signal<'ctx>(stmt: &Statement, template: &mut Template<'ctx>) {
-    match stmt {
-        Statement::InitializationBlock {
-            meta: _,
-            xtype,
-            initializations,
-        } => match xtype {
-            VariableType::Signal(signal_type, _) => {
-                for init in initializations {
-                    match init {
-                        Statement::Declaration { name, .. } => {
-                            match signal_type {
-                                SignalType::Input => {
-                                    template.add_input(name);
-                                }
-                                SignalType::Intermediate => {
-                                    template.add_intermediate(name);
-                                }
-                                SignalType::Output => {
-                                    template.add_output(name);
-                                }
-                            };
-                        }
-                        _ => unreachable!(),
-                    }
-                }
-            }
-            _ => (),
-        },
         _ => (),
     }
 }

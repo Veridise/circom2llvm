@@ -4,6 +4,7 @@ mod expression;
 mod function;
 pub mod generator;
 mod inferrence;
+mod info_collector;
 mod namer;
 pub mod scope;
 mod statement;

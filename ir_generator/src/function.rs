@@ -1,9 +1,7 @@
 use crate::codegen::CodeGen;
 use crate::expression::flat_expressions_from_statement;
-use crate::inferrence::{
-    get_type_from_expr, infer_depended_components, infer_dependences, infer_type_from_expression,
-    infer_type_from_statement,
-};
+use crate::inferrence::{get_type_from_expr, infer_type_from_expression,infer_type_from_statement};
+use crate::info_collector::{collect_depended_components, collect_dependences};
 use crate::namer::{name_entry_block, name_initial_var};
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
@@ -22,11 +20,11 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         let stmts = flat_statements(body);
         let mut exprs = Vec::new();
         for stmt in stmts {
-            infer_depended_components(stmt, &mut self.scope);
+            collect_depended_components(stmt, &mut self.scope);
             exprs.append(&mut flat_expressions_from_statement(stmt));
         }
         for expr in exprs {
-            infer_dependences(expr, &mut self.scope);
+            collect_dependences(expr, &mut self.scope);
         }
     }
 
