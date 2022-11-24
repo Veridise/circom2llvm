@@ -4,6 +4,7 @@ use crate::scope::ScopeTrait;
 use crate::template::Template;
 use inkwell::types::{AnyTypeEnum, ArrayType, BasicType, BasicTypeEnum};
 use inkwell::AddressSpace;
+use num_traits::ToPrimitive;
 use program_structure::ast::{Access, Expression, SignalType, Statement, VariableType};
 
 pub fn infer_depended_components<'ctx>(stmt: &Statement, scope: &mut dyn ScopeTrait<'ctx>) {
@@ -81,8 +82,8 @@ pub fn infer_type_from_expression<'ctx>(
                         for arg in access {
                             match arg {
                                 Access::ArrayAccess(dim) => {
-                                    arg_ty = arg_ty
-                                        .array_type(resolve_dim_expr(dim))
+                                    let size = resolve_dim_expr(dim);
+                                    arg_ty = construct_array_ty(arg_ty, &vec![size])
                                         .as_basic_type_enum();
                                 }
                                 Access::ComponentAccess(..) => {
@@ -181,7 +182,6 @@ pub fn collect_signal<'ctx>(stmt: &Statement, template: &mut Template<'ctx>) {
 }
 
 fn resolve_dim_expr<'ctx>(dim: &Expression) -> u32 {
-    // Todo: We only use MAX_ARRAYSIZE as array dimension now.
     // match dim {
     //     Expression::Number(_, bigint) => {
     //         let mut valid_u32 = bigint.to_u32().unwrap();
@@ -189,8 +189,8 @@ fn resolve_dim_expr<'ctx>(dim: &Expression) -> u32 {
     //             valid_u32 = 1;
     //         }
     //         return valid_u32;
-    //     },
-    //     _ => MAX_ARRAYSIZE,
+    //     }
+    //     _ => return MAX_ARRAYSIZE,
     // }
     return MAX_ARRAYSIZE;
 }
@@ -205,8 +205,8 @@ fn get_type_from_access<'ctx>(
     for a in access.iter().rev() {
         match a {
             Access::ArrayAccess(expr) => {
-                let dim = resolve_dim_expr(expr);
-                current_ty = current_ty.array_type(dim).as_basic_type_enum();
+                let size = resolve_dim_expr(expr);
+                current_ty = construct_array_ty(current_ty, &vec![size]).as_basic_type_enum();
             }
             Access::ComponentAccess(_) => {
                 let comp_name = scope.get_known_comp(name);
@@ -244,10 +244,21 @@ pub fn get_type_from_expr<'ctx>(
             unreachable!();
         }
         Expression::ArrayInLine { meta: _, values } => {
-            let arr_ty = construct_array_ty(
-                codegen.val_ty.as_basic_type_enum(),
-                &vec![values.len() as u32],
-            );
+            let mut val_ty = get_type_from_expr(codegen, &values[0], scope).unwrap();
+            if val_ty.is_pointer_type() {
+                if val_ty
+                    .into_pointer_type()
+                    .get_element_type()
+                    .is_array_type()
+                {
+                    val_ty = val_ty
+                        .into_pointer_type()
+                        .get_element_type()
+                        .into_array_type()
+                        .as_basic_type_enum();
+                }
+            }
+            let arr_ty = construct_array_ty(val_ty, &vec![MAX_ARRAYSIZE as u32]);
             return Some(arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum());
         }
         Expression::Call { id, .. } => {
@@ -302,7 +313,9 @@ pub fn get_type_from_expr<'ctx>(
 
 pub fn construct_array_ty<'ctx>(val_ty: BasicTypeEnum<'ctx>, dims: &Vec<u32>) -> ArrayType<'ctx> {
     assert!(dims.len() > 0);
-    let size = dims[dims.len() - 1];
+    // let size = dims[dims.len() - 1];
+    // Todo
+    let size = MAX_ARRAYSIZE;
     let mut arr_ty = val_ty.array_type(size);
     for (i, d) in dims.iter().rev().enumerate() {
         if i == 0 {

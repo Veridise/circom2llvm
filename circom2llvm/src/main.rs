@@ -1,11 +1,11 @@
-use inkwell::context::Context;
-use ir_generator::{codegen::init_codegen, summarygen::init_summarygen};
-use ir_generator::generator::generate;
-use ir_generator::after_process::remove_opaque_struct_name;
-
 use clap::Parser;
-use program_structure::ast::AST;
+use inkwell::context::Context;
+use ir_generator::after_process::remove_opaque_struct_name;
+use ir_generator::generator::generate;
+use ir_generator::{codegen::init_codegen, summarygen::init_summarygen};
+use program_structure::ast::{Definition, AST};
 use program_structure::error_definition::Report;
+use std::collections::HashSet;
 use std::{
     env,
     fs::{self, canonicalize},
@@ -90,7 +90,7 @@ fn main() {
         match parser::run_parser(input_path, Vec::new()) {
             Ok(ast) => {
                 let mut include_pathbufs: Vec<PathBuf> = Vec::new();
-                let mut generated_includes: Vec<String> = Vec::new();
+                let mut generated_includes: HashSet<String> = HashSet::new();
                 for i in &ast.includes {
                     let abs_path = canonicalize(working_dir.join(i))
                         .unwrap()
@@ -99,7 +99,7 @@ fn main() {
                         .into_string()
                         .unwrap();
                     include_pathbufs.push(working_dir.join(i));
-                    generated_includes.push(abs_path);
+                    generated_includes.insert(abs_path);
                 }
                 let mut ast_vec: Vec<AST> = vec![ast];
                 while include_pathbufs.len() > 0 {
@@ -128,15 +128,31 @@ fn main() {
                         if generated_includes.contains(&abs_path) {
                             continue;
                         }
-                        generated_includes.push(abs_path);
+                        generated_includes.insert(abs_path);
                         include_pathbufs.push(working_dir.join(i));
                     }
                     ast_vec.push(last_ast);
                 }
+                let mut definition_names = HashSet::new();
                 let mut definitions = Vec::new();
                 for ast in &ast_vec {
                     for def in &ast.definitions {
-                        definitions.push(def);
+                        match def {
+                            Definition::Template { name, .. } => {
+                                if definition_names.contains(name) {
+                                    continue;
+                                }
+                                definition_names.insert(name.clone());
+                                definitions.push(def);
+                            }
+                            Definition::Function { name, .. } => {
+                                if definition_names.contains(name) {
+                                    continue;
+                                }
+                                definition_names.insert(name.clone());
+                                definitions.push(def);
+                            }
+                        }
                     }
                 }
                 generate(definitions, &mut codegen, &mut summarygen);

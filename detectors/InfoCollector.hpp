@@ -42,7 +42,7 @@ bool isOutputSiganlDefinedInst(llvm::Instruction *inst);
 bool isComponentDefinedInst(llvm::Instruction *inst);
 bool isConstraintDefinedInst(llvm::Instruction *inst);
 std::string canonicalizeTemplateName(llvm::Function *F);
-std::vector<std::string> stringSplit(std::string s, std::string splitor);
+std::vector<std::string> stringSplit(std::string s, std::string splitor, int times);
 bool compareFunction(llvm::Function *F1, llvm::Function *F2);
 std::vector<llvm::Function *> getOrderedFunctions(llvm::Module *M);
 

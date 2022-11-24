@@ -82,12 +82,13 @@ std::string canonicalizeTemplateName(llvm::Function *F) {
     return template_name;
 }
 
-std::vector<std::string> stringSplit(std::string s, std::string splitor) {
+std::vector<std::string> stringSplit(std::string s, std::string splitor, int times = INT_MAX) {
     auto res = std::vector<std::string>();
     size_t pos = 0;
-    while ((pos = s.find(splitor)) != std::string::npos) {
+    while (((pos = s.find(splitor)) != std::string::npos) && (times > 0)) {
         res.push_back(s.substr(0, pos));
         s.erase(0, pos + splitor.length());
+        times -= 1;
     }
     res.push_back(s);
     return res;
@@ -140,7 +141,7 @@ Collector::Collector(llvm::Function *F) {
 std::string Collector::getNameOfSignal(llvm::Value *v) {
     // %temp.in.read_input_inner = xxx
     auto origin_name = v->getName().str();
-    auto res = stringSplit(origin_name, ".")[1];
+    auto res = stringSplit(origin_name, ".", 2)[1];
     return res;
 }
 
@@ -221,7 +222,7 @@ std::string Collector::getNameOfTemplate(ComponentInstance *c) {
     // %call = call %struct_template_circuit_temp* @fn_template_build_temp(i128
     // %0)
     auto origin_name = c->getCalledFunction()->getName().str();
-    auto res = stringSplit(origin_name, "_")[3];
+    auto res = stringSplit(origin_name, "_", 3)[3];
     return res;
 }
 
@@ -270,7 +271,7 @@ std::string Collector::canonicalizeOutputSignal(llvm::Value *v) {
 std::pair<std::string, std::string> Collector::canonicalizeSignalOfComponent(
     llvm::Value *v) {
     // %temp.in.read_output_outter = xxx
-    auto v_name_sec = stringSplit(v->getName().str(), ".");
+    auto v_name_sec = stringSplit(v->getName().str(), ".", 2);
     if (v_name_sec.size() != 3) {
         return {"", ""};
     }
