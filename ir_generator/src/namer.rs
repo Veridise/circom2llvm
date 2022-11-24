@@ -33,6 +33,10 @@ pub fn name_exit_block() -> String {
     return "exit".to_string();
 }
 
+pub fn name_arraydim_block() -> String {
+    return "arraydim".to_string();
+}
+
 pub fn name_constraint() -> String {
     return "constraint".to_string();
 }

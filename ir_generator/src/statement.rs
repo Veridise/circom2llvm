@@ -2,7 +2,7 @@ use crate::codegen::CodeGen;
 use crate::expression::resolve_expr;
 use crate::namer::{name_if_block, name_loop_block};
 use crate::scope::ScopeTrait;
-use inkwell::values::BasicValue;
+use inkwell::values::{BasicValue, BasicValueEnum};
 use program_structure::ast::{Access, AssignOp, Statement};
 
 pub fn resolve_stmt<'ctx>(
@@ -11,8 +11,11 @@ pub fn resolve_stmt<'ctx>(
     stmt: &Statement,
 ) {
     match stmt {
-        Statement::Assert { meta: _, arg: _ } => {
-            // Todo assert.
+        Statement::Assert { meta: _, arg } => {
+            let val = resolve_expr(codegen, arg, scope);
+            if val.get_type().into_int_type() == codegen.context.bool_type() {
+                codegen.build_assert(val.into_int_value());
+            }
         }
         Statement::Block { meta: _, stmts } => {
             for stmt in stmts {
@@ -90,7 +93,15 @@ pub fn resolve_stmt<'ctx>(
                         }
                         _ => unreachable!(),
                     },
-                    Statement::Declaration { .. } => (),
+                    Statement::Declaration {
+                        name, dimensions, ..
+                    } => {
+                        let dims: Vec<BasicValueEnum<'ctx>> = dimensions
+                            .iter()
+                            .map(|d| resolve_expr(codegen, d, scope))
+                            .collect();
+                        scope.set_var_dims(name, dims);
+                    }
                     _ => unreachable!(),
                 }
             }

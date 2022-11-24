@@ -46,9 +46,7 @@ pub fn resolve_expr<'ctx>(
             let cond = resolve_expr(codegen, cond.as_ref(), scope).into_int_value();
             let lval = resolve_expr(codegen, if_true.as_ref(), scope).into_int_value();
             let rval = resolve_expr(codegen, if_false.as_ref(), scope).into_int_value();
-            codegen
-                .build_inline_switch(cond, lval, rval)
-                .as_basic_value_enum()
+            codegen.build_switch(cond, lval, rval).as_basic_value_enum()
         }
         Expression::Number(_, bigint) => {
             let valid_u64 = (bigint % u64::MAX).to_u64().unwrap();

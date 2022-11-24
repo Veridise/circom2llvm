@@ -467,12 +467,8 @@ fp12multiplywithlineunequal
 fp12invert
 millerloop
 
-p --> millerloop
 millerloop --> millerloop
-q --> millerloop
 millerloop --> fp12multiplywithlineunequal
-p --> fp12multiplywithlineunequal
-q --> fp12multiplywithlineunequal
 millerloop --> fp12invert
 fp12multiplywithlineunequal --> fp12multiply
 fp12invert --> fp12multiply
@@ -497,10 +493,8 @@ Components:
 checkcarrytozero
 bigmultshortlongunequal
 
-x --> bigmultshortlongunequal
 in --> checkcarrytozero
 bigmultshortlongunequal --> checkcarrytozero
-y --> checkcarrytozero
 
 
 Detecting: checkcarrytozero
@@ -1266,8 +1260,6 @@ fp12compress
 signedfp12multiplynocarryunequal
 signedlinefunctionunequalnocarry
 
-p --> signedlinefunctionunequalnocarry
-q --> signedlinefunctionunequalnocarry
 g --> signedfp12multiplynocarryunequal
 signedlinefunctionunequalnocarry --> signedfp12multiplynocarryunequal
 signedfp12multiplynocarryunequal --> fp12compress
@@ -1297,8 +1289,6 @@ fp12compress
 signedfp12multiplynocarryunequal
 signedlinefunctionunequalnocarryfp2
 
-p --> signedlinefunctionunequalnocarryfp2
-q --> signedlinefunctionunequalnocarryfp2
 g --> signedfp12multiplynocarryunequal
 signedlinefunctionunequalnocarryfp2 --> signedfp12multiplynocarryunequal
 signedfp12multiplynocarryunequal --> fp12compress
@@ -1873,8 +1863,6 @@ signedfp12carrymodp
 primereduce
 signedlinefunctionequalnocarry
 
-p --> signedlinefunctionequalnocarry
-q --> signedlinefunctionequalnocarry
 signedlinefunctionequalnocarry --> primereduce
 primereduce --> signedfp12carrymodp
 signedfp12carrymodp --> out
@@ -1898,8 +1886,6 @@ signedfp12carrymodp
 primereduce
 signedlinefunctionequalnocarryfp2
 
-p --> signedlinefunctionequalnocarryfp2
-q --> signedlinefunctionequalnocarryfp2
 signedlinefunctionequalnocarryfp2 --> primereduce
 primereduce --> signedfp12carrymodp
 signedfp12carrymodp --> out
@@ -1923,8 +1909,6 @@ signedfp12carrymodp
 primereduce
 signedlinefunctionunequalnocarry
 
-p --> signedlinefunctionunequalnocarry
-q --> signedlinefunctionunequalnocarry
 signedlinefunctionunequalnocarry --> primereduce
 primereduce --> signedfp12carrymodp
 signedfp12carrymodp --> out
@@ -1948,8 +1932,6 @@ signedfp12carrymodp
 primereduce
 signedlinefunctionunequalnocarryfp2
 
-p --> signedlinefunctionunequalnocarryfp2
-q --> signedlinefunctionunequalnocarryfp2
 signedlinefunctionunequalnocarryfp2 --> primereduce
 primereduce --> signedfp12carrymodp
 signedfp12carrymodp --> out
@@ -2005,7 +1987,6 @@ signedfp12multiplynocarry
 
 in --> f
 f --> signedfp12multiplynocarry
-q --> linefunctionequal
 signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
 linefunctionequal --> signedfp12multiplynocarryunequal
 signedfp12multiplynocarryunequal --> fp12compress
@@ -2015,11 +1996,8 @@ signedfp12carrymodp --> fp12multiply
 in --> fp12multiply
 fp12multiply --> fp12multiplywithlineunequal
 ellipticcurvedouble --> fp12multiplywithlineunequal
-p --> fp12multiplywithlineunequal
-q --> fp12multiplywithlineunequal
 fp12multiplywithlineunequal --> f
 ellipticcurvedouble --> ellipticcurveaddunequal
-p --> ellipticcurveaddunequal
 f --> out
 
 
@@ -2053,7 +2031,6 @@ ellipticcurvedoublefp2
 signedfp12multiplynocarry
 
 f --> signedfp12multiplynocarry
-q --> linefunctionequalfp2
 signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
 linefunctionequalfp2 --> signedfp12multiplynocarryunequal
 signedfp12multiplynocarryunequal --> fp12compress
@@ -2061,11 +2038,8 @@ fp12compress --> signedfp12carrymodp
 signedfp12carrymodp --> f
 signedfp12carrymodp --> fp12multiplywithlineunequalfp2
 ellipticcurvedoublefp2 --> fp12multiplywithlineunequalfp2
-p --> fp12multiplywithlineunequalfp2
-q --> fp12multiplywithlineunequalfp2
 fp12multiplywithlineunequalfp2 --> f
 ellipticcurvedoublefp2 --> ellipticcurveaddunequalfp2
-p --> ellipticcurveaddunequalfp2
 f --> out
 
 
@@ -2098,7 +2072,6 @@ ellipticcurvedoublefp2
 linefunctionequalfp2
 
 f --> signedfp12multiplynocarry
-q --> linefunctionequalfp2
 signedfp12multiplynocarry --> signedfp12multiplynocarryunequal
 linefunctionequalfp2 --> signedfp12multiplynocarryunequal
 signedfp12multiplynocarryunequal --> fp12compress
@@ -2109,10 +2082,7 @@ fp12multiply --> f
 fp12multiply --> fp12multiplywithlineunequalfp2
 fp12multiplywithlineunequalfp2 --> fp12multiplywithlineunequalfp2
 ellipticcurvedoublefp2 --> fp12multiplywithlineunequalfp2
-p --> fp12multiplywithlineunequalfp2
-q --> fp12multiplywithlineunequalfp2
 ellipticcurvedoublefp2 --> ellipticcurveaddunequalfp2
-p --> ellipticcurveaddunequalfp2
 fp12multiplywithlineunequalfp2 --> f
 f --> out
 
@@ -2391,8 +2361,6 @@ finalexponentiate
 millerloopfp2
 fpnegate
 
-p --> fpnegate
-q --> millerloopfp2
 millerloopfp2 --> finalexponentiate
 finalexponentiate --> out
 
@@ -3009,12 +2977,7 @@ signedfp12scalarmultiplynocarry
 signedfp12scalarmultiplynocarryunequal
 bigmultshortlong
 
-p --> bigmultshortlong
 bigmultshortlong --> signedfp12scalarmultiplynocarryunequal
-p --> signedfp12scalarmultiplynocarryunequal
-q --> signedfp12scalarmultiplynocarryunequal
-p --> signedfp12scalarmultiplynocarry
-q --> signedfp12scalarmultiplynocarry
 signedfp12scalarmultiplynocarryunequal --> out
 signedfp12scalarmultiplynocarry --> out
 
@@ -3037,12 +3000,8 @@ signedfp2multiplynocarryunequal
 bigmultshortlong2dunequal
 bigmultshortlong2d
 
-p --> bigmultshortlong2d
-p --> bigmultshortlong2dunequal
 bigmultshortlong2d --> bigmultshortlong2dunequal
 bigmultshortlong2d --> signedfp2multiplynocarryunequal
-q --> signedfp2multiplynocarryunequal
-p --> signedfp2multiplynocarryunequal
 bigmultshortlong2dunequal --> out
 bigmultshortlong2d --> out
 signedfp2multiplynocarryunequal --> out
@@ -3065,9 +3024,6 @@ Components:
 bigmultshortlong
 signedfp12scalarmultiplynocarry
 
-p --> signedfp12scalarmultiplynocarry
-q --> signedfp12scalarmultiplynocarry
-p --> bigmultshortlong
 signedfp12scalarmultiplynocarry --> out
 bigmultshortlong --> out
 
@@ -3089,9 +3045,6 @@ Components:
 bigmultshortlong2d
 signedfp2multiplynocarry
 
-p --> signedfp2multiplynocarry
-q --> signedfp2multiplynocarry
-p --> bigmultshortlong2d
 bigmultshortlong2d --> out
 signedfp2multiplynocarry --> out
 
@@ -3157,8 +3110,6 @@ Components:
 finalexponentiate
 blsmillerloop
 
-p --> blsmillerloop
-q --> blsmillerloop
 blsmillerloop --> finalexponentiate
 finalexponentiate --> out
 

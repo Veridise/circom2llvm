@@ -466,10 +466,8 @@ Components:
 checkcarrytozero
 bigmultshortlongunequal
 
-x --> bigmultshortlongunequal
 in --> checkcarrytozero
 bigmultshortlongunequal --> checkcarrytozero
-y --> checkcarrytozero
 
 
 Detecting: checkcarrytozero

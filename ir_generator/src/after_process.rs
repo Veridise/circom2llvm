@@ -27,11 +27,10 @@ pub fn remove_opaque_struct_name(output_path: &String) {
                 }
                 for s_n in &remaining_opaque_structs {
                     let opaque_n = name_opaque_struct(s_n);
-                    if l.contains(&opaque_n) {
-                        l = l.replace(&opaque_n, s_n);
-                        break;
-                    }
+                    l = l.replace(&opaque_n, s_n);
                 }
+                // MAX U128
+                l = l.replace("poison", "340282366920938463463374607431768211455");
                 results.push(l);
             }
         }

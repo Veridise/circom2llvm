@@ -18,7 +18,11 @@ use std::path::PathBuf;
 
 pub const GLOBAL_P: &str = "12539295309507511577697735";
 pub const APPLY_MOD: bool = false;
-pub const MAX_ARRAYSIZE: u32 = if option_env!("CIRCOM2LLVM_LARGEARRAY").is_none() {256} else {4096};
+pub const MAX_ARRAYSIZE: u32 = if option_env!("CIRCOM2LLVM_LARGEARRAY").is_none() {
+    256
+} else {
+    4096
+};
 
 type Fields = (Vec<String>, Vec<String>, Vec<String>, Vec<String>);
 
@@ -35,10 +39,14 @@ pub struct CodeGen<'ctx> {
     pub hacking_ret_ty: HashMap<String, PointerType<'ctx>>,
 
     // Internal utils
-    _global_constraint_fn_val: FunctionValue<'ctx>,
-    _global_inlineswitch_fn_val: FunctionValue<'ctx>,
-    _global_pow_fn_val: FunctionValue<'ctx>,
-    _global_init_fn_val: FunctionValue<'ctx>,
+    _utils_constraint_fn_val: FunctionValue<'ctx>,
+    _utils_switch_fn_val: FunctionValue<'ctx>,
+    _utils_powi_fn_val: FunctionValue<'ctx>,
+    _utils_init_fn_val: FunctionValue<'ctx>,
+    _utils_assert_fn_val: FunctionValue<'ctx>,
+    _utils_arraydim_fn_val: FunctionValue<'ctx>,
+
+    // Global Information
     _global_template_fields: HashMap<String, Fields>,
 }
 
@@ -90,21 +98,21 @@ impl<'ctx> CodeGen<'ctx> {
             .module
             .add_global(self.context.bool_type(), None, &name_constraint());
         self.builder.build_call(
-            self._global_constraint_fn_val,
+            self._utils_constraint_fn_val,
             &[lval.into(), rval.into(), gv.as_basic_value_enum().into()],
             &name_constraint(),
         );
     }
 
-    pub fn build_inline_switch(
+    pub fn build_switch(
         &self,
         cond: IntValue<'ctx>,
         lval: IntValue<'ctx>,
         rval: IntValue<'ctx>,
     ) -> IntValue<'ctx> {
-        let assign_name = "inline_switch";
+        let assign_name = "utils_switch";
         let res = self.builder.build_call(
-            self._global_inlineswitch_fn_val,
+            self._utils_switch_fn_val,
             &[cond.into(), lval.into(), rval.into()],
             assign_name,
         );
@@ -113,7 +121,7 @@ impl<'ctx> CodeGen<'ctx> {
 
     // Prevent constant folding
     pub fn build_initial_var(&self, var: &String) -> BasicValueEnum<'ctx> {
-        let res = self.builder.build_call(self._global_init_fn_val, &[], var);
+        let res = self.builder.build_call(self._utils_init_fn_val, &[], var);
         return res.try_as_basic_value().left().unwrap();
     }
 
@@ -160,7 +168,7 @@ impl<'ctx> CodeGen<'ctx> {
     pub fn build_pow(&self, args: &[BasicMetadataValueEnum<'ctx>], name: &str) -> IntValue<'ctx> {
         return self
             .builder
-            .build_call(self._global_pow_fn_val, args, name)
+            .build_call(self._utils_powi_fn_val, args, name)
             .try_as_basic_value()
             .unwrap_left()
             .into_int_value();
@@ -193,6 +201,20 @@ impl<'ctx> CodeGen<'ctx> {
             self.builder.build_unconditional_branch(destination_bb);
         }
         self.builder.position_at_end(destination_bb);
+    }
+
+    pub fn build_assert(&self, val: IntValue<'ctx>) {
+        self.builder
+            .build_call(self._utils_assert_fn_val, &[val.into()], "assert");
+    }
+
+    pub fn build_arraydim(&self, ptr: PointerValue<'ctx>, dims: &Vec<IntValue<'ctx>>) {
+        let mut vals = vec![ptr.into()];
+        for d in dims {
+            vals.push(d.clone().into());
+        }
+        self.builder
+            .build_call(self._utils_arraydim_fn_val, &vals, "arraydim");
     }
 
     pub fn get_real_strt_ptr(
@@ -229,7 +251,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
     // Value Types
     let val_ty = context.i128_type();
     let bool_ty = context.bool_type();
-    let constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
+    let utils_constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
 
     // Global Prime
     let const_p = val_ty
@@ -239,25 +261,35 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
     let const_zero = val_ty.const_zero();
 
     // Add constraint function
-    let constraint_fn_args_ty = [val_ty.into(), val_ty.into(), constraint_gv_ptr_ty.into()];
-    let constraint_fn_ret_ty = context.void_type();
-    let constraint_fn_ty = constraint_fn_ret_ty.fn_type(&constraint_fn_args_ty, false);
-    let constraint_fn_name = name_intrinsinc_fn("add_constraint");
-    let constraint_fn_val = module.add_function(&constraint_fn_name, constraint_fn_ty, None);
-    let constraint_fn_entry_bb = context.append_basic_block(constraint_fn_val, &name_entry_block());
-    builder.position_at_end(constraint_fn_entry_bb);
+    let utils_constraint_fn_args_ty = [
+        val_ty.into(),
+        val_ty.into(),
+        utils_constraint_gv_ptr_ty.into(),
+    ];
+    let utils_constraint_fn_ret_ty = context.void_type();
+    let utils_constraint_fn_ty =
+        utils_constraint_fn_ret_ty.fn_type(&utils_constraint_fn_args_ty, false);
+    let utils_constraint_fn_name = name_intrinsinc_fn("utils_constraint");
+    let utils_constraint_fn_val =
+        module.add_function(&utils_constraint_fn_name, utils_constraint_fn_ty, None);
+    let utils_constraint_fn_entry_bb =
+        context.append_basic_block(utils_constraint_fn_val, &name_entry_block());
+    builder.position_at_end(utils_constraint_fn_entry_bb);
 
     let assign_name = name_constraint();
     let eq_val = builder.build_int_compare(
         IntPredicate::EQ,
-        constraint_fn_val
+        utils_constraint_fn_val
             .get_first_param()
             .unwrap()
             .into_int_value(),
-        constraint_fn_val.get_nth_param(1).unwrap().into_int_value(),
+        utils_constraint_fn_val
+            .get_nth_param(1)
+            .unwrap()
+            .into_int_value(),
         &assign_name,
     );
-    let gv_val = constraint_fn_val
+    let gv_val = utils_constraint_fn_val
         .get_last_param()
         .unwrap()
         .into_pointer_value();
@@ -265,31 +297,31 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
     builder.build_return(None);
 
     // Add inline switch function
-    let inlineswitch_fn_args_ty = [bool_ty.into(), val_ty.into(), val_ty.into()];
-    let inlineswitch_fn_ret_ty = val_ty;
-    let inlineswitch_fn_ty = inlineswitch_fn_ret_ty.fn_type(&inlineswitch_fn_args_ty, false);
-    let inlineswitch_fn_name = name_intrinsinc_fn("inline_switch");
-    let inlineswitch_fn_val = module.add_function(&inlineswitch_fn_name, inlineswitch_fn_ty, None);
-    let inlineswitch_fn_entry_bb =
-        context.append_basic_block(inlineswitch_fn_val, &name_entry_block());
-    let inlineswitch_fn_t_bb =
-        context.append_basic_block(inlineswitch_fn_val, &name_if_block(true, false));
-    let inlineswitch_fn_f_bb =
-        context.append_basic_block(inlineswitch_fn_val, &name_if_block(false, false));
-    builder.position_at_end(inlineswitch_fn_entry_bb);
+    let utils_switch_fn_args_ty = [bool_ty.into(), val_ty.into(), val_ty.into()];
+    let utils_switch_fn_ret_ty = val_ty;
+    let utils_switch_fn_ty = utils_switch_fn_ret_ty.fn_type(&utils_switch_fn_args_ty, false);
+    let utils_switch_fn_name = name_intrinsinc_fn("utils_switch");
+    let utils_switch_fn_val = module.add_function(&utils_switch_fn_name, utils_switch_fn_ty, None);
+    let utils_switch_fn_entry_bb =
+        context.append_basic_block(utils_switch_fn_val, &name_entry_block());
+    let utils_switch_fn_t_bb =
+        context.append_basic_block(utils_switch_fn_val, &name_if_block(true, false));
+    let utils_switch_fn_f_bb =
+        context.append_basic_block(utils_switch_fn_val, &name_if_block(false, false));
+    builder.position_at_end(utils_switch_fn_entry_bb);
 
     builder.build_conditional_branch(
-        inlineswitch_fn_val
+        utils_switch_fn_val
             .get_first_param()
             .unwrap()
             .into_int_value(),
-        inlineswitch_fn_t_bb,
-        inlineswitch_fn_f_bb,
+        utils_switch_fn_t_bb,
+        utils_switch_fn_f_bb,
     );
-    builder.position_at_end(inlineswitch_fn_t_bb);
-    builder.build_return(Some(&inlineswitch_fn_val.get_nth_param(1).unwrap()));
-    builder.position_at_end(inlineswitch_fn_f_bb);
-    builder.build_return(Some(&inlineswitch_fn_val.get_nth_param(2).unwrap()));
+    builder.position_at_end(utils_switch_fn_t_bb);
+    builder.build_return(Some(&utils_switch_fn_val.get_nth_param(1).unwrap()));
+    builder.position_at_end(utils_switch_fn_f_bb);
+    builder.build_return(Some(&utils_switch_fn_val.get_nth_param(2).unwrap()));
 
     // Add powi function
     let powi_base_ty = context.f128_type();
@@ -299,36 +331,58 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
         .get_declaration(&module, &[powi_base_ty.into(), powi_power_ty.into()])
         .unwrap();
 
-    let inlinepowi_fn_args_ty = [val_ty.into(), val_ty.into()];
-    let inlinepowi_fn_ret_ty = val_ty;
-    let inlinepowi_fn_ty = inlinepowi_fn_ret_ty.fn_type(&inlinepowi_fn_args_ty, false);
-    let inlinepowi_fn_name = name_intrinsinc_fn("inline_powi");
-    let inlinepowi_fn_val = module.add_function(&inlinepowi_fn_name, inlinepowi_fn_ty, None);
-    let inlinepowi_fn_entry_bb = context.append_basic_block(inlinepowi_fn_val, &name_entry_block());
-    builder.position_at_end(inlinepowi_fn_entry_bb);
+    let utils_powi_fn_args_ty = [val_ty.into(), val_ty.into()];
+    let utils_powi_fn_ret_ty = val_ty;
+    let utils_powi_fn_ty = utils_powi_fn_ret_ty.fn_type(&utils_powi_fn_args_ty, false);
+    let utils_powi_fn_name = name_intrinsinc_fn("utils_powi");
+    let utils_powi_fn_val = module.add_function(&utils_powi_fn_name, utils_powi_fn_ty, None);
+    let utils_powi_fn_entry_bb = context.append_basic_block(utils_powi_fn_val, &name_entry_block());
+    builder.position_at_end(utils_powi_fn_entry_bb);
 
-    let origin_base = inlinepowi_fn_val
+    let origin_base = utils_powi_fn_val
         .get_first_param()
         .unwrap()
         .into_int_value();
-    let origin_power = inlinepowi_fn_val.get_last_param().unwrap().into_int_value();
-    let base = builder.build_unsigned_int_to_float(origin_base, powi_base_ty, "inline_powi.base");
-    let power = builder.build_int_cast(origin_power, powi_power_ty, "inline_powi.power");
+    let origin_power = utils_powi_fn_val.get_last_param().unwrap().into_int_value();
+    let base = builder.build_unsigned_int_to_float(origin_base, powi_base_ty, "utils_powi.base");
+    let power = builder.build_int_cast(origin_power, powi_power_ty, "utils_powi.power");
     let powi = builder
-        .build_call(powi_fn_val, &[base.into(), power.into()], "inline_powi.cal")
+        .build_call(powi_fn_val, &[base.into(), power.into()], "utils_powi.cal")
         .try_as_basic_value()
         .unwrap_left();
     let ret =
-        builder.build_float_to_unsigned_int(powi.into_float_value(), val_ty, "inline_powi.ret");
+        builder.build_float_to_unsigned_int(powi.into_float_value(), val_ty, "utils_powi.ret");
     builder.build_return(Some(&ret));
 
-    let inlineinit_fn_ret_ty = val_ty;
-    let inlineinit_fn_ty = inlineinit_fn_ret_ty.fn_type(&[], false);
-    let inlineinit_fn_name = name_intrinsinc_fn("inline_init");
-    let inlineinit_fn_val = module.add_function(&inlineinit_fn_name, inlineinit_fn_ty, None);
-    let inlineinit_fn_entry_bb = context.append_basic_block(inlineinit_fn_val, &name_entry_block());
-    builder.position_at_end(inlineinit_fn_entry_bb);
+    let utils_init_fn_ret_ty = val_ty;
+    let utils_init_fn_ty = utils_init_fn_ret_ty.fn_type(&[], false);
+    let utils_init_fn_name = name_intrinsinc_fn("utils_init");
+    let utils_init_fn_val = module.add_function(&utils_init_fn_name, utils_init_fn_ty, None);
+    let utils_init_fn_entry_bb = context.append_basic_block(utils_init_fn_val, &name_entry_block());
+    builder.position_at_end(utils_init_fn_entry_bb);
     builder.build_return(Some(&const_zero));
+
+    let utils_assert_fn_args_ty = [context.bool_type().into()];
+    let utils_assert_fn_ret_ty = context.void_type();
+    let utils_assert_fn_ty = utils_assert_fn_ret_ty.fn_type(&utils_assert_fn_args_ty, false);
+    let utils_assert_fn_name = name_intrinsinc_fn("utils_assert");
+    let utils_assert_fn_val = module.add_function(&utils_assert_fn_name, utils_assert_fn_ty, None);
+    let utils_assert_fn_entry_bb =
+        context.append_basic_block(utils_assert_fn_val, &name_entry_block());
+    builder.position_at_end(utils_assert_fn_entry_bb);
+    builder.build_return(None);
+
+    let default_ptr_ty = val_ty.ptr_type(AddressSpace::Generic);
+    let utils_arraydim_fn_args_ty = [default_ptr_ty.into()];
+    let utils_arraydim_fn_ret_ty = context.void_type();
+    let utils_arraydim_fn_ty = utils_arraydim_fn_ret_ty.fn_type(&utils_arraydim_fn_args_ty, true);
+    let utils_arraydim_fn_name = name_intrinsinc_fn("utils_arraydim");
+    let utils_arraydim_fn_val =
+        module.add_function(&utils_arraydim_fn_name, utils_arraydim_fn_ty, None);
+    let utils_arraydim_fn_entry_bb =
+        context.append_basic_block(utils_arraydim_fn_val, &name_entry_block());
+    builder.position_at_end(utils_arraydim_fn_entry_bb);
+    builder.build_return(None);
 
     let codegen = CodeGen {
         context,
@@ -341,10 +395,12 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: PathBuf) -> CodeGe
 
         hacking_ret_ty: assert_fn_ret_ty(val_ty),
 
-        _global_constraint_fn_val: constraint_fn_val,
-        _global_inlineswitch_fn_val: inlineswitch_fn_val,
-        _global_pow_fn_val: inlinepowi_fn_val,
-        _global_init_fn_val: inlineinit_fn_val,
+        _utils_constraint_fn_val: utils_constraint_fn_val,
+        _utils_switch_fn_val: utils_switch_fn_val,
+        _utils_powi_fn_val: utils_powi_fn_val,
+        _utils_init_fn_val: utils_init_fn_val,
+        _utils_assert_fn_val: utils_assert_fn_val,
+        _utils_arraydim_fn_val: utils_arraydim_fn_val,
         _global_template_fields: HashMap::new(),
     };
     return codegen;

@@ -5,11 +5,12 @@ use crate::expression::{
 use crate::inferrence::{infer_type_from_expression, infer_type_from_statement};
 use crate::info_collector::{collect_depended_components, collect_dependences, collect_signal};
 use crate::namer::{
-    name_entry_block, name_exit_block, name_initial_var, name_template_fn, name_template_struct,
+    name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, name_template_fn,
+    name_template_struct,
 };
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
-use inkwell::values::BasicValue;
+use inkwell::values::{BasicValue, IntValue};
 use inkwell::AddressSpace;
 use program_structure::ast::Statement;
 
@@ -211,6 +212,24 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
                 }
             }
             _ => unreachable!(),
+        }
+
+        let current_bb = init_fn_val.get_last_basic_block().unwrap();
+        let arraydim_bb = context.append_basic_block(init_fn_val, &&name_arraydim_block());
+        codegen.build_block_transferring(current_bb, arraydim_bb);
+
+        for (name, ptr) in &self.scope.var2ptr {
+            let dims_op = self.scope.get_var_dims(name);
+            match dims_op {
+                Some(dims) => {
+                    let _dims: Vec<IntValue<'ctx>> =
+                        dims.iter().map(|d| d.into_int_value()).collect();
+                    let default_ptr_ty = codegen.val_ty.ptr_type(AddressSpace::Generic);
+                    let _ptr = builder.build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
+                    codegen.build_arraydim(_ptr, &_dims);
+                }
+                None => (),
+            }
         }
 
         // Write-in output signals

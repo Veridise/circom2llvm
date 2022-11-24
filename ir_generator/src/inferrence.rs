@@ -116,17 +116,7 @@ pub fn infer_type_from_statement<'ctx>(
     }
 }
 
-fn resolve_dim_expr<'ctx>(dim: &Expression) -> u32 {
-    // match dim {
-    //     Expression::Number(_, bigint) => {
-    //         let mut valid_u32 = bigint.to_u32().unwrap();
-    //         if valid_u32 == 0 {
-    //             valid_u32 = 1;
-    //         }
-    //         return valid_u32;
-    //     }
-    //     _ => return MAX_ARRAYSIZE,
-    // }
+fn resolve_dim_expr<'ctx>(_: &Expression) -> u32 {
     return MAX_ARRAYSIZE;
 }
 

@@ -27,7 +27,7 @@ using NameSet = std::unordered_set<std::string>;
 
 const std::string fn_template_prefix = "fn_template_init_";
 const std::string fn_build_prefix = "fn_template_build_";
-const std::string fn_constraint_prefix = "fn_intrinsic_add_constraint";
+const std::string fn_constraint_prefix = "fn_intrinsic_utils_constraint";
 const std::string argument_mark = "arg_inner";
 const std::string input_signal_mark = "input_inner";
 const std::string inter_signal_mark = "inter_inner";

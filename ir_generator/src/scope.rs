@@ -61,6 +61,8 @@ pub trait ScopeTrait<'ctx> {
     fn get_var_ty_as_ptr(&self, name: &String) -> BasicTypeEnum<'ctx>;
     fn set_var_ty(&mut self, name: &String, ty: BasicTypeEnum<'ctx>);
     fn has_var_ty(&self, name: &String) -> bool;
+    fn get_var_dims(&self, name: &String) -> Option<&Vec<BasicValueEnum<'ctx>>>;
+    fn set_var_dims(&mut self, name: &String, dims: Vec<BasicValueEnum<'ctx>>);
     fn get_main_fn(&self) -> FunctionValue<'ctx>;
     fn set_main_fn(&mut self, fn_val: FunctionValue<'ctx>);
     fn get_current_exit_block(&self) -> BasicBlock<'ctx>;
@@ -108,6 +110,8 @@ pub struct Scope<'ctx> {
     // Stage 3: Build Instructions.
     pub var2ptr: HashMap<String, PointerValue<'ctx>>,
     pub current_exit_block: Option<BasicBlock<'ctx>>,
+
+    pub var2dims: HashMap<String, Vec<BasicValueEnum<'ctx>>>,
 }
 
 impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
@@ -190,6 +194,17 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
 
     fn has_var_ty(&self, name: &String) -> bool {
         return self.var2ty.contains_key(name);
+    }
+
+    fn get_var_dims(&self, name: &String) -> Option<&Vec<BasicValueEnum<'ctx>>> {
+        return self.var2dims.get(name);
+    }
+
+    fn set_var_dims(&mut self, name: &String, dims: Vec<BasicValueEnum<'ctx>>) {
+        if dims.len() == 0 {
+            return;
+        }
+        self.var2dims.insert(name.clone(), dims);
     }
 
     fn initial_var(

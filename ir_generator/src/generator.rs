@@ -71,6 +71,7 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, summarygen
                     val_ty: codegen.val_ty,
 
                     dependences: Vec::new(),
+                    var2dims: HashMap::new(),
 
                     var2ty: HashMap::new(),
                     var2comp: HashMap::new(),
@@ -103,6 +104,7 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, summarygen
                     val_ty: codegen.val_ty,
 
                     dependences: Vec::new(),
+                    var2dims: HashMap::new(),
 
                     var2ptr: HashMap::new(),
                     var2ty: HashMap::new(),

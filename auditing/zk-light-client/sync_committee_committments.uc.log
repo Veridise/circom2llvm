@@ -44,8 +44,6 @@ Components:
 bits2num
 num2bits
 
-pubkeybytes --> num2bits
-bits2num --> pubkeyx
 
 
 Detecting: bigsigma
@@ -804,9 +802,6 @@ sszphase0synccommittee
 assertpubkeybytesmatchespubkeyxbigintnocheck
 
 pubkeys --> assertpubkeybytesmatchespubkeyxbigintnocheck
-pubkeyhex --> assertpubkeybytesmatchespubkeyxbigintnocheck
-pubkeyhex --> sszphase0synccommittee
-aggregatepubkeyhex --> sszphase0synccommittee
 pubkeys --> pubkeyposeidon
 
 
