@@ -1,1 +1,37 @@
-./auditing/zk-light-client/pubkey_poseidon.ssa.ll
+/Users/hongbo/code/zk-light-client/circuits/circuits/pubkey_poseidon.circom
+Detecting: ark
+
+Detecting: bytes_48_to_field_ele
+
+Detecting: mix
+
+Detecting: mixlast
+
+Detecting: mixs
+
+Detecting: poseidon
+Component: poseidonex
+    Used output signal: out
+
+Detecting: poseidonex
+Component: mixs
+    Used output signal: out
+Component: mix
+    Used output signal: out
+Component: sigma
+    Used output signal: out
+Component: mixlast
+    Used output signal: out
+Component: ark
+    Used output signal: out
+
+Detecting: posiedon_generalized
+Component: poseidon
+    Used output signal: out
+
+Detecting: pubkeyposeidon
+Component: posiedon_generalized
+    Used output signal: out
+
+Detecting: sigma
+

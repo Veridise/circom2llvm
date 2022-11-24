@@ -1,40 +1,40 @@
 ; ModuleID = 'simple_serialize.circom'
-source_filename = "/Users/hongbo/code/zk-light-client-main/circuits/circuits/simple_serialize.circom"
+source_filename = "/Users/hongbo/code/zk-light-client/circuits/circuits/simple_serialize.circom"
 
-%struct_template_circuit_bits2num = type { i128, [4096 x i128]*, i128 }
-%struct_template_circuit_maj_t = type { i128, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_rotr = type { i128, i128, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_xor3 = type { i128, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_bigsigma = type { i128, i128, i128, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_k = type { i128, [4096 x i128]* }
 %struct_template_circuit_num2bits = type { i128, i128, [4096 x i128]* }
 %struct_template_circuit_h = type { i128, [4096 x i128]* }
-%struct_template_circuit_rotr = type { i128, i128, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_k = type { i128, [4096 x i128]* }
-%struct_template_circuit_compconstant = type { i128, [4096 x i128]*, [4096 x i128]*, i128, i128 }
-%struct_template_circuit_lessthan = type { i128, [4096 x i128]*, i128 }
+%struct_template_circuit_maj_t = type { i128, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_ch_t = type { i128, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_xor3 = type { i128, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_shr = type { i128, i128, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_bigsigma = type { i128, i128, i128, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_iszero = type { i128, i128, i128 }
-%struct_template_circuit_binsum = type { i128, i128, [4096 x [4096 x i128]]*, [4096 x i128]* }
-%struct_template_circuit_aliascheck = type { [4096 x i128]* }
-%struct_template_circuit_greatereqthan = type { i128, [4096 x i128]*, i128 }
-%struct_template_circuit_isequal = type { [4096 x i128]*, i128 }
-%struct_template_circuit_num2bitsneg = type { i128, i128, [4096 x i128]* }
-%struct_template_circuit_lesseqthan = type { i128, [4096 x i128]*, i128 }
-%struct_template_circuit_smallsigma = type { i128, i128, i128, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_bits2num_strict = type { [4096 x i128]*, i128 }
+%struct_template_circuit_lessthan = type { i128, [4096 x i128]*, i128 }
+%struct_template_circuit_shr = type { i128, i128, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_forceequalifenabled = type { i128, [4096 x i128]* }
+%struct_template_circuit_num2bitsneg = type { i128, i128, [4096 x i128]* }
+%struct_template_circuit_compconstant = type { i128, [4096 x i128]*, [4096 x i128]*, i128, i128 }
+%struct_template_circuit_smallsigma = type { i128, i128, i128, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_greaterthan = type { i128, [4096 x i128]*, i128 }
+%struct_template_circuit_bits2num = type { i128, [4096 x i128]*, i128 }
+%struct_template_circuit_binsum = type { i128, i128, [4096 x [4096 x i128]]*, [4096 x i128]* }
+%struct_template_circuit_lesseqthan = type { i128, [4096 x i128]*, i128 }
 %struct_template_circuit_t2 = type { [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_num2bits_strict = type { i128, [4096 x i128]* }
+%struct_template_circuit_greatereqthan = type { i128, [4096 x i128]*, i128 }
 %struct_template_circuit_t1 = type { [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_isequal = type { [4096 x i128]*, i128 }
+%struct_template_circuit_aliascheck = type { [4096 x i128]* }
 %struct_template_circuit_sigmaplus = type { [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_num2bits_strict = type { i128, [4096 x i128]* }
+%struct_template_circuit_bits2num_strict = type { [4096 x i128]*, i128 }
 %struct_template_circuit_sha256compression = type { [4096 x i128]*, [4096 x i128]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]*, [4096 x i128]* }
 %struct_template_circuit_sha256 = type { i128, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_sha256bytes = type { i128, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_sszlayer = type { i128, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_sszarray = type { i128, i128, [4096 x i128]*, [4096 x i128]* }
-%struct_template_circuit_sszphase0synccommittee = type { [4096 x [4096 x i128]]*, [4096 x i128]*, [4096 x i128]* }
 %struct_template_circuit_sszphase0beaconblockheader = type { [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]*, [4096 x i128]* }
+%struct_template_circuit_sszphase0synccommittee = type { [4096 x [4096 x i128]]*, [4096 x i128]*, [4096 x i128]* }
 
 @constraint = external global i1
 @constraint.1 = external global i1
@@ -264,419 +264,6 @@ entry:
   ret i128 0
 }
 
-define void @fn_template_init_bits2num(%struct_template_circuit_bits2num* %0) {
-entry:
-  %Bits2Num = alloca %struct_template_circuit_bits2num*, align 8
-  store %struct_template_circuit_bits2num* %0, %struct_template_circuit_bits2num** %Bits2Num, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %0, i32 0, i32 0
-  %bits2num.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %bits2num.n.declare_arg = alloca i128, align 8
-  store i128 %bits2num.n.read_arg_inner, i128* %bits2num.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %0, i32 0, i32 1
-  %bits2num.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %bits2num.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %bits2num.in.read_input_inner, [4096 x i128]** %bits2num.in.declare_input, align 8
-  %lc1 = alloca i128, align 8
-  %lc12 = call i128 @fn_intrinsic_inline_init()
-  store i128 %lc12, i128* %lc1, align 4
-  %i = alloca i128, align 8
-  %i3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i3, i128* %i, align 4
-  %bits2num.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %bits2num.out.declare_output, align 4
-  %e2 = alloca i128, align 8
-  %e24 = call i128 @fn_intrinsic_inline_init()
-  store i128 %e24, i128* %e2, align 4
-  store i128 0, i128* %lc1, align 4
-  store i128 1, i128* %e2, align 4
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %lc15 = load i128, i128* %lc1, align 4
-  %in = load [4096 x i128]*, [4096 x i128]** %bits2num.in.declare_input, align 8
-  %i6 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %i6
-  %in7 = load i128, i128* %array_getter, align 4
-  %e28 = load i128, i128* %e2, align 4
-  %mul = mul i128 %in7, %e28
-  %add = add i128 %lc15, %mul
-  store i128 %add, i128* %lc1, align 4
-  %e29 = load i128, i128* %e2, align 4
-  %e210 = load i128, i128* %e2, align 4
-  %add11 = add i128 %e29, %e210
-  store i128 %add11, i128* %e2, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i12 = load i128, i128* %i, align 4
-  %add13 = add i128 %i12, 1
-  store i128 %add13, i128* %i, align 4
-  %i14 = load i128, i128* %i, align 4
-  %n = load i128, i128* %bits2num.n.declare_arg, align 4
-  %slt = icmp slt i128 %i14, %n
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %lc115 = load i128, i128* %lc1, align 4
-  %out16 = load i128, i128* %bits2num.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out16, i128 %lc115, i1* @constraint)
-  %ptr_getter = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %Bits2Num, align 8
-  %bits2num.out.write_output_inner = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %ptr_getter, i32 0, i32 2
-  store i128 %lc115, i128* %bits2num.out.write_output_inner, align 4
-  %Bits2Num17 = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %Bits2Num, align 8
-  %struct_getter18 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %Bits2Num17, i32 0, i32 2
-  %bits2num.out.read_output_inner = load i128, i128* %struct_getter18, align 4
-  store i128 %bits2num.out.read_output_inner, i128* %bits2num.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out19 = load i128, i128* %bits2num.out.declare_output, align 4
-  %bits2num.out.write_output_inner20 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %0, i32 0, i32 2
-  store i128 %out19, i128* %bits2num.out.write_output_inner20, align 4
-  ret void
-}
-
-define %struct_template_circuit_bits2num* @fn_template_build_bits2num(i128 %0) {
-entry:
-  %struct_template_circuit_bits2num = alloca %struct_template_circuit_bits2num, align 8
-  %bits2num.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %struct_template_circuit_bits2num, i32 0, i32 0
-  store i128 %0, i128* %bits2num.n.write_arg_inner, align 4
-  ret %struct_template_circuit_bits2num* %struct_template_circuit_bits2num
-}
-
-define void @fn_template_init_maj_t(%struct_template_circuit_maj_t* %0) {
-entry:
-  %Maj_t = alloca %struct_template_circuit_maj_t*, align 8
-  store %struct_template_circuit_maj_t* %0, %struct_template_circuit_maj_t** %Maj_t, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 0
-  %maj_t.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %maj_t.n.declare_arg = alloca i128, align 8
-  store i128 %maj_t.n.read_arg_inner, i128* %maj_t.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 1
-  %maj_t.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %maj_t.a.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %maj_t.a.read_input_inner, [4096 x i128]** %maj_t.a.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 2
-  %maj_t.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %maj_t.b.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %maj_t.b.read_input_inner, [4096 x i128]** %maj_t.b.declare_input, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 3
-  %maj_t.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %maj_t.c.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %maj_t.c.read_input_inner, [4096 x i128]** %maj_t.c.declare_input, align 8
-  %k = alloca i128, align 8
-  %k4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k4, i128* %k, align 4
-  %maj_t.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %maj_t.out.declare_output, align 8
-  %maj_t.mid.declare_inter = alloca [4096 x i128]*, align 8
-  %malloccall5 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %mid = bitcast i8* %malloccall5 to [4096 x i128]*
-  store [4096 x i128]* %mid, [4096 x i128]** %maj_t.mid.declare_inter, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %b = load [4096 x i128]*, [4096 x i128]** %maj_t.b.declare_input, align 8
-  %k6 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k6
-  %b7 = load i128, i128* %array_getter, align 4
-  %c = load [4096 x i128]*, [4096 x i128]** %maj_t.c.declare_input, align 8
-  %k8 = load i128, i128* %k, align 4
-  %array_getter9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k8
-  %c10 = load i128, i128* %array_getter9, align 4
-  %mul = mul i128 %b7, %c10
-  %mid11 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
-  %k12 = load i128, i128* %k, align 4
-  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid11, i128 0, i128 %k12
-  %mid14 = load i128, i128* %array_getter13, align 4
-  call void @fn_intrinsic_add_constraint(i128 %mid14, i128 %mul, i1* @constraint.1)
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
-  %k15 = load i128, i128* %k, align 4
-  %mid16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %k15
-  store i128 %mul, i128* %mid16, align 4
-  %a = load [4096 x i128]*, [4096 x i128]** %maj_t.a.declare_input, align 8
-  %k17 = load i128, i128* %k, align 4
-  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k17
-  %a19 = load i128, i128* %array_getter18, align 4
-  %b20 = load [4096 x i128]*, [4096 x i128]** %maj_t.b.declare_input, align 8
-  %k21 = load i128, i128* %k, align 4
-  %array_getter22 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b20, i128 0, i128 %k21
-  %b23 = load i128, i128* %array_getter22, align 4
-  %c24 = load [4096 x i128]*, [4096 x i128]** %maj_t.c.declare_input, align 8
-  %k25 = load i128, i128* %k, align 4
-  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c24, i128 0, i128 %k25
-  %c27 = load i128, i128* %array_getter26, align 4
-  %add = add i128 %b23, %c27
-  %mid28 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
-  %k29 = load i128, i128* %k, align 4
-  %array_getter30 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid28, i128 0, i128 %k29
-  %mid31 = load i128, i128* %array_getter30, align 4
-  %mul32 = mul i128 2, %mid31
-  %sub = sub i128 %add, %mul32
-  %mul33 = mul i128 %a19, %sub
-  %mid34 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
-  %k35 = load i128, i128* %k, align 4
-  %array_getter36 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid34, i128 0, i128 %k35
-  %mid37 = load i128, i128* %array_getter36, align 4
-  %add38 = add i128 %mul33, %mid37
-  %out39 = load [4096 x i128]*, [4096 x i128]** %maj_t.out.declare_output, align 8
-  %k40 = load i128, i128* %k, align 4
-  %array_getter41 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out39, i128 0, i128 %k40
-  %out42 = load i128, i128* %array_getter41, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out42, i128 %add38, i1* @constraint.2)
-  %ptr_getter43 = load [4096 x i128]*, [4096 x i128]** %maj_t.out.declare_output, align 8
-  %k44 = load i128, i128* %k, align 4
-  %out45 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter43, i128 0, i128 %k44
-  store i128 %add38, i128* %out45, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %k46 = load i128, i128* %k, align 4
-  %add47 = add i128 %k46, 1
-  store i128 %add47, i128* %k, align 4
-  %k48 = load i128, i128* %k, align 4
-  %n = load i128, i128* %maj_t.n.declare_arg, align 4
-  %slt = icmp slt i128 %k48, %n
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %mid49 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
-  %maj_t.mid.write_inter_inner = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 4
-  store [4096 x i128]* %mid49, [4096 x i128]** %maj_t.mid.write_inter_inner, align 8
-  %out50 = load [4096 x i128]*, [4096 x i128]** %maj_t.out.declare_output, align 8
-  %maj_t.out.write_output_inner = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 5
-  store [4096 x i128]* %out50, [4096 x i128]** %maj_t.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_maj_t* @fn_template_build_maj_t(i128 %0) {
-entry:
-  %struct_template_circuit_maj_t = alloca %struct_template_circuit_maj_t, align 8
-  %maj_t.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %struct_template_circuit_maj_t, i32 0, i32 0
-  store i128 %0, i128* %maj_t.n.write_arg_inner, align 4
-  ret %struct_template_circuit_maj_t* %struct_template_circuit_maj_t
-}
-
-define void @fn_template_init_num2bits(%struct_template_circuit_num2bits* %0) {
-entry:
-  %Num2Bits = alloca %struct_template_circuit_num2bits*, align 8
-  store %struct_template_circuit_num2bits* %0, %struct_template_circuit_num2bits** %Num2Bits, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %0, i32 0, i32 0
-  %num2bits.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %num2bits.n.declare_arg = alloca i128, align 8
-  store i128 %num2bits.n.read_arg_inner, i128* %num2bits.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %0, i32 0, i32 1
-  %num2bits.in.read_input_inner = load i128, i128* %struct_getter1, align 4
-  %num2bits.in.declare_input = alloca i128, align 8
-  store i128 %num2bits.in.read_input_inner, i128* %num2bits.in.declare_input, align 4
-  %i = alloca i128, align 8
-  %i2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i2, i128* %i, align 4
-  %lc1 = alloca i128, align 8
-  %lc13 = call i128 @fn_intrinsic_inline_init()
-  store i128 %lc13, i128* %lc1, align 4
-  %num2bits.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %num2bits.out.declare_output, align 8
-  %e2 = alloca i128, align 8
-  %e24 = call i128 @fn_intrinsic_inline_init()
-  store i128 %e24, i128* %e2, align 4
-  store i128 0, i128* %lc1, align 4
-  store i128 1, i128* %e2, align 4
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %in = load i128, i128* %num2bits.in.declare_input, align 4
-  %i5 = load i128, i128* %i, align 4
-  %rshift = lshr i128 %in, %i5
-  %and = and i128 %rshift, 1
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
-  %i6 = load i128, i128* %i, align 4
-  %out7 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i6
-  store i128 %and, i128* %out7, align 4
-  %out8 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
-  %i9 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %out8, i128 0, i128 %i9
-  %out10 = load i128, i128* %array_getter, align 4
-  %out11 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
-  %i12 = load i128, i128* %i, align 4
-  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out11, i128 0, i128 %i12
-  %out14 = load i128, i128* %array_getter13, align 4
-  %sub = sub i128 %out14, 1
-  %mul = mul i128 %out10, %sub
-  call void @fn_intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint.3)
-  %lc115 = load i128, i128* %lc1, align 4
-  %out16 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
-  %i17 = load i128, i128* %i, align 4
-  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out16, i128 0, i128 %i17
-  %out19 = load i128, i128* %array_getter18, align 4
-  %e220 = load i128, i128* %e2, align 4
-  %mul21 = mul i128 %out19, %e220
-  %add = add i128 %lc115, %mul21
-  store i128 %add, i128* %lc1, align 4
-  %e222 = load i128, i128* %e2, align 4
-  %e223 = load i128, i128* %e2, align 4
-  %add24 = add i128 %e222, %e223
-  store i128 %add24, i128* %e2, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i25 = load i128, i128* %i, align 4
-  %add26 = add i128 %i25, 1
-  store i128 %add26, i128* %i, align 4
-  %i27 = load i128, i128* %i, align 4
-  %n = load i128, i128* %num2bits.n.declare_arg, align 4
-  %slt = icmp slt i128 %i27, %n
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %lc128 = load i128, i128* %lc1, align 4
-  %in29 = load i128, i128* %num2bits.in.declare_input, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lc128, i128 %in29, i1* @constraint.4)
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out30 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
-  %num2bits.out.write_output_inner = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %0, i32 0, i32 2
-  store [4096 x i128]* %out30, [4096 x i128]** %num2bits.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_num2bits* @fn_template_build_num2bits(i128 %0) {
-entry:
-  %struct_template_circuit_num2bits = alloca %struct_template_circuit_num2bits, align 8
-  %num2bits.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %struct_template_circuit_num2bits, i32 0, i32 0
-  store i128 %0, i128* %num2bits.n.write_arg_inner, align 4
-  ret %struct_template_circuit_num2bits* %struct_template_circuit_num2bits
-}
-
-define void @fn_template_init_h(%struct_template_circuit_h* %0) {
-entry:
-  %H = alloca %struct_template_circuit_h*, align 8
-  store %struct_template_circuit_h* %0, %struct_template_circuit_h** %H, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_h, %struct_template_circuit_h* %0, i32 0, i32 0
-  %h.x.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %h.x.declare_arg = alloca i128, align 8
-  store i128 %h.x.read_arg_inner, i128* %h.x.declare_arg, align 4
-  %h.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %h.out.declare_output, align 8
-  %c = alloca [4096 x i128]*, align 8
-  %c1 = alloca [4096 x i128], align 8
-  store [4096 x i128]* %c1, [4096 x i128]** %c, align 8
-  %i = alloca i128, align 8
-  %i2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i2, i128* %i, align 4
-  %const_inline_array = alloca [4096 x i128], align 8
-  store [4096 x i128] [i128 1779033703, i128 3144134277, i128 1013904242, i128 2773480762, i128 1359893119, i128 2600822924, i128 528734635, i128 1541459225, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0], [4096 x i128]* %const_inline_array, align 4
-  store [4096 x i128]* %const_inline_array, [4096 x i128]** %c, align 8
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %c3 = load [4096 x i128]*, [4096 x i128]** %c, align 8
-  %x = load i128, i128* %h.x.declare_arg, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %c3, i128 0, i128 %x
-  %c4 = load i128, i128* %array_getter, align 4
-  %i5 = load i128, i128* %i, align 4
-  %rshift = lshr i128 %c4, %i5
-  %and = and i128 %rshift, 1
-  %out6 = load [4096 x i128]*, [4096 x i128]** %h.out.declare_output, align 8
-  %i7 = load i128, i128* %i, align 4
-  %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out6, i128 0, i128 %i7
-  %out9 = load i128, i128* %array_getter8, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %and, i1* @constraint.5)
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %h.out.declare_output, align 8
-  %i10 = load i128, i128* %i, align 4
-  %out11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i10
-  store i128 %and, i128* %out11, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i12 = load i128, i128* %i, align 4
-  %add = add i128 %i12, 1
-  store i128 %add, i128* %i, align 4
-  %i13 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i13, 32
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out14 = load [4096 x i128]*, [4096 x i128]** %h.out.declare_output, align 8
-  %h.out.write_output_inner = getelementptr inbounds %struct_template_circuit_h, %struct_template_circuit_h* %0, i32 0, i32 1
-  store [4096 x i128]* %out14, [4096 x i128]** %h.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_h* @fn_template_build_h(i128 %0) {
-entry:
-  %struct_template_circuit_h = alloca %struct_template_circuit_h, align 8
-  %h.x.write_arg_inner = getelementptr inbounds %struct_template_circuit_h, %struct_template_circuit_h* %struct_template_circuit_h, i32 0, i32 0
-  store i128 %0, i128* %h.x.write_arg_inner, align 4
-  ret %struct_template_circuit_h* %struct_template_circuit_h
-}
-
-define i128 @rrot(i128 %0, i128 %1) {
-entry:
-  %rrot.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %rrot.x.declare_arg, align 4
-  %rrot.n.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %rrot.n.declare_arg, align 4
-  %x = load i128, i128* %rrot.x.declare_arg, align 4
-  %n = load i128, i128* %rrot.n.declare_arg, align 4
-  %rshift = lshr i128 %x, %n
-  %x1 = load i128, i128* %rrot.x.declare_arg, align 4
-  %n2 = load i128, i128* %rrot.n.declare_arg, align 4
-  %sub = sub i128 32, %n2
-  %lshift = shl i128 %x1, %sub
-  %or = or i128 %rshift, %lshift
-  %and = and i128 %or, 4294967295
-  ret i128 %and
-}
-
-define i128 @ssigma1(i128 %0) {
-entry:
-  %ssigma1.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %ssigma1.x.declare_arg, align 4
-  %x = load i128, i128* %ssigma1.x.declare_arg, align 4
-  %call = call i128 @rrot(i128 %x, i128 17)
-  %x1 = load i128, i128* %ssigma1.x.declare_arg, align 4
-  %call2 = call i128 @rrot(i128 %x1, i128 19)
-  %xor = xor i128 %call, %call2
-  %x3 = load i128, i128* %ssigma1.x.declare_arg, align 4
-  %rshift = lshr i128 %x3, 10
-  %xor4 = xor i128 %xor, %rshift
-  ret i128 %xor4
-}
-
-define i128 @bsigma0(i128 %0) {
-entry:
-  %bsigma0.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %bsigma0.x.declare_arg, align 4
-  %x = load i128, i128* %bsigma0.x.declare_arg, align 4
-  %call = call i128 @rrot(i128 %x, i128 2)
-  %x1 = load i128, i128* %bsigma0.x.declare_arg, align 4
-  %call2 = call i128 @rrot(i128 %x1, i128 13)
-  %xor = xor i128 %call, %call2
-  %x3 = load i128, i128* %bsigma0.x.declare_arg, align 4
-  %call4 = call i128 @rrot(i128 %x3, i128 22)
-  %xor5 = xor i128 %xor, %call4
-  ret i128 %xor5
-}
-
 define void @fn_template_init_rotr(%struct_template_circuit_rotr* %0) {
 entry:
   %RotR = alloca %struct_template_circuit_rotr*, align 8
@@ -716,7 +303,7 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %i7 = load i128, i128* %i, align 4
   %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out6, i128 0, i128 %i7
   %out9 = load i128, i128* %array_getter8, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %in5, i1* @constraint.6)
+  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %in5, i1* @constraint)
   %ptr_getter = load [4096 x i128]*, [4096 x i128]** %rotr.out.declare_output, align 8
   %i10 = load i128, i128* %i, align 4
   %out11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i10
@@ -750,6 +337,371 @@ entry:
   %rotr.r.write_arg_inner = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %struct_template_circuit_rotr, i32 0, i32 1
   store i128 %1, i128* %rotr.r.write_arg_inner, align 4
   ret %struct_template_circuit_rotr* %struct_template_circuit_rotr
+}
+
+define void @fn_template_init_xor3(%struct_template_circuit_xor3* %0) {
+entry:
+  %Xor3 = alloca %struct_template_circuit_xor3*, align 8
+  store %struct_template_circuit_xor3* %0, %struct_template_circuit_xor3** %Xor3, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 0
+  %xor3.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %xor3.n.declare_arg = alloca i128, align 8
+  store i128 %xor3.n.read_arg_inner, i128* %xor3.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 1
+  %xor3.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %xor3.a.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %xor3.a.read_input_inner, [4096 x i128]** %xor3.a.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 2
+  %xor3.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %xor3.b.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %xor3.b.read_input_inner, [4096 x i128]** %xor3.b.declare_input, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 3
+  %xor3.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %xor3.c.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %xor3.c.read_input_inner, [4096 x i128]** %xor3.c.declare_input, align 8
+  %xor3.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %xor3.out.declare_output, align 8
+  %xor3.mid.declare_inter = alloca [4096 x i128]*, align 8
+  %malloccall4 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %mid = bitcast i8* %malloccall4 to [4096 x i128]*
+  store [4096 x i128]* %mid, [4096 x i128]** %xor3.mid.declare_inter, align 8
+  %k = alloca i128, align 8
+  %k5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k5, i128* %k, align 4
+  store i128 0, i128* %k, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %b = load [4096 x i128]*, [4096 x i128]** %xor3.b.declare_input, align 8
+  %k6 = load i128, i128* %k, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k6
+  %b7 = load i128, i128* %array_getter, align 4
+  %c = load [4096 x i128]*, [4096 x i128]** %xor3.c.declare_input, align 8
+  %k8 = load i128, i128* %k, align 4
+  %array_getter9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k8
+  %c10 = load i128, i128* %array_getter9, align 4
+  %mul = mul i128 %b7, %c10
+  %mid11 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
+  %k12 = load i128, i128* %k, align 4
+  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid11, i128 0, i128 %k12
+  %mid14 = load i128, i128* %array_getter13, align 4
+  call void @fn_intrinsic_add_constraint(i128 %mid14, i128 %mul, i1* @constraint.1)
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
+  %k15 = load i128, i128* %k, align 4
+  %mid16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %k15
+  store i128 %mul, i128* %mid16, align 4
+  %a = load [4096 x i128]*, [4096 x i128]** %xor3.a.declare_input, align 8
+  %k17 = load i128, i128* %k, align 4
+  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k17
+  %a19 = load i128, i128* %array_getter18, align 4
+  %b20 = load [4096 x i128]*, [4096 x i128]** %xor3.b.declare_input, align 8
+  %k21 = load i128, i128* %k, align 4
+  %array_getter22 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b20, i128 0, i128 %k21
+  %b23 = load i128, i128* %array_getter22, align 4
+  %mul24 = mul i128 2, %b23
+  %sub = sub i128 1, %mul24
+  %c25 = load [4096 x i128]*, [4096 x i128]** %xor3.c.declare_input, align 8
+  %k26 = load i128, i128* %k, align 4
+  %array_getter27 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c25, i128 0, i128 %k26
+  %c28 = load i128, i128* %array_getter27, align 4
+  %mul29 = mul i128 2, %c28
+  %sub30 = sub i128 %sub, %mul29
+  %mid31 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
+  %k32 = load i128, i128* %k, align 4
+  %array_getter33 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid31, i128 0, i128 %k32
+  %mid34 = load i128, i128* %array_getter33, align 4
+  %mul35 = mul i128 4, %mid34
+  %add = add i128 %sub30, %mul35
+  %mul36 = mul i128 %a19, %add
+  %b37 = load [4096 x i128]*, [4096 x i128]** %xor3.b.declare_input, align 8
+  %k38 = load i128, i128* %k, align 4
+  %array_getter39 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b37, i128 0, i128 %k38
+  %b40 = load i128, i128* %array_getter39, align 4
+  %add41 = add i128 %mul36, %b40
+  %c42 = load [4096 x i128]*, [4096 x i128]** %xor3.c.declare_input, align 8
+  %k43 = load i128, i128* %k, align 4
+  %array_getter44 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c42, i128 0, i128 %k43
+  %c45 = load i128, i128* %array_getter44, align 4
+  %add46 = add i128 %add41, %c45
+  %mid47 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
+  %k48 = load i128, i128* %k, align 4
+  %array_getter49 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid47, i128 0, i128 %k48
+  %mid50 = load i128, i128* %array_getter49, align 4
+  %mul51 = mul i128 2, %mid50
+  %sub52 = sub i128 %add46, %mul51
+  %out53 = load [4096 x i128]*, [4096 x i128]** %xor3.out.declare_output, align 8
+  %k54 = load i128, i128* %k, align 4
+  %array_getter55 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out53, i128 0, i128 %k54
+  %out56 = load i128, i128* %array_getter55, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out56, i128 %sub52, i1* @constraint.2)
+  %ptr_getter57 = load [4096 x i128]*, [4096 x i128]** %xor3.out.declare_output, align 8
+  %k58 = load i128, i128* %k, align 4
+  %out59 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter57, i128 0, i128 %k58
+  store i128 %sub52, i128* %out59, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %k60 = load i128, i128* %k, align 4
+  %add61 = add i128 %k60, 1
+  store i128 %add61, i128* %k, align 4
+  %k62 = load i128, i128* %k, align 4
+  %n = load i128, i128* %xor3.n.declare_arg, align 4
+  %slt = icmp slt i128 %k62, %n
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %mid63 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
+  %xor3.mid.write_inter_inner = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 4
+  store [4096 x i128]* %mid63, [4096 x i128]** %xor3.mid.write_inter_inner, align 8
+  %out64 = load [4096 x i128]*, [4096 x i128]** %xor3.out.declare_output, align 8
+  %xor3.out.write_output_inner = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 5
+  store [4096 x i128]* %out64, [4096 x i128]** %xor3.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_xor3* @fn_template_build_xor3(i128 %0) {
+entry:
+  %struct_template_circuit_xor3 = alloca %struct_template_circuit_xor3, align 8
+  %xor3.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %struct_template_circuit_xor3, i32 0, i32 0
+  store i128 %0, i128* %xor3.n.write_arg_inner, align 4
+  ret %struct_template_circuit_xor3* %struct_template_circuit_xor3
+}
+
+define void @fn_template_init_bigsigma(%struct_template_circuit_bigsigma* %0) {
+entry:
+  %BigSigma = alloca %struct_template_circuit_bigsigma*, align 8
+  store %struct_template_circuit_bigsigma* %0, %struct_template_circuit_bigsigma** %BigSigma, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 0
+  %bigsigma.ra.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %bigsigma.ra.declare_arg = alloca i128, align 8
+  store i128 %bigsigma.ra.read_arg_inner, i128* %bigsigma.ra.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 1
+  %bigsigma.rb.read_arg_inner = load i128, i128* %struct_getter1, align 4
+  %bigsigma.rb.declare_arg = alloca i128, align 8
+  store i128 %bigsigma.rb.read_arg_inner, i128* %bigsigma.rb.declare_arg, align 4
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 2
+  %bigsigma.rc.read_arg_inner = load i128, i128* %struct_getter2, align 4
+  %bigsigma.rc.declare_arg = alloca i128, align 8
+  store i128 %bigsigma.rc.read_arg_inner, i128* %bigsigma.rc.declare_arg, align 4
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 3
+  %bigsigma.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %bigsigma.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %bigsigma.in.read_input_inner, [4096 x i128]** %bigsigma.in.declare_input, align 8
+  %bigsigma.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %bigsigma.out.declare_output, align 8
+  %k = alloca i128, align 8
+  %k4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k4, i128* %k, align 4
+  %xor3 = alloca %struct_template_circuit_xor3*, align 8
+  %rotc = alloca %struct_template_circuit_rotr*, align 8
+  %rotb = alloca %struct_template_circuit_rotr*, align 8
+  %rota = alloca %struct_template_circuit_rotr*, align 8
+  store i128 0, i128* %k, align 4
+  %ra = load i128, i128* %bigsigma.ra.declare_arg, align 4
+  %call = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %ra)
+  store %struct_template_circuit_rotr* %call, %struct_template_circuit_rotr** %rota, align 8
+  %rb = load i128, i128* %bigsigma.rb.declare_arg, align 4
+  %call5 = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %rb)
+  store %struct_template_circuit_rotr* %call5, %struct_template_circuit_rotr** %rotb, align 8
+  %rc = load i128, i128* %bigsigma.rc.declare_arg, align 4
+  %call6 = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %rc)
+  store %struct_template_circuit_rotr* %call6, %struct_template_circuit_rotr** %rotc, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %in = load [4096 x i128]*, [4096 x i128]** %bigsigma.in.declare_input, align 8
+  %k7 = load i128, i128* %k, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %k7
+  %in8 = load i128, i128* %array_getter, align 4
+  %rota9 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
+  %struct_getter10 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota9, i32 0, i32 2
+  %rotr.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
+  %k11 = load i128, i128* %k, align 4
+  %array_getter12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter, i128 0, i128 %k11
+  %rota13 = load i128, i128* %array_getter12, align 4
+  call void @fn_intrinsic_add_constraint(i128 %rota13, i128 %in8, i1* @constraint.3)
+  %ptr_getter = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
+  %struct_getter14 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter, i32 0, i32 2
+  %rotr.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
+  %k16 = load i128, i128* %k, align 4
+  %rota17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter15, i128 0, i128 %k16
+  store i128 %in8, i128* %rota17, align 4
+  %in18 = load [4096 x i128]*, [4096 x i128]** %bigsigma.in.declare_input, align 8
+  %k19 = load i128, i128* %k, align 4
+  %array_getter20 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in18, i128 0, i128 %k19
+  %in21 = load i128, i128* %array_getter20, align 4
+  %rotb22 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
+  %struct_getter23 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb22, i32 0, i32 2
+  %rotr.in.read_input_outter24 = load [4096 x i128]*, [4096 x i128]** %struct_getter23, align 8
+  %k25 = load i128, i128* %k, align 4
+  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter24, i128 0, i128 %k25
+  %rotb27 = load i128, i128* %array_getter26, align 4
+  call void @fn_intrinsic_add_constraint(i128 %rotb27, i128 %in21, i1* @constraint.4)
+  %ptr_getter28 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
+  %struct_getter29 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter28, i32 0, i32 2
+  %rotr.in.read_input_outter30 = load [4096 x i128]*, [4096 x i128]** %struct_getter29, align 8
+  %k31 = load i128, i128* %k, align 4
+  %rotb32 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter30, i128 0, i128 %k31
+  store i128 %in21, i128* %rotb32, align 4
+  %in33 = load [4096 x i128]*, [4096 x i128]** %bigsigma.in.declare_input, align 8
+  %k34 = load i128, i128* %k, align 4
+  %array_getter35 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in33, i128 0, i128 %k34
+  %in36 = load i128, i128* %array_getter35, align 4
+  %rotc37 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotc, align 8
+  %struct_getter38 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotc37, i32 0, i32 2
+  %rotr.in.read_input_outter39 = load [4096 x i128]*, [4096 x i128]** %struct_getter38, align 8
+  %k40 = load i128, i128* %k, align 4
+  %array_getter41 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter39, i128 0, i128 %k40
+  %rotc42 = load i128, i128* %array_getter41, align 4
+  call void @fn_intrinsic_add_constraint(i128 %rotc42, i128 %in36, i1* @constraint.5)
+  %ptr_getter43 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotc, align 8
+  %struct_getter44 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter43, i32 0, i32 2
+  %rotr.in.read_input_outter45 = load [4096 x i128]*, [4096 x i128]** %struct_getter44, align 8
+  %k46 = load i128, i128* %k, align 4
+  %rotc47 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter45, i128 0, i128 %k46
+  store i128 %in36, i128* %rotc47, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %k48 = load i128, i128* %k, align 4
+  %add = add i128 %k48, 1
+  store i128 %add, i128* %k, align 4
+  %k49 = load i128, i128* %k, align 4
+  %slt = icmp slt i128 %k49, 32
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %call50 = call %struct_template_circuit_xor3* @fn_template_build_xor3(i128 32)
+  store %struct_template_circuit_xor3* %call50, %struct_template_circuit_xor3** %xor3, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body51
+
+loop.body51:                                      ; preds = %loop.latch99, %loop.exit
+  %rota52 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
+  %struct_getter53 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota52, i32 0, i32 3
+  %rotr.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter53, align 8
+  %k54 = load i128, i128* %k, align 4
+  %array_getter55 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter, i128 0, i128 %k54
+  %rota56 = load i128, i128* %array_getter55, align 4
+  %xor357 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter58 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor357, i32 0, i32 1
+  %xor3.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter58, align 8
+  %k59 = load i128, i128* %k, align 4
+  %array_getter60 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter, i128 0, i128 %k59
+  %xor361 = load i128, i128* %array_getter60, align 4
+  call void @fn_intrinsic_add_constraint(i128 %xor361, i128 %rota56, i1* @constraint.6)
+  %ptr_getter62 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter63 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter62, i32 0, i32 1
+  %xor3.a.read_input_outter64 = load [4096 x i128]*, [4096 x i128]** %struct_getter63, align 8
+  %k65 = load i128, i128* %k, align 4
+  %xor366 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter64, i128 0, i128 %k65
+  store i128 %rota56, i128* %xor366, align 4
+  %rotb67 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
+  %struct_getter68 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb67, i32 0, i32 3
+  %rotr.out.read_output_outter69 = load [4096 x i128]*, [4096 x i128]** %struct_getter68, align 8
+  %k70 = load i128, i128* %k, align 4
+  %array_getter71 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter69, i128 0, i128 %k70
+  %rotb72 = load i128, i128* %array_getter71, align 4
+  %xor373 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter74 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor373, i32 0, i32 2
+  %xor3.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter74, align 8
+  %k75 = load i128, i128* %k, align 4
+  %array_getter76 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter, i128 0, i128 %k75
+  %xor377 = load i128, i128* %array_getter76, align 4
+  call void @fn_intrinsic_add_constraint(i128 %xor377, i128 %rotb72, i1* @constraint.7)
+  %ptr_getter78 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter79 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter78, i32 0, i32 2
+  %xor3.b.read_input_outter80 = load [4096 x i128]*, [4096 x i128]** %struct_getter79, align 8
+  %k81 = load i128, i128* %k, align 4
+  %xor382 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter80, i128 0, i128 %k81
+  store i128 %rotb72, i128* %xor382, align 4
+  %rotc83 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotc, align 8
+  %struct_getter84 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotc83, i32 0, i32 3
+  %rotr.out.read_output_outter85 = load [4096 x i128]*, [4096 x i128]** %struct_getter84, align 8
+  %k86 = load i128, i128* %k, align 4
+  %array_getter87 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter85, i128 0, i128 %k86
+  %rotc88 = load i128, i128* %array_getter87, align 4
+  %xor389 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter90 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor389, i32 0, i32 3
+  %xor3.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter90, align 8
+  %k91 = load i128, i128* %k, align 4
+  %array_getter92 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter, i128 0, i128 %k91
+  %xor393 = load i128, i128* %array_getter92, align 4
+  call void @fn_intrinsic_add_constraint(i128 %xor393, i128 %rotc88, i1* @constraint.8)
+  %ptr_getter94 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter95 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter94, i32 0, i32 3
+  %xor3.c.read_input_outter96 = load [4096 x i128]*, [4096 x i128]** %struct_getter95, align 8
+  %k97 = load i128, i128* %k, align 4
+  %xor398 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter96, i128 0, i128 %k97
+  store i128 %rotc88, i128* %xor398, align 4
+  br label %loop.latch99
+
+loop.latch99:                                     ; preds = %loop.body51
+  %k100 = load i128, i128* %k, align 4
+  %add101 = add i128 %k100, 1
+  store i128 %add101, i128* %k, align 4
+  %k102 = load i128, i128* %k, align 4
+  %slt103 = icmp slt i128 %k102, 32
+  br i1 %slt103, label %loop.body51, label %loop.exit104
+
+loop.exit104:                                     ; preds = %loop.latch99
+  store i128 0, i128* %k, align 4
+  br label %loop.body105
+
+loop.body105:                                     ; preds = %loop.latch118, %loop.exit104
+  %xor3106 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter107 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor3106, i32 0, i32 5
+  %xor3.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter107, align 8
+  %k108 = load i128, i128* %k, align 4
+  %array_getter109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.out.read_output_outter, i128 0, i128 %k108
+  %xor3110 = load i128, i128* %array_getter109, align 4
+  %out111 = load [4096 x i128]*, [4096 x i128]** %bigsigma.out.declare_output, align 8
+  %k112 = load i128, i128* %k, align 4
+  %array_getter113 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out111, i128 0, i128 %k112
+  %out114 = load i128, i128* %array_getter113, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out114, i128 %xor3110, i1* @constraint.9)
+  %ptr_getter115 = load [4096 x i128]*, [4096 x i128]** %bigsigma.out.declare_output, align 8
+  %k116 = load i128, i128* %k, align 4
+  %out117 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter115, i128 0, i128 %k116
+  store i128 %xor3110, i128* %out117, align 4
+  br label %loop.latch118
+
+loop.latch118:                                    ; preds = %loop.body105
+  %k119 = load i128, i128* %k, align 4
+  %add120 = add i128 %k119, 1
+  store i128 %add120, i128* %k, align 4
+  %k121 = load i128, i128* %k, align 4
+  %slt122 = icmp slt i128 %k121, 32
+  br i1 %slt122, label %loop.body105, label %loop.exit123
+
+loop.exit123:                                     ; preds = %loop.latch118
+  br label %exit
+
+exit:                                             ; preds = %loop.exit123
+  %out124 = load [4096 x i128]*, [4096 x i128]** %bigsigma.out.declare_output, align 8
+  %bigsigma.out.write_output_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 4
+  store [4096 x i128]* %out124, [4096 x i128]** %bigsigma.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_bigsigma* @fn_template_build_bigsigma(i128 %0, i128 %1, i128 %2) {
+entry:
+  %struct_template_circuit_bigsigma = alloca %struct_template_circuit_bigsigma, align 8
+  %bigsigma.ra.write_arg_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma, i32 0, i32 0
+  store i128 %0, i128* %bigsigma.ra.write_arg_inner, align 4
+  %bigsigma.rb.write_arg_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma, i32 0, i32 1
+  store i128 %1, i128* %bigsigma.rb.write_arg_inner, align 4
+  %bigsigma.rc.write_arg_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma, i32 0, i32 2
+  store i128 %2, i128* %bigsigma.rc.write_arg_inner, align 4
+  ret %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma
 }
 
 define void @fn_template_init_k(%struct_template_circuit_k* %0) {
@@ -788,7 +740,7 @@ loop.body:                                        ; preds = %loop.latch, %entry
   %i7 = load i128, i128* %i, align 4
   %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out6, i128 0, i128 %i7
   %out9 = load i128, i128* %array_getter8, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %and, i1* @constraint.7)
+  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %and, i1* @constraint.10)
   %ptr_getter = load [4096 x i128]*, [4096 x i128]** %k.out.declare_output, align 8
   %i10 = load i128, i128* %i, align 4
   %out11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i10
@@ -821,6 +773,690 @@ entry:
   ret %struct_template_circuit_k* %struct_template_circuit_k
 }
 
+define void @fn_template_init_num2bits(%struct_template_circuit_num2bits* %0) {
+entry:
+  %Num2Bits = alloca %struct_template_circuit_num2bits*, align 8
+  store %struct_template_circuit_num2bits* %0, %struct_template_circuit_num2bits** %Num2Bits, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %0, i32 0, i32 0
+  %num2bits.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %num2bits.n.declare_arg = alloca i128, align 8
+  store i128 %num2bits.n.read_arg_inner, i128* %num2bits.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %0, i32 0, i32 1
+  %num2bits.in.read_input_inner = load i128, i128* %struct_getter1, align 4
+  %num2bits.in.declare_input = alloca i128, align 8
+  store i128 %num2bits.in.read_input_inner, i128* %num2bits.in.declare_input, align 4
+  %lc1 = alloca i128, align 8
+  %lc12 = call i128 @fn_intrinsic_inline_init()
+  store i128 %lc12, i128* %lc1, align 4
+  %num2bits.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %num2bits.out.declare_output, align 8
+  %e2 = alloca i128, align 8
+  %e23 = call i128 @fn_intrinsic_inline_init()
+  store i128 %e23, i128* %e2, align 4
+  %i = alloca i128, align 8
+  %i4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i4, i128* %i, align 4
+  store i128 0, i128* %lc1, align 4
+  store i128 1, i128* %e2, align 4
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %in = load i128, i128* %num2bits.in.declare_input, align 4
+  %i5 = load i128, i128* %i, align 4
+  %rshift = lshr i128 %in, %i5
+  %and = and i128 %rshift, 1
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
+  %i6 = load i128, i128* %i, align 4
+  %out7 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i6
+  store i128 %and, i128* %out7, align 4
+  %out8 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
+  %i9 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %out8, i128 0, i128 %i9
+  %out10 = load i128, i128* %array_getter, align 4
+  %out11 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
+  %i12 = load i128, i128* %i, align 4
+  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out11, i128 0, i128 %i12
+  %out14 = load i128, i128* %array_getter13, align 4
+  %sub = sub i128 %out14, 1
+  %mul = mul i128 %out10, %sub
+  call void @fn_intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint.11)
+  %lc115 = load i128, i128* %lc1, align 4
+  %out16 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
+  %i17 = load i128, i128* %i, align 4
+  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out16, i128 0, i128 %i17
+  %out19 = load i128, i128* %array_getter18, align 4
+  %e220 = load i128, i128* %e2, align 4
+  %mul21 = mul i128 %out19, %e220
+  %add = add i128 %lc115, %mul21
+  store i128 %add, i128* %lc1, align 4
+  %e222 = load i128, i128* %e2, align 4
+  %e223 = load i128, i128* %e2, align 4
+  %add24 = add i128 %e222, %e223
+  store i128 %add24, i128* %e2, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i25 = load i128, i128* %i, align 4
+  %add26 = add i128 %i25, 1
+  store i128 %add26, i128* %i, align 4
+  %i27 = load i128, i128* %i, align 4
+  %n = load i128, i128* %num2bits.n.declare_arg, align 4
+  %slt = icmp slt i128 %i27, %n
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %lc128 = load i128, i128* %lc1, align 4
+  %in29 = load i128, i128* %num2bits.in.declare_input, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lc128, i128 %in29, i1* @constraint.12)
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out30 = load [4096 x i128]*, [4096 x i128]** %num2bits.out.declare_output, align 8
+  %num2bits.out.write_output_inner = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %0, i32 0, i32 2
+  store [4096 x i128]* %out30, [4096 x i128]** %num2bits.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_num2bits* @fn_template_build_num2bits(i128 %0) {
+entry:
+  %struct_template_circuit_num2bits = alloca %struct_template_circuit_num2bits, align 8
+  %num2bits.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %struct_template_circuit_num2bits, i32 0, i32 0
+  store i128 %0, i128* %num2bits.n.write_arg_inner, align 4
+  ret %struct_template_circuit_num2bits* %struct_template_circuit_num2bits
+}
+
+define void @fn_template_init_h(%struct_template_circuit_h* %0) {
+entry:
+  %H = alloca %struct_template_circuit_h*, align 8
+  store %struct_template_circuit_h* %0, %struct_template_circuit_h** %H, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_h, %struct_template_circuit_h* %0, i32 0, i32 0
+  %h.x.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %h.x.declare_arg = alloca i128, align 8
+  store i128 %h.x.read_arg_inner, i128* %h.x.declare_arg, align 4
+  %c = alloca [4096 x i128]*, align 8
+  %c1 = alloca [4096 x i128], align 8
+  store [4096 x i128]* %c1, [4096 x i128]** %c, align 8
+  %h.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %h.out.declare_output, align 8
+  %i = alloca i128, align 8
+  %i2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i2, i128* %i, align 4
+  %const_inline_array = alloca [4096 x i128], align 8
+  store [4096 x i128] [i128 1779033703, i128 3144134277, i128 1013904242, i128 2773480762, i128 1359893119, i128 2600822924, i128 528734635, i128 1541459225, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0, i128 0], [4096 x i128]* %const_inline_array, align 4
+  store [4096 x i128]* %const_inline_array, [4096 x i128]** %c, align 8
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %c3 = load [4096 x i128]*, [4096 x i128]** %c, align 8
+  %x = load i128, i128* %h.x.declare_arg, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %c3, i128 0, i128 %x
+  %c4 = load i128, i128* %array_getter, align 4
+  %i5 = load i128, i128* %i, align 4
+  %rshift = lshr i128 %c4, %i5
+  %and = and i128 %rshift, 1
+  %out6 = load [4096 x i128]*, [4096 x i128]** %h.out.declare_output, align 8
+  %i7 = load i128, i128* %i, align 4
+  %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out6, i128 0, i128 %i7
+  %out9 = load i128, i128* %array_getter8, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %and, i1* @constraint.13)
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %h.out.declare_output, align 8
+  %i10 = load i128, i128* %i, align 4
+  %out11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i10
+  store i128 %and, i128* %out11, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i12 = load i128, i128* %i, align 4
+  %add = add i128 %i12, 1
+  store i128 %add, i128* %i, align 4
+  %i13 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i13, 32
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out14 = load [4096 x i128]*, [4096 x i128]** %h.out.declare_output, align 8
+  %h.out.write_output_inner = getelementptr inbounds %struct_template_circuit_h, %struct_template_circuit_h* %0, i32 0, i32 1
+  store [4096 x i128]* %out14, [4096 x i128]** %h.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_h* @fn_template_build_h(i128 %0) {
+entry:
+  %struct_template_circuit_h = alloca %struct_template_circuit_h, align 8
+  %h.x.write_arg_inner = getelementptr inbounds %struct_template_circuit_h, %struct_template_circuit_h* %struct_template_circuit_h, i32 0, i32 0
+  store i128 %0, i128* %h.x.write_arg_inner, align 4
+  ret %struct_template_circuit_h* %struct_template_circuit_h
+}
+
+define void @fn_template_init_maj_t(%struct_template_circuit_maj_t* %0) {
+entry:
+  %Maj_t = alloca %struct_template_circuit_maj_t*, align 8
+  store %struct_template_circuit_maj_t* %0, %struct_template_circuit_maj_t** %Maj_t, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 0
+  %maj_t.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %maj_t.n.declare_arg = alloca i128, align 8
+  store i128 %maj_t.n.read_arg_inner, i128* %maj_t.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 1
+  %maj_t.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %maj_t.a.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %maj_t.a.read_input_inner, [4096 x i128]** %maj_t.a.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 2
+  %maj_t.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %maj_t.b.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %maj_t.b.read_input_inner, [4096 x i128]** %maj_t.b.declare_input, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 3
+  %maj_t.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %maj_t.c.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %maj_t.c.read_input_inner, [4096 x i128]** %maj_t.c.declare_input, align 8
+  %maj_t.mid.declare_inter = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %mid = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %mid, [4096 x i128]** %maj_t.mid.declare_inter, align 8
+  %maj_t.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall4 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall4 to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %maj_t.out.declare_output, align 8
+  %k = alloca i128, align 8
+  %k5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k5, i128* %k, align 4
+  store i128 0, i128* %k, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %b = load [4096 x i128]*, [4096 x i128]** %maj_t.b.declare_input, align 8
+  %k6 = load i128, i128* %k, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k6
+  %b7 = load i128, i128* %array_getter, align 4
+  %c = load [4096 x i128]*, [4096 x i128]** %maj_t.c.declare_input, align 8
+  %k8 = load i128, i128* %k, align 4
+  %array_getter9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k8
+  %c10 = load i128, i128* %array_getter9, align 4
+  %mul = mul i128 %b7, %c10
+  %mid11 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
+  %k12 = load i128, i128* %k, align 4
+  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid11, i128 0, i128 %k12
+  %mid14 = load i128, i128* %array_getter13, align 4
+  call void @fn_intrinsic_add_constraint(i128 %mid14, i128 %mul, i1* @constraint.14)
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
+  %k15 = load i128, i128* %k, align 4
+  %mid16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %k15
+  store i128 %mul, i128* %mid16, align 4
+  %a = load [4096 x i128]*, [4096 x i128]** %maj_t.a.declare_input, align 8
+  %k17 = load i128, i128* %k, align 4
+  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k17
+  %a19 = load i128, i128* %array_getter18, align 4
+  %b20 = load [4096 x i128]*, [4096 x i128]** %maj_t.b.declare_input, align 8
+  %k21 = load i128, i128* %k, align 4
+  %array_getter22 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b20, i128 0, i128 %k21
+  %b23 = load i128, i128* %array_getter22, align 4
+  %c24 = load [4096 x i128]*, [4096 x i128]** %maj_t.c.declare_input, align 8
+  %k25 = load i128, i128* %k, align 4
+  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c24, i128 0, i128 %k25
+  %c27 = load i128, i128* %array_getter26, align 4
+  %add = add i128 %b23, %c27
+  %mid28 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
+  %k29 = load i128, i128* %k, align 4
+  %array_getter30 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid28, i128 0, i128 %k29
+  %mid31 = load i128, i128* %array_getter30, align 4
+  %mul32 = mul i128 2, %mid31
+  %sub = sub i128 %add, %mul32
+  %mul33 = mul i128 %a19, %sub
+  %mid34 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
+  %k35 = load i128, i128* %k, align 4
+  %array_getter36 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid34, i128 0, i128 %k35
+  %mid37 = load i128, i128* %array_getter36, align 4
+  %add38 = add i128 %mul33, %mid37
+  %out39 = load [4096 x i128]*, [4096 x i128]** %maj_t.out.declare_output, align 8
+  %k40 = load i128, i128* %k, align 4
+  %array_getter41 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out39, i128 0, i128 %k40
+  %out42 = load i128, i128* %array_getter41, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out42, i128 %add38, i1* @constraint.15)
+  %ptr_getter43 = load [4096 x i128]*, [4096 x i128]** %maj_t.out.declare_output, align 8
+  %k44 = load i128, i128* %k, align 4
+  %out45 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter43, i128 0, i128 %k44
+  store i128 %add38, i128* %out45, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %k46 = load i128, i128* %k, align 4
+  %add47 = add i128 %k46, 1
+  store i128 %add47, i128* %k, align 4
+  %k48 = load i128, i128* %k, align 4
+  %n = load i128, i128* %maj_t.n.declare_arg, align 4
+  %slt = icmp slt i128 %k48, %n
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %mid49 = load [4096 x i128]*, [4096 x i128]** %maj_t.mid.declare_inter, align 8
+  %maj_t.mid.write_inter_inner = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 4
+  store [4096 x i128]* %mid49, [4096 x i128]** %maj_t.mid.write_inter_inner, align 8
+  %out50 = load [4096 x i128]*, [4096 x i128]** %maj_t.out.declare_output, align 8
+  %maj_t.out.write_output_inner = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %0, i32 0, i32 5
+  store [4096 x i128]* %out50, [4096 x i128]** %maj_t.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_maj_t* @fn_template_build_maj_t(i128 %0) {
+entry:
+  %struct_template_circuit_maj_t = alloca %struct_template_circuit_maj_t, align 8
+  %maj_t.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %struct_template_circuit_maj_t, i32 0, i32 0
+  store i128 %0, i128* %maj_t.n.write_arg_inner, align 4
+  ret %struct_template_circuit_maj_t* %struct_template_circuit_maj_t
+}
+
+define void @fn_template_init_ch_t(%struct_template_circuit_ch_t* %0) {
+entry:
+  %Ch_t = alloca %struct_template_circuit_ch_t*, align 8
+  store %struct_template_circuit_ch_t* %0, %struct_template_circuit_ch_t** %Ch_t, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 0
+  %ch_t.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %ch_t.n.declare_arg = alloca i128, align 8
+  store i128 %ch_t.n.read_arg_inner, i128* %ch_t.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 1
+  %ch_t.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %ch_t.a.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %ch_t.a.read_input_inner, [4096 x i128]** %ch_t.a.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 2
+  %ch_t.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %ch_t.b.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %ch_t.b.read_input_inner, [4096 x i128]** %ch_t.b.declare_input, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 3
+  %ch_t.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %ch_t.c.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %ch_t.c.read_input_inner, [4096 x i128]** %ch_t.c.declare_input, align 8
+  %k = alloca i128, align 8
+  %k4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k4, i128* %k, align 4
+  %ch_t.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %ch_t.out.declare_output, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %a = load [4096 x i128]*, [4096 x i128]** %ch_t.a.declare_input, align 8
+  %k5 = load i128, i128* %k, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k5
+  %a6 = load i128, i128* %array_getter, align 4
+  %b = load [4096 x i128]*, [4096 x i128]** %ch_t.b.declare_input, align 8
+  %k7 = load i128, i128* %k, align 4
+  %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k7
+  %b9 = load i128, i128* %array_getter8, align 4
+  %c = load [4096 x i128]*, [4096 x i128]** %ch_t.c.declare_input, align 8
+  %k10 = load i128, i128* %k, align 4
+  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k10
+  %c12 = load i128, i128* %array_getter11, align 4
+  %sub = sub i128 %b9, %c12
+  %mul = mul i128 %a6, %sub
+  %c13 = load [4096 x i128]*, [4096 x i128]** %ch_t.c.declare_input, align 8
+  %k14 = load i128, i128* %k, align 4
+  %array_getter15 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c13, i128 0, i128 %k14
+  %c16 = load i128, i128* %array_getter15, align 4
+  %add = add i128 %mul, %c16
+  %out17 = load [4096 x i128]*, [4096 x i128]** %ch_t.out.declare_output, align 8
+  %k18 = load i128, i128* %k, align 4
+  %array_getter19 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out17, i128 0, i128 %k18
+  %out20 = load i128, i128* %array_getter19, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out20, i128 %add, i1* @constraint.16)
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %ch_t.out.declare_output, align 8
+  %k21 = load i128, i128* %k, align 4
+  %out22 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %k21
+  store i128 %add, i128* %out22, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %k23 = load i128, i128* %k, align 4
+  %add24 = add i128 %k23, 1
+  store i128 %add24, i128* %k, align 4
+  %k25 = load i128, i128* %k, align 4
+  %n = load i128, i128* %ch_t.n.declare_arg, align 4
+  %slt = icmp slt i128 %k25, %n
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out26 = load [4096 x i128]*, [4096 x i128]** %ch_t.out.declare_output, align 8
+  %ch_t.out.write_output_inner = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 4
+  store [4096 x i128]* %out26, [4096 x i128]** %ch_t.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_ch_t* @fn_template_build_ch_t(i128 %0) {
+entry:
+  %struct_template_circuit_ch_t = alloca %struct_template_circuit_ch_t, align 8
+  %ch_t.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %struct_template_circuit_ch_t, i32 0, i32 0
+  store i128 %0, i128* %ch_t.n.write_arg_inner, align 4
+  ret %struct_template_circuit_ch_t* %struct_template_circuit_ch_t
+}
+
+define void @fn_template_init_iszero(%struct_template_circuit_iszero* %0) {
+entry:
+  %IsZero = alloca %struct_template_circuit_iszero*, align 8
+  store %struct_template_circuit_iszero* %0, %struct_template_circuit_iszero** %IsZero, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %0, i32 0, i32 0
+  %iszero.in.read_input_inner = load i128, i128* %struct_getter, align 4
+  %iszero.in.declare_input = alloca i128, align 8
+  store i128 %iszero.in.read_input_inner, i128* %iszero.in.declare_input, align 4
+  %iszero.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %iszero.out.declare_output, align 4
+  %iszero.inv.declare_inter = alloca i128, align 8
+  %inv = call i128 @fn_intrinsic_inline_init()
+  store i128 %inv, i128* %iszero.inv.declare_inter, align 4
+  %in = load i128, i128* %iszero.in.declare_input, align 4
+  %ne = icmp ne i128 %in, 0
+  %in1 = load i128, i128* %iszero.in.declare_input, align 4
+  %sdiv = sdiv i128 1, %in1
+  %inline_switch = call i128 @fn_intrinsic_inline_switch(i1 %ne, i128 %sdiv, i128 0)
+  %ptr_getter = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
+  %iszero.inv.write_inter_inner = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter, i32 0, i32 1
+  store i128 %inline_switch, i128* %iszero.inv.write_inter_inner, align 4
+  %IsZero2 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %IsZero2, i32 0, i32 1
+  %iszero.inv.read_inter_inner = load i128, i128* %struct_getter3, align 4
+  store i128 %iszero.inv.read_inter_inner, i128* %iszero.inv.declare_inter, align 4
+  %in4 = load i128, i128* %iszero.in.declare_input, align 4
+  %neg = sub i128 0, %in4
+  %inv5 = load i128, i128* %iszero.inv.declare_inter, align 4
+  %mul = mul i128 %neg, %inv5
+  %add = add i128 %mul, 1
+  %out6 = load i128, i128* %iszero.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out6, i128 %add, i1* @constraint.17)
+  %ptr_getter7 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
+  %iszero.out.write_output_inner = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter7, i32 0, i32 2
+  store i128 %add, i128* %iszero.out.write_output_inner, align 4
+  %IsZero8 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
+  %struct_getter9 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %IsZero8, i32 0, i32 2
+  %iszero.out.read_output_inner = load i128, i128* %struct_getter9, align 4
+  store i128 %iszero.out.read_output_inner, i128* %iszero.out.declare_output, align 4
+  %in10 = load i128, i128* %iszero.in.declare_input, align 4
+  %out11 = load i128, i128* %iszero.out.declare_output, align 4
+  %mul12 = mul i128 %in10, %out11
+  call void @fn_intrinsic_add_constraint(i128 %mul12, i128 0, i1* @constraint.18)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %inv13 = load i128, i128* %iszero.inv.declare_inter, align 4
+  %iszero.inv.write_inter_inner14 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %0, i32 0, i32 1
+  store i128 %inv13, i128* %iszero.inv.write_inter_inner14, align 4
+  %out15 = load i128, i128* %iszero.out.declare_output, align 4
+  %iszero.out.write_output_inner16 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %0, i32 0, i32 2
+  store i128 %out15, i128* %iszero.out.write_output_inner16, align 4
+  ret void
+}
+
+define %struct_template_circuit_iszero* @fn_template_build_iszero() {
+entry:
+  %struct_template_circuit_iszero = alloca %struct_template_circuit_iszero, align 8
+  ret %struct_template_circuit_iszero* %struct_template_circuit_iszero
+}
+
+define i128 @Ch(i128 %0, i128 %1, i128 %2) {
+entry:
+  %ch.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %ch.x.declare_arg, align 4
+  %ch.y.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %ch.y.declare_arg, align 4
+  %ch.z.declare_arg = alloca i128, align 8
+  store i128 %2, i128* %ch.z.declare_arg, align 4
+  %x = load i128, i128* %ch.x.declare_arg, align 4
+  %y = load i128, i128* %ch.y.declare_arg, align 4
+  %and = and i128 %x, %y
+  %x1 = load i128, i128* %ch.x.declare_arg, align 4
+  %xor = xor i128 4294967295, %x1
+  %z = load i128, i128* %ch.z.declare_arg, align 4
+  %and2 = and i128 %xor, %z
+  %xor3 = xor i128 %and, %and2
+  ret i128 %xor3
+}
+
+define void @fn_template_init_lessthan(%struct_template_circuit_lessthan* %0) {
+entry:
+  %LessThan = alloca %struct_template_circuit_lessthan*, align 8
+  store %struct_template_circuit_lessthan* %0, %struct_template_circuit_lessthan** %LessThan, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %0, i32 0, i32 0
+  %lessthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %lessthan.n.declare_arg = alloca i128, align 8
+  store i128 %lessthan.n.read_arg_inner, i128* %lessthan.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %0, i32 0, i32 1
+  %lessthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %lessthan.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %lessthan.in.read_input_inner, [4096 x i128]** %lessthan.in.declare_input, align 8
+  %n2b = alloca %struct_template_circuit_num2bits*, align 8
+  %lessthan.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %lessthan.out.declare_output, align 4
+  %n = load i128, i128* %lessthan.n.declare_arg, align 4
+  %add = add i128 %n, 1
+  %call = call %struct_template_circuit_num2bits* @fn_template_build_num2bits(i128 %add)
+  store %struct_template_circuit_num2bits* %call, %struct_template_circuit_num2bits** %n2b, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %lessthan.in.declare_input, align 8
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 0
+  %in2 = load i128, i128* %array_getter, align 4
+  %n3 = load i128, i128* %lessthan.n.declare_arg, align 4
+  %lshift = shl i128 1, %n3
+  %add4 = add i128 %in2, %lshift
+  %in5 = load [4096 x i128]*, [4096 x i128]** %lessthan.in.declare_input, align 8
+  %array_getter6 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in5, i128 0, i128 1
+  %in7 = load i128, i128* %array_getter6, align 4
+  %sub = sub i128 %add4, %in7
+  %n2b8 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %struct_getter9 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b8, i32 0, i32 1
+  %num2bits.in.read_input_outter = load i128, i128* %struct_getter9, align 4
+  call void @fn_intrinsic_add_constraint(i128 %num2bits.in.read_input_outter, i128 %sub, i1* @constraint.19)
+  %ptr_getter = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %num2bits.in.write_input_outter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %ptr_getter, i32 0, i32 1
+  store i128 %sub, i128* %num2bits.in.write_input_outter, align 4
+  %n2b10 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %struct_getter11 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b10, i32 0, i32 2
+  %num2bits.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter11, align 8
+  %n12 = load i128, i128* %lessthan.n.declare_arg, align 4
+  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter, i128 0, i128 %n12
+  %n2b14 = load i128, i128* %array_getter13, align 4
+  %sub15 = sub i128 1, %n2b14
+  %out16 = load i128, i128* %lessthan.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out16, i128 %sub15, i1* @constraint.20)
+  %ptr_getter17 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %LessThan, align 8
+  %lessthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter17, i32 0, i32 2
+  store i128 %sub15, i128* %lessthan.out.write_output_inner, align 4
+  %LessThan18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %LessThan, align 8
+  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %LessThan18, i32 0, i32 2
+  %lessthan.out.read_output_inner = load i128, i128* %struct_getter19, align 4
+  store i128 %lessthan.out.read_output_inner, i128* %lessthan.out.declare_output, align 4
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %out20 = load i128, i128* %lessthan.out.declare_output, align 4
+  %lessthan.out.write_output_inner21 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %0, i32 0, i32 2
+  store i128 %out20, i128* %lessthan.out.write_output_inner21, align 4
+  ret void
+}
+
+define %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %0) {
+entry:
+  %struct_template_circuit_lessthan = alloca %struct_template_circuit_lessthan, align 8
+  %lessthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %struct_template_circuit_lessthan, i32 0, i32 0
+  store i128 %0, i128* %lessthan.n.write_arg_inner, align 4
+  ret %struct_template_circuit_lessthan* %struct_template_circuit_lessthan
+}
+
+define void @fn_template_init_shr(%struct_template_circuit_shr* %0) {
+entry:
+  %ShR = alloca %struct_template_circuit_shr*, align 8
+  store %struct_template_circuit_shr* %0, %struct_template_circuit_shr** %ShR, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 0
+  %shr.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %shr.n.declare_arg = alloca i128, align 8
+  store i128 %shr.n.read_arg_inner, i128* %shr.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 1
+  %shr.r.read_arg_inner = load i128, i128* %struct_getter1, align 4
+  %shr.r.declare_arg = alloca i128, align 8
+  store i128 %shr.r.read_arg_inner, i128* %shr.r.declare_arg, align 4
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 2
+  %shr.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %shr.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %shr.in.read_input_inner, [4096 x i128]** %shr.in.declare_input, align 8
+  %shr.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %shr.out.declare_output, align 8
+  %i = alloca i128, align 8
+  %i3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i3, i128* %i, align 4
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %i4 = load i128, i128* %i, align 4
+  %r = load i128, i128* %shr.r.declare_arg, align 4
+  %add = add i128 %i4, %r
+  %n = load i128, i128* %shr.n.declare_arg, align 4
+  %sge = icmp sge i128 %add, %n
+  br i1 %sge, label %if.true, label %if.false
+
+if.true:                                          ; preds = %loop.body
+  %out5 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
+  %i6 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %out5, i128 0, i128 %i6
+  %out7 = load i128, i128* %array_getter, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out7, i128 0, i1* @constraint.21)
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
+  %i8 = load i128, i128* %i, align 4
+  %out9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i8
+  store i128 0, i128* %out9, align 4
+  br label %if.exit
+
+if.false:                                         ; preds = %loop.body
+  %in = load [4096 x i128]*, [4096 x i128]** %shr.in.declare_input, align 8
+  %i10 = load i128, i128* %i, align 4
+  %r11 = load i128, i128* %shr.r.declare_arg, align 4
+  %add12 = add i128 %i10, %r11
+  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %add12
+  %in14 = load i128, i128* %array_getter13, align 4
+  %out15 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
+  %i16 = load i128, i128* %i, align 4
+  %array_getter17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out15, i128 0, i128 %i16
+  %out18 = load i128, i128* %array_getter17, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out18, i128 %in14, i1* @constraint.22)
+  %ptr_getter19 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
+  %i20 = load i128, i128* %i, align 4
+  %out21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter19, i128 0, i128 %i20
+  store i128 %in14, i128* %out21, align 4
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false, %if.true
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %if.exit
+  %i22 = load i128, i128* %i, align 4
+  %add23 = add i128 %i22, 1
+  store i128 %add23, i128* %i, align 4
+  %i24 = load i128, i128* %i, align 4
+  %n25 = load i128, i128* %shr.n.declare_arg, align 4
+  %slt = icmp slt i128 %i24, %n25
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out26 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
+  %shr.out.write_output_inner = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 3
+  store [4096 x i128]* %out26, [4096 x i128]** %shr.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_shr* @fn_template_build_shr(i128 %0, i128 %1) {
+entry:
+  %struct_template_circuit_shr = alloca %struct_template_circuit_shr, align 8
+  %shr.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %struct_template_circuit_shr, i32 0, i32 0
+  store i128 %0, i128* %shr.n.write_arg_inner, align 4
+  %shr.r.write_arg_inner = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %struct_template_circuit_shr, i32 0, i32 1
+  store i128 %1, i128* %shr.r.write_arg_inner, align 4
+  ret %struct_template_circuit_shr* %struct_template_circuit_shr
+}
+
+define void @fn_template_init_forceequalifenabled(%struct_template_circuit_forceequalifenabled* %0) {
+entry:
+  %ForceEqualIfEnabled = alloca %struct_template_circuit_forceequalifenabled*, align 8
+  store %struct_template_circuit_forceequalifenabled* %0, %struct_template_circuit_forceequalifenabled** %ForceEqualIfEnabled, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_forceequalifenabled, %struct_template_circuit_forceequalifenabled* %0, i32 0, i32 0
+  %forceequalifenabled.enabled.read_input_inner = load i128, i128* %struct_getter, align 4
+  %forceequalifenabled.enabled.declare_input = alloca i128, align 8
+  store i128 %forceequalifenabled.enabled.read_input_inner, i128* %forceequalifenabled.enabled.declare_input, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_forceequalifenabled, %struct_template_circuit_forceequalifenabled* %0, i32 0, i32 1
+  %forceequalifenabled.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %forceequalifenabled.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %forceequalifenabled.in.read_input_inner, [4096 x i128]** %forceequalifenabled.in.declare_input, align 8
+  %isz = alloca %struct_template_circuit_iszero*, align 8
+  %call = call %struct_template_circuit_iszero* @fn_template_build_iszero()
+  store %struct_template_circuit_iszero* %call, %struct_template_circuit_iszero** %isz, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %forceequalifenabled.in.declare_input, align 8
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
+  %in2 = load i128, i128* %array_getter, align 4
+  %in3 = load [4096 x i128]*, [4096 x i128]** %forceequalifenabled.in.declare_input, align 8
+  %array_getter4 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in3, i128 0, i128 0
+  %in5 = load i128, i128* %array_getter4, align 4
+  %sub = sub i128 %in2, %in5
+  %isz6 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
+  %struct_getter7 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz6, i32 0, i32 0
+  %iszero.in.read_input_outter = load i128, i128* %struct_getter7, align 4
+  call void @fn_intrinsic_add_constraint(i128 %iszero.in.read_input_outter, i128 %sub, i1* @constraint.23)
+  %ptr_getter = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
+  %iszero.in.write_input_outter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter, i32 0, i32 0
+  store i128 %sub, i128* %iszero.in.write_input_outter, align 4
+  %isz8 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
+  %struct_getter9 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz8, i32 0, i32 2
+  %iszero.out.read_output_outter = load i128, i128* %struct_getter9, align 4
+  %sub10 = sub i128 1, %iszero.out.read_output_outter
+  %enabled = load i128, i128* %forceequalifenabled.enabled.declare_input, align 4
+  %mul = mul i128 %sub10, %enabled
+  call void @fn_intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint.24)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define %struct_template_circuit_forceequalifenabled* @fn_template_build_forceequalifenabled() {
+entry:
+  %struct_template_circuit_forceequalifenabled = alloca %struct_template_circuit_forceequalifenabled, align 8
+  ret %struct_template_circuit_forceequalifenabled* %struct_template_circuit_forceequalifenabled
+}
+
+define i128 @rrot(i128 %0, i128 %1) {
+entry:
+  %rrot.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %rrot.x.declare_arg, align 4
+  %rrot.n.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %rrot.n.declare_arg, align 4
+  %x = load i128, i128* %rrot.x.declare_arg, align 4
+  %n = load i128, i128* %rrot.n.declare_arg, align 4
+  %rshift = lshr i128 %x, %n
+  %x1 = load i128, i128* %rrot.x.declare_arg, align 4
+  %n2 = load i128, i128* %rrot.n.declare_arg, align 4
+  %sub = sub i128 32, %n2
+  %lshift = shl i128 %x1, %sub
+  %or = or i128 %rshift, %lshift
+  %and = and i128 %or, 4294967295
+  ret i128 %and
+}
+
 define i128 @sha256K(i128 %0) {
 entry:
   %sha256k.i.declare_arg = alloca i128, align 8
@@ -838,6 +1474,126 @@ entry:
   ret i128 %k3
 }
 
+define void @fn_template_init_num2bitsneg(%struct_template_circuit_num2bitsneg* %0) {
+entry:
+  %Num2BitsNeg = alloca %struct_template_circuit_num2bitsneg*, align 8
+  store %struct_template_circuit_num2bitsneg* %0, %struct_template_circuit_num2bitsneg** %Num2BitsNeg, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %0, i32 0, i32 0
+  %num2bitsneg.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %num2bitsneg.n.declare_arg = alloca i128, align 8
+  store i128 %num2bitsneg.n.read_arg_inner, i128* %num2bitsneg.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %0, i32 0, i32 1
+  %num2bitsneg.in.read_input_inner = load i128, i128* %struct_getter1, align 4
+  %num2bitsneg.in.declare_input = alloca i128, align 8
+  store i128 %num2bitsneg.in.read_input_inner, i128* %num2bitsneg.in.declare_input, align 4
+  %lc1 = alloca i128, align 8
+  %lc12 = call i128 @fn_intrinsic_inline_init()
+  store i128 %lc12, i128* %lc1, align 4
+  %neg = alloca i128, align 8
+  %neg3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %neg3, i128* %neg, align 4
+  %isZero = alloca %struct_template_circuit_iszero*, align 8
+  %i = alloca i128, align 8
+  %i4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i4, i128* %i, align 4
+  %num2bitsneg.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
+  store i128 0, i128* %lc1, align 4
+  %call = call %struct_template_circuit_iszero* @fn_template_build_iszero()
+  store %struct_template_circuit_iszero* %call, %struct_template_circuit_iszero** %isZero, align 8
+  %n = load i128, i128* %num2bitsneg.n.declare_arg, align 4
+  %eq = icmp eq i128 %n, 0
+  %n5 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
+  %pow = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n5)
+  %in = load i128, i128* %num2bitsneg.in.declare_input, align 4
+  %sub = sub i128 %pow, %in
+  %inline_switch = call i128 @fn_intrinsic_inline_switch(i1 %eq, i128 0, i128 %sub)
+  store i128 %inline_switch, i128* %neg, align 4
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %neg6 = load i128, i128* %neg, align 4
+  %i7 = load i128, i128* %i, align 4
+  %rshift = lshr i128 %neg6, %i7
+  %and = and i128 %rshift, 1
+  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
+  %i8 = load i128, i128* %i, align 4
+  %out9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i8
+  store i128 %and, i128* %out9, align 4
+  %out10 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
+  %i11 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %out10, i128 0, i128 %i11
+  %out12 = load i128, i128* %array_getter, align 4
+  %out13 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
+  %i14 = load i128, i128* %i, align 4
+  %array_getter15 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out13, i128 0, i128 %i14
+  %out16 = load i128, i128* %array_getter15, align 4
+  %sub17 = sub i128 %out16, 1
+  %mul = mul i128 %out12, %sub17
+  call void @fn_intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint.25)
+  %lc118 = load i128, i128* %lc1, align 4
+  %out19 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
+  %i20 = load i128, i128* %i, align 4
+  %array_getter21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out19, i128 0, i128 %i20
+  %out22 = load i128, i128* %array_getter21, align 4
+  %i23 = load i128, i128* %i, align 4
+  %pow24 = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %i23)
+  %mul25 = mul i128 %out22, %pow24
+  %add = add i128 %lc118, %mul25
+  store i128 %add, i128* %lc1, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i26 = load i128, i128* %i, align 4
+  %add27 = add i128 %i26, 1
+  store i128 %add27, i128* %i, align 4
+  %i28 = load i128, i128* %i, align 4
+  %n29 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
+  %slt = icmp slt i128 %i28, %n29
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %in30 = load i128, i128* %num2bitsneg.in.declare_input, align 4
+  %isZero31 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isZero, align 8
+  %struct_getter32 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isZero31, i32 0, i32 0
+  %iszero.in.read_input_outter = load i128, i128* %struct_getter32, align 4
+  call void @fn_intrinsic_add_constraint(i128 %iszero.in.read_input_outter, i128 %in30, i1* @constraint.26)
+  %ptr_getter33 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isZero, align 8
+  %iszero.in.write_input_outter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter33, i32 0, i32 0
+  store i128 %in30, i128* %iszero.in.write_input_outter, align 4
+  %lc134 = load i128, i128* %lc1, align 4
+  %isZero35 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isZero, align 8
+  %struct_getter36 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isZero35, i32 0, i32 2
+  %iszero.out.read_output_outter = load i128, i128* %struct_getter36, align 4
+  %n37 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
+  %pow38 = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n37)
+  %mul39 = mul i128 %iszero.out.read_output_outter, %pow38
+  %add40 = add i128 %lc134, %mul39
+  %n41 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
+  %pow42 = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n41)
+  %in43 = load i128, i128* %num2bitsneg.in.declare_input, align 4
+  %sub44 = sub i128 %pow42, %in43
+  call void @fn_intrinsic_add_constraint(i128 %add40, i128 %sub44, i1* @constraint.27)
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out45 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
+  %num2bitsneg.out.write_output_inner = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %0, i32 0, i32 2
+  store [4096 x i128]* %out45, [4096 x i128]** %num2bitsneg.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_num2bitsneg* @fn_template_build_num2bitsneg(i128 %0) {
+entry:
+  %struct_template_circuit_num2bitsneg = alloca %struct_template_circuit_num2bitsneg, align 8
+  %num2bitsneg.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %struct_template_circuit_num2bitsneg, i32 0, i32 0
+  store i128 %0, i128* %num2bitsneg.n.write_arg_inner, align 4
+  ret %struct_template_circuit_num2bitsneg* %struct_template_circuit_num2bitsneg
+}
+
 define void @fn_template_init_compconstant(%struct_template_circuit_compconstant* %0) {
 entry:
   %CompConstant = alloca %struct_template_circuit_compconstant*, align 8
@@ -850,37 +1606,10 @@ entry:
   %compconstant.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
   %compconstant.in.declare_input = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %compconstant.in.read_input_inner, [4096 x i128]** %compconstant.in.declare_input, align 8
-  %smsb = alloca i128, align 8
-  %smsb2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %smsb2, i128* %smsb, align 4
-  %sum = alloca i128, align 8
-  %sum3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %sum3, i128* %sum, align 4
-  %a = alloca i128, align 8
-  %a4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %a4, i128* %a, align 4
-  %e = alloca i128, align 8
-  %e5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %e5, i128* %e, align 4
   %num2bits = alloca %struct_template_circuit_num2bits*, align 8
-  %clsb = alloca i128, align 8
-  %clsb6 = call i128 @fn_intrinsic_inline_init()
-  store i128 %clsb6, i128* %clsb, align 4
-  %slsb = alloca i128, align 8
-  %slsb7 = call i128 @fn_intrinsic_inline_init()
-  store i128 %slsb7, i128* %slsb, align 4
-  %compconstant.sout.declare_inter = alloca i128, align 8
-  %sout = call i128 @fn_intrinsic_inline_init()
-  store i128 %sout, i128* %compconstant.sout.declare_inter, align 4
-  %b = alloca i128, align 8
-  %b8 = call i128 @fn_intrinsic_inline_init()
-  store i128 %b8, i128* %b, align 4
-  %i = alloca i128, align 8
-  %i9 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i9, i128* %i, align 4
-  %cmsb = alloca i128, align 8
-  %cmsb10 = call i128 @fn_intrinsic_inline_init()
-  store i128 %cmsb10, i128* %cmsb, align 4
+  %sum = alloca i128, align 8
+  %sum2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %sum2, i128* %sum, align 4
   %compconstant.out.declare_output = alloca i128, align 8
   %out = call i128 @fn_intrinsic_inline_init()
   store i128 %out, i128* %compconstant.out.declare_output, align 4
@@ -888,6 +1617,33 @@ entry:
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %parts = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %parts, [4096 x i128]** %compconstant.parts.declare_inter, align 8
+  %compconstant.sout.declare_inter = alloca i128, align 8
+  %sout = call i128 @fn_intrinsic_inline_init()
+  store i128 %sout, i128* %compconstant.sout.declare_inter, align 4
+  %b = alloca i128, align 8
+  %b3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %b3, i128* %b, align 4
+  %slsb = alloca i128, align 8
+  %slsb4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %slsb4, i128* %slsb, align 4
+  %smsb = alloca i128, align 8
+  %smsb5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %smsb5, i128* %smsb, align 4
+  %cmsb = alloca i128, align 8
+  %cmsb6 = call i128 @fn_intrinsic_inline_init()
+  store i128 %cmsb6, i128* %cmsb, align 4
+  %a = alloca i128, align 8
+  %a7 = call i128 @fn_intrinsic_inline_init()
+  store i128 %a7, i128* %a, align 4
+  %i = alloca i128, align 8
+  %i8 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i8, i128* %i, align 4
+  %clsb = alloca i128, align 8
+  %clsb9 = call i128 @fn_intrinsic_inline_init()
+  store i128 %clsb9, i128* %clsb, align 4
+  %e = alloca i128, align 8
+  %e10 = call i128 @fn_intrinsic_inline_init()
+  store i128 %e10, i128* %e, align 4
   store i128 0, i128* %clsb, align 4
   store i128 0, i128* %cmsb, align 4
   store i128 0, i128* %slsb, align 4
@@ -953,7 +1709,7 @@ if.true:                                          ; preds = %loop.body
   %i44 = load i128, i128* %i, align 4
   %array_getter45 = getelementptr inbounds [4096 x i128], [4096 x i128]* %parts43, i128 0, i128 %i44
   %parts46 = load i128, i128* %array_getter45, align 4
-  call void @fn_intrinsic_add_constraint(i128 %parts46, i128 %add42, i1* @constraint.8)
+  call void @fn_intrinsic_add_constraint(i128 %parts46, i128 %add42, i1* @constraint.28)
   %ptr_getter = load [4096 x i128]*, [4096 x i128]** %compconstant.parts.declare_inter, align 8
   %i47 = load i128, i128* %i, align 4
   %parts48 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i47
@@ -992,7 +1748,7 @@ if.true49:                                        ; preds = %if.false
   %i75 = load i128, i128* %i, align 4
   %array_getter76 = getelementptr inbounds [4096 x i128], [4096 x i128]* %parts74, i128 0, i128 %i75
   %parts77 = load i128, i128* %array_getter76, align 4
-  call void @fn_intrinsic_add_constraint(i128 %parts77, i128 %add73, i1* @constraint.9)
+  call void @fn_intrinsic_add_constraint(i128 %parts77, i128 %add73, i1* @constraint.29)
   %ptr_getter78 = load [4096 x i128]*, [4096 x i128]** %compconstant.parts.declare_inter, align 8
   %i79 = load i128, i128* %i, align 4
   %parts80 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter78, i128 0, i128 %i79
@@ -1023,7 +1779,7 @@ if.true81:                                        ; preds = %if.false50
   %i100 = load i128, i128* %i, align 4
   %array_getter101 = getelementptr inbounds [4096 x i128], [4096 x i128]* %parts99, i128 0, i128 %i100
   %parts102 = load i128, i128* %array_getter101, align 4
-  call void @fn_intrinsic_add_constraint(i128 %parts102, i128 %add98, i1* @constraint.10)
+  call void @fn_intrinsic_add_constraint(i128 %parts102, i128 %add98, i1* @constraint.30)
   %ptr_getter103 = load [4096 x i128]*, [4096 x i128]** %compconstant.parts.declare_inter, align 8
   %i104 = load i128, i128* %i, align 4
   %parts105 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter103, i128 0, i128 %i104
@@ -1043,7 +1799,7 @@ if.false82:                                       ; preds = %if.false50
   %i115 = load i128, i128* %i, align 4
   %array_getter116 = getelementptr inbounds [4096 x i128], [4096 x i128]* %parts114, i128 0, i128 %i115
   %parts117 = load i128, i128* %array_getter116, align 4
-  call void @fn_intrinsic_add_constraint(i128 %parts117, i128 %add113, i1* @constraint.11)
+  call void @fn_intrinsic_add_constraint(i128 %parts117, i128 %add113, i1* @constraint.31)
   %ptr_getter118 = load [4096 x i128]*, [4096 x i128]** %compconstant.parts.declare_inter, align 8
   %i119 = load i128, i128* %i, align 4
   %parts120 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter118, i128 0, i128 %i119
@@ -1088,7 +1844,7 @@ loop.latch:                                       ; preds = %if.exit122
 loop.exit:                                        ; preds = %loop.latch
   %sum140 = load i128, i128* %sum, align 4
   %sout141 = load i128, i128* %compconstant.sout.declare_inter, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sout141, i128 %sum140, i1* @constraint.12)
+  call void @fn_intrinsic_add_constraint(i128 %sout141, i128 %sum140, i1* @constraint.32)
   %ptr_getter142 = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %CompConstant, align 8
   %compconstant.sout.write_inter_inner = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %ptr_getter142, i32 0, i32 3
   store i128 %sum140, i128* %compconstant.sout.write_inter_inner, align 4
@@ -1102,7 +1858,7 @@ loop.exit:                                        ; preds = %loop.latch
   %num2bits146 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %num2bits, align 8
   %struct_getter147 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %num2bits146, i32 0, i32 1
   %num2bits.in.read_input_outter = load i128, i128* %struct_getter147, align 4
-  call void @fn_intrinsic_add_constraint(i128 %num2bits.in.read_input_outter, i128 %sout145, i1* @constraint.13)
+  call void @fn_intrinsic_add_constraint(i128 %num2bits.in.read_input_outter, i128 %sout145, i1* @constraint.33)
   %ptr_getter148 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %num2bits, align 8
   %num2bits.in.write_input_outter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %ptr_getter148, i32 0, i32 1
   store i128 %sout145, i128* %num2bits.in.write_input_outter, align 4
@@ -1112,7 +1868,7 @@ loop.exit:                                        ; preds = %loop.latch
   %array_getter151 = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter, i128 0, i128 127
   %num2bits152 = load i128, i128* %array_getter151, align 4
   %out153 = load i128, i128* %compconstant.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out153, i128 %num2bits152, i1* @constraint.14)
+  call void @fn_intrinsic_add_constraint(i128 %out153, i128 %num2bits152, i1* @constraint.34)
   %ptr_getter154 = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %CompConstant, align 8
   %compconstant.out.write_output_inner = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %ptr_getter154, i32 0, i32 4
   store i128 %num2bits152, i128* %compconstant.out.write_output_inner, align 4
@@ -1143,184 +1899,236 @@ entry:
   ret %struct_template_circuit_compconstant* %struct_template_circuit_compconstant
 }
 
-define void @fn_template_init_lessthan(%struct_template_circuit_lessthan* %0) {
+define void @fn_template_init_smallsigma(%struct_template_circuit_smallsigma* %0) {
 entry:
-  %LessThan = alloca %struct_template_circuit_lessthan*, align 8
-  store %struct_template_circuit_lessthan* %0, %struct_template_circuit_lessthan** %LessThan, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %0, i32 0, i32 0
-  %lessthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %lessthan.n.declare_arg = alloca i128, align 8
-  store i128 %lessthan.n.read_arg_inner, i128* %lessthan.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %0, i32 0, i32 1
-  %lessthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %lessthan.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %lessthan.in.read_input_inner, [4096 x i128]** %lessthan.in.declare_input, align 8
-  %lessthan.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %lessthan.out.declare_output, align 4
-  %n2b = alloca %struct_template_circuit_num2bits*, align 8
-  %n = load i128, i128* %lessthan.n.declare_arg, align 4
-  %add = add i128 %n, 1
-  %call = call %struct_template_circuit_num2bits* @fn_template_build_num2bits(i128 %add)
-  store %struct_template_circuit_num2bits* %call, %struct_template_circuit_num2bits** %n2b, align 8
-  %in = load [4096 x i128]*, [4096 x i128]** %lessthan.in.declare_input, align 8
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 0
-  %in2 = load i128, i128* %array_getter, align 4
-  %n3 = load i128, i128* %lessthan.n.declare_arg, align 4
-  %lshift = shl i128 1, %n3
-  %add4 = add i128 %in2, %lshift
-  %in5 = load [4096 x i128]*, [4096 x i128]** %lessthan.in.declare_input, align 8
-  %array_getter6 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in5, i128 0, i128 1
-  %in7 = load i128, i128* %array_getter6, align 4
-  %sub = sub i128 %add4, %in7
-  %n2b8 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %struct_getter9 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b8, i32 0, i32 1
-  %num2bits.in.read_input_outter = load i128, i128* %struct_getter9, align 4
-  call void @fn_intrinsic_add_constraint(i128 %num2bits.in.read_input_outter, i128 %sub, i1* @constraint.15)
-  %ptr_getter = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %num2bits.in.write_input_outter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %ptr_getter, i32 0, i32 1
-  store i128 %sub, i128* %num2bits.in.write_input_outter, align 4
-  %n2b10 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %struct_getter11 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b10, i32 0, i32 2
-  %num2bits.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter11, align 8
-  %n12 = load i128, i128* %lessthan.n.declare_arg, align 4
-  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter, i128 0, i128 %n12
-  %n2b14 = load i128, i128* %array_getter13, align 4
-  %sub15 = sub i128 1, %n2b14
-  %out16 = load i128, i128* %lessthan.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out16, i128 %sub15, i1* @constraint.16)
-  %ptr_getter17 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %LessThan, align 8
-  %lessthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter17, i32 0, i32 2
-  store i128 %sub15, i128* %lessthan.out.write_output_inner, align 4
-  %LessThan18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %LessThan, align 8
-  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %LessThan18, i32 0, i32 2
-  %lessthan.out.read_output_inner = load i128, i128* %struct_getter19, align 4
-  store i128 %lessthan.out.read_output_inner, i128* %lessthan.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %out20 = load i128, i128* %lessthan.out.declare_output, align 4
-  %lessthan.out.write_output_inner21 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %0, i32 0, i32 2
-  store i128 %out20, i128* %lessthan.out.write_output_inner21, align 4
-  ret void
-}
-
-define %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %0) {
-entry:
-  %struct_template_circuit_lessthan = alloca %struct_template_circuit_lessthan, align 8
-  %lessthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %struct_template_circuit_lessthan, i32 0, i32 0
-  store i128 %0, i128* %lessthan.n.write_arg_inner, align 4
-  ret %struct_template_circuit_lessthan* %struct_template_circuit_lessthan
-}
-
-define i128 @Maj(i128 %0, i128 %1, i128 %2) {
-entry:
-  %maj.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %maj.x.declare_arg, align 4
-  %maj.y.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %maj.y.declare_arg, align 4
-  %maj.z.declare_arg = alloca i128, align 8
-  store i128 %2, i128* %maj.z.declare_arg, align 4
-  %x = load i128, i128* %maj.x.declare_arg, align 4
-  %y = load i128, i128* %maj.y.declare_arg, align 4
-  %and = and i128 %x, %y
-  %x1 = load i128, i128* %maj.x.declare_arg, align 4
-  %z = load i128, i128* %maj.z.declare_arg, align 4
-  %and2 = and i128 %x1, %z
-  %xor = xor i128 %and, %and2
-  %y3 = load i128, i128* %maj.y.declare_arg, align 4
-  %z4 = load i128, i128* %maj.z.declare_arg, align 4
-  %and5 = and i128 %y3, %z4
-  %xor6 = xor i128 %xor, %and5
-  ret i128 %xor6
-}
-
-define void @fn_template_init_ch_t(%struct_template_circuit_ch_t* %0) {
-entry:
-  %Ch_t = alloca %struct_template_circuit_ch_t*, align 8
-  store %struct_template_circuit_ch_t* %0, %struct_template_circuit_ch_t** %Ch_t, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 0
-  %ch_t.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %ch_t.n.declare_arg = alloca i128, align 8
-  store i128 %ch_t.n.read_arg_inner, i128* %ch_t.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 1
-  %ch_t.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %ch_t.a.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %ch_t.a.read_input_inner, [4096 x i128]** %ch_t.a.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 2
-  %ch_t.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %ch_t.b.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %ch_t.b.read_input_inner, [4096 x i128]** %ch_t.b.declare_input, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 3
-  %ch_t.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %ch_t.c.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %ch_t.c.read_input_inner, [4096 x i128]** %ch_t.c.declare_input, align 8
-  %ch_t.out.declare_output = alloca [4096 x i128]*, align 8
+  %SmallSigma = alloca %struct_template_circuit_smallsigma*, align 8
+  store %struct_template_circuit_smallsigma* %0, %struct_template_circuit_smallsigma** %SmallSigma, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 0
+  %smallsigma.ra.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %smallsigma.ra.declare_arg = alloca i128, align 8
+  store i128 %smallsigma.ra.read_arg_inner, i128* %smallsigma.ra.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 1
+  %smallsigma.rb.read_arg_inner = load i128, i128* %struct_getter1, align 4
+  %smallsigma.rb.declare_arg = alloca i128, align 8
+  store i128 %smallsigma.rb.read_arg_inner, i128* %smallsigma.rb.declare_arg, align 4
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 2
+  %smallsigma.rc.read_arg_inner = load i128, i128* %struct_getter2, align 4
+  %smallsigma.rc.declare_arg = alloca i128, align 8
+  store i128 %smallsigma.rc.read_arg_inner, i128* %smallsigma.rc.declare_arg, align 4
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 3
+  %smallsigma.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %smallsigma.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %smallsigma.in.read_input_inner, [4096 x i128]** %smallsigma.in.declare_input, align 8
+  %smallsigma.out.declare_output = alloca [4096 x i128]*, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %ch_t.out.declare_output, align 8
+  store [4096 x i128]* %out, [4096 x i128]** %smallsigma.out.declare_output, align 8
   %k = alloca i128, align 8
   %k4 = call i128 @fn_intrinsic_inline_init()
   store i128 %k4, i128* %k, align 4
+  %rota = alloca %struct_template_circuit_rotr*, align 8
+  %xor3 = alloca %struct_template_circuit_xor3*, align 8
+  %shrc = alloca %struct_template_circuit_shr*, align 8
+  %rotb = alloca %struct_template_circuit_rotr*, align 8
+  store i128 0, i128* %k, align 4
+  %ra = load i128, i128* %smallsigma.ra.declare_arg, align 4
+  %call = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %ra)
+  store %struct_template_circuit_rotr* %call, %struct_template_circuit_rotr** %rota, align 8
+  %rb = load i128, i128* %smallsigma.rb.declare_arg, align 4
+  %call5 = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %rb)
+  store %struct_template_circuit_rotr* %call5, %struct_template_circuit_rotr** %rotb, align 8
+  %rc = load i128, i128* %smallsigma.rc.declare_arg, align 4
+  %call6 = call %struct_template_circuit_shr* @fn_template_build_shr(i128 32, i128 %rc)
+  store %struct_template_circuit_shr* %call6, %struct_template_circuit_shr** %shrc, align 8
   store i128 0, i128* %k, align 4
   br label %loop.body
 
 loop.body:                                        ; preds = %loop.latch, %entry
-  %a = load [4096 x i128]*, [4096 x i128]** %ch_t.a.declare_input, align 8
-  %k5 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k5
-  %a6 = load i128, i128* %array_getter, align 4
-  %b = load [4096 x i128]*, [4096 x i128]** %ch_t.b.declare_input, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %smallsigma.in.declare_input, align 8
   %k7 = load i128, i128* %k, align 4
-  %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k7
-  %b9 = load i128, i128* %array_getter8, align 4
-  %c = load [4096 x i128]*, [4096 x i128]** %ch_t.c.declare_input, align 8
-  %k10 = load i128, i128* %k, align 4
-  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k10
-  %c12 = load i128, i128* %array_getter11, align 4
-  %sub = sub i128 %b9, %c12
-  %mul = mul i128 %a6, %sub
-  %c13 = load [4096 x i128]*, [4096 x i128]** %ch_t.c.declare_input, align 8
-  %k14 = load i128, i128* %k, align 4
-  %array_getter15 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c13, i128 0, i128 %k14
-  %c16 = load i128, i128* %array_getter15, align 4
-  %add = add i128 %mul, %c16
-  %out17 = load [4096 x i128]*, [4096 x i128]** %ch_t.out.declare_output, align 8
-  %k18 = load i128, i128* %k, align 4
-  %array_getter19 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out17, i128 0, i128 %k18
-  %out20 = load i128, i128* %array_getter19, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out20, i128 %add, i1* @constraint.17)
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %ch_t.out.declare_output, align 8
-  %k21 = load i128, i128* %k, align 4
-  %out22 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %k21
-  store i128 %add, i128* %out22, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %k7
+  %in8 = load i128, i128* %array_getter, align 4
+  %rota9 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
+  %struct_getter10 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota9, i32 0, i32 2
+  %rotr.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
+  %k11 = load i128, i128* %k, align 4
+  %array_getter12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter, i128 0, i128 %k11
+  %rota13 = load i128, i128* %array_getter12, align 4
+  call void @fn_intrinsic_add_constraint(i128 %rota13, i128 %in8, i1* @constraint.35)
+  %ptr_getter = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
+  %struct_getter14 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter, i32 0, i32 2
+  %rotr.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
+  %k16 = load i128, i128* %k, align 4
+  %rota17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter15, i128 0, i128 %k16
+  store i128 %in8, i128* %rota17, align 4
+  %in18 = load [4096 x i128]*, [4096 x i128]** %smallsigma.in.declare_input, align 8
+  %k19 = load i128, i128* %k, align 4
+  %array_getter20 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in18, i128 0, i128 %k19
+  %in21 = load i128, i128* %array_getter20, align 4
+  %rotb22 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
+  %struct_getter23 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb22, i32 0, i32 2
+  %rotr.in.read_input_outter24 = load [4096 x i128]*, [4096 x i128]** %struct_getter23, align 8
+  %k25 = load i128, i128* %k, align 4
+  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter24, i128 0, i128 %k25
+  %rotb27 = load i128, i128* %array_getter26, align 4
+  call void @fn_intrinsic_add_constraint(i128 %rotb27, i128 %in21, i1* @constraint.36)
+  %ptr_getter28 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
+  %struct_getter29 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter28, i32 0, i32 2
+  %rotr.in.read_input_outter30 = load [4096 x i128]*, [4096 x i128]** %struct_getter29, align 8
+  %k31 = load i128, i128* %k, align 4
+  %rotb32 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter30, i128 0, i128 %k31
+  store i128 %in21, i128* %rotb32, align 4
+  %in33 = load [4096 x i128]*, [4096 x i128]** %smallsigma.in.declare_input, align 8
+  %k34 = load i128, i128* %k, align 4
+  %array_getter35 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in33, i128 0, i128 %k34
+  %in36 = load i128, i128* %array_getter35, align 4
+  %shrc37 = load %struct_template_circuit_shr*, %struct_template_circuit_shr** %shrc, align 8
+  %struct_getter38 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %shrc37, i32 0, i32 2
+  %shr.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter38, align 8
+  %k39 = load i128, i128* %k, align 4
+  %array_getter40 = getelementptr inbounds [4096 x i128], [4096 x i128]* %shr.in.read_input_outter, i128 0, i128 %k39
+  %shrc41 = load i128, i128* %array_getter40, align 4
+  call void @fn_intrinsic_add_constraint(i128 %shrc41, i128 %in36, i1* @constraint.37)
+  %ptr_getter42 = load %struct_template_circuit_shr*, %struct_template_circuit_shr** %shrc, align 8
+  %struct_getter43 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %ptr_getter42, i32 0, i32 2
+  %shr.in.read_input_outter44 = load [4096 x i128]*, [4096 x i128]** %struct_getter43, align 8
+  %k45 = load i128, i128* %k, align 4
+  %shrc46 = getelementptr inbounds [4096 x i128], [4096 x i128]* %shr.in.read_input_outter44, i128 0, i128 %k45
+  store i128 %in36, i128* %shrc46, align 4
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
-  %k23 = load i128, i128* %k, align 4
-  %add24 = add i128 %k23, 1
-  store i128 %add24, i128* %k, align 4
-  %k25 = load i128, i128* %k, align 4
-  %n = load i128, i128* %ch_t.n.declare_arg, align 4
-  %slt = icmp slt i128 %k25, %n
+  %k47 = load i128, i128* %k, align 4
+  %add = add i128 %k47, 1
+  store i128 %add, i128* %k, align 4
+  %k48 = load i128, i128* %k, align 4
+  %slt = icmp slt i128 %k48, 32
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
+  %call49 = call %struct_template_circuit_xor3* @fn_template_build_xor3(i128 32)
+  store %struct_template_circuit_xor3* %call49, %struct_template_circuit_xor3** %xor3, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body50
+
+loop.body50:                                      ; preds = %loop.latch97, %loop.exit
+  %rota51 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
+  %struct_getter52 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota51, i32 0, i32 3
+  %rotr.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter52, align 8
+  %k53 = load i128, i128* %k, align 4
+  %array_getter54 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter, i128 0, i128 %k53
+  %rota55 = load i128, i128* %array_getter54, align 4
+  %xor356 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter57 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor356, i32 0, i32 1
+  %xor3.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter57, align 8
+  %k58 = load i128, i128* %k, align 4
+  %array_getter59 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter, i128 0, i128 %k58
+  %xor360 = load i128, i128* %array_getter59, align 4
+  call void @fn_intrinsic_add_constraint(i128 %xor360, i128 %rota55, i1* @constraint.38)
+  %ptr_getter61 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter62 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter61, i32 0, i32 1
+  %xor3.a.read_input_outter63 = load [4096 x i128]*, [4096 x i128]** %struct_getter62, align 8
+  %k64 = load i128, i128* %k, align 4
+  %xor365 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter63, i128 0, i128 %k64
+  store i128 %rota55, i128* %xor365, align 4
+  %rotb66 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
+  %struct_getter67 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb66, i32 0, i32 3
+  %rotr.out.read_output_outter68 = load [4096 x i128]*, [4096 x i128]** %struct_getter67, align 8
+  %k69 = load i128, i128* %k, align 4
+  %array_getter70 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter68, i128 0, i128 %k69
+  %rotb71 = load i128, i128* %array_getter70, align 4
+  %xor372 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter73 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor372, i32 0, i32 2
+  %xor3.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter73, align 8
+  %k74 = load i128, i128* %k, align 4
+  %array_getter75 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter, i128 0, i128 %k74
+  %xor376 = load i128, i128* %array_getter75, align 4
+  call void @fn_intrinsic_add_constraint(i128 %xor376, i128 %rotb71, i1* @constraint.39)
+  %ptr_getter77 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter78 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter77, i32 0, i32 2
+  %xor3.b.read_input_outter79 = load [4096 x i128]*, [4096 x i128]** %struct_getter78, align 8
+  %k80 = load i128, i128* %k, align 4
+  %xor381 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter79, i128 0, i128 %k80
+  store i128 %rotb71, i128* %xor381, align 4
+  %shrc82 = load %struct_template_circuit_shr*, %struct_template_circuit_shr** %shrc, align 8
+  %struct_getter83 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %shrc82, i32 0, i32 3
+  %shr.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter83, align 8
+  %k84 = load i128, i128* %k, align 4
+  %array_getter85 = getelementptr inbounds [4096 x i128], [4096 x i128]* %shr.out.read_output_outter, i128 0, i128 %k84
+  %shrc86 = load i128, i128* %array_getter85, align 4
+  %xor387 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter88 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor387, i32 0, i32 3
+  %xor3.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter88, align 8
+  %k89 = load i128, i128* %k, align 4
+  %array_getter90 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter, i128 0, i128 %k89
+  %xor391 = load i128, i128* %array_getter90, align 4
+  call void @fn_intrinsic_add_constraint(i128 %xor391, i128 %shrc86, i1* @constraint.40)
+  %ptr_getter92 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter93 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter92, i32 0, i32 3
+  %xor3.c.read_input_outter94 = load [4096 x i128]*, [4096 x i128]** %struct_getter93, align 8
+  %k95 = load i128, i128* %k, align 4
+  %xor396 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter94, i128 0, i128 %k95
+  store i128 %shrc86, i128* %xor396, align 4
+  br label %loop.latch97
+
+loop.latch97:                                     ; preds = %loop.body50
+  %k98 = load i128, i128* %k, align 4
+  %add99 = add i128 %k98, 1
+  store i128 %add99, i128* %k, align 4
+  %k100 = load i128, i128* %k, align 4
+  %slt101 = icmp slt i128 %k100, 32
+  br i1 %slt101, label %loop.body50, label %loop.exit102
+
+loop.exit102:                                     ; preds = %loop.latch97
+  store i128 0, i128* %k, align 4
+  br label %loop.body103
+
+loop.body103:                                     ; preds = %loop.latch116, %loop.exit102
+  %xor3104 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
+  %struct_getter105 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor3104, i32 0, i32 5
+  %xor3.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter105, align 8
+  %k106 = load i128, i128* %k, align 4
+  %array_getter107 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.out.read_output_outter, i128 0, i128 %k106
+  %xor3108 = load i128, i128* %array_getter107, align 4
+  %out109 = load [4096 x i128]*, [4096 x i128]** %smallsigma.out.declare_output, align 8
+  %k110 = load i128, i128* %k, align 4
+  %array_getter111 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out109, i128 0, i128 %k110
+  %out112 = load i128, i128* %array_getter111, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out112, i128 %xor3108, i1* @constraint.41)
+  %ptr_getter113 = load [4096 x i128]*, [4096 x i128]** %smallsigma.out.declare_output, align 8
+  %k114 = load i128, i128* %k, align 4
+  %out115 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter113, i128 0, i128 %k114
+  store i128 %xor3108, i128* %out115, align 4
+  br label %loop.latch116
+
+loop.latch116:                                    ; preds = %loop.body103
+  %k117 = load i128, i128* %k, align 4
+  %add118 = add i128 %k117, 1
+  store i128 %add118, i128* %k, align 4
+  %k119 = load i128, i128* %k, align 4
+  %slt120 = icmp slt i128 %k119, 32
+  br i1 %slt120, label %loop.body103, label %loop.exit121
+
+loop.exit121:                                     ; preds = %loop.latch116
   br label %exit
 
-exit:                                             ; preds = %loop.exit
-  %out26 = load [4096 x i128]*, [4096 x i128]** %ch_t.out.declare_output, align 8
-  %ch_t.out.write_output_inner = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %0, i32 0, i32 4
-  store [4096 x i128]* %out26, [4096 x i128]** %ch_t.out.write_output_inner, align 8
+exit:                                             ; preds = %loop.exit121
+  %out122 = load [4096 x i128]*, [4096 x i128]** %smallsigma.out.declare_output, align 8
+  %smallsigma.out.write_output_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 4
+  store [4096 x i128]* %out122, [4096 x i128]** %smallsigma.out.write_output_inner, align 8
   ret void
 }
 
-define %struct_template_circuit_ch_t* @fn_template_build_ch_t(i128 %0) {
+define %struct_template_circuit_smallsigma* @fn_template_build_smallsigma(i128 %0, i128 %1, i128 %2) {
 entry:
-  %struct_template_circuit_ch_t = alloca %struct_template_circuit_ch_t, align 8
-  %ch_t.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %struct_template_circuit_ch_t, i32 0, i32 0
-  store i128 %0, i128* %ch_t.n.write_arg_inner, align 4
-  ret %struct_template_circuit_ch_t* %struct_template_circuit_ch_t
+  %struct_template_circuit_smallsigma = alloca %struct_template_circuit_smallsigma, align 8
+  %smallsigma.ra.write_arg_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma, i32 0, i32 0
+  store i128 %0, i128* %smallsigma.ra.write_arg_inner, align 4
+  %smallsigma.rb.write_arg_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma, i32 0, i32 1
+  store i128 %1, i128* %smallsigma.rb.write_arg_inner, align 4
+  %smallsigma.rc.write_arg_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma, i32 0, i32 2
+  store i128 %2, i128* %smallsigma.rc.write_arg_inner, align 4
+  ret %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma
 }
 
 define i128 @nbits(i128 %0) {
@@ -1358,576 +2166,162 @@ loop.exit:                                        ; preds = %loop.latch
   ret i128 %r6
 }
 
-define void @fn_template_init_xor3(%struct_template_circuit_xor3* %0) {
+define void @fn_template_init_greaterthan(%struct_template_circuit_greaterthan* %0) {
 entry:
-  %Xor3 = alloca %struct_template_circuit_xor3*, align 8
-  store %struct_template_circuit_xor3* %0, %struct_template_circuit_xor3** %Xor3, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 0
-  %xor3.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %xor3.n.declare_arg = alloca i128, align 8
-  store i128 %xor3.n.read_arg_inner, i128* %xor3.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 1
-  %xor3.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %xor3.a.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %xor3.a.read_input_inner, [4096 x i128]** %xor3.a.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 2
-  %xor3.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %xor3.b.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %xor3.b.read_input_inner, [4096 x i128]** %xor3.b.declare_input, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 3
-  %xor3.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %xor3.c.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %xor3.c.read_input_inner, [4096 x i128]** %xor3.c.declare_input, align 8
-  %xor3.mid.declare_inter = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %mid = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %mid, [4096 x i128]** %xor3.mid.declare_inter, align 8
-  %xor3.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall4 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall4 to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %xor3.out.declare_output, align 8
-  %k = alloca i128, align 8
-  %k5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k5, i128* %k, align 4
-  store i128 0, i128* %k, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %b = load [4096 x i128]*, [4096 x i128]** %xor3.b.declare_input, align 8
-  %k6 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k6
-  %b7 = load i128, i128* %array_getter, align 4
-  %c = load [4096 x i128]*, [4096 x i128]** %xor3.c.declare_input, align 8
-  %k8 = load i128, i128* %k, align 4
-  %array_getter9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k8
-  %c10 = load i128, i128* %array_getter9, align 4
-  %mul = mul i128 %b7, %c10
-  %mid11 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
-  %k12 = load i128, i128* %k, align 4
-  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid11, i128 0, i128 %k12
-  %mid14 = load i128, i128* %array_getter13, align 4
-  call void @fn_intrinsic_add_constraint(i128 %mid14, i128 %mul, i1* @constraint.18)
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
-  %k15 = load i128, i128* %k, align 4
-  %mid16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %k15
-  store i128 %mul, i128* %mid16, align 4
-  %a = load [4096 x i128]*, [4096 x i128]** %xor3.a.declare_input, align 8
-  %k17 = load i128, i128* %k, align 4
-  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k17
-  %a19 = load i128, i128* %array_getter18, align 4
-  %b20 = load [4096 x i128]*, [4096 x i128]** %xor3.b.declare_input, align 8
-  %k21 = load i128, i128* %k, align 4
-  %array_getter22 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b20, i128 0, i128 %k21
-  %b23 = load i128, i128* %array_getter22, align 4
-  %mul24 = mul i128 2, %b23
-  %sub = sub i128 1, %mul24
-  %c25 = load [4096 x i128]*, [4096 x i128]** %xor3.c.declare_input, align 8
-  %k26 = load i128, i128* %k, align 4
-  %array_getter27 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c25, i128 0, i128 %k26
-  %c28 = load i128, i128* %array_getter27, align 4
-  %mul29 = mul i128 2, %c28
-  %sub30 = sub i128 %sub, %mul29
-  %mid31 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
-  %k32 = load i128, i128* %k, align 4
-  %array_getter33 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid31, i128 0, i128 %k32
-  %mid34 = load i128, i128* %array_getter33, align 4
-  %mul35 = mul i128 4, %mid34
-  %add = add i128 %sub30, %mul35
-  %mul36 = mul i128 %a19, %add
-  %b37 = load [4096 x i128]*, [4096 x i128]** %xor3.b.declare_input, align 8
-  %k38 = load i128, i128* %k, align 4
-  %array_getter39 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b37, i128 0, i128 %k38
-  %b40 = load i128, i128* %array_getter39, align 4
-  %add41 = add i128 %mul36, %b40
-  %c42 = load [4096 x i128]*, [4096 x i128]** %xor3.c.declare_input, align 8
-  %k43 = load i128, i128* %k, align 4
-  %array_getter44 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c42, i128 0, i128 %k43
-  %c45 = load i128, i128* %array_getter44, align 4
-  %add46 = add i128 %add41, %c45
-  %mid47 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
-  %k48 = load i128, i128* %k, align 4
-  %array_getter49 = getelementptr inbounds [4096 x i128], [4096 x i128]* %mid47, i128 0, i128 %k48
-  %mid50 = load i128, i128* %array_getter49, align 4
-  %mul51 = mul i128 2, %mid50
-  %sub52 = sub i128 %add46, %mul51
-  %out53 = load [4096 x i128]*, [4096 x i128]** %xor3.out.declare_output, align 8
-  %k54 = load i128, i128* %k, align 4
-  %array_getter55 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out53, i128 0, i128 %k54
-  %out56 = load i128, i128* %array_getter55, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out56, i128 %sub52, i1* @constraint.19)
-  %ptr_getter57 = load [4096 x i128]*, [4096 x i128]** %xor3.out.declare_output, align 8
-  %k58 = load i128, i128* %k, align 4
-  %out59 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter57, i128 0, i128 %k58
-  store i128 %sub52, i128* %out59, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %k60 = load i128, i128* %k, align 4
-  %add61 = add i128 %k60, 1
-  store i128 %add61, i128* %k, align 4
-  %k62 = load i128, i128* %k, align 4
-  %n = load i128, i128* %xor3.n.declare_arg, align 4
-  %slt = icmp slt i128 %k62, %n
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
+  %GreaterThan = alloca %struct_template_circuit_greaterthan*, align 8
+  store %struct_template_circuit_greaterthan* %0, %struct_template_circuit_greaterthan** %GreaterThan, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %0, i32 0, i32 0
+  %greaterthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %greaterthan.n.declare_arg = alloca i128, align 8
+  store i128 %greaterthan.n.read_arg_inner, i128* %greaterthan.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %0, i32 0, i32 1
+  %greaterthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %greaterthan.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %greaterthan.in.read_input_inner, [4096 x i128]** %greaterthan.in.declare_input, align 8
+  %lt = alloca %struct_template_circuit_lessthan*, align 8
+  %greaterthan.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %greaterthan.out.declare_output, align 4
+  %n = load i128, i128* %greaterthan.n.declare_arg, align 4
+  %call = call %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %n)
+  store %struct_template_circuit_lessthan* %call, %struct_template_circuit_lessthan** %lt, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %greaterthan.in.declare_input, align 8
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
+  %in2 = load i128, i128* %array_getter, align 4
+  %lt3 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter4 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt3, i32 0, i32 1
+  %lessthan.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
+  %array_getter5 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter, i128 0, i128 0
+  %lt6 = load i128, i128* %array_getter5, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lt6, i128 %in2, i1* @constraint.42)
+  %ptr_getter = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter7 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter, i32 0, i32 1
+  %lessthan.in.read_input_outter8 = load [4096 x i128]*, [4096 x i128]** %struct_getter7, align 8
+  %lt9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter8, i128 0, i128 0
+  store i128 %in2, i128* %lt9, align 4
+  %in10 = load [4096 x i128]*, [4096 x i128]** %greaterthan.in.declare_input, align 8
+  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in10, i128 0, i128 0
+  %in12 = load i128, i128* %array_getter11, align 4
+  %lt13 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter14 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt13, i32 0, i32 1
+  %lessthan.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
+  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter15, i128 0, i128 1
+  %lt17 = load i128, i128* %array_getter16, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lt17, i128 %in12, i1* @constraint.43)
+  %ptr_getter18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter18, i32 0, i32 1
+  %lessthan.in.read_input_outter20 = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
+  %lt21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter20, i128 0, i128 1
+  store i128 %in12, i128* %lt21, align 4
+  %lt22 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter23 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt22, i32 0, i32 2
+  %lessthan.out.read_output_outter = load i128, i128* %struct_getter23, align 4
+  %out24 = load i128, i128* %greaterthan.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out24, i128 %lessthan.out.read_output_outter, i1* @constraint.44)
+  %ptr_getter25 = load %struct_template_circuit_greaterthan*, %struct_template_circuit_greaterthan** %GreaterThan, align 8
+  %greaterthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %ptr_getter25, i32 0, i32 2
+  store i128 %lessthan.out.read_output_outter, i128* %greaterthan.out.write_output_inner, align 4
+  %GreaterThan26 = load %struct_template_circuit_greaterthan*, %struct_template_circuit_greaterthan** %GreaterThan, align 8
+  %struct_getter27 = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %GreaterThan26, i32 0, i32 2
+  %greaterthan.out.read_output_inner = load i128, i128* %struct_getter27, align 4
+  store i128 %greaterthan.out.read_output_inner, i128* %greaterthan.out.declare_output, align 4
   br label %exit
 
-exit:                                             ; preds = %loop.exit
-  %mid63 = load [4096 x i128]*, [4096 x i128]** %xor3.mid.declare_inter, align 8
-  %xor3.mid.write_inter_inner = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 4
-  store [4096 x i128]* %mid63, [4096 x i128]** %xor3.mid.write_inter_inner, align 8
-  %out64 = load [4096 x i128]*, [4096 x i128]** %xor3.out.declare_output, align 8
-  %xor3.out.write_output_inner = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %0, i32 0, i32 5
-  store [4096 x i128]* %out64, [4096 x i128]** %xor3.out.write_output_inner, align 8
+exit:                                             ; preds = %entry
+  %out28 = load i128, i128* %greaterthan.out.declare_output, align 4
+  %greaterthan.out.write_output_inner29 = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %0, i32 0, i32 2
+  store i128 %out28, i128* %greaterthan.out.write_output_inner29, align 4
   ret void
 }
 
-define %struct_template_circuit_xor3* @fn_template_build_xor3(i128 %0) {
+define %struct_template_circuit_greaterthan* @fn_template_build_greaterthan(i128 %0) {
 entry:
-  %struct_template_circuit_xor3 = alloca %struct_template_circuit_xor3, align 8
-  %xor3.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %struct_template_circuit_xor3, i32 0, i32 0
-  store i128 %0, i128* %xor3.n.write_arg_inner, align 4
-  ret %struct_template_circuit_xor3* %struct_template_circuit_xor3
+  %struct_template_circuit_greaterthan = alloca %struct_template_circuit_greaterthan, align 8
+  %greaterthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %struct_template_circuit_greaterthan, i32 0, i32 0
+  store i128 %0, i128* %greaterthan.n.write_arg_inner, align 4
+  ret %struct_template_circuit_greaterthan* %struct_template_circuit_greaterthan
 }
 
-define void @fn_template_init_shr(%struct_template_circuit_shr* %0) {
+define void @fn_template_init_bits2num(%struct_template_circuit_bits2num* %0) {
 entry:
-  %ShR = alloca %struct_template_circuit_shr*, align 8
-  store %struct_template_circuit_shr* %0, %struct_template_circuit_shr** %ShR, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 0
-  %shr.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %shr.n.declare_arg = alloca i128, align 8
-  store i128 %shr.n.read_arg_inner, i128* %shr.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 1
-  %shr.r.read_arg_inner = load i128, i128* %struct_getter1, align 4
-  %shr.r.declare_arg = alloca i128, align 8
-  store i128 %shr.r.read_arg_inner, i128* %shr.r.declare_arg, align 4
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 2
-  %shr.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %shr.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %shr.in.read_input_inner, [4096 x i128]** %shr.in.declare_input, align 8
-  %shr.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %shr.out.declare_output, align 8
+  %Bits2Num = alloca %struct_template_circuit_bits2num*, align 8
+  store %struct_template_circuit_bits2num* %0, %struct_template_circuit_bits2num** %Bits2Num, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %0, i32 0, i32 0
+  %bits2num.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %bits2num.n.declare_arg = alloca i128, align 8
+  store i128 %bits2num.n.read_arg_inner, i128* %bits2num.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %0, i32 0, i32 1
+  %bits2num.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %bits2num.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %bits2num.in.read_input_inner, [4096 x i128]** %bits2num.in.declare_input, align 8
+  %lc1 = alloca i128, align 8
+  %lc12 = call i128 @fn_intrinsic_inline_init()
+  store i128 %lc12, i128* %lc1, align 4
   %i = alloca i128, align 8
   %i3 = call i128 @fn_intrinsic_inline_init()
   store i128 %i3, i128* %i, align 4
+  %e2 = alloca i128, align 8
+  %e24 = call i128 @fn_intrinsic_inline_init()
+  store i128 %e24, i128* %e2, align 4
+  %bits2num.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %bits2num.out.declare_output, align 4
+  store i128 0, i128* %lc1, align 4
+  store i128 1, i128* %e2, align 4
   store i128 0, i128* %i, align 4
   br label %loop.body
 
 loop.body:                                        ; preds = %loop.latch, %entry
-  %i4 = load i128, i128* %i, align 4
-  %r = load i128, i128* %shr.r.declare_arg, align 4
-  %add = add i128 %i4, %r
-  %n = load i128, i128* %shr.n.declare_arg, align 4
-  %sge = icmp sge i128 %add, %n
-  br i1 %sge, label %if.true, label %if.false
-
-if.true:                                          ; preds = %loop.body
-  %out5 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
+  %lc15 = load i128, i128* %lc1, align 4
+  %in = load [4096 x i128]*, [4096 x i128]** %bits2num.in.declare_input, align 8
   %i6 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %out5, i128 0, i128 %i6
-  %out7 = load i128, i128* %array_getter, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out7, i128 0, i1* @constraint.20)
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
-  %i8 = load i128, i128* %i, align 4
-  %out9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i8
-  store i128 0, i128* %out9, align 4
-  br label %if.exit
-
-if.false:                                         ; preds = %loop.body
-  %in = load [4096 x i128]*, [4096 x i128]** %shr.in.declare_input, align 8
-  %i10 = load i128, i128* %i, align 4
-  %r11 = load i128, i128* %shr.r.declare_arg, align 4
-  %add12 = add i128 %i10, %r11
-  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %add12
-  %in14 = load i128, i128* %array_getter13, align 4
-  %out15 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
-  %i16 = load i128, i128* %i, align 4
-  %array_getter17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out15, i128 0, i128 %i16
-  %out18 = load i128, i128* %array_getter17, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out18, i128 %in14, i1* @constraint.21)
-  %ptr_getter19 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
-  %i20 = load i128, i128* %i, align 4
-  %out21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter19, i128 0, i128 %i20
-  store i128 %in14, i128* %out21, align 4
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false, %if.true
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %if.exit
-  %i22 = load i128, i128* %i, align 4
-  %add23 = add i128 %i22, 1
-  store i128 %add23, i128* %i, align 4
-  %i24 = load i128, i128* %i, align 4
-  %n25 = load i128, i128* %shr.n.declare_arg, align 4
-  %slt = icmp slt i128 %i24, %n25
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out26 = load [4096 x i128]*, [4096 x i128]** %shr.out.declare_output, align 8
-  %shr.out.write_output_inner = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %0, i32 0, i32 3
-  store [4096 x i128]* %out26, [4096 x i128]** %shr.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_shr* @fn_template_build_shr(i128 %0, i128 %1) {
-entry:
-  %struct_template_circuit_shr = alloca %struct_template_circuit_shr, align 8
-  %shr.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %struct_template_circuit_shr, i32 0, i32 0
-  store i128 %0, i128* %shr.n.write_arg_inner, align 4
-  %shr.r.write_arg_inner = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %struct_template_circuit_shr, i32 0, i32 1
-  store i128 %1, i128* %shr.r.write_arg_inner, align 4
-  ret %struct_template_circuit_shr* %struct_template_circuit_shr
-}
-
-define i128 @bsigma1(i128 %0) {
-entry:
-  %bsigma1.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %bsigma1.x.declare_arg, align 4
-  %x = load i128, i128* %bsigma1.x.declare_arg, align 4
-  %call = call i128 @rrot(i128 %x, i128 6)
-  %x1 = load i128, i128* %bsigma1.x.declare_arg, align 4
-  %call2 = call i128 @rrot(i128 %x1, i128 11)
-  %xor = xor i128 %call, %call2
-  %x3 = load i128, i128* %bsigma1.x.declare_arg, align 4
-  %call4 = call i128 @rrot(i128 %x3, i128 25)
-  %xor5 = xor i128 %xor, %call4
-  ret i128 %xor5
-}
-
-define void @fn_template_init_bigsigma(%struct_template_circuit_bigsigma* %0) {
-entry:
-  %BigSigma = alloca %struct_template_circuit_bigsigma*, align 8
-  store %struct_template_circuit_bigsigma* %0, %struct_template_circuit_bigsigma** %BigSigma, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 0
-  %bigsigma.ra.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %bigsigma.ra.declare_arg = alloca i128, align 8
-  store i128 %bigsigma.ra.read_arg_inner, i128* %bigsigma.ra.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 1
-  %bigsigma.rb.read_arg_inner = load i128, i128* %struct_getter1, align 4
-  %bigsigma.rb.declare_arg = alloca i128, align 8
-  store i128 %bigsigma.rb.read_arg_inner, i128* %bigsigma.rb.declare_arg, align 4
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 2
-  %bigsigma.rc.read_arg_inner = load i128, i128* %struct_getter2, align 4
-  %bigsigma.rc.declare_arg = alloca i128, align 8
-  store i128 %bigsigma.rc.read_arg_inner, i128* %bigsigma.rc.declare_arg, align 4
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 3
-  %bigsigma.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %bigsigma.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %bigsigma.in.read_input_inner, [4096 x i128]** %bigsigma.in.declare_input, align 8
-  %bigsigma.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %bigsigma.out.declare_output, align 8
-  %rotc = alloca %struct_template_circuit_rotr*, align 8
-  %rotb = alloca %struct_template_circuit_rotr*, align 8
-  %xor3 = alloca %struct_template_circuit_xor3*, align 8
-  %k = alloca i128, align 8
-  %k4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k4, i128* %k, align 4
-  %rota = alloca %struct_template_circuit_rotr*, align 8
-  store i128 0, i128* %k, align 4
-  %ra = load i128, i128* %bigsigma.ra.declare_arg, align 4
-  %call = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %ra)
-  store %struct_template_circuit_rotr* %call, %struct_template_circuit_rotr** %rota, align 8
-  %rb = load i128, i128* %bigsigma.rb.declare_arg, align 4
-  %call5 = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %rb)
-  store %struct_template_circuit_rotr* %call5, %struct_template_circuit_rotr** %rotb, align 8
-  %rc = load i128, i128* %bigsigma.rc.declare_arg, align 4
-  %call6 = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %rc)
-  store %struct_template_circuit_rotr* %call6, %struct_template_circuit_rotr** %rotc, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %in = load [4096 x i128]*, [4096 x i128]** %bigsigma.in.declare_input, align 8
-  %k7 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %k7
-  %in8 = load i128, i128* %array_getter, align 4
-  %rota9 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
-  %struct_getter10 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota9, i32 0, i32 2
-  %rotr.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
-  %k11 = load i128, i128* %k, align 4
-  %array_getter12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter, i128 0, i128 %k11
-  %rota13 = load i128, i128* %array_getter12, align 4
-  call void @fn_intrinsic_add_constraint(i128 %rota13, i128 %in8, i1* @constraint.22)
-  %ptr_getter = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
-  %struct_getter14 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter, i32 0, i32 2
-  %rotr.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
-  %k16 = load i128, i128* %k, align 4
-  %rota17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter15, i128 0, i128 %k16
-  store i128 %in8, i128* %rota17, align 4
-  %in18 = load [4096 x i128]*, [4096 x i128]** %bigsigma.in.declare_input, align 8
-  %k19 = load i128, i128* %k, align 4
-  %array_getter20 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in18, i128 0, i128 %k19
-  %in21 = load i128, i128* %array_getter20, align 4
-  %rotb22 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
-  %struct_getter23 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb22, i32 0, i32 2
-  %rotr.in.read_input_outter24 = load [4096 x i128]*, [4096 x i128]** %struct_getter23, align 8
-  %k25 = load i128, i128* %k, align 4
-  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter24, i128 0, i128 %k25
-  %rotb27 = load i128, i128* %array_getter26, align 4
-  call void @fn_intrinsic_add_constraint(i128 %rotb27, i128 %in21, i1* @constraint.23)
-  %ptr_getter28 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
-  %struct_getter29 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter28, i32 0, i32 2
-  %rotr.in.read_input_outter30 = load [4096 x i128]*, [4096 x i128]** %struct_getter29, align 8
-  %k31 = load i128, i128* %k, align 4
-  %rotb32 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter30, i128 0, i128 %k31
-  store i128 %in21, i128* %rotb32, align 4
-  %in33 = load [4096 x i128]*, [4096 x i128]** %bigsigma.in.declare_input, align 8
-  %k34 = load i128, i128* %k, align 4
-  %array_getter35 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in33, i128 0, i128 %k34
-  %in36 = load i128, i128* %array_getter35, align 4
-  %rotc37 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotc, align 8
-  %struct_getter38 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotc37, i32 0, i32 2
-  %rotr.in.read_input_outter39 = load [4096 x i128]*, [4096 x i128]** %struct_getter38, align 8
-  %k40 = load i128, i128* %k, align 4
-  %array_getter41 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter39, i128 0, i128 %k40
-  %rotc42 = load i128, i128* %array_getter41, align 4
-  call void @fn_intrinsic_add_constraint(i128 %rotc42, i128 %in36, i1* @constraint.24)
-  %ptr_getter43 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotc, align 8
-  %struct_getter44 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter43, i32 0, i32 2
-  %rotr.in.read_input_outter45 = load [4096 x i128]*, [4096 x i128]** %struct_getter44, align 8
-  %k46 = load i128, i128* %k, align 4
-  %rotc47 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter45, i128 0, i128 %k46
-  store i128 %in36, i128* %rotc47, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %i6
+  %in7 = load i128, i128* %array_getter, align 4
+  %e28 = load i128, i128* %e2, align 4
+  %mul = mul i128 %in7, %e28
+  %add = add i128 %lc15, %mul
+  store i128 %add, i128* %lc1, align 4
+  %e29 = load i128, i128* %e2, align 4
+  %e210 = load i128, i128* %e2, align 4
+  %add11 = add i128 %e29, %e210
+  store i128 %add11, i128* %e2, align 4
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
-  %k48 = load i128, i128* %k, align 4
-  %add = add i128 %k48, 1
-  store i128 %add, i128* %k, align 4
-  %k49 = load i128, i128* %k, align 4
-  %slt = icmp slt i128 %k49, 32
+  %i12 = load i128, i128* %i, align 4
+  %add13 = add i128 %i12, 1
+  store i128 %add13, i128* %i, align 4
+  %i14 = load i128, i128* %i, align 4
+  %n = load i128, i128* %bits2num.n.declare_arg, align 4
+  %slt = icmp slt i128 %i14, %n
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  %call50 = call %struct_template_circuit_xor3* @fn_template_build_xor3(i128 32)
-  store %struct_template_circuit_xor3* %call50, %struct_template_circuit_xor3** %xor3, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body51
-
-loop.body51:                                      ; preds = %loop.latch99, %loop.exit
-  %rota52 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
-  %struct_getter53 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota52, i32 0, i32 3
-  %rotr.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter53, align 8
-  %k54 = load i128, i128* %k, align 4
-  %array_getter55 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter, i128 0, i128 %k54
-  %rota56 = load i128, i128* %array_getter55, align 4
-  %xor357 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter58 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor357, i32 0, i32 1
-  %xor3.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter58, align 8
-  %k59 = load i128, i128* %k, align 4
-  %array_getter60 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter, i128 0, i128 %k59
-  %xor361 = load i128, i128* %array_getter60, align 4
-  call void @fn_intrinsic_add_constraint(i128 %xor361, i128 %rota56, i1* @constraint.25)
-  %ptr_getter62 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter63 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter62, i32 0, i32 1
-  %xor3.a.read_input_outter64 = load [4096 x i128]*, [4096 x i128]** %struct_getter63, align 8
-  %k65 = load i128, i128* %k, align 4
-  %xor366 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter64, i128 0, i128 %k65
-  store i128 %rota56, i128* %xor366, align 4
-  %rotb67 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
-  %struct_getter68 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb67, i32 0, i32 3
-  %rotr.out.read_output_outter69 = load [4096 x i128]*, [4096 x i128]** %struct_getter68, align 8
-  %k70 = load i128, i128* %k, align 4
-  %array_getter71 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter69, i128 0, i128 %k70
-  %rotb72 = load i128, i128* %array_getter71, align 4
-  %xor373 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter74 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor373, i32 0, i32 2
-  %xor3.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter74, align 8
-  %k75 = load i128, i128* %k, align 4
-  %array_getter76 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter, i128 0, i128 %k75
-  %xor377 = load i128, i128* %array_getter76, align 4
-  call void @fn_intrinsic_add_constraint(i128 %xor377, i128 %rotb72, i1* @constraint.26)
-  %ptr_getter78 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter79 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter78, i32 0, i32 2
-  %xor3.b.read_input_outter80 = load [4096 x i128]*, [4096 x i128]** %struct_getter79, align 8
-  %k81 = load i128, i128* %k, align 4
-  %xor382 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter80, i128 0, i128 %k81
-  store i128 %rotb72, i128* %xor382, align 4
-  %rotc83 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotc, align 8
-  %struct_getter84 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotc83, i32 0, i32 3
-  %rotr.out.read_output_outter85 = load [4096 x i128]*, [4096 x i128]** %struct_getter84, align 8
-  %k86 = load i128, i128* %k, align 4
-  %array_getter87 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter85, i128 0, i128 %k86
-  %rotc88 = load i128, i128* %array_getter87, align 4
-  %xor389 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter90 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor389, i32 0, i32 3
-  %xor3.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter90, align 8
-  %k91 = load i128, i128* %k, align 4
-  %array_getter92 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter, i128 0, i128 %k91
-  %xor393 = load i128, i128* %array_getter92, align 4
-  call void @fn_intrinsic_add_constraint(i128 %xor393, i128 %rotc88, i1* @constraint.27)
-  %ptr_getter94 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter95 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter94, i32 0, i32 3
-  %xor3.c.read_input_outter96 = load [4096 x i128]*, [4096 x i128]** %struct_getter95, align 8
-  %k97 = load i128, i128* %k, align 4
-  %xor398 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter96, i128 0, i128 %k97
-  store i128 %rotc88, i128* %xor398, align 4
-  br label %loop.latch99
-
-loop.latch99:                                     ; preds = %loop.body51
-  %k100 = load i128, i128* %k, align 4
-  %add101 = add i128 %k100, 1
-  store i128 %add101, i128* %k, align 4
-  %k102 = load i128, i128* %k, align 4
-  %slt103 = icmp slt i128 %k102, 32
-  br i1 %slt103, label %loop.body51, label %loop.exit104
-
-loop.exit104:                                     ; preds = %loop.latch99
-  store i128 0, i128* %k, align 4
-  br label %loop.body105
-
-loop.body105:                                     ; preds = %loop.latch118, %loop.exit104
-  %xor3106 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter107 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor3106, i32 0, i32 5
-  %xor3.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter107, align 8
-  %k108 = load i128, i128* %k, align 4
-  %array_getter109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.out.read_output_outter, i128 0, i128 %k108
-  %xor3110 = load i128, i128* %array_getter109, align 4
-  %out111 = load [4096 x i128]*, [4096 x i128]** %bigsigma.out.declare_output, align 8
-  %k112 = load i128, i128* %k, align 4
-  %array_getter113 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out111, i128 0, i128 %k112
-  %out114 = load i128, i128* %array_getter113, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out114, i128 %xor3110, i1* @constraint.28)
-  %ptr_getter115 = load [4096 x i128]*, [4096 x i128]** %bigsigma.out.declare_output, align 8
-  %k116 = load i128, i128* %k, align 4
-  %out117 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter115, i128 0, i128 %k116
-  store i128 %xor3110, i128* %out117, align 4
-  br label %loop.latch118
-
-loop.latch118:                                    ; preds = %loop.body105
-  %k119 = load i128, i128* %k, align 4
-  %add120 = add i128 %k119, 1
-  store i128 %add120, i128* %k, align 4
-  %k121 = load i128, i128* %k, align 4
-  %slt122 = icmp slt i128 %k121, 32
-  br i1 %slt122, label %loop.body105, label %loop.exit123
-
-loop.exit123:                                     ; preds = %loop.latch118
+  %lc115 = load i128, i128* %lc1, align 4
+  %out16 = load i128, i128* %bits2num.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out16, i128 %lc115, i1* @constraint.45)
+  %ptr_getter = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %Bits2Num, align 8
+  %bits2num.out.write_output_inner = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %ptr_getter, i32 0, i32 2
+  store i128 %lc115, i128* %bits2num.out.write_output_inner, align 4
+  %Bits2Num17 = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %Bits2Num, align 8
+  %struct_getter18 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %Bits2Num17, i32 0, i32 2
+  %bits2num.out.read_output_inner = load i128, i128* %struct_getter18, align 4
+  store i128 %bits2num.out.read_output_inner, i128* %bits2num.out.declare_output, align 4
   br label %exit
 
-exit:                                             ; preds = %loop.exit123
-  %out124 = load [4096 x i128]*, [4096 x i128]** %bigsigma.out.declare_output, align 8
-  %bigsigma.out.write_output_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %0, i32 0, i32 4
-  store [4096 x i128]* %out124, [4096 x i128]** %bigsigma.out.write_output_inner, align 8
+exit:                                             ; preds = %loop.exit
+  %out19 = load i128, i128* %bits2num.out.declare_output, align 4
+  %bits2num.out.write_output_inner20 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %0, i32 0, i32 2
+  store i128 %out19, i128* %bits2num.out.write_output_inner20, align 4
   ret void
 }
 
-define %struct_template_circuit_bigsigma* @fn_template_build_bigsigma(i128 %0, i128 %1, i128 %2) {
+define %struct_template_circuit_bits2num* @fn_template_build_bits2num(i128 %0) {
 entry:
-  %struct_template_circuit_bigsigma = alloca %struct_template_circuit_bigsigma, align 8
-  %bigsigma.ra.write_arg_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma, i32 0, i32 0
-  store i128 %0, i128* %bigsigma.ra.write_arg_inner, align 4
-  %bigsigma.rb.write_arg_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma, i32 0, i32 1
-  store i128 %1, i128* %bigsigma.rb.write_arg_inner, align 4
-  %bigsigma.rc.write_arg_inner = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma, i32 0, i32 2
-  store i128 %2, i128* %bigsigma.rc.write_arg_inner, align 4
-  ret %struct_template_circuit_bigsigma* %struct_template_circuit_bigsigma
-}
-
-define i128 @ssigma0(i128 %0) {
-entry:
-  %ssigma0.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %ssigma0.x.declare_arg, align 4
-  %x = load i128, i128* %ssigma0.x.declare_arg, align 4
-  %call = call i128 @rrot(i128 %x, i128 7)
-  %x1 = load i128, i128* %ssigma0.x.declare_arg, align 4
-  %call2 = call i128 @rrot(i128 %x1, i128 18)
-  %xor = xor i128 %call, %call2
-  %x3 = load i128, i128* %ssigma0.x.declare_arg, align 4
-  %rshift = lshr i128 %x3, 3
-  %xor4 = xor i128 %xor, %rshift
-  ret i128 %xor4
-}
-
-define i128 @Ch(i128 %0, i128 %1, i128 %2) {
-entry:
-  %ch.x.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %ch.x.declare_arg, align 4
-  %ch.y.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %ch.y.declare_arg, align 4
-  %ch.z.declare_arg = alloca i128, align 8
-  store i128 %2, i128* %ch.z.declare_arg, align 4
-  %x = load i128, i128* %ch.x.declare_arg, align 4
-  %y = load i128, i128* %ch.y.declare_arg, align 4
-  %and = and i128 %x, %y
-  %x1 = load i128, i128* %ch.x.declare_arg, align 4
-  %xor = xor i128 4294967295, %x1
-  %z = load i128, i128* %ch.z.declare_arg, align 4
-  %and2 = and i128 %xor, %z
-  %xor3 = xor i128 %and, %and2
-  ret i128 %xor3
-}
-
-define void @fn_template_init_iszero(%struct_template_circuit_iszero* %0) {
-entry:
-  %IsZero = alloca %struct_template_circuit_iszero*, align 8
-  store %struct_template_circuit_iszero* %0, %struct_template_circuit_iszero** %IsZero, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %0, i32 0, i32 0
-  %iszero.in.read_input_inner = load i128, i128* %struct_getter, align 4
-  %iszero.in.declare_input = alloca i128, align 8
-  store i128 %iszero.in.read_input_inner, i128* %iszero.in.declare_input, align 4
-  %iszero.inv.declare_inter = alloca i128, align 8
-  %inv = call i128 @fn_intrinsic_inline_init()
-  store i128 %inv, i128* %iszero.inv.declare_inter, align 4
-  %iszero.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %iszero.out.declare_output, align 4
-  %in = load i128, i128* %iszero.in.declare_input, align 4
-  %ne = icmp ne i128 %in, 0
-  %in1 = load i128, i128* %iszero.in.declare_input, align 4
-  %sdiv = sdiv i128 1, %in1
-  %inline_switch = call i128 @fn_intrinsic_inline_switch(i1 %ne, i128 %sdiv, i128 0)
-  %ptr_getter = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
-  %iszero.inv.write_inter_inner = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter, i32 0, i32 1
-  store i128 %inline_switch, i128* %iszero.inv.write_inter_inner, align 4
-  %IsZero2 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %IsZero2, i32 0, i32 1
-  %iszero.inv.read_inter_inner = load i128, i128* %struct_getter3, align 4
-  store i128 %iszero.inv.read_inter_inner, i128* %iszero.inv.declare_inter, align 4
-  %in4 = load i128, i128* %iszero.in.declare_input, align 4
-  %neg = sub i128 0, %in4
-  %inv5 = load i128, i128* %iszero.inv.declare_inter, align 4
-  %mul = mul i128 %neg, %inv5
-  %add = add i128 %mul, 1
-  %out6 = load i128, i128* %iszero.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out6, i128 %add, i1* @constraint.29)
-  %ptr_getter7 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
-  %iszero.out.write_output_inner = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter7, i32 0, i32 2
-  store i128 %add, i128* %iszero.out.write_output_inner, align 4
-  %IsZero8 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %IsZero, align 8
-  %struct_getter9 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %IsZero8, i32 0, i32 2
-  %iszero.out.read_output_inner = load i128, i128* %struct_getter9, align 4
-  store i128 %iszero.out.read_output_inner, i128* %iszero.out.declare_output, align 4
-  %in10 = load i128, i128* %iszero.in.declare_input, align 4
-  %out11 = load i128, i128* %iszero.out.declare_output, align 4
-  %mul12 = mul i128 %in10, %out11
-  call void @fn_intrinsic_add_constraint(i128 %mul12, i128 0, i1* @constraint.30)
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %inv13 = load i128, i128* %iszero.inv.declare_inter, align 4
-  %iszero.inv.write_inter_inner14 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %0, i32 0, i32 1
-  store i128 %inv13, i128* %iszero.inv.write_inter_inner14, align 4
-  %out15 = load i128, i128* %iszero.out.declare_output, align 4
-  %iszero.out.write_output_inner16 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %0, i32 0, i32 2
-  store i128 %out15, i128* %iszero.out.write_output_inner16, align 4
-  ret void
-}
-
-define %struct_template_circuit_iszero* @fn_template_build_iszero() {
-entry:
-  %struct_template_circuit_iszero = alloca %struct_template_circuit_iszero, align 8
-  ret %struct_template_circuit_iszero* %struct_template_circuit_iszero
+  %struct_template_circuit_bits2num = alloca %struct_template_circuit_bits2num, align 8
+  %bits2num.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %struct_template_circuit_bits2num, i32 0, i32 0
+  store i128 %0, i128* %bits2num.n.write_arg_inner, align 4
+  ret %struct_template_circuit_bits2num* %struct_template_circuit_bits2num
 }
 
 define void @fn_template_init_binsum(%struct_template_circuit_binsum* %0) {
@@ -1946,28 +2340,28 @@ entry:
   %binsum.in.read_input_inner = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter2, align 8
   %binsum.in.declare_input = alloca [4096 x [4096 x i128]]*, align 8
   store [4096 x [4096 x i128]]* %binsum.in.read_input_inner, [4096 x [4096 x i128]]** %binsum.in.declare_input, align 8
-  %k = alloca i128, align 8
-  %k3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k3, i128* %k, align 4
+  %j = alloca i128, align 8
+  %j3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j3, i128* %j, align 4
+  %nout = alloca i128, align 8
+  %nout4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %nout4, i128* %nout, align 4
   %lin = alloca i128, align 8
-  %lin4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %lin4, i128* %lin, align 4
-  %lout = alloca i128, align 8
-  %lout5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %lout5, i128* %lout, align 4
+  %lin5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %lin5, i128* %lin, align 4
   %binsum.out.declare_output = alloca [4096 x i128]*, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %out, [4096 x i128]** %binsum.out.declare_output, align 8
-  %j = alloca i128, align 8
-  %j6 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j6, i128* %j, align 4
-  %nout = alloca i128, align 8
-  %nout7 = call i128 @fn_intrinsic_inline_init()
-  store i128 %nout7, i128* %nout, align 4
   %e2 = alloca i128, align 8
-  %e28 = call i128 @fn_intrinsic_inline_init()
-  store i128 %e28, i128* %e2, align 4
+  %e26 = call i128 @fn_intrinsic_inline_init()
+  store i128 %e26, i128* %e2, align 4
+  %k = alloca i128, align 8
+  %k7 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k7, i128* %k, align 4
+  %lout = alloca i128, align 8
+  %lout8 = call i128 @fn_intrinsic_inline_init()
+  store i128 %lout8, i128* %lout, align 4
   %n = load i128, i128* %binsum.n.declare_arg, align 4
   %pow = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n)
   %sub = sub i128 %pow, 1
@@ -2050,7 +2444,7 @@ loop.body30:                                      ; preds = %loop.latch56, %loop
   %out42 = load i128, i128* %array_getter41, align 4
   %sub43 = sub i128 %out42, 1
   %mul44 = mul i128 %out38, %sub43
-  call void @fn_intrinsic_add_constraint(i128 %mul44, i128 0, i1* @constraint.31)
+  call void @fn_intrinsic_add_constraint(i128 %mul44, i128 0, i1* @constraint.46)
   %lout45 = load i128, i128* %lout, align 4
   %out46 = load [4096 x i128]*, [4096 x i128]** %binsum.out.declare_output, align 8
   %k47 = load i128, i128* %k, align 4
@@ -2078,7 +2472,7 @@ loop.latch56:                                     ; preds = %loop.body30
 loop.exit62:                                      ; preds = %loop.latch56
   %lin63 = load i128, i128* %lin, align 4
   %lout64 = load i128, i128* %lout, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lin63, i128 %lout64, i1* @constraint.32)
+  call void @fn_intrinsic_add_constraint(i128 %lin63, i128 %lout64, i1* @constraint.47)
   br label %exit
 
 exit:                                             ; preds = %loop.exit62
@@ -2098,57 +2492,1308 @@ entry:
   ret %struct_template_circuit_binsum* %struct_template_circuit_binsum
 }
 
+define i128 @Maj(i128 %0, i128 %1, i128 %2) {
+entry:
+  %maj.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %maj.x.declare_arg, align 4
+  %maj.y.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %maj.y.declare_arg, align 4
+  %maj.z.declare_arg = alloca i128, align 8
+  store i128 %2, i128* %maj.z.declare_arg, align 4
+  %x = load i128, i128* %maj.x.declare_arg, align 4
+  %y = load i128, i128* %maj.y.declare_arg, align 4
+  %and = and i128 %x, %y
+  %x1 = load i128, i128* %maj.x.declare_arg, align 4
+  %z = load i128, i128* %maj.z.declare_arg, align 4
+  %and2 = and i128 %x1, %z
+  %xor = xor i128 %and, %and2
+  %y3 = load i128, i128* %maj.y.declare_arg, align 4
+  %z4 = load i128, i128* %maj.z.declare_arg, align 4
+  %and5 = and i128 %y3, %z4
+  %xor6 = xor i128 %xor, %and5
+  ret i128 %xor6
+}
+
+define void @fn_template_init_lesseqthan(%struct_template_circuit_lesseqthan* %0) {
+entry:
+  %LessEqThan = alloca %struct_template_circuit_lesseqthan*, align 8
+  store %struct_template_circuit_lesseqthan* %0, %struct_template_circuit_lesseqthan** %LessEqThan, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %0, i32 0, i32 0
+  %lesseqthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %lesseqthan.n.declare_arg = alloca i128, align 8
+  store i128 %lesseqthan.n.read_arg_inner, i128* %lesseqthan.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %0, i32 0, i32 1
+  %lesseqthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %lesseqthan.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %lesseqthan.in.read_input_inner, [4096 x i128]** %lesseqthan.in.declare_input, align 8
+  %lesseqthan.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %lesseqthan.out.declare_output, align 4
+  %lt = alloca %struct_template_circuit_lessthan*, align 8
+  %n = load i128, i128* %lesseqthan.n.declare_arg, align 4
+  %call = call %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %n)
+  store %struct_template_circuit_lessthan* %call, %struct_template_circuit_lessthan** %lt, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %lesseqthan.in.declare_input, align 8
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 0
+  %in2 = load i128, i128* %array_getter, align 4
+  %lt3 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter4 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt3, i32 0, i32 1
+  %lessthan.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
+  %array_getter5 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter, i128 0, i128 0
+  %lt6 = load i128, i128* %array_getter5, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lt6, i128 %in2, i1* @constraint.48)
+  %ptr_getter = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter7 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter, i32 0, i32 1
+  %lessthan.in.read_input_outter8 = load [4096 x i128]*, [4096 x i128]** %struct_getter7, align 8
+  %lt9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter8, i128 0, i128 0
+  store i128 %in2, i128* %lt9, align 4
+  %in10 = load [4096 x i128]*, [4096 x i128]** %lesseqthan.in.declare_input, align 8
+  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in10, i128 0, i128 1
+  %in12 = load i128, i128* %array_getter11, align 4
+  %add = add i128 %in12, 1
+  %lt13 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter14 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt13, i32 0, i32 1
+  %lessthan.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
+  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter15, i128 0, i128 1
+  %lt17 = load i128, i128* %array_getter16, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lt17, i128 %add, i1* @constraint.49)
+  %ptr_getter18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter18, i32 0, i32 1
+  %lessthan.in.read_input_outter20 = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
+  %lt21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter20, i128 0, i128 1
+  store i128 %add, i128* %lt21, align 4
+  %lt22 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter23 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt22, i32 0, i32 2
+  %lessthan.out.read_output_outter = load i128, i128* %struct_getter23, align 4
+  %out24 = load i128, i128* %lesseqthan.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out24, i128 %lessthan.out.read_output_outter, i1* @constraint.50)
+  %ptr_getter25 = load %struct_template_circuit_lesseqthan*, %struct_template_circuit_lesseqthan** %LessEqThan, align 8
+  %lesseqthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %ptr_getter25, i32 0, i32 2
+  store i128 %lessthan.out.read_output_outter, i128* %lesseqthan.out.write_output_inner, align 4
+  %LessEqThan26 = load %struct_template_circuit_lesseqthan*, %struct_template_circuit_lesseqthan** %LessEqThan, align 8
+  %struct_getter27 = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %LessEqThan26, i32 0, i32 2
+  %lesseqthan.out.read_output_inner = load i128, i128* %struct_getter27, align 4
+  store i128 %lesseqthan.out.read_output_inner, i128* %lesseqthan.out.declare_output, align 4
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %out28 = load i128, i128* %lesseqthan.out.declare_output, align 4
+  %lesseqthan.out.write_output_inner29 = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %0, i32 0, i32 2
+  store i128 %out28, i128* %lesseqthan.out.write_output_inner29, align 4
+  ret void
+}
+
+define %struct_template_circuit_lesseqthan* @fn_template_build_lesseqthan(i128 %0) {
+entry:
+  %struct_template_circuit_lesseqthan = alloca %struct_template_circuit_lesseqthan, align 8
+  %lesseqthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %struct_template_circuit_lesseqthan, i32 0, i32 0
+  store i128 %0, i128* %lesseqthan.n.write_arg_inner, align 4
+  ret %struct_template_circuit_lesseqthan* %struct_template_circuit_lesseqthan
+}
+
+define i128 @bsigma1(i128 %0) {
+entry:
+  %bsigma1.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %bsigma1.x.declare_arg, align 4
+  %x = load i128, i128* %bsigma1.x.declare_arg, align 4
+  %call = call i128 @rrot(i128 %x, i128 6)
+  %x1 = load i128, i128* %bsigma1.x.declare_arg, align 4
+  %call2 = call i128 @rrot(i128 %x1, i128 11)
+  %xor = xor i128 %call, %call2
+  %x3 = load i128, i128* %bsigma1.x.declare_arg, align 4
+  %call4 = call i128 @rrot(i128 %x3, i128 25)
+  %xor5 = xor i128 %xor, %call4
+  ret i128 %xor5
+}
+
+define void @fn_template_init_t2(%struct_template_circuit_t2* %0) {
+entry:
+  %T2 = alloca %struct_template_circuit_t2*, align 8
+  store %struct_template_circuit_t2* %0, %struct_template_circuit_t2** %T2, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 0
+  %t2.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %t2.a.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t2.a.read_input_inner, [4096 x i128]** %t2.a.declare_input, align 8
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 1
+  %t2.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %t2.b.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t2.b.read_input_inner, [4096 x i128]** %t2.b.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 2
+  %t2.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %t2.c.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t2.c.read_input_inner, [4096 x i128]** %t2.c.declare_input, align 8
+  %bigsigma0 = alloca %struct_template_circuit_bigsigma*, align 8
+  %maj = alloca %struct_template_circuit_maj_t*, align 8
+  %k = alloca i128, align 8
+  %k3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k3, i128* %k, align 4
+  %t2.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %t2.out.declare_output, align 8
+  %sum = alloca %struct_template_circuit_binsum*, align 8
+  store i128 0, i128* %k, align 4
+  %call = call %struct_template_circuit_bigsigma* @fn_template_build_bigsigma(i128 2, i128 13, i128 22)
+  store %struct_template_circuit_bigsigma* %call, %struct_template_circuit_bigsigma** %bigsigma0, align 8
+  %call4 = call %struct_template_circuit_maj_t* @fn_template_build_maj_t(i128 32)
+  store %struct_template_circuit_maj_t* %call4, %struct_template_circuit_maj_t** %maj, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %a = load [4096 x i128]*, [4096 x i128]** %t2.a.declare_input, align 8
+  %k5 = load i128, i128* %k, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k5
+  %a6 = load i128, i128* %array_getter, align 4
+  %bigsigma07 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma0, align 8
+  %struct_getter8 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma07, i32 0, i32 3
+  %bigsigma.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter8, align 8
+  %k9 = load i128, i128* %k, align 4
+  %array_getter10 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter, i128 0, i128 %k9
+  %bigsigma011 = load i128, i128* %array_getter10, align 4
+  call void @fn_intrinsic_add_constraint(i128 %bigsigma011, i128 %a6, i1* @constraint.51)
+  %ptr_getter = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma0, align 8
+  %struct_getter12 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %ptr_getter, i32 0, i32 3
+  %bigsigma.in.read_input_outter13 = load [4096 x i128]*, [4096 x i128]** %struct_getter12, align 8
+  %k14 = load i128, i128* %k, align 4
+  %bigsigma015 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter13, i128 0, i128 %k14
+  store i128 %a6, i128* %bigsigma015, align 4
+  %a16 = load [4096 x i128]*, [4096 x i128]** %t2.a.declare_input, align 8
+  %k17 = load i128, i128* %k, align 4
+  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %a16, i128 0, i128 %k17
+  %a19 = load i128, i128* %array_getter18, align 4
+  %maj20 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter21 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj20, i32 0, i32 1
+  %maj_t.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter21, align 8
+  %k22 = load i128, i128* %k, align 4
+  %array_getter23 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.a.read_input_outter, i128 0, i128 %k22
+  %maj24 = load i128, i128* %array_getter23, align 4
+  call void @fn_intrinsic_add_constraint(i128 %maj24, i128 %a19, i1* @constraint.52)
+  %ptr_getter25 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter26 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %ptr_getter25, i32 0, i32 1
+  %maj_t.a.read_input_outter27 = load [4096 x i128]*, [4096 x i128]** %struct_getter26, align 8
+  %k28 = load i128, i128* %k, align 4
+  %maj29 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.a.read_input_outter27, i128 0, i128 %k28
+  store i128 %a19, i128* %maj29, align 4
+  %b = load [4096 x i128]*, [4096 x i128]** %t2.b.declare_input, align 8
+  %k30 = load i128, i128* %k, align 4
+  %array_getter31 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k30
+  %b32 = load i128, i128* %array_getter31, align 4
+  %maj33 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter34 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj33, i32 0, i32 2
+  %maj_t.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter34, align 8
+  %k35 = load i128, i128* %k, align 4
+  %array_getter36 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.b.read_input_outter, i128 0, i128 %k35
+  %maj37 = load i128, i128* %array_getter36, align 4
+  call void @fn_intrinsic_add_constraint(i128 %maj37, i128 %b32, i1* @constraint.53)
+  %ptr_getter38 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter39 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %ptr_getter38, i32 0, i32 2
+  %maj_t.b.read_input_outter40 = load [4096 x i128]*, [4096 x i128]** %struct_getter39, align 8
+  %k41 = load i128, i128* %k, align 4
+  %maj42 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.b.read_input_outter40, i128 0, i128 %k41
+  store i128 %b32, i128* %maj42, align 4
+  %c = load [4096 x i128]*, [4096 x i128]** %t2.c.declare_input, align 8
+  %k43 = load i128, i128* %k, align 4
+  %array_getter44 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k43
+  %c45 = load i128, i128* %array_getter44, align 4
+  %maj46 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter47 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj46, i32 0, i32 3
+  %maj_t.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter47, align 8
+  %k48 = load i128, i128* %k, align 4
+  %array_getter49 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.c.read_input_outter, i128 0, i128 %k48
+  %maj50 = load i128, i128* %array_getter49, align 4
+  call void @fn_intrinsic_add_constraint(i128 %maj50, i128 %c45, i1* @constraint.54)
+  %ptr_getter51 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter52 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %ptr_getter51, i32 0, i32 3
+  %maj_t.c.read_input_outter53 = load [4096 x i128]*, [4096 x i128]** %struct_getter52, align 8
+  %k54 = load i128, i128* %k, align 4
+  %maj55 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.c.read_input_outter53, i128 0, i128 %k54
+  store i128 %c45, i128* %maj55, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %k56 = load i128, i128* %k, align 4
+  %add = add i128 %k56, 1
+  store i128 %add, i128* %k, align 4
+  %k57 = load i128, i128* %k, align 4
+  %slt = icmp slt i128 %k57, 32
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %call58 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
+  store %struct_template_circuit_binsum* %call58, %struct_template_circuit_binsum** %sum, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body59
+
+loop.body59:                                      ; preds = %loop.latch91, %loop.exit
+  %bigsigma060 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma0, align 8
+  %struct_getter61 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma060, i32 0, i32 4
+  %bigsigma.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter61, align 8
+  %k62 = load i128, i128* %k, align 4
+  %array_getter63 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.out.read_output_outter, i128 0, i128 %k62
+  %bigsigma064 = load i128, i128* %array_getter63, align 4
+  %sum65 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter66 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum65, i32 0, i32 2
+  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter66, align 8
+  %k67 = load i128, i128* %k, align 4
+  %array_getter68 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %k67
+  %sum69 = load i128, i128* %array_getter68, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum69, i128 %bigsigma064, i1* @constraint.55)
+  %ptr_getter70 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter71 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter70, i32 0, i32 2
+  %binsum.in.read_input_outter72 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter71, align 8
+  %k73 = load i128, i128* %k, align 4
+  %sum74 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter72, i128 0, i128 0, i128 %k73
+  store i128 %bigsigma064, i128* %sum74, align 4
+  %maj75 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
+  %struct_getter76 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj75, i32 0, i32 5
+  %maj_t.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter76, align 8
+  %k77 = load i128, i128* %k, align 4
+  %array_getter78 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.out.read_output_outter, i128 0, i128 %k77
+  %maj79 = load i128, i128* %array_getter78, align 4
+  %sum80 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter81 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum80, i32 0, i32 2
+  %binsum.in.read_input_outter82 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter81, align 8
+  %k83 = load i128, i128* %k, align 4
+  %array_getter84 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter82, i128 0, i128 1, i128 %k83
+  %sum85 = load i128, i128* %array_getter84, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum85, i128 %maj79, i1* @constraint.56)
+  %ptr_getter86 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter87 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter86, i32 0, i32 2
+  %binsum.in.read_input_outter88 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter87, align 8
+  %k89 = load i128, i128* %k, align 4
+  %sum90 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter88, i128 0, i128 1, i128 %k89
+  store i128 %maj79, i128* %sum90, align 4
+  br label %loop.latch91
+
+loop.latch91:                                     ; preds = %loop.body59
+  %k92 = load i128, i128* %k, align 4
+  %add93 = add i128 %k92, 1
+  store i128 %add93, i128* %k, align 4
+  %k94 = load i128, i128* %k, align 4
+  %slt95 = icmp slt i128 %k94, 32
+  br i1 %slt95, label %loop.body59, label %loop.exit96
+
+loop.exit96:                                      ; preds = %loop.latch91
+  store i128 0, i128* %k, align 4
+  br label %loop.body97
+
+loop.body97:                                      ; preds = %loop.latch110, %loop.exit96
+  %sum98 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter99 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum98, i32 0, i32 3
+  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter99, align 8
+  %k100 = load i128, i128* %k, align 4
+  %array_getter101 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %k100
+  %sum102 = load i128, i128* %array_getter101, align 4
+  %out103 = load [4096 x i128]*, [4096 x i128]** %t2.out.declare_output, align 8
+  %k104 = load i128, i128* %k, align 4
+  %array_getter105 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out103, i128 0, i128 %k104
+  %out106 = load i128, i128* %array_getter105, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out106, i128 %sum102, i1* @constraint.57)
+  %ptr_getter107 = load [4096 x i128]*, [4096 x i128]** %t2.out.declare_output, align 8
+  %k108 = load i128, i128* %k, align 4
+  %out109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter107, i128 0, i128 %k108
+  store i128 %sum102, i128* %out109, align 4
+  br label %loop.latch110
+
+loop.latch110:                                    ; preds = %loop.body97
+  %k111 = load i128, i128* %k, align 4
+  %add112 = add i128 %k111, 1
+  store i128 %add112, i128* %k, align 4
+  %k113 = load i128, i128* %k, align 4
+  %slt114 = icmp slt i128 %k113, 32
+  br i1 %slt114, label %loop.body97, label %loop.exit115
+
+loop.exit115:                                     ; preds = %loop.latch110
+  br label %exit
+
+exit:                                             ; preds = %loop.exit115
+  %out116 = load [4096 x i128]*, [4096 x i128]** %t2.out.declare_output, align 8
+  %t2.out.write_output_inner = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 3
+  store [4096 x i128]* %out116, [4096 x i128]** %t2.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_t2* @fn_template_build_t2() {
+entry:
+  %struct_template_circuit_t2 = alloca %struct_template_circuit_t2, align 8
+  ret %struct_template_circuit_t2* %struct_template_circuit_t2
+}
+
+define i128 @bsigma0(i128 %0) {
+entry:
+  %bsigma0.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %bsigma0.x.declare_arg, align 4
+  %x = load i128, i128* %bsigma0.x.declare_arg, align 4
+  %call = call i128 @rrot(i128 %x, i128 2)
+  %x1 = load i128, i128* %bsigma0.x.declare_arg, align 4
+  %call2 = call i128 @rrot(i128 %x1, i128 13)
+  %xor = xor i128 %call, %call2
+  %x3 = load i128, i128* %bsigma0.x.declare_arg, align 4
+  %call4 = call i128 @rrot(i128 %x3, i128 22)
+  %xor5 = xor i128 %xor, %call4
+  ret i128 %xor5
+}
+
+define i128 @ssigma1(i128 %0) {
+entry:
+  %ssigma1.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %ssigma1.x.declare_arg, align 4
+  %x = load i128, i128* %ssigma1.x.declare_arg, align 4
+  %call = call i128 @rrot(i128 %x, i128 17)
+  %x1 = load i128, i128* %ssigma1.x.declare_arg, align 4
+  %call2 = call i128 @rrot(i128 %x1, i128 19)
+  %xor = xor i128 %call, %call2
+  %x3 = load i128, i128* %ssigma1.x.declare_arg, align 4
+  %rshift = lshr i128 %x3, 10
+  %xor4 = xor i128 %xor, %rshift
+  ret i128 %xor4
+}
+
+define void @fn_template_init_greatereqthan(%struct_template_circuit_greatereqthan* %0) {
+entry:
+  %GreaterEqThan = alloca %struct_template_circuit_greatereqthan*, align 8
+  store %struct_template_circuit_greatereqthan* %0, %struct_template_circuit_greatereqthan** %GreaterEqThan, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %0, i32 0, i32 0
+  %greatereqthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
+  %greatereqthan.n.declare_arg = alloca i128, align 8
+  store i128 %greatereqthan.n.read_arg_inner, i128* %greatereqthan.n.declare_arg, align 4
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %0, i32 0, i32 1
+  %greatereqthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %greatereqthan.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %greatereqthan.in.read_input_inner, [4096 x i128]** %greatereqthan.in.declare_input, align 8
+  %lt = alloca %struct_template_circuit_lessthan*, align 8
+  %greatereqthan.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %greatereqthan.out.declare_output, align 4
+  %n = load i128, i128* %greatereqthan.n.declare_arg, align 4
+  %call = call %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %n)
+  store %struct_template_circuit_lessthan* %call, %struct_template_circuit_lessthan** %lt, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %greatereqthan.in.declare_input, align 8
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
+  %in2 = load i128, i128* %array_getter, align 4
+  %lt3 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter4 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt3, i32 0, i32 1
+  %lessthan.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
+  %array_getter5 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter, i128 0, i128 0
+  %lt6 = load i128, i128* %array_getter5, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lt6, i128 %in2, i1* @constraint.58)
+  %ptr_getter = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter7 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter, i32 0, i32 1
+  %lessthan.in.read_input_outter8 = load [4096 x i128]*, [4096 x i128]** %struct_getter7, align 8
+  %lt9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter8, i128 0, i128 0
+  store i128 %in2, i128* %lt9, align 4
+  %in10 = load [4096 x i128]*, [4096 x i128]** %greatereqthan.in.declare_input, align 8
+  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in10, i128 0, i128 0
+  %in12 = load i128, i128* %array_getter11, align 4
+  %add = add i128 %in12, 1
+  %lt13 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter14 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt13, i32 0, i32 1
+  %lessthan.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
+  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter15, i128 0, i128 1
+  %lt17 = load i128, i128* %array_getter16, align 4
+  call void @fn_intrinsic_add_constraint(i128 %lt17, i128 %add, i1* @constraint.59)
+  %ptr_getter18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter18, i32 0, i32 1
+  %lessthan.in.read_input_outter20 = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
+  %lt21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter20, i128 0, i128 1
+  store i128 %add, i128* %lt21, align 4
+  %lt22 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
+  %struct_getter23 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt22, i32 0, i32 2
+  %lessthan.out.read_output_outter = load i128, i128* %struct_getter23, align 4
+  %out24 = load i128, i128* %greatereqthan.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out24, i128 %lessthan.out.read_output_outter, i1* @constraint.60)
+  %ptr_getter25 = load %struct_template_circuit_greatereqthan*, %struct_template_circuit_greatereqthan** %GreaterEqThan, align 8
+  %greatereqthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %ptr_getter25, i32 0, i32 2
+  store i128 %lessthan.out.read_output_outter, i128* %greatereqthan.out.write_output_inner, align 4
+  %GreaterEqThan26 = load %struct_template_circuit_greatereqthan*, %struct_template_circuit_greatereqthan** %GreaterEqThan, align 8
+  %struct_getter27 = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %GreaterEqThan26, i32 0, i32 2
+  %greatereqthan.out.read_output_inner = load i128, i128* %struct_getter27, align 4
+  store i128 %greatereqthan.out.read_output_inner, i128* %greatereqthan.out.declare_output, align 4
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %out28 = load i128, i128* %greatereqthan.out.declare_output, align 4
+  %greatereqthan.out.write_output_inner29 = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %0, i32 0, i32 2
+  store i128 %out28, i128* %greatereqthan.out.write_output_inner29, align 4
+  ret void
+}
+
+define %struct_template_circuit_greatereqthan* @fn_template_build_greatereqthan(i128 %0) {
+entry:
+  %struct_template_circuit_greatereqthan = alloca %struct_template_circuit_greatereqthan, align 8
+  %greatereqthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %struct_template_circuit_greatereqthan, i32 0, i32 0
+  store i128 %0, i128* %greatereqthan.n.write_arg_inner, align 4
+  ret %struct_template_circuit_greatereqthan* %struct_template_circuit_greatereqthan
+}
+
+define void @fn_template_init_t1(%struct_template_circuit_t1* %0) {
+entry:
+  %T1 = alloca %struct_template_circuit_t1*, align 8
+  store %struct_template_circuit_t1* %0, %struct_template_circuit_t1** %T1, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 0
+  %t1.h.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %t1.h.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t1.h.read_input_inner, [4096 x i128]** %t1.h.declare_input, align 8
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 1
+  %t1.e.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %t1.e.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t1.e.read_input_inner, [4096 x i128]** %t1.e.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 2
+  %t1.f.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %t1.f.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t1.f.read_input_inner, [4096 x i128]** %t1.f.declare_input, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 3
+  %t1.g.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %t1.g.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t1.g.read_input_inner, [4096 x i128]** %t1.g.declare_input, align 8
+  %struct_getter4 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 4
+  %t1.k.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
+  %t1.k.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t1.k.read_input_inner, [4096 x i128]** %t1.k.declare_input, align 8
+  %struct_getter5 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 5
+  %t1.w.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter5, align 8
+  %t1.w.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %t1.w.read_input_inner, [4096 x i128]** %t1.w.declare_input, align 8
+  %ch = alloca %struct_template_circuit_ch_t*, align 8
+  %t1.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %t1.out.declare_output, align 8
+  %sum = alloca %struct_template_circuit_binsum*, align 8
+  %ki = alloca i128, align 8
+  %ki6 = call i128 @fn_intrinsic_inline_init()
+  store i128 %ki6, i128* %ki, align 4
+  %bigsigma1 = alloca %struct_template_circuit_bigsigma*, align 8
+  store i128 0, i128* %ki, align 4
+  %call = call %struct_template_circuit_ch_t* @fn_template_build_ch_t(i128 32)
+  store %struct_template_circuit_ch_t* %call, %struct_template_circuit_ch_t** %ch, align 8
+  %call7 = call %struct_template_circuit_bigsigma* @fn_template_build_bigsigma(i128 6, i128 11, i128 25)
+  store %struct_template_circuit_bigsigma* %call7, %struct_template_circuit_bigsigma** %bigsigma1, align 8
+  store i128 0, i128* %ki, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %e = load [4096 x i128]*, [4096 x i128]** %t1.e.declare_input, align 8
+  %ki8 = load i128, i128* %ki, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %e, i128 0, i128 %ki8
+  %e9 = load i128, i128* %array_getter, align 4
+  %bigsigma110 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma1, align 8
+  %struct_getter11 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma110, i32 0, i32 3
+  %bigsigma.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter11, align 8
+  %ki12 = load i128, i128* %ki, align 4
+  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter, i128 0, i128 %ki12
+  %bigsigma114 = load i128, i128* %array_getter13, align 4
+  call void @fn_intrinsic_add_constraint(i128 %bigsigma114, i128 %e9, i1* @constraint.61)
+  %ptr_getter = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma1, align 8
+  %struct_getter15 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %ptr_getter, i32 0, i32 3
+  %bigsigma.in.read_input_outter16 = load [4096 x i128]*, [4096 x i128]** %struct_getter15, align 8
+  %ki17 = load i128, i128* %ki, align 4
+  %bigsigma118 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter16, i128 0, i128 %ki17
+  store i128 %e9, i128* %bigsigma118, align 4
+  %e19 = load [4096 x i128]*, [4096 x i128]** %t1.e.declare_input, align 8
+  %ki20 = load i128, i128* %ki, align 4
+  %array_getter21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %e19, i128 0, i128 %ki20
+  %e22 = load i128, i128* %array_getter21, align 4
+  %ch23 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter24 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch23, i32 0, i32 1
+  %ch_t.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter24, align 8
+  %ki25 = load i128, i128* %ki, align 4
+  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.a.read_input_outter, i128 0, i128 %ki25
+  %ch27 = load i128, i128* %array_getter26, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ch27, i128 %e22, i1* @constraint.62)
+  %ptr_getter28 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter29 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ptr_getter28, i32 0, i32 1
+  %ch_t.a.read_input_outter30 = load [4096 x i128]*, [4096 x i128]** %struct_getter29, align 8
+  %ki31 = load i128, i128* %ki, align 4
+  %ch32 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.a.read_input_outter30, i128 0, i128 %ki31
+  store i128 %e22, i128* %ch32, align 4
+  %f = load [4096 x i128]*, [4096 x i128]** %t1.f.declare_input, align 8
+  %ki33 = load i128, i128* %ki, align 4
+  %array_getter34 = getelementptr inbounds [4096 x i128], [4096 x i128]* %f, i128 0, i128 %ki33
+  %f35 = load i128, i128* %array_getter34, align 4
+  %ch36 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter37 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch36, i32 0, i32 2
+  %ch_t.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter37, align 8
+  %ki38 = load i128, i128* %ki, align 4
+  %array_getter39 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.b.read_input_outter, i128 0, i128 %ki38
+  %ch40 = load i128, i128* %array_getter39, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ch40, i128 %f35, i1* @constraint.63)
+  %ptr_getter41 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter42 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ptr_getter41, i32 0, i32 2
+  %ch_t.b.read_input_outter43 = load [4096 x i128]*, [4096 x i128]** %struct_getter42, align 8
+  %ki44 = load i128, i128* %ki, align 4
+  %ch45 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.b.read_input_outter43, i128 0, i128 %ki44
+  store i128 %f35, i128* %ch45, align 4
+  %g = load [4096 x i128]*, [4096 x i128]** %t1.g.declare_input, align 8
+  %ki46 = load i128, i128* %ki, align 4
+  %array_getter47 = getelementptr inbounds [4096 x i128], [4096 x i128]* %g, i128 0, i128 %ki46
+  %g48 = load i128, i128* %array_getter47, align 4
+  %ch49 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter50 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch49, i32 0, i32 3
+  %ch_t.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter50, align 8
+  %ki51 = load i128, i128* %ki, align 4
+  %array_getter52 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.c.read_input_outter, i128 0, i128 %ki51
+  %ch53 = load i128, i128* %array_getter52, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ch53, i128 %g48, i1* @constraint.64)
+  %ptr_getter54 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter55 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ptr_getter54, i32 0, i32 3
+  %ch_t.c.read_input_outter56 = load [4096 x i128]*, [4096 x i128]** %struct_getter55, align 8
+  %ki57 = load i128, i128* %ki, align 4
+  %ch58 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.c.read_input_outter56, i128 0, i128 %ki57
+  store i128 %g48, i128* %ch58, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %ki59 = load i128, i128* %ki, align 4
+  %add = add i128 %ki59, 1
+  store i128 %add, i128* %ki, align 4
+  %ki60 = load i128, i128* %ki, align 4
+  %slt = icmp slt i128 %ki60, 32
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %call61 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 5)
+  store %struct_template_circuit_binsum* %call61, %struct_template_circuit_binsum** %sum, align 8
+  store i128 0, i128* %ki, align 4
+  br label %loop.body62
+
+loop.body62:                                      ; preds = %loop.latch136, %loop.exit
+  %h = load [4096 x i128]*, [4096 x i128]** %t1.h.declare_input, align 8
+  %ki63 = load i128, i128* %ki, align 4
+  %array_getter64 = getelementptr inbounds [4096 x i128], [4096 x i128]* %h, i128 0, i128 %ki63
+  %h65 = load i128, i128* %array_getter64, align 4
+  %sum66 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter67 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum66, i32 0, i32 2
+  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter67, align 8
+  %ki68 = load i128, i128* %ki, align 4
+  %array_getter69 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %ki68
+  %sum70 = load i128, i128* %array_getter69, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum70, i128 %h65, i1* @constraint.65)
+  %ptr_getter71 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter72 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter71, i32 0, i32 2
+  %binsum.in.read_input_outter73 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter72, align 8
+  %ki74 = load i128, i128* %ki, align 4
+  %sum75 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter73, i128 0, i128 0, i128 %ki74
+  store i128 %h65, i128* %sum75, align 4
+  %bigsigma176 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma1, align 8
+  %struct_getter77 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma176, i32 0, i32 4
+  %bigsigma.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter77, align 8
+  %ki78 = load i128, i128* %ki, align 4
+  %array_getter79 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.out.read_output_outter, i128 0, i128 %ki78
+  %bigsigma180 = load i128, i128* %array_getter79, align 4
+  %sum81 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter82 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum81, i32 0, i32 2
+  %binsum.in.read_input_outter83 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter82, align 8
+  %ki84 = load i128, i128* %ki, align 4
+  %array_getter85 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter83, i128 0, i128 1, i128 %ki84
+  %sum86 = load i128, i128* %array_getter85, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum86, i128 %bigsigma180, i1* @constraint.66)
+  %ptr_getter87 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter88 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter87, i32 0, i32 2
+  %binsum.in.read_input_outter89 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter88, align 8
+  %ki90 = load i128, i128* %ki, align 4
+  %sum91 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter89, i128 0, i128 1, i128 %ki90
+  store i128 %bigsigma180, i128* %sum91, align 4
+  %ch92 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
+  %struct_getter93 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch92, i32 0, i32 4
+  %ch_t.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter93, align 8
+  %ki94 = load i128, i128* %ki, align 4
+  %array_getter95 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.out.read_output_outter, i128 0, i128 %ki94
+  %ch96 = load i128, i128* %array_getter95, align 4
+  %sum97 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter98 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum97, i32 0, i32 2
+  %binsum.in.read_input_outter99 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter98, align 8
+  %ki100 = load i128, i128* %ki, align 4
+  %array_getter101 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter99, i128 0, i128 2, i128 %ki100
+  %sum102 = load i128, i128* %array_getter101, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum102, i128 %ch96, i1* @constraint.67)
+  %ptr_getter103 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter104 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter103, i32 0, i32 2
+  %binsum.in.read_input_outter105 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter104, align 8
+  %ki106 = load i128, i128* %ki, align 4
+  %sum107 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter105, i128 0, i128 2, i128 %ki106
+  store i128 %ch96, i128* %sum107, align 4
+  %k = load [4096 x i128]*, [4096 x i128]** %t1.k.declare_input, align 8
+  %ki108 = load i128, i128* %ki, align 4
+  %array_getter109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %k, i128 0, i128 %ki108
+  %k110 = load i128, i128* %array_getter109, align 4
+  %sum111 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter112 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum111, i32 0, i32 2
+  %binsum.in.read_input_outter113 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter112, align 8
+  %ki114 = load i128, i128* %ki, align 4
+  %array_getter115 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter113, i128 0, i128 3, i128 %ki114
+  %sum116 = load i128, i128* %array_getter115, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum116, i128 %k110, i1* @constraint.68)
+  %ptr_getter117 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter118 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter117, i32 0, i32 2
+  %binsum.in.read_input_outter119 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter118, align 8
+  %ki120 = load i128, i128* %ki, align 4
+  %sum121 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter119, i128 0, i128 3, i128 %ki120
+  store i128 %k110, i128* %sum121, align 4
+  %w = load [4096 x i128]*, [4096 x i128]** %t1.w.declare_input, align 8
+  %ki122 = load i128, i128* %ki, align 4
+  %array_getter123 = getelementptr inbounds [4096 x i128], [4096 x i128]* %w, i128 0, i128 %ki122
+  %w124 = load i128, i128* %array_getter123, align 4
+  %sum125 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter126 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum125, i32 0, i32 2
+  %binsum.in.read_input_outter127 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter126, align 8
+  %ki128 = load i128, i128* %ki, align 4
+  %array_getter129 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter127, i128 0, i128 4, i128 %ki128
+  %sum130 = load i128, i128* %array_getter129, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum130, i128 %w124, i1* @constraint.69)
+  %ptr_getter131 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter132 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter131, i32 0, i32 2
+  %binsum.in.read_input_outter133 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter132, align 8
+  %ki134 = load i128, i128* %ki, align 4
+  %sum135 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter133, i128 0, i128 4, i128 %ki134
+  store i128 %w124, i128* %sum135, align 4
+  br label %loop.latch136
+
+loop.latch136:                                    ; preds = %loop.body62
+  %ki137 = load i128, i128* %ki, align 4
+  %add138 = add i128 %ki137, 1
+  store i128 %add138, i128* %ki, align 4
+  %ki139 = load i128, i128* %ki, align 4
+  %slt140 = icmp slt i128 %ki139, 32
+  br i1 %slt140, label %loop.body62, label %loop.exit141
+
+loop.exit141:                                     ; preds = %loop.latch136
+  store i128 0, i128* %ki, align 4
+  br label %loop.body142
+
+loop.body142:                                     ; preds = %loop.latch155, %loop.exit141
+  %sum143 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter144 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum143, i32 0, i32 3
+  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter144, align 8
+  %ki145 = load i128, i128* %ki, align 4
+  %array_getter146 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %ki145
+  %sum147 = load i128, i128* %array_getter146, align 4
+  %out148 = load [4096 x i128]*, [4096 x i128]** %t1.out.declare_output, align 8
+  %ki149 = load i128, i128* %ki, align 4
+  %array_getter150 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out148, i128 0, i128 %ki149
+  %out151 = load i128, i128* %array_getter150, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out151, i128 %sum147, i1* @constraint.70)
+  %ptr_getter152 = load [4096 x i128]*, [4096 x i128]** %t1.out.declare_output, align 8
+  %ki153 = load i128, i128* %ki, align 4
+  %out154 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter152, i128 0, i128 %ki153
+  store i128 %sum147, i128* %out154, align 4
+  br label %loop.latch155
+
+loop.latch155:                                    ; preds = %loop.body142
+  %ki156 = load i128, i128* %ki, align 4
+  %add157 = add i128 %ki156, 1
+  store i128 %add157, i128* %ki, align 4
+  %ki158 = load i128, i128* %ki, align 4
+  %slt159 = icmp slt i128 %ki158, 32
+  br i1 %slt159, label %loop.body142, label %loop.exit160
+
+loop.exit160:                                     ; preds = %loop.latch155
+  br label %exit
+
+exit:                                             ; preds = %loop.exit160
+  %out161 = load [4096 x i128]*, [4096 x i128]** %t1.out.declare_output, align 8
+  %t1.out.write_output_inner = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 6
+  store [4096 x i128]* %out161, [4096 x i128]** %t1.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_t1* @fn_template_build_t1() {
+entry:
+  %struct_template_circuit_t1 = alloca %struct_template_circuit_t1, align 8
+  ret %struct_template_circuit_t1* %struct_template_circuit_t1
+}
+
+define void @fn_template_init_isequal(%struct_template_circuit_isequal* %0) {
+entry:
+  %IsEqual = alloca %struct_template_circuit_isequal*, align 8
+  store %struct_template_circuit_isequal* %0, %struct_template_circuit_isequal** %IsEqual, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %0, i32 0, i32 0
+  %isequal.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %isequal.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %isequal.in.read_input_inner, [4096 x i128]** %isequal.in.declare_input, align 8
+  %isequal.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %isequal.out.declare_output, align 4
+  %isz = alloca %struct_template_circuit_iszero*, align 8
+  %call = call %struct_template_circuit_iszero* @fn_template_build_iszero()
+  store %struct_template_circuit_iszero* %call, %struct_template_circuit_iszero** %isz, align 8
+  %in = load [4096 x i128]*, [4096 x i128]** %isequal.in.declare_input, align 8
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
+  %in1 = load i128, i128* %array_getter, align 4
+  %in2 = load [4096 x i128]*, [4096 x i128]** %isequal.in.declare_input, align 8
+  %array_getter3 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in2, i128 0, i128 0
+  %in4 = load i128, i128* %array_getter3, align 4
+  %sub = sub i128 %in1, %in4
+  %isz5 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
+  %struct_getter6 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz5, i32 0, i32 0
+  %iszero.in.read_input_outter = load i128, i128* %struct_getter6, align 4
+  call void @fn_intrinsic_add_constraint(i128 %iszero.in.read_input_outter, i128 %sub, i1* @constraint.71)
+  %ptr_getter = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
+  %iszero.in.write_input_outter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter, i32 0, i32 0
+  store i128 %sub, i128* %iszero.in.write_input_outter, align 4
+  %isz7 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
+  %struct_getter8 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz7, i32 0, i32 2
+  %iszero.out.read_output_outter = load i128, i128* %struct_getter8, align 4
+  %out9 = load i128, i128* %isequal.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %iszero.out.read_output_outter, i1* @constraint.72)
+  %ptr_getter10 = load %struct_template_circuit_isequal*, %struct_template_circuit_isequal** %IsEqual, align 8
+  %isequal.out.write_output_inner = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %ptr_getter10, i32 0, i32 1
+  store i128 %iszero.out.read_output_outter, i128* %isequal.out.write_output_inner, align 4
+  %IsEqual11 = load %struct_template_circuit_isequal*, %struct_template_circuit_isequal** %IsEqual, align 8
+  %struct_getter12 = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %IsEqual11, i32 0, i32 1
+  %isequal.out.read_output_inner = load i128, i128* %struct_getter12, align 4
+  store i128 %isequal.out.read_output_inner, i128* %isequal.out.declare_output, align 4
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %out13 = load i128, i128* %isequal.out.declare_output, align 4
+  %isequal.out.write_output_inner14 = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %0, i32 0, i32 1
+  store i128 %out13, i128* %isequal.out.write_output_inner14, align 4
+  ret void
+}
+
+define %struct_template_circuit_isequal* @fn_template_build_isequal() {
+entry:
+  %struct_template_circuit_isequal = alloca %struct_template_circuit_isequal, align 8
+  ret %struct_template_circuit_isequal* %struct_template_circuit_isequal
+}
+
+define void @fn_template_init_aliascheck(%struct_template_circuit_aliascheck* %0) {
+entry:
+  %AliasCheck = alloca %struct_template_circuit_aliascheck*, align 8
+  store %struct_template_circuit_aliascheck* %0, %struct_template_circuit_aliascheck** %AliasCheck, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %0, i32 0, i32 0
+  %aliascheck.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %aliascheck.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %aliascheck.in.read_input_inner, [4096 x i128]** %aliascheck.in.declare_input, align 8
+  %compConstant = alloca %struct_template_circuit_compconstant*, align 8
+  %i = alloca i128, align 8
+  %i1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i1, i128* %i, align 4
+  %call = call %struct_template_circuit_compconstant* @fn_template_build_compconstant(i128 -1)
+  store %struct_template_circuit_compconstant* %call, %struct_template_circuit_compconstant** %compConstant, align 8
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %in = load [4096 x i128]*, [4096 x i128]** %aliascheck.in.declare_input, align 8
+  %i2 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %i2
+  %in3 = load i128, i128* %array_getter, align 4
+  %compConstant4 = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %compConstant, align 8
+  %struct_getter5 = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %compConstant4, i32 0, i32 1
+  %compconstant.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter5, align 8
+  %i6 = load i128, i128* %i, align 4
+  %array_getter7 = getelementptr inbounds [4096 x i128], [4096 x i128]* %compconstant.in.read_input_outter, i128 0, i128 %i6
+  %compConstant8 = load i128, i128* %array_getter7, align 4
+  call void @fn_intrinsic_add_constraint(i128 %compConstant8, i128 %in3, i1* @constraint.73)
+  %ptr_getter = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %compConstant, align 8
+  %struct_getter9 = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %ptr_getter, i32 0, i32 1
+  %compconstant.in.read_input_outter10 = load [4096 x i128]*, [4096 x i128]** %struct_getter9, align 8
+  %i11 = load i128, i128* %i, align 4
+  %compConstant12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %compconstant.in.read_input_outter10, i128 0, i128 %i11
+  store i128 %in3, i128* %compConstant12, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i13 = load i128, i128* %i, align 4
+  %add = add i128 %i13, 1
+  store i128 %add, i128* %i, align 4
+  %i14 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i14, 254
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %compConstant15 = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %compConstant, align 8
+  %struct_getter16 = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %compConstant15, i32 0, i32 4
+  %compconstant.out.read_output_outter = load i128, i128* %struct_getter16, align 4
+  call void @fn_intrinsic_add_constraint(i128 %compconstant.out.read_output_outter, i128 0, i1* @constraint.74)
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  ret void
+}
+
+define %struct_template_circuit_aliascheck* @fn_template_build_aliascheck() {
+entry:
+  %struct_template_circuit_aliascheck = alloca %struct_template_circuit_aliascheck, align 8
+  ret %struct_template_circuit_aliascheck* %struct_template_circuit_aliascheck
+}
+
+define i128 @ssigma0(i128 %0) {
+entry:
+  %ssigma0.x.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %ssigma0.x.declare_arg, align 4
+  %x = load i128, i128* %ssigma0.x.declare_arg, align 4
+  %call = call i128 @rrot(i128 %x, i128 7)
+  %x1 = load i128, i128* %ssigma0.x.declare_arg, align 4
+  %call2 = call i128 @rrot(i128 %x1, i128 18)
+  %xor = xor i128 %call, %call2
+  %x3 = load i128, i128* %ssigma0.x.declare_arg, align 4
+  %rshift = lshr i128 %x3, 3
+  %xor4 = xor i128 %xor, %rshift
+  ret i128 %xor4
+}
+
+define void @fn_template_init_sigmaplus(%struct_template_circuit_sigmaplus* %0) {
+entry:
+  %SigmaPlus = alloca %struct_template_circuit_sigmaplus*, align 8
+  store %struct_template_circuit_sigmaplus* %0, %struct_template_circuit_sigmaplus** %SigmaPlus, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 0
+  %sigmaplus.in2.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %sigmaplus.in2.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sigmaplus.in2.read_input_inner, [4096 x i128]** %sigmaplus.in2.declare_input, align 8
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 1
+  %sigmaplus.in7.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %sigmaplus.in7.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sigmaplus.in7.read_input_inner, [4096 x i128]** %sigmaplus.in7.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 2
+  %sigmaplus.in15.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %sigmaplus.in15.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sigmaplus.in15.read_input_inner, [4096 x i128]** %sigmaplus.in15.declare_input, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 3
+  %sigmaplus.in16.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %sigmaplus.in16.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sigmaplus.in16.read_input_inner, [4096 x i128]** %sigmaplus.in16.declare_input, align 8
+  %sigma0 = alloca %struct_template_circuit_smallsigma*, align 8
+  %sigmaplus.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %sigmaplus.out.declare_output, align 8
+  %sigma1 = alloca %struct_template_circuit_smallsigma*, align 8
+  %sum = alloca %struct_template_circuit_binsum*, align 8
+  %k = alloca i128, align 8
+  %k4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k4, i128* %k, align 4
+  store i128 0, i128* %k, align 4
+  %call = call %struct_template_circuit_smallsigma* @fn_template_build_smallsigma(i128 17, i128 19, i128 10)
+  store %struct_template_circuit_smallsigma* %call, %struct_template_circuit_smallsigma** %sigma1, align 8
+  %call5 = call %struct_template_circuit_smallsigma* @fn_template_build_smallsigma(i128 7, i128 18, i128 3)
+  store %struct_template_circuit_smallsigma* %call5, %struct_template_circuit_smallsigma** %sigma0, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %in2 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in2.declare_input, align 8
+  %k6 = load i128, i128* %k, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in2, i128 0, i128 %k6
+  %in27 = load i128, i128* %array_getter, align 4
+  %sigma18 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma1, align 8
+  %struct_getter9 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma18, i32 0, i32 3
+  %smallsigma.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter9, align 8
+  %k10 = load i128, i128* %k, align 4
+  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter, i128 0, i128 %k10
+  %sigma112 = load i128, i128* %array_getter11, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sigma112, i128 %in27, i1* @constraint.75)
+  %ptr_getter = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma1, align 8
+  %struct_getter13 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %ptr_getter, i32 0, i32 3
+  %smallsigma.in.read_input_outter14 = load [4096 x i128]*, [4096 x i128]** %struct_getter13, align 8
+  %k15 = load i128, i128* %k, align 4
+  %sigma116 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter14, i128 0, i128 %k15
+  store i128 %in27, i128* %sigma116, align 4
+  %in15 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in15.declare_input, align 8
+  %k17 = load i128, i128* %k, align 4
+  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in15, i128 0, i128 %k17
+  %in1519 = load i128, i128* %array_getter18, align 4
+  %sigma020 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma0, align 8
+  %struct_getter21 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma020, i32 0, i32 3
+  %smallsigma.in.read_input_outter22 = load [4096 x i128]*, [4096 x i128]** %struct_getter21, align 8
+  %k23 = load i128, i128* %k, align 4
+  %array_getter24 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter22, i128 0, i128 %k23
+  %sigma025 = load i128, i128* %array_getter24, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sigma025, i128 %in1519, i1* @constraint.76)
+  %ptr_getter26 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma0, align 8
+  %struct_getter27 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %ptr_getter26, i32 0, i32 3
+  %smallsigma.in.read_input_outter28 = load [4096 x i128]*, [4096 x i128]** %struct_getter27, align 8
+  %k29 = load i128, i128* %k, align 4
+  %sigma030 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter28, i128 0, i128 %k29
+  store i128 %in1519, i128* %sigma030, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %k31 = load i128, i128* %k, align 4
+  %add = add i128 %k31, 1
+  store i128 %add, i128* %k, align 4
+  %k32 = load i128, i128* %k, align 4
+  %slt = icmp slt i128 %k32, 32
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %call33 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 4)
+  store %struct_template_circuit_binsum* %call33, %struct_template_circuit_binsum** %sum, align 8
+  store i128 0, i128* %k, align 4
+  br label %loop.body34
+
+loop.body34:                                      ; preds = %loop.latch95, %loop.exit
+  %sigma135 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma1, align 8
+  %struct_getter36 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma135, i32 0, i32 4
+  %smallsigma.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter36, align 8
+  %k37 = load i128, i128* %k, align 4
+  %array_getter38 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.out.read_output_outter, i128 0, i128 %k37
+  %sigma139 = load i128, i128* %array_getter38, align 4
+  %sum40 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter41 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum40, i32 0, i32 2
+  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter41, align 8
+  %k42 = load i128, i128* %k, align 4
+  %array_getter43 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %k42
+  %sum44 = load i128, i128* %array_getter43, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum44, i128 %sigma139, i1* @constraint.77)
+  %ptr_getter45 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter46 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter45, i32 0, i32 2
+  %binsum.in.read_input_outter47 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter46, align 8
+  %k48 = load i128, i128* %k, align 4
+  %sum49 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter47, i128 0, i128 0, i128 %k48
+  store i128 %sigma139, i128* %sum49, align 4
+  %in7 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in7.declare_input, align 8
+  %k50 = load i128, i128* %k, align 4
+  %array_getter51 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in7, i128 0, i128 %k50
+  %in752 = load i128, i128* %array_getter51, align 4
+  %sum53 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter54 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum53, i32 0, i32 2
+  %binsum.in.read_input_outter55 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter54, align 8
+  %k56 = load i128, i128* %k, align 4
+  %array_getter57 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter55, i128 0, i128 1, i128 %k56
+  %sum58 = load i128, i128* %array_getter57, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum58, i128 %in752, i1* @constraint.78)
+  %ptr_getter59 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter60 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter59, i32 0, i32 2
+  %binsum.in.read_input_outter61 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter60, align 8
+  %k62 = load i128, i128* %k, align 4
+  %sum63 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter61, i128 0, i128 1, i128 %k62
+  store i128 %in752, i128* %sum63, align 4
+  %sigma064 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma0, align 8
+  %struct_getter65 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma064, i32 0, i32 4
+  %smallsigma.out.read_output_outter66 = load [4096 x i128]*, [4096 x i128]** %struct_getter65, align 8
+  %k67 = load i128, i128* %k, align 4
+  %array_getter68 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.out.read_output_outter66, i128 0, i128 %k67
+  %sigma069 = load i128, i128* %array_getter68, align 4
+  %sum70 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter71 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum70, i32 0, i32 2
+  %binsum.in.read_input_outter72 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter71, align 8
+  %k73 = load i128, i128* %k, align 4
+  %array_getter74 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter72, i128 0, i128 2, i128 %k73
+  %sum75 = load i128, i128* %array_getter74, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum75, i128 %sigma069, i1* @constraint.79)
+  %ptr_getter76 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter77 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter76, i32 0, i32 2
+  %binsum.in.read_input_outter78 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter77, align 8
+  %k79 = load i128, i128* %k, align 4
+  %sum80 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter78, i128 0, i128 2, i128 %k79
+  store i128 %sigma069, i128* %sum80, align 4
+  %in16 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in16.declare_input, align 8
+  %k81 = load i128, i128* %k, align 4
+  %array_getter82 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in16, i128 0, i128 %k81
+  %in1683 = load i128, i128* %array_getter82, align 4
+  %sum84 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter85 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum84, i32 0, i32 2
+  %binsum.in.read_input_outter86 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter85, align 8
+  %k87 = load i128, i128* %k, align 4
+  %array_getter88 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter86, i128 0, i128 3, i128 %k87
+  %sum89 = load i128, i128* %array_getter88, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sum89, i128 %in1683, i1* @constraint.80)
+  %ptr_getter90 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter91 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter90, i32 0, i32 2
+  %binsum.in.read_input_outter92 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter91, align 8
+  %k93 = load i128, i128* %k, align 4
+  %sum94 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter92, i128 0, i128 3, i128 %k93
+  store i128 %in1683, i128* %sum94, align 4
+  br label %loop.latch95
+
+loop.latch95:                                     ; preds = %loop.body34
+  %k96 = load i128, i128* %k, align 4
+  %add97 = add i128 %k96, 1
+  store i128 %add97, i128* %k, align 4
+  %k98 = load i128, i128* %k, align 4
+  %slt99 = icmp slt i128 %k98, 32
+  br i1 %slt99, label %loop.body34, label %loop.exit100
+
+loop.exit100:                                     ; preds = %loop.latch95
+  store i128 0, i128* %k, align 4
+  br label %loop.body101
+
+loop.body101:                                     ; preds = %loop.latch114, %loop.exit100
+  %sum102 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
+  %struct_getter103 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum102, i32 0, i32 3
+  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter103, align 8
+  %k104 = load i128, i128* %k, align 4
+  %array_getter105 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %k104
+  %sum106 = load i128, i128* %array_getter105, align 4
+  %out107 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.out.declare_output, align 8
+  %k108 = load i128, i128* %k, align 4
+  %array_getter109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out107, i128 0, i128 %k108
+  %out110 = load i128, i128* %array_getter109, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out110, i128 %sum106, i1* @constraint.81)
+  %ptr_getter111 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.out.declare_output, align 8
+  %k112 = load i128, i128* %k, align 4
+  %out113 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter111, i128 0, i128 %k112
+  store i128 %sum106, i128* %out113, align 4
+  br label %loop.latch114
+
+loop.latch114:                                    ; preds = %loop.body101
+  %k115 = load i128, i128* %k, align 4
+  %add116 = add i128 %k115, 1
+  store i128 %add116, i128* %k, align 4
+  %k117 = load i128, i128* %k, align 4
+  %slt118 = icmp slt i128 %k117, 32
+  br i1 %slt118, label %loop.body101, label %loop.exit119
+
+loop.exit119:                                     ; preds = %loop.latch114
+  br label %exit
+
+exit:                                             ; preds = %loop.exit119
+  %out120 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.out.declare_output, align 8
+  %sigmaplus.out.write_output_inner = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 4
+  store [4096 x i128]* %out120, [4096 x i128]** %sigmaplus.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_sigmaplus* @fn_template_build_sigmaplus() {
+entry:
+  %struct_template_circuit_sigmaplus = alloca %struct_template_circuit_sigmaplus, align 8
+  ret %struct_template_circuit_sigmaplus* %struct_template_circuit_sigmaplus
+}
+
+define void @fn_template_init_num2bits_strict(%struct_template_circuit_num2bits_strict* %0) {
+entry:
+  %Num2Bits_strict = alloca %struct_template_circuit_num2bits_strict*, align 8
+  store %struct_template_circuit_num2bits_strict* %0, %struct_template_circuit_num2bits_strict** %Num2Bits_strict, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_num2bits_strict, %struct_template_circuit_num2bits_strict* %0, i32 0, i32 0
+  %num2bits_strict.in.read_input_inner = load i128, i128* %struct_getter, align 4
+  %num2bits_strict.in.declare_input = alloca i128, align 8
+  store i128 %num2bits_strict.in.read_input_inner, i128* %num2bits_strict.in.declare_input, align 4
+  %i = alloca i128, align 8
+  %i1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i1, i128* %i, align 4
+  %n2b = alloca %struct_template_circuit_num2bits*, align 8
+  %num2bits_strict.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
+  %aliasCheck = alloca %struct_template_circuit_aliascheck*, align 8
+  %call = call %struct_template_circuit_aliascheck* @fn_template_build_aliascheck()
+  store %struct_template_circuit_aliascheck* %call, %struct_template_circuit_aliascheck** %aliasCheck, align 8
+  %call2 = call %struct_template_circuit_num2bits* @fn_template_build_num2bits(i128 254)
+  store %struct_template_circuit_num2bits* %call2, %struct_template_circuit_num2bits** %n2b, align 8
+  %in = load i128, i128* %num2bits_strict.in.declare_input, align 4
+  %n2b3 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %struct_getter4 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b3, i32 0, i32 1
+  %num2bits.in.read_input_outter = load i128, i128* %struct_getter4, align 4
+  call void @fn_intrinsic_add_constraint(i128 %num2bits.in.read_input_outter, i128 %in, i1* @constraint.82)
+  %ptr_getter = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %num2bits.in.write_input_outter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %ptr_getter, i32 0, i32 1
+  store i128 %in, i128* %num2bits.in.write_input_outter, align 4
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %n2b5 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %struct_getter6 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b5, i32 0, i32 2
+  %num2bits.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter6, align 8
+  %i7 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter, i128 0, i128 %i7
+  %n2b8 = load i128, i128* %array_getter, align 4
+  %out9 = load [4096 x i128]*, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
+  %i10 = load i128, i128* %i, align 4
+  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out9, i128 0, i128 %i10
+  %out12 = load i128, i128* %array_getter11, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out12, i128 %n2b8, i1* @constraint.83)
+  %ptr_getter13 = load [4096 x i128]*, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
+  %i14 = load i128, i128* %i, align 4
+  %out15 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter13, i128 0, i128 %i14
+  store i128 %n2b8, i128* %out15, align 4
+  %n2b16 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
+  %struct_getter17 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b16, i32 0, i32 2
+  %num2bits.out.read_output_outter18 = load [4096 x i128]*, [4096 x i128]** %struct_getter17, align 8
+  %i19 = load i128, i128* %i, align 4
+  %array_getter20 = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter18, i128 0, i128 %i19
+  %n2b21 = load i128, i128* %array_getter20, align 4
+  %aliasCheck22 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
+  %struct_getter23 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %aliasCheck22, i32 0, i32 0
+  %aliascheck.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter23, align 8
+  %i24 = load i128, i128* %i, align 4
+  %array_getter25 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter, i128 0, i128 %i24
+  %aliasCheck26 = load i128, i128* %array_getter25, align 4
+  call void @fn_intrinsic_add_constraint(i128 %aliasCheck26, i128 %n2b21, i1* @constraint.84)
+  %ptr_getter27 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
+  %struct_getter28 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %ptr_getter27, i32 0, i32 0
+  %aliascheck.in.read_input_outter29 = load [4096 x i128]*, [4096 x i128]** %struct_getter28, align 8
+  %i30 = load i128, i128* %i, align 4
+  %aliasCheck31 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter29, i128 0, i128 %i30
+  store i128 %n2b21, i128* %aliasCheck31, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i32 = load i128, i128* %i, align 4
+  %add = add i128 %i32, 1
+  store i128 %add, i128* %i, align 4
+  %i33 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i33, 254
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out34 = load [4096 x i128]*, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
+  %num2bits_strict.out.write_output_inner = getelementptr inbounds %struct_template_circuit_num2bits_strict, %struct_template_circuit_num2bits_strict* %0, i32 0, i32 1
+  store [4096 x i128]* %out34, [4096 x i128]** %num2bits_strict.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_num2bits_strict* @fn_template_build_num2bits_strict() {
+entry:
+  %struct_template_circuit_num2bits_strict = alloca %struct_template_circuit_num2bits_strict, align 8
+  ret %struct_template_circuit_num2bits_strict* %struct_template_circuit_num2bits_strict
+}
+
+define void @fn_template_init_bits2num_strict(%struct_template_circuit_bits2num_strict* %0) {
+entry:
+  %Bits2Num_strict = alloca %struct_template_circuit_bits2num_strict*, align 8
+  store %struct_template_circuit_bits2num_strict* %0, %struct_template_circuit_bits2num_strict** %Bits2Num_strict, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %0, i32 0, i32 0
+  %bits2num_strict.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %bits2num_strict.in.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %bits2num_strict.in.read_input_inner, [4096 x i128]** %bits2num_strict.in.declare_input, align 8
+  %b2n = alloca %struct_template_circuit_bits2num*, align 8
+  %aliasCheck = alloca %struct_template_circuit_aliascheck*, align 8
+  %bits2num_strict.out.declare_output = alloca i128, align 8
+  %out = call i128 @fn_intrinsic_inline_init()
+  store i128 %out, i128* %bits2num_strict.out.declare_output, align 4
+  %i = alloca i128, align 8
+  %i1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i1, i128* %i, align 4
+  %call = call %struct_template_circuit_aliascheck* @fn_template_build_aliascheck()
+  store %struct_template_circuit_aliascheck* %call, %struct_template_circuit_aliascheck** %aliasCheck, align 8
+  %call2 = call %struct_template_circuit_bits2num* @fn_template_build_bits2num(i128 254)
+  store %struct_template_circuit_bits2num* %call2, %struct_template_circuit_bits2num** %b2n, align 8
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %in = load [4096 x i128]*, [4096 x i128]** %bits2num_strict.in.declare_input, align 8
+  %i3 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %i3
+  %in4 = load i128, i128* %array_getter, align 4
+  %b2n5 = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %b2n, align 8
+  %struct_getter6 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %b2n5, i32 0, i32 1
+  %bits2num.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter6, align 8
+  %i7 = load i128, i128* %i, align 4
+  %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bits2num.in.read_input_outter, i128 0, i128 %i7
+  %b2n9 = load i128, i128* %array_getter8, align 4
+  call void @fn_intrinsic_add_constraint(i128 %b2n9, i128 %in4, i1* @constraint.85)
+  %ptr_getter = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %b2n, align 8
+  %struct_getter10 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %ptr_getter, i32 0, i32 1
+  %bits2num.in.read_input_outter11 = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
+  %i12 = load i128, i128* %i, align 4
+  %b2n13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bits2num.in.read_input_outter11, i128 0, i128 %i12
+  store i128 %in4, i128* %b2n13, align 4
+  %in14 = load [4096 x i128]*, [4096 x i128]** %bits2num_strict.in.declare_input, align 8
+  %i15 = load i128, i128* %i, align 4
+  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in14, i128 0, i128 %i15
+  %in17 = load i128, i128* %array_getter16, align 4
+  %aliasCheck18 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
+  %struct_getter19 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %aliasCheck18, i32 0, i32 0
+  %aliascheck.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
+  %i20 = load i128, i128* %i, align 4
+  %array_getter21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter, i128 0, i128 %i20
+  %aliasCheck22 = load i128, i128* %array_getter21, align 4
+  call void @fn_intrinsic_add_constraint(i128 %aliasCheck22, i128 %in17, i1* @constraint.86)
+  %ptr_getter23 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
+  %struct_getter24 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %ptr_getter23, i32 0, i32 0
+  %aliascheck.in.read_input_outter25 = load [4096 x i128]*, [4096 x i128]** %struct_getter24, align 8
+  %i26 = load i128, i128* %i, align 4
+  %aliasCheck27 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter25, i128 0, i128 %i26
+  store i128 %in17, i128* %aliasCheck27, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i28 = load i128, i128* %i, align 4
+  %add = add i128 %i28, 1
+  store i128 %add, i128* %i, align 4
+  %i29 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i29, 254
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  %b2n30 = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %b2n, align 8
+  %struct_getter31 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %b2n30, i32 0, i32 2
+  %bits2num.out.read_output_outter = load i128, i128* %struct_getter31, align 4
+  %out32 = load i128, i128* %bits2num_strict.out.declare_output, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out32, i128 %bits2num.out.read_output_outter, i1* @constraint.87)
+  %ptr_getter33 = load %struct_template_circuit_bits2num_strict*, %struct_template_circuit_bits2num_strict** %Bits2Num_strict, align 8
+  %bits2num_strict.out.write_output_inner = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %ptr_getter33, i32 0, i32 1
+  store i128 %bits2num.out.read_output_outter, i128* %bits2num_strict.out.write_output_inner, align 4
+  %Bits2Num_strict34 = load %struct_template_circuit_bits2num_strict*, %struct_template_circuit_bits2num_strict** %Bits2Num_strict, align 8
+  %struct_getter35 = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %Bits2Num_strict34, i32 0, i32 1
+  %bits2num_strict.out.read_output_inner = load i128, i128* %struct_getter35, align 4
+  store i128 %bits2num_strict.out.read_output_inner, i128* %bits2num_strict.out.declare_output, align 4
+  br label %exit
+
+exit:                                             ; preds = %loop.exit
+  %out36 = load i128, i128* %bits2num_strict.out.declare_output, align 4
+  %bits2num_strict.out.write_output_inner37 = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %0, i32 0, i32 1
+  store i128 %out36, i128* %bits2num_strict.out.write_output_inner37, align 4
+  ret void
+}
+
+define %struct_template_circuit_bits2num_strict* @fn_template_build_bits2num_strict() {
+entry:
+  %struct_template_circuit_bits2num_strict = alloca %struct_template_circuit_bits2num_strict, align 8
+  ret %struct_template_circuit_bits2num_strict* %struct_template_circuit_bits2num_strict
+}
+
 define [4096 x i128]* @sha256compression([4096 x i128]* %0, [4096 x i128]* %1) {
 entry:
   %sha256compression.hin.declare_arg = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %0, [4096 x i128]** %sha256compression.hin.declare_arg, align 8
   %sha256compression.inp.declare_arg = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %1, [4096 x i128]** %sha256compression.inp.declare_arg, align 8
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %w = alloca [4096 x i128]*, align 8
-  %w2 = alloca [4096 x i128], align 8
-  store [4096 x i128]* %w2, [4096 x i128]** %w, align 8
+  %H = alloca [4096 x i128]*, align 8
+  %H1 = alloca [4096 x i128], align 8
+  store [4096 x i128]* %H1, [4096 x i128]** %H, align 8
+  %e = alloca i128, align 8
+  %e2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %e2, i128* %e, align 4
   %f = alloca i128, align 8
   %f3 = call i128 @fn_intrinsic_inline_init()
   store i128 %f3, i128* %f, align 4
   %g = alloca i128, align 8
   %g4 = call i128 @fn_intrinsic_inline_init()
   store i128 %g4, i128* %g, align 4
-  %b = alloca i128, align 8
-  %b5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %b5, i128* %b, align 4
-  %h = alloca i128, align 8
-  %h6 = call i128 @fn_intrinsic_inline_init()
-  store i128 %h6, i128* %h, align 4
-  %T1 = alloca i128, align 8
-  %T17 = call i128 @fn_intrinsic_inline_init()
-  store i128 %T17, i128* %T1, align 4
-  %out = alloca [4096 x i128]*, align 8
-  %out8 = alloca [4096 x i128], align 8
-  store [4096 x i128]* %out8, [4096 x i128]** %out, align 8
-  %j = alloca i128, align 8
-  %j9 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j9, i128* %j, align 4
-  %a = alloca i128, align 8
-  %a10 = call i128 @fn_intrinsic_inline_init()
-  store i128 %a10, i128* %a, align 4
   %c = alloca i128, align 8
-  %c11 = call i128 @fn_intrinsic_inline_init()
-  store i128 %c11, i128* %c, align 4
-  %e = alloca i128, align 8
-  %e12 = call i128 @fn_intrinsic_inline_init()
-  store i128 %e12, i128* %e, align 4
+  %c5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %c5, i128* %c, align 4
+  %b = alloca i128, align 8
+  %b6 = call i128 @fn_intrinsic_inline_init()
+  store i128 %b6, i128* %b, align 4
+  %out = alloca [4096 x i128]*, align 8
+  %out7 = alloca [4096 x i128], align 8
+  store [4096 x i128]* %out7, [4096 x i128]** %out, align 8
   %T2 = alloca i128, align 8
-  %T213 = call i128 @fn_intrinsic_inline_init()
-  store i128 %T213, i128* %T2, align 4
+  %T28 = call i128 @fn_intrinsic_inline_init()
+  store i128 %T28, i128* %T2, align 4
+  %a = alloca i128, align 8
+  %a9 = call i128 @fn_intrinsic_inline_init()
+  store i128 %a9, i128* %a, align 4
+  %w = alloca [4096 x i128]*, align 8
+  %w10 = alloca [4096 x i128], align 8
+  store [4096 x i128]* %w10, [4096 x i128]** %w, align 8
+  %h = alloca i128, align 8
+  %h11 = call i128 @fn_intrinsic_inline_init()
+  store i128 %h11, i128* %h, align 4
   %d = alloca i128, align 8
-  %d14 = call i128 @fn_intrinsic_inline_init()
-  store i128 %d14, i128* %d, align 4
-  %H = alloca [4096 x i128]*, align 8
-  %H15 = alloca [4096 x i128], align 8
-  store [4096 x i128]* %H15, [4096 x i128]** %H, align 8
+  %d12 = call i128 @fn_intrinsic_inline_init()
+  store i128 %d12, i128* %d, align 4
+  %j = alloca i128, align 8
+  %j13 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j13, i128* %j, align 4
+  %T1 = alloca i128, align 8
+  %T114 = call i128 @fn_intrinsic_inline_init()
+  store i128 %T114, i128* %T1, align 4
+  %i = alloca i128, align 8
+  %i15 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i15, i128* %i, align 4
   %uniform_array = alloca [4096 x i128], align 8
   store [4096 x i128]* %uniform_array, [4096 x i128]** %H, align 8
   store i128 0, i128* %a, align 4
@@ -2506,1651 +4151,6 @@ loop.exit250:                                     ; preds = %loop.latch245
   ret [4096 x i128]* %out251
 }
 
-define void @fn_template_init_aliascheck(%struct_template_circuit_aliascheck* %0) {
-entry:
-  %AliasCheck = alloca %struct_template_circuit_aliascheck*, align 8
-  store %struct_template_circuit_aliascheck* %0, %struct_template_circuit_aliascheck** %AliasCheck, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %0, i32 0, i32 0
-  %aliascheck.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %aliascheck.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %aliascheck.in.read_input_inner, [4096 x i128]** %aliascheck.in.declare_input, align 8
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %compConstant = alloca %struct_template_circuit_compconstant*, align 8
-  %call = call %struct_template_circuit_compconstant* @fn_template_build_compconstant(i128 -1)
-  store %struct_template_circuit_compconstant* %call, %struct_template_circuit_compconstant** %compConstant, align 8
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %in = load [4096 x i128]*, [4096 x i128]** %aliascheck.in.declare_input, align 8
-  %i2 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %i2
-  %in3 = load i128, i128* %array_getter, align 4
-  %compConstant4 = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %compConstant, align 8
-  %struct_getter5 = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %compConstant4, i32 0, i32 1
-  %compconstant.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter5, align 8
-  %i6 = load i128, i128* %i, align 4
-  %array_getter7 = getelementptr inbounds [4096 x i128], [4096 x i128]* %compconstant.in.read_input_outter, i128 0, i128 %i6
-  %compConstant8 = load i128, i128* %array_getter7, align 4
-  call void @fn_intrinsic_add_constraint(i128 %compConstant8, i128 %in3, i1* @constraint.33)
-  %ptr_getter = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %compConstant, align 8
-  %struct_getter9 = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %ptr_getter, i32 0, i32 1
-  %compconstant.in.read_input_outter10 = load [4096 x i128]*, [4096 x i128]** %struct_getter9, align 8
-  %i11 = load i128, i128* %i, align 4
-  %compConstant12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %compconstant.in.read_input_outter10, i128 0, i128 %i11
-  store i128 %in3, i128* %compConstant12, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i13 = load i128, i128* %i, align 4
-  %add = add i128 %i13, 1
-  store i128 %add, i128* %i, align 4
-  %i14 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i14, 254
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %compConstant15 = load %struct_template_circuit_compconstant*, %struct_template_circuit_compconstant** %compConstant, align 8
-  %struct_getter16 = getelementptr inbounds %struct_template_circuit_compconstant, %struct_template_circuit_compconstant* %compConstant15, i32 0, i32 4
-  %compconstant.out.read_output_outter = load i128, i128* %struct_getter16, align 4
-  call void @fn_intrinsic_add_constraint(i128 %compconstant.out.read_output_outter, i128 0, i1* @constraint.34)
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  ret void
-}
-
-define %struct_template_circuit_aliascheck* @fn_template_build_aliascheck() {
-entry:
-  %struct_template_circuit_aliascheck = alloca %struct_template_circuit_aliascheck, align 8
-  ret %struct_template_circuit_aliascheck* %struct_template_circuit_aliascheck
-}
-
-define void @fn_template_init_greatereqthan(%struct_template_circuit_greatereqthan* %0) {
-entry:
-  %GreaterEqThan = alloca %struct_template_circuit_greatereqthan*, align 8
-  store %struct_template_circuit_greatereqthan* %0, %struct_template_circuit_greatereqthan** %GreaterEqThan, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %0, i32 0, i32 0
-  %greatereqthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %greatereqthan.n.declare_arg = alloca i128, align 8
-  store i128 %greatereqthan.n.read_arg_inner, i128* %greatereqthan.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %0, i32 0, i32 1
-  %greatereqthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %greatereqthan.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %greatereqthan.in.read_input_inner, [4096 x i128]** %greatereqthan.in.declare_input, align 8
-  %greatereqthan.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %greatereqthan.out.declare_output, align 4
-  %lt = alloca %struct_template_circuit_lessthan*, align 8
-  %n = load i128, i128* %greatereqthan.n.declare_arg, align 4
-  %call = call %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %n)
-  store %struct_template_circuit_lessthan* %call, %struct_template_circuit_lessthan** %lt, align 8
-  %in = load [4096 x i128]*, [4096 x i128]** %greatereqthan.in.declare_input, align 8
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
-  %in2 = load i128, i128* %array_getter, align 4
-  %lt3 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter4 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt3, i32 0, i32 1
-  %lessthan.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
-  %array_getter5 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter, i128 0, i128 0
-  %lt6 = load i128, i128* %array_getter5, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lt6, i128 %in2, i1* @constraint.35)
-  %ptr_getter = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter7 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter, i32 0, i32 1
-  %lessthan.in.read_input_outter8 = load [4096 x i128]*, [4096 x i128]** %struct_getter7, align 8
-  %lt9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter8, i128 0, i128 0
-  store i128 %in2, i128* %lt9, align 4
-  %in10 = load [4096 x i128]*, [4096 x i128]** %greatereqthan.in.declare_input, align 8
-  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in10, i128 0, i128 0
-  %in12 = load i128, i128* %array_getter11, align 4
-  %add = add i128 %in12, 1
-  %lt13 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter14 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt13, i32 0, i32 1
-  %lessthan.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
-  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter15, i128 0, i128 1
-  %lt17 = load i128, i128* %array_getter16, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lt17, i128 %add, i1* @constraint.36)
-  %ptr_getter18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter18, i32 0, i32 1
-  %lessthan.in.read_input_outter20 = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
-  %lt21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter20, i128 0, i128 1
-  store i128 %add, i128* %lt21, align 4
-  %lt22 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter23 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt22, i32 0, i32 2
-  %lessthan.out.read_output_outter = load i128, i128* %struct_getter23, align 4
-  %out24 = load i128, i128* %greatereqthan.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out24, i128 %lessthan.out.read_output_outter, i1* @constraint.37)
-  %ptr_getter25 = load %struct_template_circuit_greatereqthan*, %struct_template_circuit_greatereqthan** %GreaterEqThan, align 8
-  %greatereqthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %ptr_getter25, i32 0, i32 2
-  store i128 %lessthan.out.read_output_outter, i128* %greatereqthan.out.write_output_inner, align 4
-  %GreaterEqThan26 = load %struct_template_circuit_greatereqthan*, %struct_template_circuit_greatereqthan** %GreaterEqThan, align 8
-  %struct_getter27 = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %GreaterEqThan26, i32 0, i32 2
-  %greatereqthan.out.read_output_inner = load i128, i128* %struct_getter27, align 4
-  store i128 %greatereqthan.out.read_output_inner, i128* %greatereqthan.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %out28 = load i128, i128* %greatereqthan.out.declare_output, align 4
-  %greatereqthan.out.write_output_inner29 = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %0, i32 0, i32 2
-  store i128 %out28, i128* %greatereqthan.out.write_output_inner29, align 4
-  ret void
-}
-
-define %struct_template_circuit_greatereqthan* @fn_template_build_greatereqthan(i128 %0) {
-entry:
-  %struct_template_circuit_greatereqthan = alloca %struct_template_circuit_greatereqthan, align 8
-  %greatereqthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_greatereqthan, %struct_template_circuit_greatereqthan* %struct_template_circuit_greatereqthan, i32 0, i32 0
-  store i128 %0, i128* %greatereqthan.n.write_arg_inner, align 4
-  ret %struct_template_circuit_greatereqthan* %struct_template_circuit_greatereqthan
-}
-
-define void @fn_template_init_isequal(%struct_template_circuit_isequal* %0) {
-entry:
-  %IsEqual = alloca %struct_template_circuit_isequal*, align 8
-  store %struct_template_circuit_isequal* %0, %struct_template_circuit_isequal** %IsEqual, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %0, i32 0, i32 0
-  %isequal.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %isequal.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %isequal.in.read_input_inner, [4096 x i128]** %isequal.in.declare_input, align 8
-  %isz = alloca %struct_template_circuit_iszero*, align 8
-  %isequal.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %isequal.out.declare_output, align 4
-  %call = call %struct_template_circuit_iszero* @fn_template_build_iszero()
-  store %struct_template_circuit_iszero* %call, %struct_template_circuit_iszero** %isz, align 8
-  %in = load [4096 x i128]*, [4096 x i128]** %isequal.in.declare_input, align 8
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
-  %in1 = load i128, i128* %array_getter, align 4
-  %in2 = load [4096 x i128]*, [4096 x i128]** %isequal.in.declare_input, align 8
-  %array_getter3 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in2, i128 0, i128 0
-  %in4 = load i128, i128* %array_getter3, align 4
-  %sub = sub i128 %in1, %in4
-  %isz5 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
-  %struct_getter6 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz5, i32 0, i32 0
-  %iszero.in.read_input_outter = load i128, i128* %struct_getter6, align 4
-  call void @fn_intrinsic_add_constraint(i128 %iszero.in.read_input_outter, i128 %sub, i1* @constraint.38)
-  %ptr_getter = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
-  %iszero.in.write_input_outter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter, i32 0, i32 0
-  store i128 %sub, i128* %iszero.in.write_input_outter, align 4
-  %isz7 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
-  %struct_getter8 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz7, i32 0, i32 2
-  %iszero.out.read_output_outter = load i128, i128* %struct_getter8, align 4
-  %out9 = load i128, i128* %isequal.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out9, i128 %iszero.out.read_output_outter, i1* @constraint.39)
-  %ptr_getter10 = load %struct_template_circuit_isequal*, %struct_template_circuit_isequal** %IsEqual, align 8
-  %isequal.out.write_output_inner = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %ptr_getter10, i32 0, i32 1
-  store i128 %iszero.out.read_output_outter, i128* %isequal.out.write_output_inner, align 4
-  %IsEqual11 = load %struct_template_circuit_isequal*, %struct_template_circuit_isequal** %IsEqual, align 8
-  %struct_getter12 = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %IsEqual11, i32 0, i32 1
-  %isequal.out.read_output_inner = load i128, i128* %struct_getter12, align 4
-  store i128 %isequal.out.read_output_inner, i128* %isequal.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %out13 = load i128, i128* %isequal.out.declare_output, align 4
-  %isequal.out.write_output_inner14 = getelementptr inbounds %struct_template_circuit_isequal, %struct_template_circuit_isequal* %0, i32 0, i32 1
-  store i128 %out13, i128* %isequal.out.write_output_inner14, align 4
-  ret void
-}
-
-define %struct_template_circuit_isequal* @fn_template_build_isequal() {
-entry:
-  %struct_template_circuit_isequal = alloca %struct_template_circuit_isequal, align 8
-  ret %struct_template_circuit_isequal* %struct_template_circuit_isequal
-}
-
-define void @fn_template_init_num2bitsneg(%struct_template_circuit_num2bitsneg* %0) {
-entry:
-  %Num2BitsNeg = alloca %struct_template_circuit_num2bitsneg*, align 8
-  store %struct_template_circuit_num2bitsneg* %0, %struct_template_circuit_num2bitsneg** %Num2BitsNeg, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %0, i32 0, i32 0
-  %num2bitsneg.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %num2bitsneg.n.declare_arg = alloca i128, align 8
-  store i128 %num2bitsneg.n.read_arg_inner, i128* %num2bitsneg.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %0, i32 0, i32 1
-  %num2bitsneg.in.read_input_inner = load i128, i128* %struct_getter1, align 4
-  %num2bitsneg.in.declare_input = alloca i128, align 8
-  store i128 %num2bitsneg.in.read_input_inner, i128* %num2bitsneg.in.declare_input, align 4
-  %lc1 = alloca i128, align 8
-  %lc12 = call i128 @fn_intrinsic_inline_init()
-  store i128 %lc12, i128* %lc1, align 4
-  %neg = alloca i128, align 8
-  %neg3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %neg3, i128* %neg, align 4
-  %isZero = alloca %struct_template_circuit_iszero*, align 8
-  %i = alloca i128, align 8
-  %i4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i4, i128* %i, align 4
-  %num2bitsneg.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
-  store i128 0, i128* %lc1, align 4
-  %call = call %struct_template_circuit_iszero* @fn_template_build_iszero()
-  store %struct_template_circuit_iszero* %call, %struct_template_circuit_iszero** %isZero, align 8
-  %n = load i128, i128* %num2bitsneg.n.declare_arg, align 4
-  %eq = icmp eq i128 %n, 0
-  %n5 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
-  %pow = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n5)
-  %in = load i128, i128* %num2bitsneg.in.declare_input, align 4
-  %sub = sub i128 %pow, %in
-  %inline_switch = call i128 @fn_intrinsic_inline_switch(i1 %eq, i128 0, i128 %sub)
-  store i128 %inline_switch, i128* %neg, align 4
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %neg6 = load i128, i128* %neg, align 4
-  %i7 = load i128, i128* %i, align 4
-  %rshift = lshr i128 %neg6, %i7
-  %and = and i128 %rshift, 1
-  %ptr_getter = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
-  %i8 = load i128, i128* %i, align 4
-  %out9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i8
-  store i128 %and, i128* %out9, align 4
-  %out10 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
-  %i11 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %out10, i128 0, i128 %i11
-  %out12 = load i128, i128* %array_getter, align 4
-  %out13 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
-  %i14 = load i128, i128* %i, align 4
-  %array_getter15 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out13, i128 0, i128 %i14
-  %out16 = load i128, i128* %array_getter15, align 4
-  %sub17 = sub i128 %out16, 1
-  %mul = mul i128 %out12, %sub17
-  call void @fn_intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint.40)
-  %lc118 = load i128, i128* %lc1, align 4
-  %out19 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
-  %i20 = load i128, i128* %i, align 4
-  %array_getter21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out19, i128 0, i128 %i20
-  %out22 = load i128, i128* %array_getter21, align 4
-  %i23 = load i128, i128* %i, align 4
-  %pow24 = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %i23)
-  %mul25 = mul i128 %out22, %pow24
-  %add = add i128 %lc118, %mul25
-  store i128 %add, i128* %lc1, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i26 = load i128, i128* %i, align 4
-  %add27 = add i128 %i26, 1
-  store i128 %add27, i128* %i, align 4
-  %i28 = load i128, i128* %i, align 4
-  %n29 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
-  %slt = icmp slt i128 %i28, %n29
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %in30 = load i128, i128* %num2bitsneg.in.declare_input, align 4
-  %isZero31 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isZero, align 8
-  %struct_getter32 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isZero31, i32 0, i32 0
-  %iszero.in.read_input_outter = load i128, i128* %struct_getter32, align 4
-  call void @fn_intrinsic_add_constraint(i128 %iszero.in.read_input_outter, i128 %in30, i1* @constraint.41)
-  %ptr_getter33 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isZero, align 8
-  %iszero.in.write_input_outter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter33, i32 0, i32 0
-  store i128 %in30, i128* %iszero.in.write_input_outter, align 4
-  %lc134 = load i128, i128* %lc1, align 4
-  %isZero35 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isZero, align 8
-  %struct_getter36 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isZero35, i32 0, i32 2
-  %iszero.out.read_output_outter = load i128, i128* %struct_getter36, align 4
-  %n37 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
-  %pow38 = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n37)
-  %mul39 = mul i128 %iszero.out.read_output_outter, %pow38
-  %add40 = add i128 %lc134, %mul39
-  %n41 = load i128, i128* %num2bitsneg.n.declare_arg, align 4
-  %pow42 = call i128 @fn_intrinsic_inline_powi(i128 2, i128 %n41)
-  %in43 = load i128, i128* %num2bitsneg.in.declare_input, align 4
-  %sub44 = sub i128 %pow42, %in43
-  call void @fn_intrinsic_add_constraint(i128 %add40, i128 %sub44, i1* @constraint.42)
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out45 = load [4096 x i128]*, [4096 x i128]** %num2bitsneg.out.declare_output, align 8
-  %num2bitsneg.out.write_output_inner = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %0, i32 0, i32 2
-  store [4096 x i128]* %out45, [4096 x i128]** %num2bitsneg.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_num2bitsneg* @fn_template_build_num2bitsneg(i128 %0) {
-entry:
-  %struct_template_circuit_num2bitsneg = alloca %struct_template_circuit_num2bitsneg, align 8
-  %num2bitsneg.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_num2bitsneg, %struct_template_circuit_num2bitsneg* %struct_template_circuit_num2bitsneg, i32 0, i32 0
-  store i128 %0, i128* %num2bitsneg.n.write_arg_inner, align 4
-  ret %struct_template_circuit_num2bitsneg* %struct_template_circuit_num2bitsneg
-}
-
-define void @fn_template_init_lesseqthan(%struct_template_circuit_lesseqthan* %0) {
-entry:
-  %LessEqThan = alloca %struct_template_circuit_lesseqthan*, align 8
-  store %struct_template_circuit_lesseqthan* %0, %struct_template_circuit_lesseqthan** %LessEqThan, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %0, i32 0, i32 0
-  %lesseqthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %lesseqthan.n.declare_arg = alloca i128, align 8
-  store i128 %lesseqthan.n.read_arg_inner, i128* %lesseqthan.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %0, i32 0, i32 1
-  %lesseqthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %lesseqthan.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %lesseqthan.in.read_input_inner, [4096 x i128]** %lesseqthan.in.declare_input, align 8
-  %lesseqthan.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %lesseqthan.out.declare_output, align 4
-  %lt = alloca %struct_template_circuit_lessthan*, align 8
-  %n = load i128, i128* %lesseqthan.n.declare_arg, align 4
-  %call = call %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %n)
-  store %struct_template_circuit_lessthan* %call, %struct_template_circuit_lessthan** %lt, align 8
-  %in = load [4096 x i128]*, [4096 x i128]** %lesseqthan.in.declare_input, align 8
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 0
-  %in2 = load i128, i128* %array_getter, align 4
-  %lt3 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter4 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt3, i32 0, i32 1
-  %lessthan.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
-  %array_getter5 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter, i128 0, i128 0
-  %lt6 = load i128, i128* %array_getter5, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lt6, i128 %in2, i1* @constraint.43)
-  %ptr_getter = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter7 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter, i32 0, i32 1
-  %lessthan.in.read_input_outter8 = load [4096 x i128]*, [4096 x i128]** %struct_getter7, align 8
-  %lt9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter8, i128 0, i128 0
-  store i128 %in2, i128* %lt9, align 4
-  %in10 = load [4096 x i128]*, [4096 x i128]** %lesseqthan.in.declare_input, align 8
-  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in10, i128 0, i128 1
-  %in12 = load i128, i128* %array_getter11, align 4
-  %add = add i128 %in12, 1
-  %lt13 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter14 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt13, i32 0, i32 1
-  %lessthan.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
-  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter15, i128 0, i128 1
-  %lt17 = load i128, i128* %array_getter16, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lt17, i128 %add, i1* @constraint.44)
-  %ptr_getter18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter18, i32 0, i32 1
-  %lessthan.in.read_input_outter20 = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
-  %lt21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter20, i128 0, i128 1
-  store i128 %add, i128* %lt21, align 4
-  %lt22 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter23 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt22, i32 0, i32 2
-  %lessthan.out.read_output_outter = load i128, i128* %struct_getter23, align 4
-  %out24 = load i128, i128* %lesseqthan.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out24, i128 %lessthan.out.read_output_outter, i1* @constraint.45)
-  %ptr_getter25 = load %struct_template_circuit_lesseqthan*, %struct_template_circuit_lesseqthan** %LessEqThan, align 8
-  %lesseqthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %ptr_getter25, i32 0, i32 2
-  store i128 %lessthan.out.read_output_outter, i128* %lesseqthan.out.write_output_inner, align 4
-  %LessEqThan26 = load %struct_template_circuit_lesseqthan*, %struct_template_circuit_lesseqthan** %LessEqThan, align 8
-  %struct_getter27 = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %LessEqThan26, i32 0, i32 2
-  %lesseqthan.out.read_output_inner = load i128, i128* %struct_getter27, align 4
-  store i128 %lesseqthan.out.read_output_inner, i128* %lesseqthan.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %out28 = load i128, i128* %lesseqthan.out.declare_output, align 4
-  %lesseqthan.out.write_output_inner29 = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %0, i32 0, i32 2
-  store i128 %out28, i128* %lesseqthan.out.write_output_inner29, align 4
-  ret void
-}
-
-define %struct_template_circuit_lesseqthan* @fn_template_build_lesseqthan(i128 %0) {
-entry:
-  %struct_template_circuit_lesseqthan = alloca %struct_template_circuit_lesseqthan, align 8
-  %lesseqthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_lesseqthan, %struct_template_circuit_lesseqthan* %struct_template_circuit_lesseqthan, i32 0, i32 0
-  store i128 %0, i128* %lesseqthan.n.write_arg_inner, align 4
-  ret %struct_template_circuit_lesseqthan* %struct_template_circuit_lesseqthan
-}
-
-define void @fn_template_init_smallsigma(%struct_template_circuit_smallsigma* %0) {
-entry:
-  %SmallSigma = alloca %struct_template_circuit_smallsigma*, align 8
-  store %struct_template_circuit_smallsigma* %0, %struct_template_circuit_smallsigma** %SmallSigma, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 0
-  %smallsigma.ra.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %smallsigma.ra.declare_arg = alloca i128, align 8
-  store i128 %smallsigma.ra.read_arg_inner, i128* %smallsigma.ra.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 1
-  %smallsigma.rb.read_arg_inner = load i128, i128* %struct_getter1, align 4
-  %smallsigma.rb.declare_arg = alloca i128, align 8
-  store i128 %smallsigma.rb.read_arg_inner, i128* %smallsigma.rb.declare_arg, align 4
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 2
-  %smallsigma.rc.read_arg_inner = load i128, i128* %struct_getter2, align 4
-  %smallsigma.rc.declare_arg = alloca i128, align 8
-  store i128 %smallsigma.rc.read_arg_inner, i128* %smallsigma.rc.declare_arg, align 4
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 3
-  %smallsigma.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %smallsigma.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %smallsigma.in.read_input_inner, [4096 x i128]** %smallsigma.in.declare_input, align 8
-  %rota = alloca %struct_template_circuit_rotr*, align 8
-  %rotb = alloca %struct_template_circuit_rotr*, align 8
-  %k = alloca i128, align 8
-  %k4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k4, i128* %k, align 4
-  %shrc = alloca %struct_template_circuit_shr*, align 8
-  %xor3 = alloca %struct_template_circuit_xor3*, align 8
-  %smallsigma.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %smallsigma.out.declare_output, align 8
-  store i128 0, i128* %k, align 4
-  %ra = load i128, i128* %smallsigma.ra.declare_arg, align 4
-  %call = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %ra)
-  store %struct_template_circuit_rotr* %call, %struct_template_circuit_rotr** %rota, align 8
-  %rb = load i128, i128* %smallsigma.rb.declare_arg, align 4
-  %call5 = call %struct_template_circuit_rotr* @fn_template_build_rotr(i128 32, i128 %rb)
-  store %struct_template_circuit_rotr* %call5, %struct_template_circuit_rotr** %rotb, align 8
-  %rc = load i128, i128* %smallsigma.rc.declare_arg, align 4
-  %call6 = call %struct_template_circuit_shr* @fn_template_build_shr(i128 32, i128 %rc)
-  store %struct_template_circuit_shr* %call6, %struct_template_circuit_shr** %shrc, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %in = load [4096 x i128]*, [4096 x i128]** %smallsigma.in.declare_input, align 8
-  %k7 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %k7
-  %in8 = load i128, i128* %array_getter, align 4
-  %rota9 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
-  %struct_getter10 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota9, i32 0, i32 2
-  %rotr.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
-  %k11 = load i128, i128* %k, align 4
-  %array_getter12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter, i128 0, i128 %k11
-  %rota13 = load i128, i128* %array_getter12, align 4
-  call void @fn_intrinsic_add_constraint(i128 %rota13, i128 %in8, i1* @constraint.46)
-  %ptr_getter = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
-  %struct_getter14 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter, i32 0, i32 2
-  %rotr.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
-  %k16 = load i128, i128* %k, align 4
-  %rota17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter15, i128 0, i128 %k16
-  store i128 %in8, i128* %rota17, align 4
-  %in18 = load [4096 x i128]*, [4096 x i128]** %smallsigma.in.declare_input, align 8
-  %k19 = load i128, i128* %k, align 4
-  %array_getter20 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in18, i128 0, i128 %k19
-  %in21 = load i128, i128* %array_getter20, align 4
-  %rotb22 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
-  %struct_getter23 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb22, i32 0, i32 2
-  %rotr.in.read_input_outter24 = load [4096 x i128]*, [4096 x i128]** %struct_getter23, align 8
-  %k25 = load i128, i128* %k, align 4
-  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter24, i128 0, i128 %k25
-  %rotb27 = load i128, i128* %array_getter26, align 4
-  call void @fn_intrinsic_add_constraint(i128 %rotb27, i128 %in21, i1* @constraint.47)
-  %ptr_getter28 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
-  %struct_getter29 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %ptr_getter28, i32 0, i32 2
-  %rotr.in.read_input_outter30 = load [4096 x i128]*, [4096 x i128]** %struct_getter29, align 8
-  %k31 = load i128, i128* %k, align 4
-  %rotb32 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.in.read_input_outter30, i128 0, i128 %k31
-  store i128 %in21, i128* %rotb32, align 4
-  %in33 = load [4096 x i128]*, [4096 x i128]** %smallsigma.in.declare_input, align 8
-  %k34 = load i128, i128* %k, align 4
-  %array_getter35 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in33, i128 0, i128 %k34
-  %in36 = load i128, i128* %array_getter35, align 4
-  %shrc37 = load %struct_template_circuit_shr*, %struct_template_circuit_shr** %shrc, align 8
-  %struct_getter38 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %shrc37, i32 0, i32 2
-  %shr.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter38, align 8
-  %k39 = load i128, i128* %k, align 4
-  %array_getter40 = getelementptr inbounds [4096 x i128], [4096 x i128]* %shr.in.read_input_outter, i128 0, i128 %k39
-  %shrc41 = load i128, i128* %array_getter40, align 4
-  call void @fn_intrinsic_add_constraint(i128 %shrc41, i128 %in36, i1* @constraint.48)
-  %ptr_getter42 = load %struct_template_circuit_shr*, %struct_template_circuit_shr** %shrc, align 8
-  %struct_getter43 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %ptr_getter42, i32 0, i32 2
-  %shr.in.read_input_outter44 = load [4096 x i128]*, [4096 x i128]** %struct_getter43, align 8
-  %k45 = load i128, i128* %k, align 4
-  %shrc46 = getelementptr inbounds [4096 x i128], [4096 x i128]* %shr.in.read_input_outter44, i128 0, i128 %k45
-  store i128 %in36, i128* %shrc46, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %k47 = load i128, i128* %k, align 4
-  %add = add i128 %k47, 1
-  store i128 %add, i128* %k, align 4
-  %k48 = load i128, i128* %k, align 4
-  %slt = icmp slt i128 %k48, 32
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %call49 = call %struct_template_circuit_xor3* @fn_template_build_xor3(i128 32)
-  store %struct_template_circuit_xor3* %call49, %struct_template_circuit_xor3** %xor3, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body50
-
-loop.body50:                                      ; preds = %loop.latch97, %loop.exit
-  %rota51 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rota, align 8
-  %struct_getter52 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rota51, i32 0, i32 3
-  %rotr.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter52, align 8
-  %k53 = load i128, i128* %k, align 4
-  %array_getter54 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter, i128 0, i128 %k53
-  %rota55 = load i128, i128* %array_getter54, align 4
-  %xor356 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter57 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor356, i32 0, i32 1
-  %xor3.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter57, align 8
-  %k58 = load i128, i128* %k, align 4
-  %array_getter59 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter, i128 0, i128 %k58
-  %xor360 = load i128, i128* %array_getter59, align 4
-  call void @fn_intrinsic_add_constraint(i128 %xor360, i128 %rota55, i1* @constraint.49)
-  %ptr_getter61 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter62 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter61, i32 0, i32 1
-  %xor3.a.read_input_outter63 = load [4096 x i128]*, [4096 x i128]** %struct_getter62, align 8
-  %k64 = load i128, i128* %k, align 4
-  %xor365 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.a.read_input_outter63, i128 0, i128 %k64
-  store i128 %rota55, i128* %xor365, align 4
-  %rotb66 = load %struct_template_circuit_rotr*, %struct_template_circuit_rotr** %rotb, align 8
-  %struct_getter67 = getelementptr inbounds %struct_template_circuit_rotr, %struct_template_circuit_rotr* %rotb66, i32 0, i32 3
-  %rotr.out.read_output_outter68 = load [4096 x i128]*, [4096 x i128]** %struct_getter67, align 8
-  %k69 = load i128, i128* %k, align 4
-  %array_getter70 = getelementptr inbounds [4096 x i128], [4096 x i128]* %rotr.out.read_output_outter68, i128 0, i128 %k69
-  %rotb71 = load i128, i128* %array_getter70, align 4
-  %xor372 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter73 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor372, i32 0, i32 2
-  %xor3.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter73, align 8
-  %k74 = load i128, i128* %k, align 4
-  %array_getter75 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter, i128 0, i128 %k74
-  %xor376 = load i128, i128* %array_getter75, align 4
-  call void @fn_intrinsic_add_constraint(i128 %xor376, i128 %rotb71, i1* @constraint.50)
-  %ptr_getter77 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter78 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter77, i32 0, i32 2
-  %xor3.b.read_input_outter79 = load [4096 x i128]*, [4096 x i128]** %struct_getter78, align 8
-  %k80 = load i128, i128* %k, align 4
-  %xor381 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.b.read_input_outter79, i128 0, i128 %k80
-  store i128 %rotb71, i128* %xor381, align 4
-  %shrc82 = load %struct_template_circuit_shr*, %struct_template_circuit_shr** %shrc, align 8
-  %struct_getter83 = getelementptr inbounds %struct_template_circuit_shr, %struct_template_circuit_shr* %shrc82, i32 0, i32 3
-  %shr.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter83, align 8
-  %k84 = load i128, i128* %k, align 4
-  %array_getter85 = getelementptr inbounds [4096 x i128], [4096 x i128]* %shr.out.read_output_outter, i128 0, i128 %k84
-  %shrc86 = load i128, i128* %array_getter85, align 4
-  %xor387 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter88 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor387, i32 0, i32 3
-  %xor3.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter88, align 8
-  %k89 = load i128, i128* %k, align 4
-  %array_getter90 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter, i128 0, i128 %k89
-  %xor391 = load i128, i128* %array_getter90, align 4
-  call void @fn_intrinsic_add_constraint(i128 %xor391, i128 %shrc86, i1* @constraint.51)
-  %ptr_getter92 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter93 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %ptr_getter92, i32 0, i32 3
-  %xor3.c.read_input_outter94 = load [4096 x i128]*, [4096 x i128]** %struct_getter93, align 8
-  %k95 = load i128, i128* %k, align 4
-  %xor396 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.c.read_input_outter94, i128 0, i128 %k95
-  store i128 %shrc86, i128* %xor396, align 4
-  br label %loop.latch97
-
-loop.latch97:                                     ; preds = %loop.body50
-  %k98 = load i128, i128* %k, align 4
-  %add99 = add i128 %k98, 1
-  store i128 %add99, i128* %k, align 4
-  %k100 = load i128, i128* %k, align 4
-  %slt101 = icmp slt i128 %k100, 32
-  br i1 %slt101, label %loop.body50, label %loop.exit102
-
-loop.exit102:                                     ; preds = %loop.latch97
-  store i128 0, i128* %k, align 4
-  br label %loop.body103
-
-loop.body103:                                     ; preds = %loop.latch116, %loop.exit102
-  %xor3104 = load %struct_template_circuit_xor3*, %struct_template_circuit_xor3** %xor3, align 8
-  %struct_getter105 = getelementptr inbounds %struct_template_circuit_xor3, %struct_template_circuit_xor3* %xor3104, i32 0, i32 5
-  %xor3.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter105, align 8
-  %k106 = load i128, i128* %k, align 4
-  %array_getter107 = getelementptr inbounds [4096 x i128], [4096 x i128]* %xor3.out.read_output_outter, i128 0, i128 %k106
-  %xor3108 = load i128, i128* %array_getter107, align 4
-  %out109 = load [4096 x i128]*, [4096 x i128]** %smallsigma.out.declare_output, align 8
-  %k110 = load i128, i128* %k, align 4
-  %array_getter111 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out109, i128 0, i128 %k110
-  %out112 = load i128, i128* %array_getter111, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out112, i128 %xor3108, i1* @constraint.52)
-  %ptr_getter113 = load [4096 x i128]*, [4096 x i128]** %smallsigma.out.declare_output, align 8
-  %k114 = load i128, i128* %k, align 4
-  %out115 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter113, i128 0, i128 %k114
-  store i128 %xor3108, i128* %out115, align 4
-  br label %loop.latch116
-
-loop.latch116:                                    ; preds = %loop.body103
-  %k117 = load i128, i128* %k, align 4
-  %add118 = add i128 %k117, 1
-  store i128 %add118, i128* %k, align 4
-  %k119 = load i128, i128* %k, align 4
-  %slt120 = icmp slt i128 %k119, 32
-  br i1 %slt120, label %loop.body103, label %loop.exit121
-
-loop.exit121:                                     ; preds = %loop.latch116
-  br label %exit
-
-exit:                                             ; preds = %loop.exit121
-  %out122 = load [4096 x i128]*, [4096 x i128]** %smallsigma.out.declare_output, align 8
-  %smallsigma.out.write_output_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %0, i32 0, i32 4
-  store [4096 x i128]* %out122, [4096 x i128]** %smallsigma.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_smallsigma* @fn_template_build_smallsigma(i128 %0, i128 %1, i128 %2) {
-entry:
-  %struct_template_circuit_smallsigma = alloca %struct_template_circuit_smallsigma, align 8
-  %smallsigma.ra.write_arg_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma, i32 0, i32 0
-  store i128 %0, i128* %smallsigma.ra.write_arg_inner, align 4
-  %smallsigma.rb.write_arg_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma, i32 0, i32 1
-  store i128 %1, i128* %smallsigma.rb.write_arg_inner, align 4
-  %smallsigma.rc.write_arg_inner = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma, i32 0, i32 2
-  store i128 %2, i128* %smallsigma.rc.write_arg_inner, align 4
-  ret %struct_template_circuit_smallsigma* %struct_template_circuit_smallsigma
-}
-
-define void @fn_template_init_bits2num_strict(%struct_template_circuit_bits2num_strict* %0) {
-entry:
-  %Bits2Num_strict = alloca %struct_template_circuit_bits2num_strict*, align 8
-  store %struct_template_circuit_bits2num_strict* %0, %struct_template_circuit_bits2num_strict** %Bits2Num_strict, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %0, i32 0, i32 0
-  %bits2num_strict.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %bits2num_strict.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %bits2num_strict.in.read_input_inner, [4096 x i128]** %bits2num_strict.in.declare_input, align 8
-  %bits2num_strict.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %bits2num_strict.out.declare_output, align 4
-  %aliasCheck = alloca %struct_template_circuit_aliascheck*, align 8
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %b2n = alloca %struct_template_circuit_bits2num*, align 8
-  %call = call %struct_template_circuit_aliascheck* @fn_template_build_aliascheck()
-  store %struct_template_circuit_aliascheck* %call, %struct_template_circuit_aliascheck** %aliasCheck, align 8
-  %call2 = call %struct_template_circuit_bits2num* @fn_template_build_bits2num(i128 254)
-  store %struct_template_circuit_bits2num* %call2, %struct_template_circuit_bits2num** %b2n, align 8
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %in = load [4096 x i128]*, [4096 x i128]** %bits2num_strict.in.declare_input, align 8
-  %i3 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 %i3
-  %in4 = load i128, i128* %array_getter, align 4
-  %b2n5 = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %b2n, align 8
-  %struct_getter6 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %b2n5, i32 0, i32 1
-  %bits2num.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter6, align 8
-  %i7 = load i128, i128* %i, align 4
-  %array_getter8 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bits2num.in.read_input_outter, i128 0, i128 %i7
-  %b2n9 = load i128, i128* %array_getter8, align 4
-  call void @fn_intrinsic_add_constraint(i128 %b2n9, i128 %in4, i1* @constraint.53)
-  %ptr_getter = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %b2n, align 8
-  %struct_getter10 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %ptr_getter, i32 0, i32 1
-  %bits2num.in.read_input_outter11 = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
-  %i12 = load i128, i128* %i, align 4
-  %b2n13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bits2num.in.read_input_outter11, i128 0, i128 %i12
-  store i128 %in4, i128* %b2n13, align 4
-  %in14 = load [4096 x i128]*, [4096 x i128]** %bits2num_strict.in.declare_input, align 8
-  %i15 = load i128, i128* %i, align 4
-  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in14, i128 0, i128 %i15
-  %in17 = load i128, i128* %array_getter16, align 4
-  %aliasCheck18 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
-  %struct_getter19 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %aliasCheck18, i32 0, i32 0
-  %aliascheck.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
-  %i20 = load i128, i128* %i, align 4
-  %array_getter21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter, i128 0, i128 %i20
-  %aliasCheck22 = load i128, i128* %array_getter21, align 4
-  call void @fn_intrinsic_add_constraint(i128 %aliasCheck22, i128 %in17, i1* @constraint.54)
-  %ptr_getter23 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
-  %struct_getter24 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %ptr_getter23, i32 0, i32 0
-  %aliascheck.in.read_input_outter25 = load [4096 x i128]*, [4096 x i128]** %struct_getter24, align 8
-  %i26 = load i128, i128* %i, align 4
-  %aliasCheck27 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter25, i128 0, i128 %i26
-  store i128 %in17, i128* %aliasCheck27, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i28 = load i128, i128* %i, align 4
-  %add = add i128 %i28, 1
-  store i128 %add, i128* %i, align 4
-  %i29 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i29, 254
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %b2n30 = load %struct_template_circuit_bits2num*, %struct_template_circuit_bits2num** %b2n, align 8
-  %struct_getter31 = getelementptr inbounds %struct_template_circuit_bits2num, %struct_template_circuit_bits2num* %b2n30, i32 0, i32 2
-  %bits2num.out.read_output_outter = load i128, i128* %struct_getter31, align 4
-  %out32 = load i128, i128* %bits2num_strict.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out32, i128 %bits2num.out.read_output_outter, i1* @constraint.55)
-  %ptr_getter33 = load %struct_template_circuit_bits2num_strict*, %struct_template_circuit_bits2num_strict** %Bits2Num_strict, align 8
-  %bits2num_strict.out.write_output_inner = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %ptr_getter33, i32 0, i32 1
-  store i128 %bits2num.out.read_output_outter, i128* %bits2num_strict.out.write_output_inner, align 4
-  %Bits2Num_strict34 = load %struct_template_circuit_bits2num_strict*, %struct_template_circuit_bits2num_strict** %Bits2Num_strict, align 8
-  %struct_getter35 = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %Bits2Num_strict34, i32 0, i32 1
-  %bits2num_strict.out.read_output_inner = load i128, i128* %struct_getter35, align 4
-  store i128 %bits2num_strict.out.read_output_inner, i128* %bits2num_strict.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out36 = load i128, i128* %bits2num_strict.out.declare_output, align 4
-  %bits2num_strict.out.write_output_inner37 = getelementptr inbounds %struct_template_circuit_bits2num_strict, %struct_template_circuit_bits2num_strict* %0, i32 0, i32 1
-  store i128 %out36, i128* %bits2num_strict.out.write_output_inner37, align 4
-  ret void
-}
-
-define %struct_template_circuit_bits2num_strict* @fn_template_build_bits2num_strict() {
-entry:
-  %struct_template_circuit_bits2num_strict = alloca %struct_template_circuit_bits2num_strict, align 8
-  ret %struct_template_circuit_bits2num_strict* %struct_template_circuit_bits2num_strict
-}
-
-define void @fn_template_init_forceequalifenabled(%struct_template_circuit_forceequalifenabled* %0) {
-entry:
-  %ForceEqualIfEnabled = alloca %struct_template_circuit_forceequalifenabled*, align 8
-  store %struct_template_circuit_forceequalifenabled* %0, %struct_template_circuit_forceequalifenabled** %ForceEqualIfEnabled, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_forceequalifenabled, %struct_template_circuit_forceequalifenabled* %0, i32 0, i32 0
-  %forceequalifenabled.enabled.read_input_inner = load i128, i128* %struct_getter, align 4
-  %forceequalifenabled.enabled.declare_input = alloca i128, align 8
-  store i128 %forceequalifenabled.enabled.read_input_inner, i128* %forceequalifenabled.enabled.declare_input, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_forceequalifenabled, %struct_template_circuit_forceequalifenabled* %0, i32 0, i32 1
-  %forceequalifenabled.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %forceequalifenabled.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %forceequalifenabled.in.read_input_inner, [4096 x i128]** %forceequalifenabled.in.declare_input, align 8
-  %isz = alloca %struct_template_circuit_iszero*, align 8
-  %call = call %struct_template_circuit_iszero* @fn_template_build_iszero()
-  store %struct_template_circuit_iszero* %call, %struct_template_circuit_iszero** %isz, align 8
-  %in = load [4096 x i128]*, [4096 x i128]** %forceequalifenabled.in.declare_input, align 8
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
-  %in2 = load i128, i128* %array_getter, align 4
-  %in3 = load [4096 x i128]*, [4096 x i128]** %forceequalifenabled.in.declare_input, align 8
-  %array_getter4 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in3, i128 0, i128 0
-  %in5 = load i128, i128* %array_getter4, align 4
-  %sub = sub i128 %in2, %in5
-  %isz6 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
-  %struct_getter7 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz6, i32 0, i32 0
-  %iszero.in.read_input_outter = load i128, i128* %struct_getter7, align 4
-  call void @fn_intrinsic_add_constraint(i128 %iszero.in.read_input_outter, i128 %sub, i1* @constraint.56)
-  %ptr_getter = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
-  %iszero.in.write_input_outter = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %ptr_getter, i32 0, i32 0
-  store i128 %sub, i128* %iszero.in.write_input_outter, align 4
-  %isz8 = load %struct_template_circuit_iszero*, %struct_template_circuit_iszero** %isz, align 8
-  %struct_getter9 = getelementptr inbounds %struct_template_circuit_iszero, %struct_template_circuit_iszero* %isz8, i32 0, i32 2
-  %iszero.out.read_output_outter = load i128, i128* %struct_getter9, align 4
-  %sub10 = sub i128 1, %iszero.out.read_output_outter
-  %enabled = load i128, i128* %forceequalifenabled.enabled.declare_input, align 4
-  %mul = mul i128 %sub10, %enabled
-  call void @fn_intrinsic_add_constraint(i128 %mul, i128 0, i1* @constraint.57)
-  br label %exit
-
-exit:                                             ; preds = %entry
-  ret void
-}
-
-define %struct_template_circuit_forceequalifenabled* @fn_template_build_forceequalifenabled() {
-entry:
-  %struct_template_circuit_forceequalifenabled = alloca %struct_template_circuit_forceequalifenabled, align 8
-  ret %struct_template_circuit_forceequalifenabled* %struct_template_circuit_forceequalifenabled
-}
-
-define void @fn_template_init_greaterthan(%struct_template_circuit_greaterthan* %0) {
-entry:
-  %GreaterThan = alloca %struct_template_circuit_greaterthan*, align 8
-  store %struct_template_circuit_greaterthan* %0, %struct_template_circuit_greaterthan** %GreaterThan, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %0, i32 0, i32 0
-  %greaterthan.n.read_arg_inner = load i128, i128* %struct_getter, align 4
-  %greaterthan.n.declare_arg = alloca i128, align 8
-  store i128 %greaterthan.n.read_arg_inner, i128* %greaterthan.n.declare_arg, align 4
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %0, i32 0, i32 1
-  %greaterthan.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %greaterthan.in.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %greaterthan.in.read_input_inner, [4096 x i128]** %greaterthan.in.declare_input, align 8
-  %greaterthan.out.declare_output = alloca i128, align 8
-  %out = call i128 @fn_intrinsic_inline_init()
-  store i128 %out, i128* %greaterthan.out.declare_output, align 4
-  %lt = alloca %struct_template_circuit_lessthan*, align 8
-  %n = load i128, i128* %greaterthan.n.declare_arg, align 4
-  %call = call %struct_template_circuit_lessthan* @fn_template_build_lessthan(i128 %n)
-  store %struct_template_circuit_lessthan* %call, %struct_template_circuit_lessthan** %lt, align 8
-  %in = load [4096 x i128]*, [4096 x i128]** %greaterthan.in.declare_input, align 8
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in, i128 0, i128 1
-  %in2 = load i128, i128* %array_getter, align 4
-  %lt3 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter4 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt3, i32 0, i32 1
-  %lessthan.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
-  %array_getter5 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter, i128 0, i128 0
-  %lt6 = load i128, i128* %array_getter5, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lt6, i128 %in2, i1* @constraint.58)
-  %ptr_getter = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter7 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter, i32 0, i32 1
-  %lessthan.in.read_input_outter8 = load [4096 x i128]*, [4096 x i128]** %struct_getter7, align 8
-  %lt9 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter8, i128 0, i128 0
-  store i128 %in2, i128* %lt9, align 4
-  %in10 = load [4096 x i128]*, [4096 x i128]** %greaterthan.in.declare_input, align 8
-  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in10, i128 0, i128 0
-  %in12 = load i128, i128* %array_getter11, align 4
-  %lt13 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter14 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt13, i32 0, i32 1
-  %lessthan.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
-  %array_getter16 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter15, i128 0, i128 1
-  %lt17 = load i128, i128* %array_getter16, align 4
-  call void @fn_intrinsic_add_constraint(i128 %lt17, i128 %in12, i1* @constraint.59)
-  %ptr_getter18 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter19 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %ptr_getter18, i32 0, i32 1
-  %lessthan.in.read_input_outter20 = load [4096 x i128]*, [4096 x i128]** %struct_getter19, align 8
-  %lt21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %lessthan.in.read_input_outter20, i128 0, i128 1
-  store i128 %in12, i128* %lt21, align 4
-  %lt22 = load %struct_template_circuit_lessthan*, %struct_template_circuit_lessthan** %lt, align 8
-  %struct_getter23 = getelementptr inbounds %struct_template_circuit_lessthan, %struct_template_circuit_lessthan* %lt22, i32 0, i32 2
-  %lessthan.out.read_output_outter = load i128, i128* %struct_getter23, align 4
-  %out24 = load i128, i128* %greaterthan.out.declare_output, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out24, i128 %lessthan.out.read_output_outter, i1* @constraint.60)
-  %ptr_getter25 = load %struct_template_circuit_greaterthan*, %struct_template_circuit_greaterthan** %GreaterThan, align 8
-  %greaterthan.out.write_output_inner = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %ptr_getter25, i32 0, i32 2
-  store i128 %lessthan.out.read_output_outter, i128* %greaterthan.out.write_output_inner, align 4
-  %GreaterThan26 = load %struct_template_circuit_greaterthan*, %struct_template_circuit_greaterthan** %GreaterThan, align 8
-  %struct_getter27 = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %GreaterThan26, i32 0, i32 2
-  %greaterthan.out.read_output_inner = load i128, i128* %struct_getter27, align 4
-  store i128 %greaterthan.out.read_output_inner, i128* %greaterthan.out.declare_output, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %out28 = load i128, i128* %greaterthan.out.declare_output, align 4
-  %greaterthan.out.write_output_inner29 = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %0, i32 0, i32 2
-  store i128 %out28, i128* %greaterthan.out.write_output_inner29, align 4
-  ret void
-}
-
-define %struct_template_circuit_greaterthan* @fn_template_build_greaterthan(i128 %0) {
-entry:
-  %struct_template_circuit_greaterthan = alloca %struct_template_circuit_greaterthan, align 8
-  %greaterthan.n.write_arg_inner = getelementptr inbounds %struct_template_circuit_greaterthan, %struct_template_circuit_greaterthan* %struct_template_circuit_greaterthan, i32 0, i32 0
-  store i128 %0, i128* %greaterthan.n.write_arg_inner, align 4
-  ret %struct_template_circuit_greaterthan* %struct_template_circuit_greaterthan
-}
-
-define void @fn_template_init_t2(%struct_template_circuit_t2* %0) {
-entry:
-  %T2 = alloca %struct_template_circuit_t2*, align 8
-  store %struct_template_circuit_t2* %0, %struct_template_circuit_t2** %T2, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 0
-  %t2.a.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %t2.a.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t2.a.read_input_inner, [4096 x i128]** %t2.a.declare_input, align 8
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 1
-  %t2.b.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %t2.b.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t2.b.read_input_inner, [4096 x i128]** %t2.b.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 2
-  %t2.c.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %t2.c.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t2.c.read_input_inner, [4096 x i128]** %t2.c.declare_input, align 8
-  %t2.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %t2.out.declare_output, align 8
-  %k = alloca i128, align 8
-  %k3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k3, i128* %k, align 4
-  %bigsigma0 = alloca %struct_template_circuit_bigsigma*, align 8
-  %sum = alloca %struct_template_circuit_binsum*, align 8
-  %maj = alloca %struct_template_circuit_maj_t*, align 8
-  store i128 0, i128* %k, align 4
-  %call = call %struct_template_circuit_bigsigma* @fn_template_build_bigsigma(i128 2, i128 13, i128 22)
-  store %struct_template_circuit_bigsigma* %call, %struct_template_circuit_bigsigma** %bigsigma0, align 8
-  %call4 = call %struct_template_circuit_maj_t* @fn_template_build_maj_t(i128 32)
-  store %struct_template_circuit_maj_t* %call4, %struct_template_circuit_maj_t** %maj, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %a = load [4096 x i128]*, [4096 x i128]** %t2.a.declare_input, align 8
-  %k5 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %a, i128 0, i128 %k5
-  %a6 = load i128, i128* %array_getter, align 4
-  %bigsigma07 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma0, align 8
-  %struct_getter8 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma07, i32 0, i32 3
-  %bigsigma.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter8, align 8
-  %k9 = load i128, i128* %k, align 4
-  %array_getter10 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter, i128 0, i128 %k9
-  %bigsigma011 = load i128, i128* %array_getter10, align 4
-  call void @fn_intrinsic_add_constraint(i128 %bigsigma011, i128 %a6, i1* @constraint.61)
-  %ptr_getter = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma0, align 8
-  %struct_getter12 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %ptr_getter, i32 0, i32 3
-  %bigsigma.in.read_input_outter13 = load [4096 x i128]*, [4096 x i128]** %struct_getter12, align 8
-  %k14 = load i128, i128* %k, align 4
-  %bigsigma015 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter13, i128 0, i128 %k14
-  store i128 %a6, i128* %bigsigma015, align 4
-  %a16 = load [4096 x i128]*, [4096 x i128]** %t2.a.declare_input, align 8
-  %k17 = load i128, i128* %k, align 4
-  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %a16, i128 0, i128 %k17
-  %a19 = load i128, i128* %array_getter18, align 4
-  %maj20 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter21 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj20, i32 0, i32 1
-  %maj_t.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter21, align 8
-  %k22 = load i128, i128* %k, align 4
-  %array_getter23 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.a.read_input_outter, i128 0, i128 %k22
-  %maj24 = load i128, i128* %array_getter23, align 4
-  call void @fn_intrinsic_add_constraint(i128 %maj24, i128 %a19, i1* @constraint.62)
-  %ptr_getter25 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter26 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %ptr_getter25, i32 0, i32 1
-  %maj_t.a.read_input_outter27 = load [4096 x i128]*, [4096 x i128]** %struct_getter26, align 8
-  %k28 = load i128, i128* %k, align 4
-  %maj29 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.a.read_input_outter27, i128 0, i128 %k28
-  store i128 %a19, i128* %maj29, align 4
-  %b = load [4096 x i128]*, [4096 x i128]** %t2.b.declare_input, align 8
-  %k30 = load i128, i128* %k, align 4
-  %array_getter31 = getelementptr inbounds [4096 x i128], [4096 x i128]* %b, i128 0, i128 %k30
-  %b32 = load i128, i128* %array_getter31, align 4
-  %maj33 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter34 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj33, i32 0, i32 2
-  %maj_t.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter34, align 8
-  %k35 = load i128, i128* %k, align 4
-  %array_getter36 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.b.read_input_outter, i128 0, i128 %k35
-  %maj37 = load i128, i128* %array_getter36, align 4
-  call void @fn_intrinsic_add_constraint(i128 %maj37, i128 %b32, i1* @constraint.63)
-  %ptr_getter38 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter39 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %ptr_getter38, i32 0, i32 2
-  %maj_t.b.read_input_outter40 = load [4096 x i128]*, [4096 x i128]** %struct_getter39, align 8
-  %k41 = load i128, i128* %k, align 4
-  %maj42 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.b.read_input_outter40, i128 0, i128 %k41
-  store i128 %b32, i128* %maj42, align 4
-  %c = load [4096 x i128]*, [4096 x i128]** %t2.c.declare_input, align 8
-  %k43 = load i128, i128* %k, align 4
-  %array_getter44 = getelementptr inbounds [4096 x i128], [4096 x i128]* %c, i128 0, i128 %k43
-  %c45 = load i128, i128* %array_getter44, align 4
-  %maj46 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter47 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj46, i32 0, i32 3
-  %maj_t.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter47, align 8
-  %k48 = load i128, i128* %k, align 4
-  %array_getter49 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.c.read_input_outter, i128 0, i128 %k48
-  %maj50 = load i128, i128* %array_getter49, align 4
-  call void @fn_intrinsic_add_constraint(i128 %maj50, i128 %c45, i1* @constraint.64)
-  %ptr_getter51 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter52 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %ptr_getter51, i32 0, i32 3
-  %maj_t.c.read_input_outter53 = load [4096 x i128]*, [4096 x i128]** %struct_getter52, align 8
-  %k54 = load i128, i128* %k, align 4
-  %maj55 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.c.read_input_outter53, i128 0, i128 %k54
-  store i128 %c45, i128* %maj55, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %k56 = load i128, i128* %k, align 4
-  %add = add i128 %k56, 1
-  store i128 %add, i128* %k, align 4
-  %k57 = load i128, i128* %k, align 4
-  %slt = icmp slt i128 %k57, 32
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %call58 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
-  store %struct_template_circuit_binsum* %call58, %struct_template_circuit_binsum** %sum, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body59
-
-loop.body59:                                      ; preds = %loop.latch91, %loop.exit
-  %bigsigma060 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma0, align 8
-  %struct_getter61 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma060, i32 0, i32 4
-  %bigsigma.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter61, align 8
-  %k62 = load i128, i128* %k, align 4
-  %array_getter63 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.out.read_output_outter, i128 0, i128 %k62
-  %bigsigma064 = load i128, i128* %array_getter63, align 4
-  %sum65 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter66 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum65, i32 0, i32 2
-  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter66, align 8
-  %k67 = load i128, i128* %k, align 4
-  %array_getter68 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %k67
-  %sum69 = load i128, i128* %array_getter68, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum69, i128 %bigsigma064, i1* @constraint.65)
-  %ptr_getter70 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter71 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter70, i32 0, i32 2
-  %binsum.in.read_input_outter72 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter71, align 8
-  %k73 = load i128, i128* %k, align 4
-  %sum74 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter72, i128 0, i128 0, i128 %k73
-  store i128 %bigsigma064, i128* %sum74, align 4
-  %maj75 = load %struct_template_circuit_maj_t*, %struct_template_circuit_maj_t** %maj, align 8
-  %struct_getter76 = getelementptr inbounds %struct_template_circuit_maj_t, %struct_template_circuit_maj_t* %maj75, i32 0, i32 5
-  %maj_t.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter76, align 8
-  %k77 = load i128, i128* %k, align 4
-  %array_getter78 = getelementptr inbounds [4096 x i128], [4096 x i128]* %maj_t.out.read_output_outter, i128 0, i128 %k77
-  %maj79 = load i128, i128* %array_getter78, align 4
-  %sum80 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter81 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum80, i32 0, i32 2
-  %binsum.in.read_input_outter82 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter81, align 8
-  %k83 = load i128, i128* %k, align 4
-  %array_getter84 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter82, i128 0, i128 1, i128 %k83
-  %sum85 = load i128, i128* %array_getter84, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum85, i128 %maj79, i1* @constraint.66)
-  %ptr_getter86 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter87 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter86, i32 0, i32 2
-  %binsum.in.read_input_outter88 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter87, align 8
-  %k89 = load i128, i128* %k, align 4
-  %sum90 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter88, i128 0, i128 1, i128 %k89
-  store i128 %maj79, i128* %sum90, align 4
-  br label %loop.latch91
-
-loop.latch91:                                     ; preds = %loop.body59
-  %k92 = load i128, i128* %k, align 4
-  %add93 = add i128 %k92, 1
-  store i128 %add93, i128* %k, align 4
-  %k94 = load i128, i128* %k, align 4
-  %slt95 = icmp slt i128 %k94, 32
-  br i1 %slt95, label %loop.body59, label %loop.exit96
-
-loop.exit96:                                      ; preds = %loop.latch91
-  store i128 0, i128* %k, align 4
-  br label %loop.body97
-
-loop.body97:                                      ; preds = %loop.latch110, %loop.exit96
-  %sum98 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter99 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum98, i32 0, i32 3
-  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter99, align 8
-  %k100 = load i128, i128* %k, align 4
-  %array_getter101 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %k100
-  %sum102 = load i128, i128* %array_getter101, align 4
-  %out103 = load [4096 x i128]*, [4096 x i128]** %t2.out.declare_output, align 8
-  %k104 = load i128, i128* %k, align 4
-  %array_getter105 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out103, i128 0, i128 %k104
-  %out106 = load i128, i128* %array_getter105, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out106, i128 %sum102, i1* @constraint.67)
-  %ptr_getter107 = load [4096 x i128]*, [4096 x i128]** %t2.out.declare_output, align 8
-  %k108 = load i128, i128* %k, align 4
-  %out109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter107, i128 0, i128 %k108
-  store i128 %sum102, i128* %out109, align 4
-  br label %loop.latch110
-
-loop.latch110:                                    ; preds = %loop.body97
-  %k111 = load i128, i128* %k, align 4
-  %add112 = add i128 %k111, 1
-  store i128 %add112, i128* %k, align 4
-  %k113 = load i128, i128* %k, align 4
-  %slt114 = icmp slt i128 %k113, 32
-  br i1 %slt114, label %loop.body97, label %loop.exit115
-
-loop.exit115:                                     ; preds = %loop.latch110
-  br label %exit
-
-exit:                                             ; preds = %loop.exit115
-  %out116 = load [4096 x i128]*, [4096 x i128]** %t2.out.declare_output, align 8
-  %t2.out.write_output_inner = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %0, i32 0, i32 3
-  store [4096 x i128]* %out116, [4096 x i128]** %t2.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_t2* @fn_template_build_t2() {
-entry:
-  %struct_template_circuit_t2 = alloca %struct_template_circuit_t2, align 8
-  ret %struct_template_circuit_t2* %struct_template_circuit_t2
-}
-
-define void @fn_template_init_num2bits_strict(%struct_template_circuit_num2bits_strict* %0) {
-entry:
-  %Num2Bits_strict = alloca %struct_template_circuit_num2bits_strict*, align 8
-  store %struct_template_circuit_num2bits_strict* %0, %struct_template_circuit_num2bits_strict** %Num2Bits_strict, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_num2bits_strict, %struct_template_circuit_num2bits_strict* %0, i32 0, i32 0
-  %num2bits_strict.in.read_input_inner = load i128, i128* %struct_getter, align 4
-  %num2bits_strict.in.declare_input = alloca i128, align 8
-  store i128 %num2bits_strict.in.read_input_inner, i128* %num2bits_strict.in.declare_input, align 4
-  %aliasCheck = alloca %struct_template_circuit_aliascheck*, align 8
-  %num2bits_strict.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
-  %n2b = alloca %struct_template_circuit_num2bits*, align 8
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %call = call %struct_template_circuit_aliascheck* @fn_template_build_aliascheck()
-  store %struct_template_circuit_aliascheck* %call, %struct_template_circuit_aliascheck** %aliasCheck, align 8
-  %call2 = call %struct_template_circuit_num2bits* @fn_template_build_num2bits(i128 254)
-  store %struct_template_circuit_num2bits* %call2, %struct_template_circuit_num2bits** %n2b, align 8
-  %in = load i128, i128* %num2bits_strict.in.declare_input, align 4
-  %n2b3 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %struct_getter4 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b3, i32 0, i32 1
-  %num2bits.in.read_input_outter = load i128, i128* %struct_getter4, align 4
-  call void @fn_intrinsic_add_constraint(i128 %num2bits.in.read_input_outter, i128 %in, i1* @constraint.68)
-  %ptr_getter = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %num2bits.in.write_input_outter = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %ptr_getter, i32 0, i32 1
-  store i128 %in, i128* %num2bits.in.write_input_outter, align 4
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %n2b5 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %struct_getter6 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b5, i32 0, i32 2
-  %num2bits.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter6, align 8
-  %i7 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter, i128 0, i128 %i7
-  %n2b8 = load i128, i128* %array_getter, align 4
-  %out9 = load [4096 x i128]*, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
-  %i10 = load i128, i128* %i, align 4
-  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out9, i128 0, i128 %i10
-  %out12 = load i128, i128* %array_getter11, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out12, i128 %n2b8, i1* @constraint.69)
-  %ptr_getter13 = load [4096 x i128]*, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
-  %i14 = load i128, i128* %i, align 4
-  %out15 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter13, i128 0, i128 %i14
-  store i128 %n2b8, i128* %out15, align 4
-  %n2b16 = load %struct_template_circuit_num2bits*, %struct_template_circuit_num2bits** %n2b, align 8
-  %struct_getter17 = getelementptr inbounds %struct_template_circuit_num2bits, %struct_template_circuit_num2bits* %n2b16, i32 0, i32 2
-  %num2bits.out.read_output_outter18 = load [4096 x i128]*, [4096 x i128]** %struct_getter17, align 8
-  %i19 = load i128, i128* %i, align 4
-  %array_getter20 = getelementptr inbounds [4096 x i128], [4096 x i128]* %num2bits.out.read_output_outter18, i128 0, i128 %i19
-  %n2b21 = load i128, i128* %array_getter20, align 4
-  %aliasCheck22 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
-  %struct_getter23 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %aliasCheck22, i32 0, i32 0
-  %aliascheck.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter23, align 8
-  %i24 = load i128, i128* %i, align 4
-  %array_getter25 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter, i128 0, i128 %i24
-  %aliasCheck26 = load i128, i128* %array_getter25, align 4
-  call void @fn_intrinsic_add_constraint(i128 %aliasCheck26, i128 %n2b21, i1* @constraint.70)
-  %ptr_getter27 = load %struct_template_circuit_aliascheck*, %struct_template_circuit_aliascheck** %aliasCheck, align 8
-  %struct_getter28 = getelementptr inbounds %struct_template_circuit_aliascheck, %struct_template_circuit_aliascheck* %ptr_getter27, i32 0, i32 0
-  %aliascheck.in.read_input_outter29 = load [4096 x i128]*, [4096 x i128]** %struct_getter28, align 8
-  %i30 = load i128, i128* %i, align 4
-  %aliasCheck31 = getelementptr inbounds [4096 x i128], [4096 x i128]* %aliascheck.in.read_input_outter29, i128 0, i128 %i30
-  store i128 %n2b21, i128* %aliasCheck31, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i32 = load i128, i128* %i, align 4
-  %add = add i128 %i32, 1
-  store i128 %add, i128* %i, align 4
-  %i33 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i33, 254
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  br label %exit
-
-exit:                                             ; preds = %loop.exit
-  %out34 = load [4096 x i128]*, [4096 x i128]** %num2bits_strict.out.declare_output, align 8
-  %num2bits_strict.out.write_output_inner = getelementptr inbounds %struct_template_circuit_num2bits_strict, %struct_template_circuit_num2bits_strict* %0, i32 0, i32 1
-  store [4096 x i128]* %out34, [4096 x i128]** %num2bits_strict.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_num2bits_strict* @fn_template_build_num2bits_strict() {
-entry:
-  %struct_template_circuit_num2bits_strict = alloca %struct_template_circuit_num2bits_strict, align 8
-  ret %struct_template_circuit_num2bits_strict* %struct_template_circuit_num2bits_strict
-}
-
-define void @fn_template_init_t1(%struct_template_circuit_t1* %0) {
-entry:
-  %T1 = alloca %struct_template_circuit_t1*, align 8
-  store %struct_template_circuit_t1* %0, %struct_template_circuit_t1** %T1, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 0
-  %t1.h.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %t1.h.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t1.h.read_input_inner, [4096 x i128]** %t1.h.declare_input, align 8
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 1
-  %t1.e.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %t1.e.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t1.e.read_input_inner, [4096 x i128]** %t1.e.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 2
-  %t1.f.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %t1.f.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t1.f.read_input_inner, [4096 x i128]** %t1.f.declare_input, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 3
-  %t1.g.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %t1.g.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t1.g.read_input_inner, [4096 x i128]** %t1.g.declare_input, align 8
-  %struct_getter4 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 4
-  %t1.k.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
-  %t1.k.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t1.k.read_input_inner, [4096 x i128]** %t1.k.declare_input, align 8
-  %struct_getter5 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 5
-  %t1.w.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter5, align 8
-  %t1.w.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %t1.w.read_input_inner, [4096 x i128]** %t1.w.declare_input, align 8
-  %ki = alloca i128, align 8
-  %ki6 = call i128 @fn_intrinsic_inline_init()
-  store i128 %ki6, i128* %ki, align 4
-  %ch = alloca %struct_template_circuit_ch_t*, align 8
-  %sum = alloca %struct_template_circuit_binsum*, align 8
-  %bigsigma1 = alloca %struct_template_circuit_bigsigma*, align 8
-  %t1.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %t1.out.declare_output, align 8
-  store i128 0, i128* %ki, align 4
-  %call = call %struct_template_circuit_ch_t* @fn_template_build_ch_t(i128 32)
-  store %struct_template_circuit_ch_t* %call, %struct_template_circuit_ch_t** %ch, align 8
-  %call7 = call %struct_template_circuit_bigsigma* @fn_template_build_bigsigma(i128 6, i128 11, i128 25)
-  store %struct_template_circuit_bigsigma* %call7, %struct_template_circuit_bigsigma** %bigsigma1, align 8
-  store i128 0, i128* %ki, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %e = load [4096 x i128]*, [4096 x i128]** %t1.e.declare_input, align 8
-  %ki8 = load i128, i128* %ki, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %e, i128 0, i128 %ki8
-  %e9 = load i128, i128* %array_getter, align 4
-  %bigsigma110 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma1, align 8
-  %struct_getter11 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma110, i32 0, i32 3
-  %bigsigma.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter11, align 8
-  %ki12 = load i128, i128* %ki, align 4
-  %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter, i128 0, i128 %ki12
-  %bigsigma114 = load i128, i128* %array_getter13, align 4
-  call void @fn_intrinsic_add_constraint(i128 %bigsigma114, i128 %e9, i1* @constraint.71)
-  %ptr_getter = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma1, align 8
-  %struct_getter15 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %ptr_getter, i32 0, i32 3
-  %bigsigma.in.read_input_outter16 = load [4096 x i128]*, [4096 x i128]** %struct_getter15, align 8
-  %ki17 = load i128, i128* %ki, align 4
-  %bigsigma118 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.in.read_input_outter16, i128 0, i128 %ki17
-  store i128 %e9, i128* %bigsigma118, align 4
-  %e19 = load [4096 x i128]*, [4096 x i128]** %t1.e.declare_input, align 8
-  %ki20 = load i128, i128* %ki, align 4
-  %array_getter21 = getelementptr inbounds [4096 x i128], [4096 x i128]* %e19, i128 0, i128 %ki20
-  %e22 = load i128, i128* %array_getter21, align 4
-  %ch23 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter24 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch23, i32 0, i32 1
-  %ch_t.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter24, align 8
-  %ki25 = load i128, i128* %ki, align 4
-  %array_getter26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.a.read_input_outter, i128 0, i128 %ki25
-  %ch27 = load i128, i128* %array_getter26, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ch27, i128 %e22, i1* @constraint.72)
-  %ptr_getter28 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter29 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ptr_getter28, i32 0, i32 1
-  %ch_t.a.read_input_outter30 = load [4096 x i128]*, [4096 x i128]** %struct_getter29, align 8
-  %ki31 = load i128, i128* %ki, align 4
-  %ch32 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.a.read_input_outter30, i128 0, i128 %ki31
-  store i128 %e22, i128* %ch32, align 4
-  %f = load [4096 x i128]*, [4096 x i128]** %t1.f.declare_input, align 8
-  %ki33 = load i128, i128* %ki, align 4
-  %array_getter34 = getelementptr inbounds [4096 x i128], [4096 x i128]* %f, i128 0, i128 %ki33
-  %f35 = load i128, i128* %array_getter34, align 4
-  %ch36 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter37 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch36, i32 0, i32 2
-  %ch_t.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter37, align 8
-  %ki38 = load i128, i128* %ki, align 4
-  %array_getter39 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.b.read_input_outter, i128 0, i128 %ki38
-  %ch40 = load i128, i128* %array_getter39, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ch40, i128 %f35, i1* @constraint.73)
-  %ptr_getter41 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter42 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ptr_getter41, i32 0, i32 2
-  %ch_t.b.read_input_outter43 = load [4096 x i128]*, [4096 x i128]** %struct_getter42, align 8
-  %ki44 = load i128, i128* %ki, align 4
-  %ch45 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.b.read_input_outter43, i128 0, i128 %ki44
-  store i128 %f35, i128* %ch45, align 4
-  %g = load [4096 x i128]*, [4096 x i128]** %t1.g.declare_input, align 8
-  %ki46 = load i128, i128* %ki, align 4
-  %array_getter47 = getelementptr inbounds [4096 x i128], [4096 x i128]* %g, i128 0, i128 %ki46
-  %g48 = load i128, i128* %array_getter47, align 4
-  %ch49 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter50 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch49, i32 0, i32 3
-  %ch_t.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter50, align 8
-  %ki51 = load i128, i128* %ki, align 4
-  %array_getter52 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.c.read_input_outter, i128 0, i128 %ki51
-  %ch53 = load i128, i128* %array_getter52, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ch53, i128 %g48, i1* @constraint.74)
-  %ptr_getter54 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter55 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ptr_getter54, i32 0, i32 3
-  %ch_t.c.read_input_outter56 = load [4096 x i128]*, [4096 x i128]** %struct_getter55, align 8
-  %ki57 = load i128, i128* %ki, align 4
-  %ch58 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.c.read_input_outter56, i128 0, i128 %ki57
-  store i128 %g48, i128* %ch58, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %ki59 = load i128, i128* %ki, align 4
-  %add = add i128 %ki59, 1
-  store i128 %add, i128* %ki, align 4
-  %ki60 = load i128, i128* %ki, align 4
-  %slt = icmp slt i128 %ki60, 32
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %call61 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 5)
-  store %struct_template_circuit_binsum* %call61, %struct_template_circuit_binsum** %sum, align 8
-  store i128 0, i128* %ki, align 4
-  br label %loop.body62
-
-loop.body62:                                      ; preds = %loop.latch136, %loop.exit
-  %h = load [4096 x i128]*, [4096 x i128]** %t1.h.declare_input, align 8
-  %ki63 = load i128, i128* %ki, align 4
-  %array_getter64 = getelementptr inbounds [4096 x i128], [4096 x i128]* %h, i128 0, i128 %ki63
-  %h65 = load i128, i128* %array_getter64, align 4
-  %sum66 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter67 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum66, i32 0, i32 2
-  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter67, align 8
-  %ki68 = load i128, i128* %ki, align 4
-  %array_getter69 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %ki68
-  %sum70 = load i128, i128* %array_getter69, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum70, i128 %h65, i1* @constraint.75)
-  %ptr_getter71 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter72 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter71, i32 0, i32 2
-  %binsum.in.read_input_outter73 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter72, align 8
-  %ki74 = load i128, i128* %ki, align 4
-  %sum75 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter73, i128 0, i128 0, i128 %ki74
-  store i128 %h65, i128* %sum75, align 4
-  %bigsigma176 = load %struct_template_circuit_bigsigma*, %struct_template_circuit_bigsigma** %bigsigma1, align 8
-  %struct_getter77 = getelementptr inbounds %struct_template_circuit_bigsigma, %struct_template_circuit_bigsigma* %bigsigma176, i32 0, i32 4
-  %bigsigma.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter77, align 8
-  %ki78 = load i128, i128* %ki, align 4
-  %array_getter79 = getelementptr inbounds [4096 x i128], [4096 x i128]* %bigsigma.out.read_output_outter, i128 0, i128 %ki78
-  %bigsigma180 = load i128, i128* %array_getter79, align 4
-  %sum81 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter82 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum81, i32 0, i32 2
-  %binsum.in.read_input_outter83 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter82, align 8
-  %ki84 = load i128, i128* %ki, align 4
-  %array_getter85 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter83, i128 0, i128 1, i128 %ki84
-  %sum86 = load i128, i128* %array_getter85, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum86, i128 %bigsigma180, i1* @constraint.76)
-  %ptr_getter87 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter88 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter87, i32 0, i32 2
-  %binsum.in.read_input_outter89 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter88, align 8
-  %ki90 = load i128, i128* %ki, align 4
-  %sum91 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter89, i128 0, i128 1, i128 %ki90
-  store i128 %bigsigma180, i128* %sum91, align 4
-  %ch92 = load %struct_template_circuit_ch_t*, %struct_template_circuit_ch_t** %ch, align 8
-  %struct_getter93 = getelementptr inbounds %struct_template_circuit_ch_t, %struct_template_circuit_ch_t* %ch92, i32 0, i32 4
-  %ch_t.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter93, align 8
-  %ki94 = load i128, i128* %ki, align 4
-  %array_getter95 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ch_t.out.read_output_outter, i128 0, i128 %ki94
-  %ch96 = load i128, i128* %array_getter95, align 4
-  %sum97 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter98 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum97, i32 0, i32 2
-  %binsum.in.read_input_outter99 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter98, align 8
-  %ki100 = load i128, i128* %ki, align 4
-  %array_getter101 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter99, i128 0, i128 2, i128 %ki100
-  %sum102 = load i128, i128* %array_getter101, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum102, i128 %ch96, i1* @constraint.77)
-  %ptr_getter103 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter104 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter103, i32 0, i32 2
-  %binsum.in.read_input_outter105 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter104, align 8
-  %ki106 = load i128, i128* %ki, align 4
-  %sum107 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter105, i128 0, i128 2, i128 %ki106
-  store i128 %ch96, i128* %sum107, align 4
-  %k = load [4096 x i128]*, [4096 x i128]** %t1.k.declare_input, align 8
-  %ki108 = load i128, i128* %ki, align 4
-  %array_getter109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %k, i128 0, i128 %ki108
-  %k110 = load i128, i128* %array_getter109, align 4
-  %sum111 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter112 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum111, i32 0, i32 2
-  %binsum.in.read_input_outter113 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter112, align 8
-  %ki114 = load i128, i128* %ki, align 4
-  %array_getter115 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter113, i128 0, i128 3, i128 %ki114
-  %sum116 = load i128, i128* %array_getter115, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum116, i128 %k110, i1* @constraint.78)
-  %ptr_getter117 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter118 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter117, i32 0, i32 2
-  %binsum.in.read_input_outter119 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter118, align 8
-  %ki120 = load i128, i128* %ki, align 4
-  %sum121 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter119, i128 0, i128 3, i128 %ki120
-  store i128 %k110, i128* %sum121, align 4
-  %w = load [4096 x i128]*, [4096 x i128]** %t1.w.declare_input, align 8
-  %ki122 = load i128, i128* %ki, align 4
-  %array_getter123 = getelementptr inbounds [4096 x i128], [4096 x i128]* %w, i128 0, i128 %ki122
-  %w124 = load i128, i128* %array_getter123, align 4
-  %sum125 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter126 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum125, i32 0, i32 2
-  %binsum.in.read_input_outter127 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter126, align 8
-  %ki128 = load i128, i128* %ki, align 4
-  %array_getter129 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter127, i128 0, i128 4, i128 %ki128
-  %sum130 = load i128, i128* %array_getter129, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum130, i128 %w124, i1* @constraint.79)
-  %ptr_getter131 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter132 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter131, i32 0, i32 2
-  %binsum.in.read_input_outter133 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter132, align 8
-  %ki134 = load i128, i128* %ki, align 4
-  %sum135 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter133, i128 0, i128 4, i128 %ki134
-  store i128 %w124, i128* %sum135, align 4
-  br label %loop.latch136
-
-loop.latch136:                                    ; preds = %loop.body62
-  %ki137 = load i128, i128* %ki, align 4
-  %add138 = add i128 %ki137, 1
-  store i128 %add138, i128* %ki, align 4
-  %ki139 = load i128, i128* %ki, align 4
-  %slt140 = icmp slt i128 %ki139, 32
-  br i1 %slt140, label %loop.body62, label %loop.exit141
-
-loop.exit141:                                     ; preds = %loop.latch136
-  store i128 0, i128* %ki, align 4
-  br label %loop.body142
-
-loop.body142:                                     ; preds = %loop.latch155, %loop.exit141
-  %sum143 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter144 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum143, i32 0, i32 3
-  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter144, align 8
-  %ki145 = load i128, i128* %ki, align 4
-  %array_getter146 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %ki145
-  %sum147 = load i128, i128* %array_getter146, align 4
-  %out148 = load [4096 x i128]*, [4096 x i128]** %t1.out.declare_output, align 8
-  %ki149 = load i128, i128* %ki, align 4
-  %array_getter150 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out148, i128 0, i128 %ki149
-  %out151 = load i128, i128* %array_getter150, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out151, i128 %sum147, i1* @constraint.80)
-  %ptr_getter152 = load [4096 x i128]*, [4096 x i128]** %t1.out.declare_output, align 8
-  %ki153 = load i128, i128* %ki, align 4
-  %out154 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter152, i128 0, i128 %ki153
-  store i128 %sum147, i128* %out154, align 4
-  br label %loop.latch155
-
-loop.latch155:                                    ; preds = %loop.body142
-  %ki156 = load i128, i128* %ki, align 4
-  %add157 = add i128 %ki156, 1
-  store i128 %add157, i128* %ki, align 4
-  %ki158 = load i128, i128* %ki, align 4
-  %slt159 = icmp slt i128 %ki158, 32
-  br i1 %slt159, label %loop.body142, label %loop.exit160
-
-loop.exit160:                                     ; preds = %loop.latch155
-  br label %exit
-
-exit:                                             ; preds = %loop.exit160
-  %out161 = load [4096 x i128]*, [4096 x i128]** %t1.out.declare_output, align 8
-  %t1.out.write_output_inner = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %0, i32 0, i32 6
-  store [4096 x i128]* %out161, [4096 x i128]** %t1.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_t1* @fn_template_build_t1() {
-entry:
-  %struct_template_circuit_t1 = alloca %struct_template_circuit_t1, align 8
-  ret %struct_template_circuit_t1* %struct_template_circuit_t1
-}
-
-define void @fn_template_init_sigmaplus(%struct_template_circuit_sigmaplus* %0) {
-entry:
-  %SigmaPlus = alloca %struct_template_circuit_sigmaplus*, align 8
-  store %struct_template_circuit_sigmaplus* %0, %struct_template_circuit_sigmaplus** %SigmaPlus, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 0
-  %sigmaplus.in2.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %sigmaplus.in2.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sigmaplus.in2.read_input_inner, [4096 x i128]** %sigmaplus.in2.declare_input, align 8
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 1
-  %sigmaplus.in7.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %sigmaplus.in7.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sigmaplus.in7.read_input_inner, [4096 x i128]** %sigmaplus.in7.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 2
-  %sigmaplus.in15.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %sigmaplus.in15.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sigmaplus.in15.read_input_inner, [4096 x i128]** %sigmaplus.in15.declare_input, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 3
-  %sigmaplus.in16.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %sigmaplus.in16.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sigmaplus.in16.read_input_inner, [4096 x i128]** %sigmaplus.in16.declare_input, align 8
-  %sigma0 = alloca %struct_template_circuit_smallsigma*, align 8
-  %sum = alloca %struct_template_circuit_binsum*, align 8
-  %k = alloca i128, align 8
-  %k4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k4, i128* %k, align 4
-  %sigmaplus.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %sigmaplus.out.declare_output, align 8
-  %sigma1 = alloca %struct_template_circuit_smallsigma*, align 8
-  store i128 0, i128* %k, align 4
-  %call = call %struct_template_circuit_smallsigma* @fn_template_build_smallsigma(i128 17, i128 19, i128 10)
-  store %struct_template_circuit_smallsigma* %call, %struct_template_circuit_smallsigma** %sigma1, align 8
-  %call5 = call %struct_template_circuit_smallsigma* @fn_template_build_smallsigma(i128 7, i128 18, i128 3)
-  store %struct_template_circuit_smallsigma* %call5, %struct_template_circuit_smallsigma** %sigma0, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %in2 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in2.declare_input, align 8
-  %k6 = load i128, i128* %k, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %in2, i128 0, i128 %k6
-  %in27 = load i128, i128* %array_getter, align 4
-  %sigma18 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma1, align 8
-  %struct_getter9 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma18, i32 0, i32 3
-  %smallsigma.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter9, align 8
-  %k10 = load i128, i128* %k, align 4
-  %array_getter11 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter, i128 0, i128 %k10
-  %sigma112 = load i128, i128* %array_getter11, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sigma112, i128 %in27, i1* @constraint.81)
-  %ptr_getter = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma1, align 8
-  %struct_getter13 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %ptr_getter, i32 0, i32 3
-  %smallsigma.in.read_input_outter14 = load [4096 x i128]*, [4096 x i128]** %struct_getter13, align 8
-  %k15 = load i128, i128* %k, align 4
-  %sigma116 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter14, i128 0, i128 %k15
-  store i128 %in27, i128* %sigma116, align 4
-  %in15 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in15.declare_input, align 8
-  %k17 = load i128, i128* %k, align 4
-  %array_getter18 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in15, i128 0, i128 %k17
-  %in1519 = load i128, i128* %array_getter18, align 4
-  %sigma020 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma0, align 8
-  %struct_getter21 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma020, i32 0, i32 3
-  %smallsigma.in.read_input_outter22 = load [4096 x i128]*, [4096 x i128]** %struct_getter21, align 8
-  %k23 = load i128, i128* %k, align 4
-  %array_getter24 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter22, i128 0, i128 %k23
-  %sigma025 = load i128, i128* %array_getter24, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sigma025, i128 %in1519, i1* @constraint.82)
-  %ptr_getter26 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma0, align 8
-  %struct_getter27 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %ptr_getter26, i32 0, i32 3
-  %smallsigma.in.read_input_outter28 = load [4096 x i128]*, [4096 x i128]** %struct_getter27, align 8
-  %k29 = load i128, i128* %k, align 4
-  %sigma030 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.in.read_input_outter28, i128 0, i128 %k29
-  store i128 %in1519, i128* %sigma030, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %k31 = load i128, i128* %k, align 4
-  %add = add i128 %k31, 1
-  store i128 %add, i128* %k, align 4
-  %k32 = load i128, i128* %k, align 4
-  %slt = icmp slt i128 %k32, 32
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %call33 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 4)
-  store %struct_template_circuit_binsum* %call33, %struct_template_circuit_binsum** %sum, align 8
-  store i128 0, i128* %k, align 4
-  br label %loop.body34
-
-loop.body34:                                      ; preds = %loop.latch95, %loop.exit
-  %sigma135 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma1, align 8
-  %struct_getter36 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma135, i32 0, i32 4
-  %smallsigma.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter36, align 8
-  %k37 = load i128, i128* %k, align 4
-  %array_getter38 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.out.read_output_outter, i128 0, i128 %k37
-  %sigma139 = load i128, i128* %array_getter38, align 4
-  %sum40 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter41 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum40, i32 0, i32 2
-  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter41, align 8
-  %k42 = load i128, i128* %k, align 4
-  %array_getter43 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %k42
-  %sum44 = load i128, i128* %array_getter43, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum44, i128 %sigma139, i1* @constraint.83)
-  %ptr_getter45 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter46 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter45, i32 0, i32 2
-  %binsum.in.read_input_outter47 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter46, align 8
-  %k48 = load i128, i128* %k, align 4
-  %sum49 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter47, i128 0, i128 0, i128 %k48
-  store i128 %sigma139, i128* %sum49, align 4
-  %in7 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in7.declare_input, align 8
-  %k50 = load i128, i128* %k, align 4
-  %array_getter51 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in7, i128 0, i128 %k50
-  %in752 = load i128, i128* %array_getter51, align 4
-  %sum53 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter54 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum53, i32 0, i32 2
-  %binsum.in.read_input_outter55 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter54, align 8
-  %k56 = load i128, i128* %k, align 4
-  %array_getter57 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter55, i128 0, i128 1, i128 %k56
-  %sum58 = load i128, i128* %array_getter57, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum58, i128 %in752, i1* @constraint.84)
-  %ptr_getter59 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter60 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter59, i32 0, i32 2
-  %binsum.in.read_input_outter61 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter60, align 8
-  %k62 = load i128, i128* %k, align 4
-  %sum63 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter61, i128 0, i128 1, i128 %k62
-  store i128 %in752, i128* %sum63, align 4
-  %sigma064 = load %struct_template_circuit_smallsigma*, %struct_template_circuit_smallsigma** %sigma0, align 8
-  %struct_getter65 = getelementptr inbounds %struct_template_circuit_smallsigma, %struct_template_circuit_smallsigma* %sigma064, i32 0, i32 4
-  %smallsigma.out.read_output_outter66 = load [4096 x i128]*, [4096 x i128]** %struct_getter65, align 8
-  %k67 = load i128, i128* %k, align 4
-  %array_getter68 = getelementptr inbounds [4096 x i128], [4096 x i128]* %smallsigma.out.read_output_outter66, i128 0, i128 %k67
-  %sigma069 = load i128, i128* %array_getter68, align 4
-  %sum70 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter71 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum70, i32 0, i32 2
-  %binsum.in.read_input_outter72 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter71, align 8
-  %k73 = load i128, i128* %k, align 4
-  %array_getter74 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter72, i128 0, i128 2, i128 %k73
-  %sum75 = load i128, i128* %array_getter74, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum75, i128 %sigma069, i1* @constraint.85)
-  %ptr_getter76 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter77 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter76, i32 0, i32 2
-  %binsum.in.read_input_outter78 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter77, align 8
-  %k79 = load i128, i128* %k, align 4
-  %sum80 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter78, i128 0, i128 2, i128 %k79
-  store i128 %sigma069, i128* %sum80, align 4
-  %in16 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.in16.declare_input, align 8
-  %k81 = load i128, i128* %k, align 4
-  %array_getter82 = getelementptr inbounds [4096 x i128], [4096 x i128]* %in16, i128 0, i128 %k81
-  %in1683 = load i128, i128* %array_getter82, align 4
-  %sum84 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter85 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum84, i32 0, i32 2
-  %binsum.in.read_input_outter86 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter85, align 8
-  %k87 = load i128, i128* %k, align 4
-  %array_getter88 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter86, i128 0, i128 3, i128 %k87
-  %sum89 = load i128, i128* %array_getter88, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sum89, i128 %in1683, i1* @constraint.86)
-  %ptr_getter90 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter91 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %ptr_getter90, i32 0, i32 2
-  %binsum.in.read_input_outter92 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter91, align 8
-  %k93 = load i128, i128* %k, align 4
-  %sum94 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter92, i128 0, i128 3, i128 %k93
-  store i128 %in1683, i128* %sum94, align 4
-  br label %loop.latch95
-
-loop.latch95:                                     ; preds = %loop.body34
-  %k96 = load i128, i128* %k, align 4
-  %add97 = add i128 %k96, 1
-  store i128 %add97, i128* %k, align 4
-  %k98 = load i128, i128* %k, align 4
-  %slt99 = icmp slt i128 %k98, 32
-  br i1 %slt99, label %loop.body34, label %loop.exit100
-
-loop.exit100:                                     ; preds = %loop.latch95
-  store i128 0, i128* %k, align 4
-  br label %loop.body101
-
-loop.body101:                                     ; preds = %loop.latch114, %loop.exit100
-  %sum102 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %sum, align 8
-  %struct_getter103 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sum102, i32 0, i32 3
-  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter103, align 8
-  %k104 = load i128, i128* %k, align 4
-  %array_getter105 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %k104
-  %sum106 = load i128, i128* %array_getter105, align 4
-  %out107 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.out.declare_output, align 8
-  %k108 = load i128, i128* %k, align 4
-  %array_getter109 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out107, i128 0, i128 %k108
-  %out110 = load i128, i128* %array_getter109, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out110, i128 %sum106, i1* @constraint.87)
-  %ptr_getter111 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.out.declare_output, align 8
-  %k112 = load i128, i128* %k, align 4
-  %out113 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter111, i128 0, i128 %k112
-  store i128 %sum106, i128* %out113, align 4
-  br label %loop.latch114
-
-loop.latch114:                                    ; preds = %loop.body101
-  %k115 = load i128, i128* %k, align 4
-  %add116 = add i128 %k115, 1
-  store i128 %add116, i128* %k, align 4
-  %k117 = load i128, i128* %k, align 4
-  %slt118 = icmp slt i128 %k117, 32
-  br i1 %slt118, label %loop.body101, label %loop.exit119
-
-loop.exit119:                                     ; preds = %loop.latch114
-  br label %exit
-
-exit:                                             ; preds = %loop.exit119
-  %out120 = load [4096 x i128]*, [4096 x i128]** %sigmaplus.out.declare_output, align 8
-  %sigmaplus.out.write_output_inner = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %0, i32 0, i32 4
-  store [4096 x i128]* %out120, [4096 x i128]** %sigmaplus.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_sigmaplus* @fn_template_build_sigmaplus() {
-entry:
-  %struct_template_circuit_sigmaplus = alloca %struct_template_circuit_sigmaplus, align 8
-  ret %struct_template_circuit_sigmaplus* %struct_template_circuit_sigmaplus
-}
-
 define void @fn_template_init_sha256compression(%struct_template_circuit_sha256compression* %0) {
 entry:
   %Sha256compression = alloca %struct_template_circuit_sha256compression*, align 8
@@ -4163,79 +4163,79 @@ entry:
   %sha256compression.inp.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
   %sha256compression.inp.declare_input = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %sha256compression.inp.read_input_inner, [4096 x i128]** %sha256compression.inp.declare_input, align 8
-  %t = alloca i128, align 8
-  %t2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %t2, i128* %t, align 4
-  %sigmaPlus = alloca [4096 x %struct_template_circuit_sigmaplus*]*, align 8
-  %sigmaPlus3 = alloca [4096 x %struct_template_circuit_sigmaplus*], align 8
-  store [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus3, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %sha256compression.e.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %e = bitcast i8* %malloccall to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %e, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %ct_k = alloca [4096 x %struct_template_circuit_k*]*, align 8
-  %ct_k4 = alloca [4096 x %struct_template_circuit_k*], align 8
-  store [4096 x %struct_template_circuit_k*]* %ct_k4, [4096 x %struct_template_circuit_k*]** %ct_k, align 8
-  %sha256compression.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall5 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall5 to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %sume = alloca [4096 x %struct_template_circuit_binsum*]*, align 8
-  %sume6 = alloca [4096 x %struct_template_circuit_binsum*], align 8
-  store [4096 x %struct_template_circuit_binsum*]* %sume6, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
   %sha256compression.f.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall7 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %f = bitcast i8* %malloccall7 to [4096 x [4096 x i128]]*
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %f = bitcast i8* %malloccall to [4096 x [4096 x i128]]*
   store [4096 x [4096 x i128]]* %f, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %outCalc = alloca [4096 x i128]*, align 8
-  %outCalc8 = alloca [4096 x i128], align 8
-  store [4096 x i128]* %outCalc8, [4096 x i128]** %outCalc, align 8
-  %sha256compression.w.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall9 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %w = bitcast i8* %malloccall9 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %w, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %i = alloca i128, align 8
-  %i10 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i10, i128* %i, align 4
   %t1 = alloca [4096 x %struct_template_circuit_t1*]*, align 8
-  %t111 = alloca [4096 x %struct_template_circuit_t1*], align 8
-  store [4096 x %struct_template_circuit_t1*]* %t111, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %sha256compression.d.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall12 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %d = bitcast i8* %malloccall12 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %d, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %sha256compression.c.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall13 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %c = bitcast i8* %malloccall13 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %c, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %sha256compression.a.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall14 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %a = bitcast i8* %malloccall14 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %a, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %fsum = alloca [4096 x %struct_template_circuit_binsum*]*, align 8
-  %fsum15 = alloca [4096 x %struct_template_circuit_binsum*], align 8
-  store [4096 x %struct_template_circuit_binsum*]* %fsum15, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %t216 = alloca [4096 x %struct_template_circuit_t2*]*, align 8
-  %t217 = alloca [4096 x %struct_template_circuit_t2*], align 8
-  store [4096 x %struct_template_circuit_t2*]* %t217, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %sha256compression.h.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall18 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %h = bitcast i8* %malloccall18 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %h, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %t12 = alloca [4096 x %struct_template_circuit_t1*], align 8
+  store [4096 x %struct_template_circuit_t1*]* %t12, [4096 x %struct_template_circuit_t1*]** %t1, align 8
   %suma = alloca [4096 x %struct_template_circuit_binsum*]*, align 8
-  %suma19 = alloca [4096 x %struct_template_circuit_binsum*], align 8
-  store [4096 x %struct_template_circuit_binsum*]* %suma19, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %suma3 = alloca [4096 x %struct_template_circuit_binsum*], align 8
+  store [4096 x %struct_template_circuit_binsum*]* %suma3, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %sha256compression.d.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall4 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %d = bitcast i8* %malloccall4 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %d, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %sha256compression.h.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall5 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %h = bitcast i8* %malloccall5 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %h, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %sha256compression.c.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall6 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %c = bitcast i8* %malloccall6 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %c, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %outCalc = alloca [4096 x i128]*, align 8
+  %outCalc7 = alloca [4096 x i128], align 8
+  store [4096 x i128]* %outCalc7, [4096 x i128]** %outCalc, align 8
+  %sha256compression.e.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall8 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %e = bitcast i8* %malloccall8 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %e, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %sha256compression.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall9 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall9 to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %sha256compression.w.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall10 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %w = bitcast i8* %malloccall10 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %w, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %sha256compression.b.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall11 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %b = bitcast i8* %malloccall11 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %b, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %sume = alloca [4096 x %struct_template_circuit_binsum*]*, align 8
+  %sume12 = alloca [4096 x %struct_template_circuit_binsum*], align 8
+  store [4096 x %struct_template_circuit_binsum*]* %sume12, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %ct_k = alloca [4096 x %struct_template_circuit_k*]*, align 8
+  %ct_k13 = alloca [4096 x %struct_template_circuit_k*], align 8
+  store [4096 x %struct_template_circuit_k*]* %ct_k13, [4096 x %struct_template_circuit_k*]** %ct_k, align 8
+  %fsum = alloca [4096 x %struct_template_circuit_binsum*]*, align 8
+  %fsum14 = alloca [4096 x %struct_template_circuit_binsum*], align 8
+  store [4096 x %struct_template_circuit_binsum*]* %fsum14, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %t = alloca i128, align 8
+  %t15 = call i128 @fn_intrinsic_inline_init()
+  store i128 %t15, i128* %t, align 4
+  %i = alloca i128, align 8
+  %i16 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i16, i128* %i, align 4
+  %sha256compression.g.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %malloccall17 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
+  %g = bitcast i8* %malloccall17 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %g, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %sigmaPlus = alloca [4096 x %struct_template_circuit_sigmaplus*]*, align 8
+  %sigmaPlus18 = alloca [4096 x %struct_template_circuit_sigmaplus*], align 8
+  store [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus18, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t2 = alloca [4096 x %struct_template_circuit_t2*]*, align 8
+  %t219 = alloca [4096 x %struct_template_circuit_t2*], align 8
+  store [4096 x %struct_template_circuit_t2*]* %t219, [4096 x %struct_template_circuit_t2*]** %t2, align 8
   %k = alloca i128, align 8
   %k20 = call i128 @fn_intrinsic_inline_init()
   store i128 %k20, i128* %k, align 4
-  %sha256compression.b.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
+  %sha256compression.a.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
   %malloccall21 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %b = bitcast i8* %malloccall21 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %b, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %sha256compression.g.declare_inter = alloca [4096 x [4096 x i128]]*, align 8
-  %malloccall22 = tail call i8* @malloc(i32 ptrtoint ([4096 x [4096 x i128]]* getelementptr ([4096 x [4096 x i128]], [4096 x [4096 x i128]]* null, i32 1) to i32))
-  %g = bitcast i8* %malloccall22 to [4096 x [4096 x i128]]*
-  store [4096 x [4096 x i128]]* %g, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %a = bitcast i8* %malloccall21 to [4096 x [4096 x i128]]*
+  store [4096 x [4096 x i128]]* %a, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
   %hin = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
   %inp = load [4096 x i128]*, [4096 x i128]** %sha256compression.inp.declare_input, align 8
   %call = call [4096 x i128]* @sha256compression([4096 x i128]* %hin, [4096 x i128]* %inp)
@@ -4245,1572 +4245,1572 @@ entry:
   br label %loop.body
 
 loop.body:                                        ; preds = %loop.latch, %entry
-  %outCalc23 = load [4096 x i128]*, [4096 x i128]** %outCalc, align 8
-  %i24 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %outCalc23, i128 0, i128 %i24
-  %outCalc25 = load i128, i128* %array_getter, align 4
+  %outCalc22 = load [4096 x i128]*, [4096 x i128]** %outCalc, align 8
+  %i23 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %outCalc22, i128 0, i128 %i23
+  %outCalc24 = load i128, i128* %array_getter, align 4
   %ptr_getter = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %i26 = load i128, i128* %i, align 4
-  %out27 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i26
-  store i128 %outCalc25, i128* %out27, align 4
+  %i25 = load i128, i128* %i, align 4
+  %out26 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter, i128 0, i128 %i25
+  store i128 %outCalc24, i128* %out26, align 4
   br label %loop.latch
 
 loop.latch:                                       ; preds = %loop.body
-  %i28 = load i128, i128* %i, align 4
-  %add = add i128 %i28, 1
+  %i27 = load i128, i128* %i, align 4
+  %add = add i128 %i27, 1
   store i128 %add, i128* %i, align 4
-  %i29 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i29, 256
+  %i28 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i28, 256
   br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
   store i128 0, i128* %i, align 4
-  br label %loop.body30
+  br label %loop.body29
 
-loop.body30:                                      ; preds = %loop.latch35, %loop.exit
-  %call31 = call %struct_template_circuit_sigmaplus* @fn_template_build_sigmaplus()
-  %ptr_getter32 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %i33 = load i128, i128* %i, align 4
-  %sigmaPlus34 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter32, i128 0, i128 %i33
-  store %struct_template_circuit_sigmaplus* %call31, %struct_template_circuit_sigmaplus** %sigmaPlus34, align 8
-  br label %loop.latch35
+loop.body29:                                      ; preds = %loop.latch34, %loop.exit
+  %call30 = call %struct_template_circuit_sigmaplus* @fn_template_build_sigmaplus()
+  %ptr_getter31 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %i32 = load i128, i128* %i, align 4
+  %sigmaPlus33 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter31, i128 0, i128 %i32
+  store %struct_template_circuit_sigmaplus* %call30, %struct_template_circuit_sigmaplus** %sigmaPlus33, align 8
+  br label %loop.latch34
 
-loop.latch35:                                     ; preds = %loop.body30
-  %i36 = load i128, i128* %i, align 4
-  %add37 = add i128 %i36, 1
-  store i128 %add37, i128* %i, align 4
-  %i38 = load i128, i128* %i, align 4
-  %slt39 = icmp slt i128 %i38, 48
-  br i1 %slt39, label %loop.body30, label %loop.exit40
+loop.latch34:                                     ; preds = %loop.body29
+  %i35 = load i128, i128* %i, align 4
+  %add36 = add i128 %i35, 1
+  store i128 %add36, i128* %i, align 4
+  %i37 = load i128, i128* %i, align 4
+  %slt38 = icmp slt i128 %i37, 48
+  br i1 %slt38, label %loop.body29, label %loop.exit39
 
-loop.exit40:                                      ; preds = %loop.latch35
+loop.exit39:                                      ; preds = %loop.latch34
   store i128 0, i128* %i, align 4
-  br label %loop.body41
+  br label %loop.body40
 
-loop.body41:                                      ; preds = %loop.latch47, %loop.exit40
-  %i42 = load i128, i128* %i, align 4
-  %call43 = call %struct_template_circuit_k* @fn_template_build_k(i128 %i42)
-  %ptr_getter44 = load [4096 x %struct_template_circuit_k*]*, [4096 x %struct_template_circuit_k*]** %ct_k, align 8
-  %i45 = load i128, i128* %i, align 4
-  %ct_k46 = getelementptr inbounds [4096 x %struct_template_circuit_k*], [4096 x %struct_template_circuit_k*]* %ptr_getter44, i128 0, i128 %i45
-  store %struct_template_circuit_k* %call43, %struct_template_circuit_k** %ct_k46, align 8
-  br label %loop.latch47
+loop.body40:                                      ; preds = %loop.latch46, %loop.exit39
+  %i41 = load i128, i128* %i, align 4
+  %call42 = call %struct_template_circuit_k* @fn_template_build_k(i128 %i41)
+  %ptr_getter43 = load [4096 x %struct_template_circuit_k*]*, [4096 x %struct_template_circuit_k*]** %ct_k, align 8
+  %i44 = load i128, i128* %i, align 4
+  %ct_k45 = getelementptr inbounds [4096 x %struct_template_circuit_k*], [4096 x %struct_template_circuit_k*]* %ptr_getter43, i128 0, i128 %i44
+  store %struct_template_circuit_k* %call42, %struct_template_circuit_k** %ct_k45, align 8
+  br label %loop.latch46
 
-loop.latch47:                                     ; preds = %loop.body41
-  %i48 = load i128, i128* %i, align 4
-  %add49 = add i128 %i48, 1
-  store i128 %add49, i128* %i, align 4
-  %i50 = load i128, i128* %i, align 4
-  %slt51 = icmp slt i128 %i50, 64
-  br i1 %slt51, label %loop.body41, label %loop.exit52
+loop.latch46:                                     ; preds = %loop.body40
+  %i47 = load i128, i128* %i, align 4
+  %add48 = add i128 %i47, 1
+  store i128 %add48, i128* %i, align 4
+  %i49 = load i128, i128* %i, align 4
+  %slt50 = icmp slt i128 %i49, 64
+  br i1 %slt50, label %loop.body40, label %loop.exit51
 
-loop.exit52:                                      ; preds = %loop.latch47
+loop.exit51:                                      ; preds = %loop.latch46
   store i128 0, i128* %i, align 4
-  br label %loop.body53
+  br label %loop.body52
 
-loop.body53:                                      ; preds = %loop.latch58, %loop.exit52
-  %call54 = call %struct_template_circuit_t1* @fn_template_build_t1()
-  %ptr_getter55 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %i56 = load i128, i128* %i, align 4
-  %t157 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter55, i128 0, i128 %i56
-  store %struct_template_circuit_t1* %call54, %struct_template_circuit_t1** %t157, align 8
-  br label %loop.latch58
+loop.body52:                                      ; preds = %loop.latch57, %loop.exit51
+  %call53 = call %struct_template_circuit_t1* @fn_template_build_t1()
+  %ptr_getter54 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %i55 = load i128, i128* %i, align 4
+  %t156 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter54, i128 0, i128 %i55
+  store %struct_template_circuit_t1* %call53, %struct_template_circuit_t1** %t156, align 8
+  br label %loop.latch57
 
-loop.latch58:                                     ; preds = %loop.body53
-  %i59 = load i128, i128* %i, align 4
-  %add60 = add i128 %i59, 1
-  store i128 %add60, i128* %i, align 4
-  %i61 = load i128, i128* %i, align 4
-  %slt62 = icmp slt i128 %i61, 64
-  br i1 %slt62, label %loop.body53, label %loop.exit63
+loop.latch57:                                     ; preds = %loop.body52
+  %i58 = load i128, i128* %i, align 4
+  %add59 = add i128 %i58, 1
+  store i128 %add59, i128* %i, align 4
+  %i60 = load i128, i128* %i, align 4
+  %slt61 = icmp slt i128 %i60, 64
+  br i1 %slt61, label %loop.body52, label %loop.exit62
 
-loop.exit63:                                      ; preds = %loop.latch58
+loop.exit62:                                      ; preds = %loop.latch57
   store i128 0, i128* %i, align 4
-  br label %loop.body64
+  br label %loop.body63
 
-loop.body64:                                      ; preds = %loop.latch69, %loop.exit63
-  %call65 = call %struct_template_circuit_t2* @fn_template_build_t2()
-  %ptr_getter66 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %i67 = load i128, i128* %i, align 4
-  %t268 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter66, i128 0, i128 %i67
-  store %struct_template_circuit_t2* %call65, %struct_template_circuit_t2** %t268, align 8
-  br label %loop.latch69
+loop.body63:                                      ; preds = %loop.latch68, %loop.exit62
+  %call64 = call %struct_template_circuit_t2* @fn_template_build_t2()
+  %ptr_getter65 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %i66 = load i128, i128* %i, align 4
+  %t267 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter65, i128 0, i128 %i66
+  store %struct_template_circuit_t2* %call64, %struct_template_circuit_t2** %t267, align 8
+  br label %loop.latch68
 
-loop.latch69:                                     ; preds = %loop.body64
-  %i70 = load i128, i128* %i, align 4
-  %add71 = add i128 %i70, 1
-  store i128 %add71, i128* %i, align 4
-  %i72 = load i128, i128* %i, align 4
-  %slt73 = icmp slt i128 %i72, 64
-  br i1 %slt73, label %loop.body64, label %loop.exit74
+loop.latch68:                                     ; preds = %loop.body63
+  %i69 = load i128, i128* %i, align 4
+  %add70 = add i128 %i69, 1
+  store i128 %add70, i128* %i, align 4
+  %i71 = load i128, i128* %i, align 4
+  %slt72 = icmp slt i128 %i71, 64
+  br i1 %slt72, label %loop.body63, label %loop.exit73
 
-loop.exit74:                                      ; preds = %loop.latch69
+loop.exit73:                                      ; preds = %loop.latch68
   store i128 0, i128* %i, align 4
-  br label %loop.body75
+  br label %loop.body74
 
-loop.body75:                                      ; preds = %loop.latch80, %loop.exit74
-  %call76 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
-  %ptr_getter77 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
-  %i78 = load i128, i128* %i, align 4
-  %suma79 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter77, i128 0, i128 %i78
-  store %struct_template_circuit_binsum* %call76, %struct_template_circuit_binsum** %suma79, align 8
-  br label %loop.latch80
+loop.body74:                                      ; preds = %loop.latch79, %loop.exit73
+  %call75 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
+  %ptr_getter76 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %i77 = load i128, i128* %i, align 4
+  %suma78 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter76, i128 0, i128 %i77
+  store %struct_template_circuit_binsum* %call75, %struct_template_circuit_binsum** %suma78, align 8
+  br label %loop.latch79
 
-loop.latch80:                                     ; preds = %loop.body75
-  %i81 = load i128, i128* %i, align 4
-  %add82 = add i128 %i81, 1
-  store i128 %add82, i128* %i, align 4
-  %i83 = load i128, i128* %i, align 4
-  %slt84 = icmp slt i128 %i83, 64
-  br i1 %slt84, label %loop.body75, label %loop.exit85
+loop.latch79:                                     ; preds = %loop.body74
+  %i80 = load i128, i128* %i, align 4
+  %add81 = add i128 %i80, 1
+  store i128 %add81, i128* %i, align 4
+  %i82 = load i128, i128* %i, align 4
+  %slt83 = icmp slt i128 %i82, 64
+  br i1 %slt83, label %loop.body74, label %loop.exit84
 
-loop.exit85:                                      ; preds = %loop.latch80
+loop.exit84:                                      ; preds = %loop.latch79
   store i128 0, i128* %i, align 4
-  br label %loop.body86
+  br label %loop.body85
 
-loop.body86:                                      ; preds = %loop.latch91, %loop.exit85
-  %call87 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
-  %ptr_getter88 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
-  %i89 = load i128, i128* %i, align 4
-  %sume90 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter88, i128 0, i128 %i89
-  store %struct_template_circuit_binsum* %call87, %struct_template_circuit_binsum** %sume90, align 8
-  br label %loop.latch91
+loop.body85:                                      ; preds = %loop.latch90, %loop.exit84
+  %call86 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
+  %ptr_getter87 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %i88 = load i128, i128* %i, align 4
+  %sume89 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter87, i128 0, i128 %i88
+  store %struct_template_circuit_binsum* %call86, %struct_template_circuit_binsum** %sume89, align 8
+  br label %loop.latch90
 
-loop.latch91:                                     ; preds = %loop.body86
-  %i92 = load i128, i128* %i, align 4
-  %add93 = add i128 %i92, 1
-  store i128 %add93, i128* %i, align 4
-  %i94 = load i128, i128* %i, align 4
-  %slt95 = icmp slt i128 %i94, 64
-  br i1 %slt95, label %loop.body86, label %loop.exit96
+loop.latch90:                                     ; preds = %loop.body85
+  %i91 = load i128, i128* %i, align 4
+  %add92 = add i128 %i91, 1
+  store i128 %add92, i128* %i, align 4
+  %i93 = load i128, i128* %i, align 4
+  %slt94 = icmp slt i128 %i93, 64
+  br i1 %slt94, label %loop.body85, label %loop.exit95
 
-loop.exit96:                                      ; preds = %loop.latch91
+loop.exit95:                                      ; preds = %loop.latch90
   store i128 0, i128* %i, align 4
-  br label %loop.body97
+  br label %loop.body96
 
-loop.body97:                                      ; preds = %loop.latch102, %loop.exit96
-  %call98 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
-  %ptr_getter99 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %i100 = load i128, i128* %i, align 4
-  %fsum101 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter99, i128 0, i128 %i100
-  store %struct_template_circuit_binsum* %call98, %struct_template_circuit_binsum** %fsum101, align 8
-  br label %loop.latch102
+loop.body96:                                      ; preds = %loop.latch101, %loop.exit95
+  %call97 = call %struct_template_circuit_binsum* @fn_template_build_binsum(i128 32, i128 2)
+  %ptr_getter98 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %i99 = load i128, i128* %i, align 4
+  %fsum100 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter98, i128 0, i128 %i99
+  store %struct_template_circuit_binsum* %call97, %struct_template_circuit_binsum** %fsum100, align 8
+  br label %loop.latch101
 
-loop.latch102:                                    ; preds = %loop.body97
-  %i103 = load i128, i128* %i, align 4
-  %add104 = add i128 %i103, 1
-  store i128 %add104, i128* %i, align 4
-  %i105 = load i128, i128* %i, align 4
-  %slt106 = icmp slt i128 %i105, 8
-  br i1 %slt106, label %loop.body97, label %loop.exit107
+loop.latch101:                                    ; preds = %loop.body96
+  %i102 = load i128, i128* %i, align 4
+  %add103 = add i128 %i102, 1
+  store i128 %add103, i128* %i, align 4
+  %i104 = load i128, i128* %i, align 4
+  %slt105 = icmp slt i128 %i104, 8
+  br i1 %slt105, label %loop.body96, label %loop.exit106
 
-loop.exit107:                                     ; preds = %loop.latch102
+loop.exit106:                                     ; preds = %loop.latch101
   store i128 0, i128* %k, align 4
   store i128 0, i128* %t, align 4
   store i128 0, i128* %t, align 4
-  br label %loop.body108
+  br label %loop.body107
 
-loop.body108:                                     ; preds = %loop.latch261, %loop.exit107
-  %t109 = load i128, i128* %t, align 4
-  %slt110 = icmp slt i128 %t109, 16
-  br i1 %slt110, label %if.true, label %if.false
+loop.body107:                                     ; preds = %loop.latch260, %loop.exit106
+  %t108 = load i128, i128* %t, align 4
+  %slt109 = icmp slt i128 %t108, 16
+  br i1 %slt109, label %if.true, label %if.false
 
-if.true:                                          ; preds = %loop.body108
+if.true:                                          ; preds = %loop.body107
   store i128 0, i128* %k, align 4
-  br label %loop.body111
+  br label %loop.body110
 
-if.false:                                         ; preds = %loop.body108
+if.false:                                         ; preds = %loop.body107
   store i128 0, i128* %k, align 4
-  br label %loop.body133
+  br label %loop.body132
 
-loop.body111:                                     ; preds = %loop.latch127, %if.true
-  %inp112 = load [4096 x i128]*, [4096 x i128]** %sha256compression.inp.declare_input, align 8
-  %t113 = load i128, i128* %t, align 4
-  %mul = mul i128 %t113, 32
-  %add114 = add i128 %mul, 31
-  %k115 = load i128, i128* %k, align 4
-  %sub = sub i128 %add114, %k115
-  %array_getter116 = getelementptr inbounds [4096 x i128], [4096 x i128]* %inp112, i128 0, i128 %sub
-  %inp117 = load i128, i128* %array_getter116, align 4
-  %w118 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t119 = load i128, i128* %t, align 4
-  %k120 = load i128, i128* %k, align 4
-  %array_getter121 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w118, i128 0, i128 %t119, i128 %k120
-  %w122 = load i128, i128* %array_getter121, align 4
-  call void @fn_intrinsic_add_constraint(i128 %w122, i128 %inp117, i1* @constraint.88)
-  %ptr_getter123 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t124 = load i128, i128* %t, align 4
-  %k125 = load i128, i128* %k, align 4
-  %w126 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter123, i128 0, i128 %t124, i128 %k125
-  store i128 %inp117, i128* %w126, align 4
-  br label %loop.latch127
+loop.body110:                                     ; preds = %loop.latch126, %if.true
+  %inp111 = load [4096 x i128]*, [4096 x i128]** %sha256compression.inp.declare_input, align 8
+  %t112 = load i128, i128* %t, align 4
+  %mul = mul i128 %t112, 32
+  %add113 = add i128 %mul, 31
+  %k114 = load i128, i128* %k, align 4
+  %sub = sub i128 %add113, %k114
+  %array_getter115 = getelementptr inbounds [4096 x i128], [4096 x i128]* %inp111, i128 0, i128 %sub
+  %inp116 = load i128, i128* %array_getter115, align 4
+  %w117 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t118 = load i128, i128* %t, align 4
+  %k119 = load i128, i128* %k, align 4
+  %array_getter120 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w117, i128 0, i128 %t118, i128 %k119
+  %w121 = load i128, i128* %array_getter120, align 4
+  call void @fn_intrinsic_add_constraint(i128 %w121, i128 %inp116, i1* @constraint.88)
+  %ptr_getter122 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t123 = load i128, i128* %t, align 4
+  %k124 = load i128, i128* %k, align 4
+  %w125 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter122, i128 0, i128 %t123, i128 %k124
+  store i128 %inp116, i128* %w125, align 4
+  br label %loop.latch126
 
-loop.latch127:                                    ; preds = %loop.body111
-  %k128 = load i128, i128* %k, align 4
-  %add129 = add i128 %k128, 1
-  store i128 %add129, i128* %k, align 4
-  %k130 = load i128, i128* %k, align 4
-  %slt131 = icmp slt i128 %k130, 32
-  br i1 %slt131, label %loop.body111, label %loop.exit132
+loop.latch126:                                    ; preds = %loop.body110
+  %k127 = load i128, i128* %k, align 4
+  %add128 = add i128 %k127, 1
+  store i128 %add128, i128* %k, align 4
+  %k129 = load i128, i128* %k, align 4
+  %slt130 = icmp slt i128 %k129, 32
+  br i1 %slt130, label %loop.body110, label %loop.exit131
 
-loop.exit132:                                     ; preds = %loop.latch127
+loop.exit131:                                     ; preds = %loop.latch126
   br label %if.exit
 
-loop.body133:                                     ; preds = %loop.latch230, %if.false
-  %w134 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t135 = load i128, i128* %t, align 4
-  %sub136 = sub i128 %t135, 2
-  %k137 = load i128, i128* %k, align 4
-  %array_getter138 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w134, i128 0, i128 %sub136, i128 %k137
-  %w139 = load i128, i128* %array_getter138, align 4
-  %sigmaPlus140 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t141 = load i128, i128* %t, align 4
-  %sub142 = sub i128 %t141, 16
-  %array_getter143 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus140, i128 0, i128 %sub142
-  %sigmaPlus144 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter143, align 8
-  %struct_getter145 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus144, i32 0, i32 0
-  %sigmaplus.in2.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter145, align 8
-  %k146 = load i128, i128* %k, align 4
-  %array_getter147 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in2.read_input_outter, i128 0, i128 %k146
-  %sigmaPlus148 = load i128, i128* %array_getter147, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus148, i128 %w139, i1* @constraint.89)
-  %ptr_getter149 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t150 = load i128, i128* %t, align 4
-  %sub151 = sub i128 %t150, 16
-  %array_getter152 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter149, i128 0, i128 %sub151
-  %sigmaPlus153 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter152, align 8
-  %struct_getter154 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus153, i32 0, i32 0
-  %sigmaplus.in2.read_input_outter155 = load [4096 x i128]*, [4096 x i128]** %struct_getter154, align 8
-  %k156 = load i128, i128* %k, align 4
-  %sigmaPlus157 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in2.read_input_outter155, i128 0, i128 %k156
-  store i128 %w139, i128* %sigmaPlus157, align 4
-  %w158 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t159 = load i128, i128* %t, align 4
-  %sub160 = sub i128 %t159, 7
-  %k161 = load i128, i128* %k, align 4
-  %array_getter162 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w158, i128 0, i128 %sub160, i128 %k161
-  %w163 = load i128, i128* %array_getter162, align 4
-  %sigmaPlus164 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t165 = load i128, i128* %t, align 4
-  %sub166 = sub i128 %t165, 16
-  %array_getter167 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus164, i128 0, i128 %sub166
-  %sigmaPlus168 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter167, align 8
-  %struct_getter169 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus168, i32 0, i32 1
-  %sigmaplus.in7.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter169, align 8
-  %k170 = load i128, i128* %k, align 4
-  %array_getter171 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in7.read_input_outter, i128 0, i128 %k170
-  %sigmaPlus172 = load i128, i128* %array_getter171, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus172, i128 %w163, i1* @constraint.90)
-  %ptr_getter173 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t174 = load i128, i128* %t, align 4
-  %sub175 = sub i128 %t174, 16
-  %array_getter176 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter173, i128 0, i128 %sub175
-  %sigmaPlus177 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter176, align 8
-  %struct_getter178 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus177, i32 0, i32 1
-  %sigmaplus.in7.read_input_outter179 = load [4096 x i128]*, [4096 x i128]** %struct_getter178, align 8
-  %k180 = load i128, i128* %k, align 4
-  %sigmaPlus181 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in7.read_input_outter179, i128 0, i128 %k180
-  store i128 %w163, i128* %sigmaPlus181, align 4
-  %w182 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t183 = load i128, i128* %t, align 4
-  %sub184 = sub i128 %t183, 15
-  %k185 = load i128, i128* %k, align 4
-  %array_getter186 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w182, i128 0, i128 %sub184, i128 %k185
-  %w187 = load i128, i128* %array_getter186, align 4
-  %sigmaPlus188 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t189 = load i128, i128* %t, align 4
-  %sub190 = sub i128 %t189, 16
-  %array_getter191 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus188, i128 0, i128 %sub190
-  %sigmaPlus192 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter191, align 8
-  %struct_getter193 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus192, i32 0, i32 2
-  %sigmaplus.in15.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter193, align 8
-  %k194 = load i128, i128* %k, align 4
-  %array_getter195 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in15.read_input_outter, i128 0, i128 %k194
-  %sigmaPlus196 = load i128, i128* %array_getter195, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus196, i128 %w187, i1* @constraint.91)
-  %ptr_getter197 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t198 = load i128, i128* %t, align 4
-  %sub199 = sub i128 %t198, 16
-  %array_getter200 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter197, i128 0, i128 %sub199
-  %sigmaPlus201 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter200, align 8
-  %struct_getter202 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus201, i32 0, i32 2
-  %sigmaplus.in15.read_input_outter203 = load [4096 x i128]*, [4096 x i128]** %struct_getter202, align 8
-  %k204 = load i128, i128* %k, align 4
-  %sigmaPlus205 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in15.read_input_outter203, i128 0, i128 %k204
-  store i128 %w187, i128* %sigmaPlus205, align 4
-  %w206 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t207 = load i128, i128* %t, align 4
-  %sub208 = sub i128 %t207, 16
-  %k209 = load i128, i128* %k, align 4
-  %array_getter210 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w206, i128 0, i128 %sub208, i128 %k209
-  %w211 = load i128, i128* %array_getter210, align 4
-  %sigmaPlus212 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t213 = load i128, i128* %t, align 4
-  %sub214 = sub i128 %t213, 16
-  %array_getter215 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus212, i128 0, i128 %sub214
-  %sigmaPlus216 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter215, align 8
-  %struct_getter217 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus216, i32 0, i32 3
-  %sigmaplus.in16.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter217, align 8
-  %k218 = load i128, i128* %k, align 4
-  %array_getter219 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in16.read_input_outter, i128 0, i128 %k218
-  %sigmaPlus220 = load i128, i128* %array_getter219, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus220, i128 %w211, i1* @constraint.92)
-  %ptr_getter221 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t222 = load i128, i128* %t, align 4
-  %sub223 = sub i128 %t222, 16
-  %array_getter224 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter221, i128 0, i128 %sub223
-  %sigmaPlus225 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter224, align 8
-  %struct_getter226 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus225, i32 0, i32 3
-  %sigmaplus.in16.read_input_outter227 = load [4096 x i128]*, [4096 x i128]** %struct_getter226, align 8
-  %k228 = load i128, i128* %k, align 4
-  %sigmaPlus229 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in16.read_input_outter227, i128 0, i128 %k228
-  store i128 %w211, i128* %sigmaPlus229, align 4
-  br label %loop.latch230
+loop.body132:                                     ; preds = %loop.latch229, %if.false
+  %w133 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t134 = load i128, i128* %t, align 4
+  %sub135 = sub i128 %t134, 2
+  %k136 = load i128, i128* %k, align 4
+  %array_getter137 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w133, i128 0, i128 %sub135, i128 %k136
+  %w138 = load i128, i128* %array_getter137, align 4
+  %sigmaPlus139 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t140 = load i128, i128* %t, align 4
+  %sub141 = sub i128 %t140, 16
+  %array_getter142 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus139, i128 0, i128 %sub141
+  %sigmaPlus143 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter142, align 8
+  %struct_getter144 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus143, i32 0, i32 0
+  %sigmaplus.in2.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter144, align 8
+  %k145 = load i128, i128* %k, align 4
+  %array_getter146 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in2.read_input_outter, i128 0, i128 %k145
+  %sigmaPlus147 = load i128, i128* %array_getter146, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus147, i128 %w138, i1* @constraint.89)
+  %ptr_getter148 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t149 = load i128, i128* %t, align 4
+  %sub150 = sub i128 %t149, 16
+  %array_getter151 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter148, i128 0, i128 %sub150
+  %sigmaPlus152 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter151, align 8
+  %struct_getter153 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus152, i32 0, i32 0
+  %sigmaplus.in2.read_input_outter154 = load [4096 x i128]*, [4096 x i128]** %struct_getter153, align 8
+  %k155 = load i128, i128* %k, align 4
+  %sigmaPlus156 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in2.read_input_outter154, i128 0, i128 %k155
+  store i128 %w138, i128* %sigmaPlus156, align 4
+  %w157 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t158 = load i128, i128* %t, align 4
+  %sub159 = sub i128 %t158, 7
+  %k160 = load i128, i128* %k, align 4
+  %array_getter161 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w157, i128 0, i128 %sub159, i128 %k160
+  %w162 = load i128, i128* %array_getter161, align 4
+  %sigmaPlus163 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t164 = load i128, i128* %t, align 4
+  %sub165 = sub i128 %t164, 16
+  %array_getter166 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus163, i128 0, i128 %sub165
+  %sigmaPlus167 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter166, align 8
+  %struct_getter168 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus167, i32 0, i32 1
+  %sigmaplus.in7.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter168, align 8
+  %k169 = load i128, i128* %k, align 4
+  %array_getter170 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in7.read_input_outter, i128 0, i128 %k169
+  %sigmaPlus171 = load i128, i128* %array_getter170, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus171, i128 %w162, i1* @constraint.90)
+  %ptr_getter172 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t173 = load i128, i128* %t, align 4
+  %sub174 = sub i128 %t173, 16
+  %array_getter175 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter172, i128 0, i128 %sub174
+  %sigmaPlus176 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter175, align 8
+  %struct_getter177 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus176, i32 0, i32 1
+  %sigmaplus.in7.read_input_outter178 = load [4096 x i128]*, [4096 x i128]** %struct_getter177, align 8
+  %k179 = load i128, i128* %k, align 4
+  %sigmaPlus180 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in7.read_input_outter178, i128 0, i128 %k179
+  store i128 %w162, i128* %sigmaPlus180, align 4
+  %w181 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t182 = load i128, i128* %t, align 4
+  %sub183 = sub i128 %t182, 15
+  %k184 = load i128, i128* %k, align 4
+  %array_getter185 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w181, i128 0, i128 %sub183, i128 %k184
+  %w186 = load i128, i128* %array_getter185, align 4
+  %sigmaPlus187 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t188 = load i128, i128* %t, align 4
+  %sub189 = sub i128 %t188, 16
+  %array_getter190 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus187, i128 0, i128 %sub189
+  %sigmaPlus191 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter190, align 8
+  %struct_getter192 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus191, i32 0, i32 2
+  %sigmaplus.in15.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter192, align 8
+  %k193 = load i128, i128* %k, align 4
+  %array_getter194 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in15.read_input_outter, i128 0, i128 %k193
+  %sigmaPlus195 = load i128, i128* %array_getter194, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus195, i128 %w186, i1* @constraint.91)
+  %ptr_getter196 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t197 = load i128, i128* %t, align 4
+  %sub198 = sub i128 %t197, 16
+  %array_getter199 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter196, i128 0, i128 %sub198
+  %sigmaPlus200 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter199, align 8
+  %struct_getter201 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus200, i32 0, i32 2
+  %sigmaplus.in15.read_input_outter202 = load [4096 x i128]*, [4096 x i128]** %struct_getter201, align 8
+  %k203 = load i128, i128* %k, align 4
+  %sigmaPlus204 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in15.read_input_outter202, i128 0, i128 %k203
+  store i128 %w186, i128* %sigmaPlus204, align 4
+  %w205 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t206 = load i128, i128* %t, align 4
+  %sub207 = sub i128 %t206, 16
+  %k208 = load i128, i128* %k, align 4
+  %array_getter209 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w205, i128 0, i128 %sub207, i128 %k208
+  %w210 = load i128, i128* %array_getter209, align 4
+  %sigmaPlus211 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t212 = load i128, i128* %t, align 4
+  %sub213 = sub i128 %t212, 16
+  %array_getter214 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus211, i128 0, i128 %sub213
+  %sigmaPlus215 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter214, align 8
+  %struct_getter216 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus215, i32 0, i32 3
+  %sigmaplus.in16.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter216, align 8
+  %k217 = load i128, i128* %k, align 4
+  %array_getter218 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in16.read_input_outter, i128 0, i128 %k217
+  %sigmaPlus219 = load i128, i128* %array_getter218, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sigmaPlus219, i128 %w210, i1* @constraint.92)
+  %ptr_getter220 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t221 = load i128, i128* %t, align 4
+  %sub222 = sub i128 %t221, 16
+  %array_getter223 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %ptr_getter220, i128 0, i128 %sub222
+  %sigmaPlus224 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter223, align 8
+  %struct_getter225 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus224, i32 0, i32 3
+  %sigmaplus.in16.read_input_outter226 = load [4096 x i128]*, [4096 x i128]** %struct_getter225, align 8
+  %k227 = load i128, i128* %k, align 4
+  %sigmaPlus228 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.in16.read_input_outter226, i128 0, i128 %k227
+  store i128 %w210, i128* %sigmaPlus228, align 4
+  br label %loop.latch229
 
-loop.latch230:                                    ; preds = %loop.body133
-  %k231 = load i128, i128* %k, align 4
-  %add232 = add i128 %k231, 1
-  store i128 %add232, i128* %k, align 4
-  %k233 = load i128, i128* %k, align 4
-  %slt234 = icmp slt i128 %k233, 32
-  br i1 %slt234, label %loop.body133, label %loop.exit235
+loop.latch229:                                    ; preds = %loop.body132
+  %k230 = load i128, i128* %k, align 4
+  %add231 = add i128 %k230, 1
+  store i128 %add231, i128* %k, align 4
+  %k232 = load i128, i128* %k, align 4
+  %slt233 = icmp slt i128 %k232, 32
+  br i1 %slt233, label %loop.body132, label %loop.exit234
 
-loop.exit235:                                     ; preds = %loop.latch230
+loop.exit234:                                     ; preds = %loop.latch229
   store i128 0, i128* %k, align 4
-  br label %loop.body236
+  br label %loop.body235
 
-loop.body236:                                     ; preds = %loop.latch255, %loop.exit235
-  %sigmaPlus237 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
-  %t238 = load i128, i128* %t, align 4
-  %sub239 = sub i128 %t238, 16
-  %array_getter240 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus237, i128 0, i128 %sub239
-  %sigmaPlus241 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter240, align 8
-  %struct_getter242 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus241, i32 0, i32 4
-  %sigmaplus.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter242, align 8
-  %k243 = load i128, i128* %k, align 4
-  %array_getter244 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.out.read_output_outter, i128 0, i128 %k243
-  %sigmaPlus245 = load i128, i128* %array_getter244, align 4
-  %w246 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t247 = load i128, i128* %t, align 4
-  %k248 = load i128, i128* %k, align 4
-  %array_getter249 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w246, i128 0, i128 %t247, i128 %k248
-  %w250 = load i128, i128* %array_getter249, align 4
-  call void @fn_intrinsic_add_constraint(i128 %w250, i128 %sigmaPlus245, i1* @constraint.93)
-  %ptr_getter251 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t252 = load i128, i128* %t, align 4
-  %k253 = load i128, i128* %k, align 4
-  %w254 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter251, i128 0, i128 %t252, i128 %k253
-  store i128 %sigmaPlus245, i128* %w254, align 4
-  br label %loop.latch255
+loop.body235:                                     ; preds = %loop.latch254, %loop.exit234
+  %sigmaPlus236 = load [4096 x %struct_template_circuit_sigmaplus*]*, [4096 x %struct_template_circuit_sigmaplus*]** %sigmaPlus, align 8
+  %t237 = load i128, i128* %t, align 4
+  %sub238 = sub i128 %t237, 16
+  %array_getter239 = getelementptr inbounds [4096 x %struct_template_circuit_sigmaplus*], [4096 x %struct_template_circuit_sigmaplus*]* %sigmaPlus236, i128 0, i128 %sub238
+  %sigmaPlus240 = load %struct_template_circuit_sigmaplus*, %struct_template_circuit_sigmaplus** %array_getter239, align 8
+  %struct_getter241 = getelementptr inbounds %struct_template_circuit_sigmaplus, %struct_template_circuit_sigmaplus* %sigmaPlus240, i32 0, i32 4
+  %sigmaplus.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter241, align 8
+  %k242 = load i128, i128* %k, align 4
+  %array_getter243 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sigmaplus.out.read_output_outter, i128 0, i128 %k242
+  %sigmaPlus244 = load i128, i128* %array_getter243, align 4
+  %w245 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t246 = load i128, i128* %t, align 4
+  %k247 = load i128, i128* %k, align 4
+  %array_getter248 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w245, i128 0, i128 %t246, i128 %k247
+  %w249 = load i128, i128* %array_getter248, align 4
+  call void @fn_intrinsic_add_constraint(i128 %w249, i128 %sigmaPlus244, i1* @constraint.93)
+  %ptr_getter250 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t251 = load i128, i128* %t, align 4
+  %k252 = load i128, i128* %k, align 4
+  %w253 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter250, i128 0, i128 %t251, i128 %k252
+  store i128 %sigmaPlus244, i128* %w253, align 4
+  br label %loop.latch254
 
-loop.latch255:                                    ; preds = %loop.body236
-  %k256 = load i128, i128* %k, align 4
-  %add257 = add i128 %k256, 1
-  store i128 %add257, i128* %k, align 4
-  %k258 = load i128, i128* %k, align 4
-  %slt259 = icmp slt i128 %k258, 32
-  br i1 %slt259, label %loop.body236, label %loop.exit260
+loop.latch254:                                    ; preds = %loop.body235
+  %k255 = load i128, i128* %k, align 4
+  %add256 = add i128 %k255, 1
+  store i128 %add256, i128* %k, align 4
+  %k257 = load i128, i128* %k, align 4
+  %slt258 = icmp slt i128 %k257, 32
+  br i1 %slt258, label %loop.body235, label %loop.exit259
 
-loop.exit260:                                     ; preds = %loop.latch255
+loop.exit259:                                     ; preds = %loop.latch254
   br label %if.exit
 
-if.exit:                                          ; preds = %loop.exit260, %loop.exit132
-  br label %loop.latch261
+if.exit:                                          ; preds = %loop.exit259, %loop.exit131
+  br label %loop.latch260
 
-loop.latch261:                                    ; preds = %if.exit
-  %t262 = load i128, i128* %t, align 4
-  %add263 = add i128 %t262, 1
-  store i128 %add263, i128* %t, align 4
-  %t264 = load i128, i128* %t, align 4
-  %slt265 = icmp slt i128 %t264, 64
-  br i1 %slt265, label %loop.body108, label %loop.exit266
+loop.latch260:                                    ; preds = %if.exit
+  %t261 = load i128, i128* %t, align 4
+  %add262 = add i128 %t261, 1
+  store i128 %add262, i128* %t, align 4
+  %t263 = load i128, i128* %t, align 4
+  %slt264 = icmp slt i128 %t263, 64
+  br i1 %slt264, label %loop.body107, label %loop.exit265
 
-loop.exit266:                                     ; preds = %loop.latch261
+loop.exit265:                                     ; preds = %loop.latch260
   store i128 0, i128* %k, align 4
-  br label %loop.body267
+  br label %loop.body266
 
-loop.body267:                                     ; preds = %loop.latch363, %loop.exit266
-  %hin268 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k269 = load i128, i128* %k, align 4
-  %array_getter270 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin268, i128 0, i128 %k269
-  %hin271 = load i128, i128* %array_getter270, align 4
-  %a272 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %k273 = load i128, i128* %k, align 4
-  %array_getter274 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a272, i128 0, i128 0, i128 %k273
-  %a275 = load i128, i128* %array_getter274, align 4
-  call void @fn_intrinsic_add_constraint(i128 %a275, i128 %hin271, i1* @constraint.94)
-  %ptr_getter276 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %k277 = load i128, i128* %k, align 4
-  %a278 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter276, i128 0, i128 0, i128 %k277
-  store i128 %hin271, i128* %a278, align 4
-  %hin279 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k280 = load i128, i128* %k, align 4
-  %add281 = add i128 32, %k280
-  %array_getter282 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin279, i128 0, i128 %add281
-  %hin283 = load i128, i128* %array_getter282, align 4
-  %b284 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %k285 = load i128, i128* %k, align 4
-  %array_getter286 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b284, i128 0, i128 0, i128 %k285
-  %b287 = load i128, i128* %array_getter286, align 4
-  call void @fn_intrinsic_add_constraint(i128 %b287, i128 %hin283, i1* @constraint.95)
-  %ptr_getter288 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %k289 = load i128, i128* %k, align 4
-  %b290 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter288, i128 0, i128 0, i128 %k289
-  store i128 %hin283, i128* %b290, align 4
-  %hin291 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k292 = load i128, i128* %k, align 4
-  %add293 = add i128 64, %k292
-  %array_getter294 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin291, i128 0, i128 %add293
-  %hin295 = load i128, i128* %array_getter294, align 4
-  %c296 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %k297 = load i128, i128* %k, align 4
-  %array_getter298 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c296, i128 0, i128 0, i128 %k297
-  %c299 = load i128, i128* %array_getter298, align 4
-  call void @fn_intrinsic_add_constraint(i128 %c299, i128 %hin295, i1* @constraint.96)
-  %ptr_getter300 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %k301 = load i128, i128* %k, align 4
-  %c302 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter300, i128 0, i128 0, i128 %k301
-  store i128 %hin295, i128* %c302, align 4
-  %hin303 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k304 = load i128, i128* %k, align 4
-  %add305 = add i128 96, %k304
-  %array_getter306 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin303, i128 0, i128 %add305
-  %hin307 = load i128, i128* %array_getter306, align 4
-  %d308 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %k309 = load i128, i128* %k, align 4
-  %array_getter310 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d308, i128 0, i128 0, i128 %k309
-  %d311 = load i128, i128* %array_getter310, align 4
-  call void @fn_intrinsic_add_constraint(i128 %d311, i128 %hin307, i1* @constraint.97)
-  %ptr_getter312 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %k313 = load i128, i128* %k, align 4
-  %d314 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter312, i128 0, i128 0, i128 %k313
-  store i128 %hin307, i128* %d314, align 4
-  %hin315 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k316 = load i128, i128* %k, align 4
-  %add317 = add i128 128, %k316
-  %array_getter318 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin315, i128 0, i128 %add317
-  %hin319 = load i128, i128* %array_getter318, align 4
-  %e320 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %k321 = load i128, i128* %k, align 4
-  %array_getter322 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e320, i128 0, i128 0, i128 %k321
-  %e323 = load i128, i128* %array_getter322, align 4
-  call void @fn_intrinsic_add_constraint(i128 %e323, i128 %hin319, i1* @constraint.98)
-  %ptr_getter324 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %k325 = load i128, i128* %k, align 4
-  %e326 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter324, i128 0, i128 0, i128 %k325
-  store i128 %hin319, i128* %e326, align 4
-  %hin327 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k328 = load i128, i128* %k, align 4
-  %add329 = add i128 160, %k328
-  %array_getter330 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin327, i128 0, i128 %add329
-  %hin331 = load i128, i128* %array_getter330, align 4
-  %f332 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %k333 = load i128, i128* %k, align 4
-  %array_getter334 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f332, i128 0, i128 0, i128 %k333
-  %f335 = load i128, i128* %array_getter334, align 4
-  call void @fn_intrinsic_add_constraint(i128 %f335, i128 %hin331, i1* @constraint.99)
-  %ptr_getter336 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %k337 = load i128, i128* %k, align 4
-  %f338 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter336, i128 0, i128 0, i128 %k337
-  store i128 %hin331, i128* %f338, align 4
-  %hin339 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k340 = load i128, i128* %k, align 4
-  %add341 = add i128 192, %k340
-  %array_getter342 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin339, i128 0, i128 %add341
-  %hin343 = load i128, i128* %array_getter342, align 4
-  %g344 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %k345 = load i128, i128* %k, align 4
-  %array_getter346 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g344, i128 0, i128 0, i128 %k345
-  %g347 = load i128, i128* %array_getter346, align 4
-  call void @fn_intrinsic_add_constraint(i128 %g347, i128 %hin343, i1* @constraint.100)
-  %ptr_getter348 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %k349 = load i128, i128* %k, align 4
-  %g350 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter348, i128 0, i128 0, i128 %k349
-  store i128 %hin343, i128* %g350, align 4
-  %hin351 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k352 = load i128, i128* %k, align 4
-  %add353 = add i128 224, %k352
-  %array_getter354 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin351, i128 0, i128 %add353
-  %hin355 = load i128, i128* %array_getter354, align 4
-  %h356 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
-  %k357 = load i128, i128* %k, align 4
-  %array_getter358 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h356, i128 0, i128 0, i128 %k357
-  %h359 = load i128, i128* %array_getter358, align 4
-  call void @fn_intrinsic_add_constraint(i128 %h359, i128 %hin355, i1* @constraint.101)
-  %ptr_getter360 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
-  %k361 = load i128, i128* %k, align 4
-  %h362 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter360, i128 0, i128 0, i128 %k361
-  store i128 %hin355, i128* %h362, align 4
-  br label %loop.latch363
+loop.body266:                                     ; preds = %loop.latch362, %loop.exit265
+  %hin267 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k268 = load i128, i128* %k, align 4
+  %array_getter269 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin267, i128 0, i128 %k268
+  %hin270 = load i128, i128* %array_getter269, align 4
+  %a271 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %k272 = load i128, i128* %k, align 4
+  %array_getter273 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a271, i128 0, i128 0, i128 %k272
+  %a274 = load i128, i128* %array_getter273, align 4
+  call void @fn_intrinsic_add_constraint(i128 %a274, i128 %hin270, i1* @constraint.94)
+  %ptr_getter275 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %k276 = load i128, i128* %k, align 4
+  %a277 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter275, i128 0, i128 0, i128 %k276
+  store i128 %hin270, i128* %a277, align 4
+  %hin278 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k279 = load i128, i128* %k, align 4
+  %add280 = add i128 32, %k279
+  %array_getter281 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin278, i128 0, i128 %add280
+  %hin282 = load i128, i128* %array_getter281, align 4
+  %b283 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %k284 = load i128, i128* %k, align 4
+  %array_getter285 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b283, i128 0, i128 0, i128 %k284
+  %b286 = load i128, i128* %array_getter285, align 4
+  call void @fn_intrinsic_add_constraint(i128 %b286, i128 %hin282, i1* @constraint.95)
+  %ptr_getter287 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %k288 = load i128, i128* %k, align 4
+  %b289 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter287, i128 0, i128 0, i128 %k288
+  store i128 %hin282, i128* %b289, align 4
+  %hin290 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k291 = load i128, i128* %k, align 4
+  %add292 = add i128 64, %k291
+  %array_getter293 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin290, i128 0, i128 %add292
+  %hin294 = load i128, i128* %array_getter293, align 4
+  %c295 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %k296 = load i128, i128* %k, align 4
+  %array_getter297 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c295, i128 0, i128 0, i128 %k296
+  %c298 = load i128, i128* %array_getter297, align 4
+  call void @fn_intrinsic_add_constraint(i128 %c298, i128 %hin294, i1* @constraint.96)
+  %ptr_getter299 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %k300 = load i128, i128* %k, align 4
+  %c301 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter299, i128 0, i128 0, i128 %k300
+  store i128 %hin294, i128* %c301, align 4
+  %hin302 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k303 = load i128, i128* %k, align 4
+  %add304 = add i128 96, %k303
+  %array_getter305 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin302, i128 0, i128 %add304
+  %hin306 = load i128, i128* %array_getter305, align 4
+  %d307 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %k308 = load i128, i128* %k, align 4
+  %array_getter309 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d307, i128 0, i128 0, i128 %k308
+  %d310 = load i128, i128* %array_getter309, align 4
+  call void @fn_intrinsic_add_constraint(i128 %d310, i128 %hin306, i1* @constraint.97)
+  %ptr_getter311 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %k312 = load i128, i128* %k, align 4
+  %d313 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter311, i128 0, i128 0, i128 %k312
+  store i128 %hin306, i128* %d313, align 4
+  %hin314 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k315 = load i128, i128* %k, align 4
+  %add316 = add i128 128, %k315
+  %array_getter317 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin314, i128 0, i128 %add316
+  %hin318 = load i128, i128* %array_getter317, align 4
+  %e319 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %k320 = load i128, i128* %k, align 4
+  %array_getter321 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e319, i128 0, i128 0, i128 %k320
+  %e322 = load i128, i128* %array_getter321, align 4
+  call void @fn_intrinsic_add_constraint(i128 %e322, i128 %hin318, i1* @constraint.98)
+  %ptr_getter323 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %k324 = load i128, i128* %k, align 4
+  %e325 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter323, i128 0, i128 0, i128 %k324
+  store i128 %hin318, i128* %e325, align 4
+  %hin326 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k327 = load i128, i128* %k, align 4
+  %add328 = add i128 160, %k327
+  %array_getter329 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin326, i128 0, i128 %add328
+  %hin330 = load i128, i128* %array_getter329, align 4
+  %f331 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %k332 = load i128, i128* %k, align 4
+  %array_getter333 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f331, i128 0, i128 0, i128 %k332
+  %f334 = load i128, i128* %array_getter333, align 4
+  call void @fn_intrinsic_add_constraint(i128 %f334, i128 %hin330, i1* @constraint.99)
+  %ptr_getter335 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %k336 = load i128, i128* %k, align 4
+  %f337 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter335, i128 0, i128 0, i128 %k336
+  store i128 %hin330, i128* %f337, align 4
+  %hin338 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k339 = load i128, i128* %k, align 4
+  %add340 = add i128 192, %k339
+  %array_getter341 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin338, i128 0, i128 %add340
+  %hin342 = load i128, i128* %array_getter341, align 4
+  %g343 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %k344 = load i128, i128* %k, align 4
+  %array_getter345 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g343, i128 0, i128 0, i128 %k344
+  %g346 = load i128, i128* %array_getter345, align 4
+  call void @fn_intrinsic_add_constraint(i128 %g346, i128 %hin342, i1* @constraint.100)
+  %ptr_getter347 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %k348 = load i128, i128* %k, align 4
+  %g349 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter347, i128 0, i128 0, i128 %k348
+  store i128 %hin342, i128* %g349, align 4
+  %hin350 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k351 = load i128, i128* %k, align 4
+  %add352 = add i128 224, %k351
+  %array_getter353 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin350, i128 0, i128 %add352
+  %hin354 = load i128, i128* %array_getter353, align 4
+  %h355 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %k356 = load i128, i128* %k, align 4
+  %array_getter357 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h355, i128 0, i128 0, i128 %k356
+  %h358 = load i128, i128* %array_getter357, align 4
+  call void @fn_intrinsic_add_constraint(i128 %h358, i128 %hin354, i1* @constraint.101)
+  %ptr_getter359 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %k360 = load i128, i128* %k, align 4
+  %h361 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter359, i128 0, i128 0, i128 %k360
+  store i128 %hin354, i128* %h361, align 4
+  br label %loop.latch362
 
-loop.latch363:                                    ; preds = %loop.body267
-  %k364 = load i128, i128* %k, align 4
-  %add365 = add i128 %k364, 1
-  store i128 %add365, i128* %k, align 4
-  %k366 = load i128, i128* %k, align 4
-  %slt367 = icmp slt i128 %k366, 32
-  br i1 %slt367, label %loop.body267, label %loop.exit368
+loop.latch362:                                    ; preds = %loop.body266
+  %k363 = load i128, i128* %k, align 4
+  %add364 = add i128 %k363, 1
+  store i128 %add364, i128* %k, align 4
+  %k365 = load i128, i128* %k, align 4
+  %slt366 = icmp slt i128 %k365, 32
+  br i1 %slt366, label %loop.body266, label %loop.exit367
 
-loop.exit368:                                     ; preds = %loop.latch363
+loop.exit367:                                     ; preds = %loop.latch362
   store i128 0, i128* %t, align 4
+  br label %loop.body368
+
+loop.body368:                                     ; preds = %loop.latch814, %loop.exit367
+  store i128 0, i128* %k, align 4
   br label %loop.body369
 
-loop.body369:                                     ; preds = %loop.latch815, %loop.exit368
+loop.body369:                                     ; preds = %loop.latch562, %loop.body368
+  %h370 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %t371 = load i128, i128* %t, align 4
+  %k372 = load i128, i128* %k, align 4
+  %array_getter373 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h370, i128 0, i128 %t371, i128 %k372
+  %h374 = load i128, i128* %array_getter373, align 4
+  %t1375 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t376 = load i128, i128* %t, align 4
+  %array_getter377 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1375, i128 0, i128 %t376
+  %t1378 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter377, align 8
+  %struct_getter379 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1378, i32 0, i32 0
+  %t1.h.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter379, align 8
+  %k380 = load i128, i128* %k, align 4
+  %array_getter381 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.h.read_input_outter, i128 0, i128 %k380
+  %t1382 = load i128, i128* %array_getter381, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t1382, i128 %h374, i1* @constraint.102)
+  %ptr_getter383 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t384 = load i128, i128* %t, align 4
+  %array_getter385 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter383, i128 0, i128 %t384
+  %t1386 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter385, align 8
+  %struct_getter387 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1386, i32 0, i32 0
+  %t1.h.read_input_outter388 = load [4096 x i128]*, [4096 x i128]** %struct_getter387, align 8
+  %k389 = load i128, i128* %k, align 4
+  %t1390 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.h.read_input_outter388, i128 0, i128 %k389
+  store i128 %h374, i128* %t1390, align 4
+  %e391 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %t392 = load i128, i128* %t, align 4
+  %k393 = load i128, i128* %k, align 4
+  %array_getter394 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e391, i128 0, i128 %t392, i128 %k393
+  %e395 = load i128, i128* %array_getter394, align 4
+  %t1396 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t397 = load i128, i128* %t, align 4
+  %array_getter398 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1396, i128 0, i128 %t397
+  %t1399 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter398, align 8
+  %struct_getter400 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1399, i32 0, i32 1
+  %t1.e.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter400, align 8
+  %k401 = load i128, i128* %k, align 4
+  %array_getter402 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.e.read_input_outter, i128 0, i128 %k401
+  %t1403 = load i128, i128* %array_getter402, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t1403, i128 %e395, i1* @constraint.103)
+  %ptr_getter404 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t405 = load i128, i128* %t, align 4
+  %array_getter406 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter404, i128 0, i128 %t405
+  %t1407 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter406, align 8
+  %struct_getter408 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1407, i32 0, i32 1
+  %t1.e.read_input_outter409 = load [4096 x i128]*, [4096 x i128]** %struct_getter408, align 8
+  %k410 = load i128, i128* %k, align 4
+  %t1411 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.e.read_input_outter409, i128 0, i128 %k410
+  store i128 %e395, i128* %t1411, align 4
+  %f412 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %t413 = load i128, i128* %t, align 4
+  %k414 = load i128, i128* %k, align 4
+  %array_getter415 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f412, i128 0, i128 %t413, i128 %k414
+  %f416 = load i128, i128* %array_getter415, align 4
+  %t1417 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t418 = load i128, i128* %t, align 4
+  %array_getter419 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1417, i128 0, i128 %t418
+  %t1420 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter419, align 8
+  %struct_getter421 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1420, i32 0, i32 2
+  %t1.f.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter421, align 8
+  %k422 = load i128, i128* %k, align 4
+  %array_getter423 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.f.read_input_outter, i128 0, i128 %k422
+  %t1424 = load i128, i128* %array_getter423, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t1424, i128 %f416, i1* @constraint.104)
+  %ptr_getter425 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t426 = load i128, i128* %t, align 4
+  %array_getter427 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter425, i128 0, i128 %t426
+  %t1428 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter427, align 8
+  %struct_getter429 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1428, i32 0, i32 2
+  %t1.f.read_input_outter430 = load [4096 x i128]*, [4096 x i128]** %struct_getter429, align 8
+  %k431 = load i128, i128* %k, align 4
+  %t1432 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.f.read_input_outter430, i128 0, i128 %k431
+  store i128 %f416, i128* %t1432, align 4
+  %g433 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %t434 = load i128, i128* %t, align 4
+  %k435 = load i128, i128* %k, align 4
+  %array_getter436 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g433, i128 0, i128 %t434, i128 %k435
+  %g437 = load i128, i128* %array_getter436, align 4
+  %t1438 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t439 = load i128, i128* %t, align 4
+  %array_getter440 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1438, i128 0, i128 %t439
+  %t1441 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter440, align 8
+  %struct_getter442 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1441, i32 0, i32 3
+  %t1.g.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter442, align 8
+  %k443 = load i128, i128* %k, align 4
+  %array_getter444 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.g.read_input_outter, i128 0, i128 %k443
+  %t1445 = load i128, i128* %array_getter444, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t1445, i128 %g437, i1* @constraint.105)
+  %ptr_getter446 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t447 = load i128, i128* %t, align 4
+  %array_getter448 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter446, i128 0, i128 %t447
+  %t1449 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter448, align 8
+  %struct_getter450 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1449, i32 0, i32 3
+  %t1.g.read_input_outter451 = load [4096 x i128]*, [4096 x i128]** %struct_getter450, align 8
+  %k452 = load i128, i128* %k, align 4
+  %t1453 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.g.read_input_outter451, i128 0, i128 %k452
+  store i128 %g437, i128* %t1453, align 4
+  %ct_k454 = load [4096 x %struct_template_circuit_k*]*, [4096 x %struct_template_circuit_k*]** %ct_k, align 8
+  %t455 = load i128, i128* %t, align 4
+  %array_getter456 = getelementptr inbounds [4096 x %struct_template_circuit_k*], [4096 x %struct_template_circuit_k*]* %ct_k454, i128 0, i128 %t455
+  %ct_k457 = load %struct_template_circuit_k*, %struct_template_circuit_k** %array_getter456, align 8
+  %struct_getter458 = getelementptr inbounds %struct_template_circuit_k, %struct_template_circuit_k* %ct_k457, i32 0, i32 1
+  %k.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter458, align 8
+  %k459 = load i128, i128* %k, align 4
+  %array_getter460 = getelementptr inbounds [4096 x i128], [4096 x i128]* %k.out.read_output_outter, i128 0, i128 %k459
+  %ct_k461 = load i128, i128* %array_getter460, align 4
+  %t1462 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t463 = load i128, i128* %t, align 4
+  %array_getter464 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1462, i128 0, i128 %t463
+  %t1465 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter464, align 8
+  %struct_getter466 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1465, i32 0, i32 4
+  %t1.k.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter466, align 8
+  %k467 = load i128, i128* %k, align 4
+  %array_getter468 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.k.read_input_outter, i128 0, i128 %k467
+  %t1469 = load i128, i128* %array_getter468, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t1469, i128 %ct_k461, i1* @constraint.106)
+  %ptr_getter470 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t471 = load i128, i128* %t, align 4
+  %array_getter472 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter470, i128 0, i128 %t471
+  %t1473 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter472, align 8
+  %struct_getter474 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1473, i32 0, i32 4
+  %t1.k.read_input_outter475 = load [4096 x i128]*, [4096 x i128]** %struct_getter474, align 8
+  %k476 = load i128, i128* %k, align 4
+  %t1477 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.k.read_input_outter475, i128 0, i128 %k476
+  store i128 %ct_k461, i128* %t1477, align 4
+  %w478 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  %t479 = load i128, i128* %t, align 4
+  %k480 = load i128, i128* %k, align 4
+  %array_getter481 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w478, i128 0, i128 %t479, i128 %k480
+  %w482 = load i128, i128* %array_getter481, align 4
+  %t1483 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t484 = load i128, i128* %t, align 4
+  %array_getter485 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1483, i128 0, i128 %t484
+  %t1486 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter485, align 8
+  %struct_getter487 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1486, i32 0, i32 5
+  %t1.w.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter487, align 8
+  %k488 = load i128, i128* %k, align 4
+  %array_getter489 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.w.read_input_outter, i128 0, i128 %k488
+  %t1490 = load i128, i128* %array_getter489, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t1490, i128 %w482, i1* @constraint.107)
+  %ptr_getter491 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t492 = load i128, i128* %t, align 4
+  %array_getter493 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter491, i128 0, i128 %t492
+  %t1494 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter493, align 8
+  %struct_getter495 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1494, i32 0, i32 5
+  %t1.w.read_input_outter496 = load [4096 x i128]*, [4096 x i128]** %struct_getter495, align 8
+  %k497 = load i128, i128* %k, align 4
+  %t1498 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.w.read_input_outter496, i128 0, i128 %k497
+  store i128 %w482, i128* %t1498, align 4
+  %a499 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %t500 = load i128, i128* %t, align 4
+  %k501 = load i128, i128* %k, align 4
+  %array_getter502 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a499, i128 0, i128 %t500, i128 %k501
+  %a503 = load i128, i128* %array_getter502, align 4
+  %t2504 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t505 = load i128, i128* %t, align 4
+  %array_getter506 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2504, i128 0, i128 %t505
+  %t2507 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter506, align 8
+  %struct_getter508 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2507, i32 0, i32 0
+  %t2.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter508, align 8
+  %k509 = load i128, i128* %k, align 4
+  %array_getter510 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.a.read_input_outter, i128 0, i128 %k509
+  %t2511 = load i128, i128* %array_getter510, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t2511, i128 %a503, i1* @constraint.108)
+  %ptr_getter512 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t513 = load i128, i128* %t, align 4
+  %array_getter514 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter512, i128 0, i128 %t513
+  %t2515 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter514, align 8
+  %struct_getter516 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2515, i32 0, i32 0
+  %t2.a.read_input_outter517 = load [4096 x i128]*, [4096 x i128]** %struct_getter516, align 8
+  %k518 = load i128, i128* %k, align 4
+  %t2519 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.a.read_input_outter517, i128 0, i128 %k518
+  store i128 %a503, i128* %t2519, align 4
+  %b520 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %t521 = load i128, i128* %t, align 4
+  %k522 = load i128, i128* %k, align 4
+  %array_getter523 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b520, i128 0, i128 %t521, i128 %k522
+  %b524 = load i128, i128* %array_getter523, align 4
+  %t2525 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t526 = load i128, i128* %t, align 4
+  %array_getter527 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2525, i128 0, i128 %t526
+  %t2528 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter527, align 8
+  %struct_getter529 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2528, i32 0, i32 1
+  %t2.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter529, align 8
+  %k530 = load i128, i128* %k, align 4
+  %array_getter531 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.b.read_input_outter, i128 0, i128 %k530
+  %t2532 = load i128, i128* %array_getter531, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t2532, i128 %b524, i1* @constraint.109)
+  %ptr_getter533 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t534 = load i128, i128* %t, align 4
+  %array_getter535 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter533, i128 0, i128 %t534
+  %t2536 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter535, align 8
+  %struct_getter537 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2536, i32 0, i32 1
+  %t2.b.read_input_outter538 = load [4096 x i128]*, [4096 x i128]** %struct_getter537, align 8
+  %k539 = load i128, i128* %k, align 4
+  %t2540 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.b.read_input_outter538, i128 0, i128 %k539
+  store i128 %b524, i128* %t2540, align 4
+  %c541 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %t542 = load i128, i128* %t, align 4
+  %k543 = load i128, i128* %k, align 4
+  %array_getter544 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c541, i128 0, i128 %t542, i128 %k543
+  %c545 = load i128, i128* %array_getter544, align 4
+  %t2546 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t547 = load i128, i128* %t, align 4
+  %array_getter548 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2546, i128 0, i128 %t547
+  %t2549 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter548, align 8
+  %struct_getter550 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2549, i32 0, i32 2
+  %t2.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter550, align 8
+  %k551 = load i128, i128* %k, align 4
+  %array_getter552 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.c.read_input_outter, i128 0, i128 %k551
+  %t2553 = load i128, i128* %array_getter552, align 4
+  call void @fn_intrinsic_add_constraint(i128 %t2553, i128 %c545, i1* @constraint.110)
+  %ptr_getter554 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t555 = load i128, i128* %t, align 4
+  %array_getter556 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter554, i128 0, i128 %t555
+  %t2557 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter556, align 8
+  %struct_getter558 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2557, i32 0, i32 2
+  %t2.c.read_input_outter559 = load [4096 x i128]*, [4096 x i128]** %struct_getter558, align 8
+  %k560 = load i128, i128* %k, align 4
+  %t2561 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.c.read_input_outter559, i128 0, i128 %k560
+  store i128 %c545, i128* %t2561, align 4
+  br label %loop.latch562
+
+loop.latch562:                                    ; preds = %loop.body369
+  %k563 = load i128, i128* %k, align 4
+  %add564 = add i128 %k563, 1
+  store i128 %add564, i128* %k, align 4
+  %k565 = load i128, i128* %k, align 4
+  %slt566 = icmp slt i128 %k565, 32
+  br i1 %slt566, label %loop.body369, label %loop.exit567
+
+loop.exit567:                                     ; preds = %loop.latch562
   store i128 0, i128* %k, align 4
-  br label %loop.body370
+  br label %loop.body568
 
-loop.body370:                                     ; preds = %loop.latch563, %loop.body369
-  %h371 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
-  %t372 = load i128, i128* %t, align 4
-  %k373 = load i128, i128* %k, align 4
-  %array_getter374 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h371, i128 0, i128 %t372, i128 %k373
-  %h375 = load i128, i128* %array_getter374, align 4
-  %t1376 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t377 = load i128, i128* %t, align 4
-  %array_getter378 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1376, i128 0, i128 %t377
-  %t1379 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter378, align 8
-  %struct_getter380 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1379, i32 0, i32 0
-  %t1.h.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter380, align 8
-  %k381 = load i128, i128* %k, align 4
-  %array_getter382 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.h.read_input_outter, i128 0, i128 %k381
-  %t1383 = load i128, i128* %array_getter382, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t1383, i128 %h375, i1* @constraint.102)
-  %ptr_getter384 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t385 = load i128, i128* %t, align 4
-  %array_getter386 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter384, i128 0, i128 %t385
-  %t1387 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter386, align 8
-  %struct_getter388 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1387, i32 0, i32 0
-  %t1.h.read_input_outter389 = load [4096 x i128]*, [4096 x i128]** %struct_getter388, align 8
-  %k390 = load i128, i128* %k, align 4
-  %t1391 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.h.read_input_outter389, i128 0, i128 %k390
-  store i128 %h375, i128* %t1391, align 4
-  %e392 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %t393 = load i128, i128* %t, align 4
-  %k394 = load i128, i128* %k, align 4
-  %array_getter395 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e392, i128 0, i128 %t393, i128 %k394
-  %e396 = load i128, i128* %array_getter395, align 4
-  %t1397 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t398 = load i128, i128* %t, align 4
-  %array_getter399 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1397, i128 0, i128 %t398
-  %t1400 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter399, align 8
-  %struct_getter401 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1400, i32 0, i32 1
-  %t1.e.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter401, align 8
-  %k402 = load i128, i128* %k, align 4
-  %array_getter403 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.e.read_input_outter, i128 0, i128 %k402
-  %t1404 = load i128, i128* %array_getter403, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t1404, i128 %e396, i1* @constraint.103)
-  %ptr_getter405 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t406 = load i128, i128* %t, align 4
-  %array_getter407 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter405, i128 0, i128 %t406
-  %t1408 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter407, align 8
-  %struct_getter409 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1408, i32 0, i32 1
-  %t1.e.read_input_outter410 = load [4096 x i128]*, [4096 x i128]** %struct_getter409, align 8
-  %k411 = load i128, i128* %k, align 4
-  %t1412 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.e.read_input_outter410, i128 0, i128 %k411
-  store i128 %e396, i128* %t1412, align 4
-  %f413 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %t414 = load i128, i128* %t, align 4
-  %k415 = load i128, i128* %k, align 4
-  %array_getter416 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f413, i128 0, i128 %t414, i128 %k415
-  %f417 = load i128, i128* %array_getter416, align 4
-  %t1418 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t419 = load i128, i128* %t, align 4
-  %array_getter420 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1418, i128 0, i128 %t419
-  %t1421 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter420, align 8
-  %struct_getter422 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1421, i32 0, i32 2
-  %t1.f.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter422, align 8
-  %k423 = load i128, i128* %k, align 4
-  %array_getter424 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.f.read_input_outter, i128 0, i128 %k423
-  %t1425 = load i128, i128* %array_getter424, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t1425, i128 %f417, i1* @constraint.104)
-  %ptr_getter426 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t427 = load i128, i128* %t, align 4
-  %array_getter428 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter426, i128 0, i128 %t427
-  %t1429 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter428, align 8
-  %struct_getter430 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1429, i32 0, i32 2
-  %t1.f.read_input_outter431 = load [4096 x i128]*, [4096 x i128]** %struct_getter430, align 8
-  %k432 = load i128, i128* %k, align 4
-  %t1433 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.f.read_input_outter431, i128 0, i128 %k432
-  store i128 %f417, i128* %t1433, align 4
-  %g434 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %t435 = load i128, i128* %t, align 4
-  %k436 = load i128, i128* %k, align 4
-  %array_getter437 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g434, i128 0, i128 %t435, i128 %k436
-  %g438 = load i128, i128* %array_getter437, align 4
-  %t1439 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t440 = load i128, i128* %t, align 4
-  %array_getter441 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1439, i128 0, i128 %t440
-  %t1442 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter441, align 8
-  %struct_getter443 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1442, i32 0, i32 3
-  %t1.g.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter443, align 8
-  %k444 = load i128, i128* %k, align 4
-  %array_getter445 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.g.read_input_outter, i128 0, i128 %k444
-  %t1446 = load i128, i128* %array_getter445, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t1446, i128 %g438, i1* @constraint.105)
-  %ptr_getter447 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t448 = load i128, i128* %t, align 4
-  %array_getter449 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter447, i128 0, i128 %t448
-  %t1450 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter449, align 8
-  %struct_getter451 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1450, i32 0, i32 3
-  %t1.g.read_input_outter452 = load [4096 x i128]*, [4096 x i128]** %struct_getter451, align 8
-  %k453 = load i128, i128* %k, align 4
-  %t1454 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.g.read_input_outter452, i128 0, i128 %k453
-  store i128 %g438, i128* %t1454, align 4
-  %ct_k455 = load [4096 x %struct_template_circuit_k*]*, [4096 x %struct_template_circuit_k*]** %ct_k, align 8
-  %t456 = load i128, i128* %t, align 4
-  %array_getter457 = getelementptr inbounds [4096 x %struct_template_circuit_k*], [4096 x %struct_template_circuit_k*]* %ct_k455, i128 0, i128 %t456
-  %ct_k458 = load %struct_template_circuit_k*, %struct_template_circuit_k** %array_getter457, align 8
-  %struct_getter459 = getelementptr inbounds %struct_template_circuit_k, %struct_template_circuit_k* %ct_k458, i32 0, i32 1
-  %k.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter459, align 8
-  %k460 = load i128, i128* %k, align 4
-  %array_getter461 = getelementptr inbounds [4096 x i128], [4096 x i128]* %k.out.read_output_outter, i128 0, i128 %k460
-  %ct_k462 = load i128, i128* %array_getter461, align 4
-  %t1463 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t464 = load i128, i128* %t, align 4
-  %array_getter465 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1463, i128 0, i128 %t464
-  %t1466 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter465, align 8
-  %struct_getter467 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1466, i32 0, i32 4
-  %t1.k.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter467, align 8
-  %k468 = load i128, i128* %k, align 4
-  %array_getter469 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.k.read_input_outter, i128 0, i128 %k468
-  %t1470 = load i128, i128* %array_getter469, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t1470, i128 %ct_k462, i1* @constraint.106)
-  %ptr_getter471 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t472 = load i128, i128* %t, align 4
-  %array_getter473 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter471, i128 0, i128 %t472
-  %t1474 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter473, align 8
-  %struct_getter475 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1474, i32 0, i32 4
-  %t1.k.read_input_outter476 = load [4096 x i128]*, [4096 x i128]** %struct_getter475, align 8
-  %k477 = load i128, i128* %k, align 4
-  %t1478 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.k.read_input_outter476, i128 0, i128 %k477
-  store i128 %ct_k462, i128* %t1478, align 4
-  %w479 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
-  %t480 = load i128, i128* %t, align 4
-  %k481 = load i128, i128* %k, align 4
-  %array_getter482 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %w479, i128 0, i128 %t480, i128 %k481
-  %w483 = load i128, i128* %array_getter482, align 4
-  %t1484 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t485 = load i128, i128* %t, align 4
-  %array_getter486 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1484, i128 0, i128 %t485
-  %t1487 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter486, align 8
-  %struct_getter488 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1487, i32 0, i32 5
-  %t1.w.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter488, align 8
-  %k489 = load i128, i128* %k, align 4
-  %array_getter490 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.w.read_input_outter, i128 0, i128 %k489
-  %t1491 = load i128, i128* %array_getter490, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t1491, i128 %w483, i1* @constraint.107)
-  %ptr_getter492 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t493 = load i128, i128* %t, align 4
-  %array_getter494 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %ptr_getter492, i128 0, i128 %t493
-  %t1495 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter494, align 8
-  %struct_getter496 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1495, i32 0, i32 5
-  %t1.w.read_input_outter497 = load [4096 x i128]*, [4096 x i128]** %struct_getter496, align 8
-  %k498 = load i128, i128* %k, align 4
-  %t1499 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.w.read_input_outter497, i128 0, i128 %k498
-  store i128 %w483, i128* %t1499, align 4
-  %a500 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %t501 = load i128, i128* %t, align 4
-  %k502 = load i128, i128* %k, align 4
-  %array_getter503 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a500, i128 0, i128 %t501, i128 %k502
-  %a504 = load i128, i128* %array_getter503, align 4
-  %t2505 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t506 = load i128, i128* %t, align 4
-  %array_getter507 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2505, i128 0, i128 %t506
-  %t2508 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter507, align 8
-  %struct_getter509 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2508, i32 0, i32 0
-  %t2.a.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter509, align 8
-  %k510 = load i128, i128* %k, align 4
-  %array_getter511 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.a.read_input_outter, i128 0, i128 %k510
-  %t2512 = load i128, i128* %array_getter511, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t2512, i128 %a504, i1* @constraint.108)
-  %ptr_getter513 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t514 = load i128, i128* %t, align 4
-  %array_getter515 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter513, i128 0, i128 %t514
-  %t2516 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter515, align 8
-  %struct_getter517 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2516, i32 0, i32 0
-  %t2.a.read_input_outter518 = load [4096 x i128]*, [4096 x i128]** %struct_getter517, align 8
-  %k519 = load i128, i128* %k, align 4
-  %t2520 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.a.read_input_outter518, i128 0, i128 %k519
-  store i128 %a504, i128* %t2520, align 4
-  %b521 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %t522 = load i128, i128* %t, align 4
-  %k523 = load i128, i128* %k, align 4
-  %array_getter524 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b521, i128 0, i128 %t522, i128 %k523
-  %b525 = load i128, i128* %array_getter524, align 4
-  %t2526 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t527 = load i128, i128* %t, align 4
-  %array_getter528 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2526, i128 0, i128 %t527
-  %t2529 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter528, align 8
-  %struct_getter530 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2529, i32 0, i32 1
-  %t2.b.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter530, align 8
-  %k531 = load i128, i128* %k, align 4
-  %array_getter532 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.b.read_input_outter, i128 0, i128 %k531
-  %t2533 = load i128, i128* %array_getter532, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t2533, i128 %b525, i1* @constraint.109)
-  %ptr_getter534 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t535 = load i128, i128* %t, align 4
-  %array_getter536 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter534, i128 0, i128 %t535
-  %t2537 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter536, align 8
-  %struct_getter538 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2537, i32 0, i32 1
-  %t2.b.read_input_outter539 = load [4096 x i128]*, [4096 x i128]** %struct_getter538, align 8
-  %k540 = load i128, i128* %k, align 4
-  %t2541 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.b.read_input_outter539, i128 0, i128 %k540
-  store i128 %b525, i128* %t2541, align 4
-  %c542 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %t543 = load i128, i128* %t, align 4
-  %k544 = load i128, i128* %k, align 4
-  %array_getter545 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c542, i128 0, i128 %t543, i128 %k544
-  %c546 = load i128, i128* %array_getter545, align 4
-  %t2547 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t548 = load i128, i128* %t, align 4
-  %array_getter549 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2547, i128 0, i128 %t548
-  %t2550 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter549, align 8
-  %struct_getter551 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2550, i32 0, i32 2
-  %t2.c.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter551, align 8
-  %k552 = load i128, i128* %k, align 4
-  %array_getter553 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.c.read_input_outter, i128 0, i128 %k552
-  %t2554 = load i128, i128* %array_getter553, align 4
-  call void @fn_intrinsic_add_constraint(i128 %t2554, i128 %c546, i1* @constraint.110)
-  %ptr_getter555 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t556 = load i128, i128* %t, align 4
-  %array_getter557 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %ptr_getter555, i128 0, i128 %t556
-  %t2558 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter557, align 8
-  %struct_getter559 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2558, i32 0, i32 2
-  %t2.c.read_input_outter560 = load [4096 x i128]*, [4096 x i128]** %struct_getter559, align 8
-  %k561 = load i128, i128* %k, align 4
-  %t2562 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.c.read_input_outter560, i128 0, i128 %k561
-  store i128 %c546, i128* %t2562, align 4
-  br label %loop.latch563
+loop.body568:                                     ; preds = %loop.latch666, %loop.exit567
+  %d569 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %t570 = load i128, i128* %t, align 4
+  %k571 = load i128, i128* %k, align 4
+  %array_getter572 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d569, i128 0, i128 %t570, i128 %k571
+  %d573 = load i128, i128* %array_getter572, align 4
+  %sume574 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %t575 = load i128, i128* %t, align 4
+  %array_getter576 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %sume574, i128 0, i128 %t575
+  %sume577 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter576, align 8
+  %struct_getter578 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume577, i32 0, i32 2
+  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter578, align 8
+  %k579 = load i128, i128* %k, align 4
+  %array_getter580 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %k579
+  %sume581 = load i128, i128* %array_getter580, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sume581, i128 %d573, i1* @constraint.111)
+  %ptr_getter582 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %t583 = load i128, i128* %t, align 4
+  %array_getter584 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter582, i128 0, i128 %t583
+  %sume585 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter584, align 8
+  %struct_getter586 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume585, i32 0, i32 2
+  %binsum.in.read_input_outter587 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter586, align 8
+  %k588 = load i128, i128* %k, align 4
+  %sume589 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter587, i128 0, i128 0, i128 %k588
+  store i128 %d573, i128* %sume589, align 4
+  %t1590 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t591 = load i128, i128* %t, align 4
+  %array_getter592 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1590, i128 0, i128 %t591
+  %t1593 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter592, align 8
+  %struct_getter594 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1593, i32 0, i32 6
+  %t1.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter594, align 8
+  %k595 = load i128, i128* %k, align 4
+  %array_getter596 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.out.read_output_outter, i128 0, i128 %k595
+  %t1597 = load i128, i128* %array_getter596, align 4
+  %sume598 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %t599 = load i128, i128* %t, align 4
+  %array_getter600 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %sume598, i128 0, i128 %t599
+  %sume601 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter600, align 8
+  %struct_getter602 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume601, i32 0, i32 2
+  %binsum.in.read_input_outter603 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter602, align 8
+  %k604 = load i128, i128* %k, align 4
+  %array_getter605 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter603, i128 0, i128 1, i128 %k604
+  %sume606 = load i128, i128* %array_getter605, align 4
+  call void @fn_intrinsic_add_constraint(i128 %sume606, i128 %t1597, i1* @constraint.112)
+  %ptr_getter607 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %t608 = load i128, i128* %t, align 4
+  %array_getter609 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter607, i128 0, i128 %t608
+  %sume610 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter609, align 8
+  %struct_getter611 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume610, i32 0, i32 2
+  %binsum.in.read_input_outter612 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter611, align 8
+  %k613 = load i128, i128* %k, align 4
+  %sume614 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter612, i128 0, i128 1, i128 %k613
+  store i128 %t1597, i128* %sume614, align 4
+  %t1615 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
+  %t616 = load i128, i128* %t, align 4
+  %array_getter617 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1615, i128 0, i128 %t616
+  %t1618 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter617, align 8
+  %struct_getter619 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1618, i32 0, i32 6
+  %t1.out.read_output_outter620 = load [4096 x i128]*, [4096 x i128]** %struct_getter619, align 8
+  %k621 = load i128, i128* %k, align 4
+  %array_getter622 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.out.read_output_outter620, i128 0, i128 %k621
+  %t1623 = load i128, i128* %array_getter622, align 4
+  %suma624 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %t625 = load i128, i128* %t, align 4
+  %array_getter626 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %suma624, i128 0, i128 %t625
+  %suma627 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter626, align 8
+  %struct_getter628 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma627, i32 0, i32 2
+  %binsum.in.read_input_outter629 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter628, align 8
+  %k630 = load i128, i128* %k, align 4
+  %array_getter631 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter629, i128 0, i128 0, i128 %k630
+  %suma632 = load i128, i128* %array_getter631, align 4
+  call void @fn_intrinsic_add_constraint(i128 %suma632, i128 %t1623, i1* @constraint.113)
+  %ptr_getter633 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %t634 = load i128, i128* %t, align 4
+  %array_getter635 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter633, i128 0, i128 %t634
+  %suma636 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter635, align 8
+  %struct_getter637 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma636, i32 0, i32 2
+  %binsum.in.read_input_outter638 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter637, align 8
+  %k639 = load i128, i128* %k, align 4
+  %suma640 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter638, i128 0, i128 0, i128 %k639
+  store i128 %t1623, i128* %suma640, align 4
+  %t2641 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t2, align 8
+  %t642 = load i128, i128* %t, align 4
+  %array_getter643 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2641, i128 0, i128 %t642
+  %t2644 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter643, align 8
+  %struct_getter645 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2644, i32 0, i32 3
+  %t2.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter645, align 8
+  %k646 = load i128, i128* %k, align 4
+  %array_getter647 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.out.read_output_outter, i128 0, i128 %k646
+  %t2648 = load i128, i128* %array_getter647, align 4
+  %suma649 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %t650 = load i128, i128* %t, align 4
+  %array_getter651 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %suma649, i128 0, i128 %t650
+  %suma652 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter651, align 8
+  %struct_getter653 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma652, i32 0, i32 2
+  %binsum.in.read_input_outter654 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter653, align 8
+  %k655 = load i128, i128* %k, align 4
+  %array_getter656 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter654, i128 0, i128 1, i128 %k655
+  %suma657 = load i128, i128* %array_getter656, align 4
+  call void @fn_intrinsic_add_constraint(i128 %suma657, i128 %t2648, i1* @constraint.114)
+  %ptr_getter658 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %t659 = load i128, i128* %t, align 4
+  %array_getter660 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter658, i128 0, i128 %t659
+  %suma661 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter660, align 8
+  %struct_getter662 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma661, i32 0, i32 2
+  %binsum.in.read_input_outter663 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter662, align 8
+  %k664 = load i128, i128* %k, align 4
+  %suma665 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter663, i128 0, i128 1, i128 %k664
+  store i128 %t2648, i128* %suma665, align 4
+  br label %loop.latch666
 
-loop.latch563:                                    ; preds = %loop.body370
-  %k564 = load i128, i128* %k, align 4
-  %add565 = add i128 %k564, 1
-  store i128 %add565, i128* %k, align 4
-  %k566 = load i128, i128* %k, align 4
-  %slt567 = icmp slt i128 %k566, 32
-  br i1 %slt567, label %loop.body370, label %loop.exit568
+loop.latch666:                                    ; preds = %loop.body568
+  %k667 = load i128, i128* %k, align 4
+  %add668 = add i128 %k667, 1
+  store i128 %add668, i128* %k, align 4
+  %k669 = load i128, i128* %k, align 4
+  %slt670 = icmp slt i128 %k669, 32
+  br i1 %slt670, label %loop.body568, label %loop.exit671
 
-loop.exit568:                                     ; preds = %loop.latch563
+loop.exit671:                                     ; preds = %loop.latch666
   store i128 0, i128* %k, align 4
-  br label %loop.body569
+  br label %loop.body672
 
-loop.body569:                                     ; preds = %loop.latch667, %loop.exit568
-  %d570 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %t571 = load i128, i128* %t, align 4
-  %k572 = load i128, i128* %k, align 4
-  %array_getter573 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d570, i128 0, i128 %t571, i128 %k572
-  %d574 = load i128, i128* %array_getter573, align 4
-  %sume575 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
-  %t576 = load i128, i128* %t, align 4
-  %array_getter577 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %sume575, i128 0, i128 %t576
-  %sume578 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter577, align 8
-  %struct_getter579 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume578, i32 0, i32 2
-  %binsum.in.read_input_outter = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter579, align 8
-  %k580 = load i128, i128* %k, align 4
-  %array_getter581 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter, i128 0, i128 0, i128 %k580
-  %sume582 = load i128, i128* %array_getter581, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sume582, i128 %d574, i1* @constraint.111)
-  %ptr_getter583 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
-  %t584 = load i128, i128* %t, align 4
-  %array_getter585 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter583, i128 0, i128 %t584
-  %sume586 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter585, align 8
-  %struct_getter587 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume586, i32 0, i32 2
-  %binsum.in.read_input_outter588 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter587, align 8
-  %k589 = load i128, i128* %k, align 4
-  %sume590 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter588, i128 0, i128 0, i128 %k589
-  store i128 %d574, i128* %sume590, align 4
-  %t1591 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t592 = load i128, i128* %t, align 4
-  %array_getter593 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1591, i128 0, i128 %t592
-  %t1594 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter593, align 8
-  %struct_getter595 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1594, i32 0, i32 6
-  %t1.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter595, align 8
-  %k596 = load i128, i128* %k, align 4
-  %array_getter597 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.out.read_output_outter, i128 0, i128 %k596
-  %t1598 = load i128, i128* %array_getter597, align 4
-  %sume599 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
-  %t600 = load i128, i128* %t, align 4
-  %array_getter601 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %sume599, i128 0, i128 %t600
-  %sume602 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter601, align 8
-  %struct_getter603 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume602, i32 0, i32 2
-  %binsum.in.read_input_outter604 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter603, align 8
-  %k605 = load i128, i128* %k, align 4
-  %array_getter606 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter604, i128 0, i128 1, i128 %k605
-  %sume607 = load i128, i128* %array_getter606, align 4
-  call void @fn_intrinsic_add_constraint(i128 %sume607, i128 %t1598, i1* @constraint.112)
-  %ptr_getter608 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
-  %t609 = load i128, i128* %t, align 4
-  %array_getter610 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter608, i128 0, i128 %t609
-  %sume611 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter610, align 8
-  %struct_getter612 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume611, i32 0, i32 2
-  %binsum.in.read_input_outter613 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter612, align 8
-  %k614 = load i128, i128* %k, align 4
-  %sume615 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter613, i128 0, i128 1, i128 %k614
-  store i128 %t1598, i128* %sume615, align 4
-  %t1616 = load [4096 x %struct_template_circuit_t1*]*, [4096 x %struct_template_circuit_t1*]** %t1, align 8
-  %t617 = load i128, i128* %t, align 4
-  %array_getter618 = getelementptr inbounds [4096 x %struct_template_circuit_t1*], [4096 x %struct_template_circuit_t1*]* %t1616, i128 0, i128 %t617
-  %t1619 = load %struct_template_circuit_t1*, %struct_template_circuit_t1** %array_getter618, align 8
-  %struct_getter620 = getelementptr inbounds %struct_template_circuit_t1, %struct_template_circuit_t1* %t1619, i32 0, i32 6
-  %t1.out.read_output_outter621 = load [4096 x i128]*, [4096 x i128]** %struct_getter620, align 8
-  %k622 = load i128, i128* %k, align 4
-  %array_getter623 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t1.out.read_output_outter621, i128 0, i128 %k622
-  %t1624 = load i128, i128* %array_getter623, align 4
-  %suma625 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
-  %t626 = load i128, i128* %t, align 4
-  %array_getter627 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %suma625, i128 0, i128 %t626
-  %suma628 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter627, align 8
-  %struct_getter629 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma628, i32 0, i32 2
-  %binsum.in.read_input_outter630 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter629, align 8
-  %k631 = load i128, i128* %k, align 4
-  %array_getter632 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter630, i128 0, i128 0, i128 %k631
-  %suma633 = load i128, i128* %array_getter632, align 4
-  call void @fn_intrinsic_add_constraint(i128 %suma633, i128 %t1624, i1* @constraint.113)
-  %ptr_getter634 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
-  %t635 = load i128, i128* %t, align 4
-  %array_getter636 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter634, i128 0, i128 %t635
-  %suma637 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter636, align 8
-  %struct_getter638 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma637, i32 0, i32 2
-  %binsum.in.read_input_outter639 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter638, align 8
-  %k640 = load i128, i128* %k, align 4
-  %suma641 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter639, i128 0, i128 0, i128 %k640
-  store i128 %t1624, i128* %suma641, align 4
-  %t2642 = load [4096 x %struct_template_circuit_t2*]*, [4096 x %struct_template_circuit_t2*]** %t216, align 8
-  %t643 = load i128, i128* %t, align 4
-  %array_getter644 = getelementptr inbounds [4096 x %struct_template_circuit_t2*], [4096 x %struct_template_circuit_t2*]* %t2642, i128 0, i128 %t643
-  %t2645 = load %struct_template_circuit_t2*, %struct_template_circuit_t2** %array_getter644, align 8
-  %struct_getter646 = getelementptr inbounds %struct_template_circuit_t2, %struct_template_circuit_t2* %t2645, i32 0, i32 3
-  %t2.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter646, align 8
-  %k647 = load i128, i128* %k, align 4
-  %array_getter648 = getelementptr inbounds [4096 x i128], [4096 x i128]* %t2.out.read_output_outter, i128 0, i128 %k647
-  %t2649 = load i128, i128* %array_getter648, align 4
-  %suma650 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
-  %t651 = load i128, i128* %t, align 4
-  %array_getter652 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %suma650, i128 0, i128 %t651
-  %suma653 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter652, align 8
-  %struct_getter654 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma653, i32 0, i32 2
-  %binsum.in.read_input_outter655 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter654, align 8
-  %k656 = load i128, i128* %k, align 4
-  %array_getter657 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter655, i128 0, i128 1, i128 %k656
-  %suma658 = load i128, i128* %array_getter657, align 4
-  call void @fn_intrinsic_add_constraint(i128 %suma658, i128 %t2649, i1* @constraint.114)
-  %ptr_getter659 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
-  %t660 = load i128, i128* %t, align 4
-  %array_getter661 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter659, i128 0, i128 %t660
-  %suma662 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter661, align 8
-  %struct_getter663 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma662, i32 0, i32 2
-  %binsum.in.read_input_outter664 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter663, align 8
-  %k665 = load i128, i128* %k, align 4
-  %suma666 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter664, i128 0, i128 1, i128 %k665
-  store i128 %t2649, i128* %suma666, align 4
-  br label %loop.latch667
+loop.body672:                                     ; preds = %loop.latch808, %loop.exit671
+  %g673 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %t674 = load i128, i128* %t, align 4
+  %k675 = load i128, i128* %k, align 4
+  %array_getter676 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g673, i128 0, i128 %t674, i128 %k675
+  %g677 = load i128, i128* %array_getter676, align 4
+  %h678 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %t679 = load i128, i128* %t, align 4
+  %add680 = add i128 %t679, 1
+  %k681 = load i128, i128* %k, align 4
+  %array_getter682 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h678, i128 0, i128 %add680, i128 %k681
+  %h683 = load i128, i128* %array_getter682, align 4
+  call void @fn_intrinsic_add_constraint(i128 %h683, i128 %g677, i1* @constraint.115)
+  %ptr_getter684 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %t685 = load i128, i128* %t, align 4
+  %add686 = add i128 %t685, 1
+  %k687 = load i128, i128* %k, align 4
+  %h688 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter684, i128 0, i128 %add686, i128 %k687
+  store i128 %g677, i128* %h688, align 4
+  %f689 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %t690 = load i128, i128* %t, align 4
+  %k691 = load i128, i128* %k, align 4
+  %array_getter692 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f689, i128 0, i128 %t690, i128 %k691
+  %f693 = load i128, i128* %array_getter692, align 4
+  %g694 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %t695 = load i128, i128* %t, align 4
+  %add696 = add i128 %t695, 1
+  %k697 = load i128, i128* %k, align 4
+  %array_getter698 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g694, i128 0, i128 %add696, i128 %k697
+  %g699 = load i128, i128* %array_getter698, align 4
+  call void @fn_intrinsic_add_constraint(i128 %g699, i128 %f693, i1* @constraint.116)
+  %ptr_getter700 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %t701 = load i128, i128* %t, align 4
+  %add702 = add i128 %t701, 1
+  %k703 = load i128, i128* %k, align 4
+  %g704 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter700, i128 0, i128 %add702, i128 %k703
+  store i128 %f693, i128* %g704, align 4
+  %e705 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %t706 = load i128, i128* %t, align 4
+  %k707 = load i128, i128* %k, align 4
+  %array_getter708 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e705, i128 0, i128 %t706, i128 %k707
+  %e709 = load i128, i128* %array_getter708, align 4
+  %f710 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %t711 = load i128, i128* %t, align 4
+  %add712 = add i128 %t711, 1
+  %k713 = load i128, i128* %k, align 4
+  %array_getter714 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f710, i128 0, i128 %add712, i128 %k713
+  %f715 = load i128, i128* %array_getter714, align 4
+  call void @fn_intrinsic_add_constraint(i128 %f715, i128 %e709, i1* @constraint.117)
+  %ptr_getter716 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %t717 = load i128, i128* %t, align 4
+  %add718 = add i128 %t717, 1
+  %k719 = load i128, i128* %k, align 4
+  %f720 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter716, i128 0, i128 %add718, i128 %k719
+  store i128 %e709, i128* %f720, align 4
+  %sume721 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
+  %t722 = load i128, i128* %t, align 4
+  %array_getter723 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %sume721, i128 0, i128 %t722
+  %sume724 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter723, align 8
+  %struct_getter725 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume724, i32 0, i32 3
+  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter725, align 8
+  %k726 = load i128, i128* %k, align 4
+  %array_getter727 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %k726
+  %sume728 = load i128, i128* %array_getter727, align 4
+  %e729 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %t730 = load i128, i128* %t, align 4
+  %add731 = add i128 %t730, 1
+  %k732 = load i128, i128* %k, align 4
+  %array_getter733 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e729, i128 0, i128 %add731, i128 %k732
+  %e734 = load i128, i128* %array_getter733, align 4
+  call void @fn_intrinsic_add_constraint(i128 %e734, i128 %sume728, i1* @constraint.118)
+  %ptr_getter735 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %t736 = load i128, i128* %t, align 4
+  %add737 = add i128 %t736, 1
+  %k738 = load i128, i128* %k, align 4
+  %e739 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter735, i128 0, i128 %add737, i128 %k738
+  store i128 %sume728, i128* %e739, align 4
+  %c740 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %t741 = load i128, i128* %t, align 4
+  %k742 = load i128, i128* %k, align 4
+  %array_getter743 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c740, i128 0, i128 %t741, i128 %k742
+  %c744 = load i128, i128* %array_getter743, align 4
+  %d745 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %t746 = load i128, i128* %t, align 4
+  %add747 = add i128 %t746, 1
+  %k748 = load i128, i128* %k, align 4
+  %array_getter749 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d745, i128 0, i128 %add747, i128 %k748
+  %d750 = load i128, i128* %array_getter749, align 4
+  call void @fn_intrinsic_add_constraint(i128 %d750, i128 %c744, i1* @constraint.119)
+  %ptr_getter751 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %t752 = load i128, i128* %t, align 4
+  %add753 = add i128 %t752, 1
+  %k754 = load i128, i128* %k, align 4
+  %d755 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter751, i128 0, i128 %add753, i128 %k754
+  store i128 %c744, i128* %d755, align 4
+  %b756 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %t757 = load i128, i128* %t, align 4
+  %k758 = load i128, i128* %k, align 4
+  %array_getter759 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b756, i128 0, i128 %t757, i128 %k758
+  %b760 = load i128, i128* %array_getter759, align 4
+  %c761 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %t762 = load i128, i128* %t, align 4
+  %add763 = add i128 %t762, 1
+  %k764 = load i128, i128* %k, align 4
+  %array_getter765 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c761, i128 0, i128 %add763, i128 %k764
+  %c766 = load i128, i128* %array_getter765, align 4
+  call void @fn_intrinsic_add_constraint(i128 %c766, i128 %b760, i1* @constraint.120)
+  %ptr_getter767 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %t768 = load i128, i128* %t, align 4
+  %add769 = add i128 %t768, 1
+  %k770 = load i128, i128* %k, align 4
+  %c771 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter767, i128 0, i128 %add769, i128 %k770
+  store i128 %b760, i128* %c771, align 4
+  %a772 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %t773 = load i128, i128* %t, align 4
+  %k774 = load i128, i128* %k, align 4
+  %array_getter775 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a772, i128 0, i128 %t773, i128 %k774
+  %a776 = load i128, i128* %array_getter775, align 4
+  %b777 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %t778 = load i128, i128* %t, align 4
+  %add779 = add i128 %t778, 1
+  %k780 = load i128, i128* %k, align 4
+  %array_getter781 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b777, i128 0, i128 %add779, i128 %k780
+  %b782 = load i128, i128* %array_getter781, align 4
+  call void @fn_intrinsic_add_constraint(i128 %b782, i128 %a776, i1* @constraint.121)
+  %ptr_getter783 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %t784 = load i128, i128* %t, align 4
+  %add785 = add i128 %t784, 1
+  %k786 = load i128, i128* %k, align 4
+  %b787 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter783, i128 0, i128 %add785, i128 %k786
+  store i128 %a776, i128* %b787, align 4
+  %suma788 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
+  %t789 = load i128, i128* %t, align 4
+  %array_getter790 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %suma788, i128 0, i128 %t789
+  %suma791 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter790, align 8
+  %struct_getter792 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma791, i32 0, i32 3
+  %binsum.out.read_output_outter793 = load [4096 x i128]*, [4096 x i128]** %struct_getter792, align 8
+  %k794 = load i128, i128* %k, align 4
+  %array_getter795 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter793, i128 0, i128 %k794
+  %suma796 = load i128, i128* %array_getter795, align 4
+  %a797 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %t798 = load i128, i128* %t, align 4
+  %add799 = add i128 %t798, 1
+  %k800 = load i128, i128* %k, align 4
+  %array_getter801 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a797, i128 0, i128 %add799, i128 %k800
+  %a802 = load i128, i128* %array_getter801, align 4
+  call void @fn_intrinsic_add_constraint(i128 %a802, i128 %suma796, i1* @constraint.122)
+  %ptr_getter803 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %t804 = load i128, i128* %t, align 4
+  %add805 = add i128 %t804, 1
+  %k806 = load i128, i128* %k, align 4
+  %a807 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter803, i128 0, i128 %add805, i128 %k806
+  store i128 %suma796, i128* %a807, align 4
+  br label %loop.latch808
 
-loop.latch667:                                    ; preds = %loop.body569
-  %k668 = load i128, i128* %k, align 4
-  %add669 = add i128 %k668, 1
-  store i128 %add669, i128* %k, align 4
-  %k670 = load i128, i128* %k, align 4
-  %slt671 = icmp slt i128 %k670, 32
-  br i1 %slt671, label %loop.body569, label %loop.exit672
+loop.latch808:                                    ; preds = %loop.body672
+  %k809 = load i128, i128* %k, align 4
+  %add810 = add i128 %k809, 1
+  store i128 %add810, i128* %k, align 4
+  %k811 = load i128, i128* %k, align 4
+  %slt812 = icmp slt i128 %k811, 32
+  br i1 %slt812, label %loop.body672, label %loop.exit813
 
-loop.exit672:                                     ; preds = %loop.latch667
+loop.exit813:                                     ; preds = %loop.latch808
+  br label %loop.latch814
+
+loop.latch814:                                    ; preds = %loop.exit813
+  %t815 = load i128, i128* %t, align 4
+  %add816 = add i128 %t815, 1
+  store i128 %add816, i128* %t, align 4
+  %t817 = load i128, i128* %t, align 4
+  %slt818 = icmp slt i128 %t817, 64
+  br i1 %slt818, label %loop.body368, label %loop.exit819
+
+loop.exit819:                                     ; preds = %loop.latch814
   store i128 0, i128* %k, align 4
-  br label %loop.body673
+  br label %loop.body820
 
-loop.body673:                                     ; preds = %loop.latch809, %loop.exit672
-  %g674 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %t675 = load i128, i128* %t, align 4
-  %k676 = load i128, i128* %k, align 4
-  %array_getter677 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g674, i128 0, i128 %t675, i128 %k676
-  %g678 = load i128, i128* %array_getter677, align 4
-  %h679 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
-  %t680 = load i128, i128* %t, align 4
-  %add681 = add i128 %t680, 1
-  %k682 = load i128, i128* %k, align 4
-  %array_getter683 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h679, i128 0, i128 %add681, i128 %k682
-  %h684 = load i128, i128* %array_getter683, align 4
-  call void @fn_intrinsic_add_constraint(i128 %h684, i128 %g678, i1* @constraint.115)
-  %ptr_getter685 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
-  %t686 = load i128, i128* %t, align 4
-  %add687 = add i128 %t686, 1
-  %k688 = load i128, i128* %k, align 4
-  %h689 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter685, i128 0, i128 %add687, i128 %k688
-  store i128 %g678, i128* %h689, align 4
-  %f690 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %t691 = load i128, i128* %t, align 4
-  %k692 = load i128, i128* %k, align 4
-  %array_getter693 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f690, i128 0, i128 %t691, i128 %k692
-  %f694 = load i128, i128* %array_getter693, align 4
-  %g695 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %t696 = load i128, i128* %t, align 4
-  %add697 = add i128 %t696, 1
-  %k698 = load i128, i128* %k, align 4
-  %array_getter699 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g695, i128 0, i128 %add697, i128 %k698
-  %g700 = load i128, i128* %array_getter699, align 4
-  call void @fn_intrinsic_add_constraint(i128 %g700, i128 %f694, i1* @constraint.116)
-  %ptr_getter701 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %t702 = load i128, i128* %t, align 4
-  %add703 = add i128 %t702, 1
-  %k704 = load i128, i128* %k, align 4
-  %g705 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter701, i128 0, i128 %add703, i128 %k704
-  store i128 %f694, i128* %g705, align 4
-  %e706 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %t707 = load i128, i128* %t, align 4
-  %k708 = load i128, i128* %k, align 4
-  %array_getter709 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e706, i128 0, i128 %t707, i128 %k708
-  %e710 = load i128, i128* %array_getter709, align 4
-  %f711 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %t712 = load i128, i128* %t, align 4
-  %add713 = add i128 %t712, 1
-  %k714 = load i128, i128* %k, align 4
-  %array_getter715 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f711, i128 0, i128 %add713, i128 %k714
-  %f716 = load i128, i128* %array_getter715, align 4
-  call void @fn_intrinsic_add_constraint(i128 %f716, i128 %e710, i1* @constraint.117)
-  %ptr_getter717 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %t718 = load i128, i128* %t, align 4
-  %add719 = add i128 %t718, 1
-  %k720 = load i128, i128* %k, align 4
-  %f721 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter717, i128 0, i128 %add719, i128 %k720
-  store i128 %e710, i128* %f721, align 4
-  %sume722 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %sume, align 8
-  %t723 = load i128, i128* %t, align 4
-  %array_getter724 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %sume722, i128 0, i128 %t723
-  %sume725 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter724, align 8
-  %struct_getter726 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %sume725, i32 0, i32 3
-  %binsum.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter726, align 8
-  %k727 = load i128, i128* %k, align 4
-  %array_getter728 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter, i128 0, i128 %k727
-  %sume729 = load i128, i128* %array_getter728, align 4
-  %e730 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %t731 = load i128, i128* %t, align 4
-  %add732 = add i128 %t731, 1
-  %k733 = load i128, i128* %k, align 4
-  %array_getter734 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e730, i128 0, i128 %add732, i128 %k733
-  %e735 = load i128, i128* %array_getter734, align 4
-  call void @fn_intrinsic_add_constraint(i128 %e735, i128 %sume729, i1* @constraint.118)
-  %ptr_getter736 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %t737 = load i128, i128* %t, align 4
-  %add738 = add i128 %t737, 1
-  %k739 = load i128, i128* %k, align 4
-  %e740 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter736, i128 0, i128 %add738, i128 %k739
-  store i128 %sume729, i128* %e740, align 4
-  %c741 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %t742 = load i128, i128* %t, align 4
-  %k743 = load i128, i128* %k, align 4
-  %array_getter744 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c741, i128 0, i128 %t742, i128 %k743
-  %c745 = load i128, i128* %array_getter744, align 4
-  %d746 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %t747 = load i128, i128* %t, align 4
-  %add748 = add i128 %t747, 1
-  %k749 = load i128, i128* %k, align 4
-  %array_getter750 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d746, i128 0, i128 %add748, i128 %k749
-  %d751 = load i128, i128* %array_getter750, align 4
-  call void @fn_intrinsic_add_constraint(i128 %d751, i128 %c745, i1* @constraint.119)
-  %ptr_getter752 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %t753 = load i128, i128* %t, align 4
-  %add754 = add i128 %t753, 1
-  %k755 = load i128, i128* %k, align 4
-  %d756 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter752, i128 0, i128 %add754, i128 %k755
-  store i128 %c745, i128* %d756, align 4
-  %b757 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %t758 = load i128, i128* %t, align 4
-  %k759 = load i128, i128* %k, align 4
-  %array_getter760 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b757, i128 0, i128 %t758, i128 %k759
-  %b761 = load i128, i128* %array_getter760, align 4
-  %c762 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %t763 = load i128, i128* %t, align 4
-  %add764 = add i128 %t763, 1
-  %k765 = load i128, i128* %k, align 4
-  %array_getter766 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c762, i128 0, i128 %add764, i128 %k765
-  %c767 = load i128, i128* %array_getter766, align 4
-  call void @fn_intrinsic_add_constraint(i128 %c767, i128 %b761, i1* @constraint.120)
-  %ptr_getter768 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %t769 = load i128, i128* %t, align 4
-  %add770 = add i128 %t769, 1
-  %k771 = load i128, i128* %k, align 4
-  %c772 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter768, i128 0, i128 %add770, i128 %k771
-  store i128 %b761, i128* %c772, align 4
-  %a773 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %t774 = load i128, i128* %t, align 4
-  %k775 = load i128, i128* %k, align 4
-  %array_getter776 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a773, i128 0, i128 %t774, i128 %k775
-  %a777 = load i128, i128* %array_getter776, align 4
-  %b778 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %t779 = load i128, i128* %t, align 4
-  %add780 = add i128 %t779, 1
-  %k781 = load i128, i128* %k, align 4
-  %array_getter782 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b778, i128 0, i128 %add780, i128 %k781
-  %b783 = load i128, i128* %array_getter782, align 4
-  call void @fn_intrinsic_add_constraint(i128 %b783, i128 %a777, i1* @constraint.121)
-  %ptr_getter784 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %t785 = load i128, i128* %t, align 4
-  %add786 = add i128 %t785, 1
-  %k787 = load i128, i128* %k, align 4
-  %b788 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter784, i128 0, i128 %add786, i128 %k787
-  store i128 %a777, i128* %b788, align 4
-  %suma789 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %suma, align 8
-  %t790 = load i128, i128* %t, align 4
-  %array_getter791 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %suma789, i128 0, i128 %t790
-  %suma792 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter791, align 8
-  %struct_getter793 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %suma792, i32 0, i32 3
-  %binsum.out.read_output_outter794 = load [4096 x i128]*, [4096 x i128]** %struct_getter793, align 8
-  %k795 = load i128, i128* %k, align 4
-  %array_getter796 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter794, i128 0, i128 %k795
-  %suma797 = load i128, i128* %array_getter796, align 4
-  %a798 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %t799 = load i128, i128* %t, align 4
-  %add800 = add i128 %t799, 1
-  %k801 = load i128, i128* %k, align 4
-  %array_getter802 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a798, i128 0, i128 %add800, i128 %k801
-  %a803 = load i128, i128* %array_getter802, align 4
-  call void @fn_intrinsic_add_constraint(i128 %a803, i128 %suma797, i1* @constraint.122)
-  %ptr_getter804 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %t805 = load i128, i128* %t, align 4
-  %add806 = add i128 %t805, 1
-  %k807 = load i128, i128* %k, align 4
-  %a808 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %ptr_getter804, i128 0, i128 %add806, i128 %k807
-  store i128 %suma797, i128* %a808, align 4
-  br label %loop.latch809
+loop.body820:                                     ; preds = %loop.latch1133, %loop.exit819
+  %hin821 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k822 = load i128, i128* %k, align 4
+  %add823 = add i128 0, %k822
+  %array_getter824 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin821, i128 0, i128 %add823
+  %hin825 = load i128, i128* %array_getter824, align 4
+  %fsum826 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter827 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum826, i128 0, i128 0
+  %fsum828 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter827, align 8
+  %struct_getter829 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum828, i32 0, i32 2
+  %binsum.in.read_input_outter830 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter829, align 8
+  %k831 = load i128, i128* %k, align 4
+  %array_getter832 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter830, i128 0, i128 0, i128 %k831
+  %fsum833 = load i128, i128* %array_getter832, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum833, i128 %hin825, i1* @constraint.123)
+  %ptr_getter834 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter835 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter834, i128 0, i128 0
+  %fsum836 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter835, align 8
+  %struct_getter837 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum836, i32 0, i32 2
+  %binsum.in.read_input_outter838 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter837, align 8
+  %k839 = load i128, i128* %k, align 4
+  %fsum840 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter838, i128 0, i128 0, i128 %k839
+  store i128 %hin825, i128* %fsum840, align 4
+  %a841 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+  %k842 = load i128, i128* %k, align 4
+  %array_getter843 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a841, i128 0, i128 64, i128 %k842
+  %a844 = load i128, i128* %array_getter843, align 4
+  %fsum845 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter846 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum845, i128 0, i128 0
+  %fsum847 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter846, align 8
+  %struct_getter848 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum847, i32 0, i32 2
+  %binsum.in.read_input_outter849 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter848, align 8
+  %k850 = load i128, i128* %k, align 4
+  %array_getter851 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter849, i128 0, i128 1, i128 %k850
+  %fsum852 = load i128, i128* %array_getter851, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum852, i128 %a844, i1* @constraint.124)
+  %ptr_getter853 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter854 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter853, i128 0, i128 0
+  %fsum855 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter854, align 8
+  %struct_getter856 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum855, i32 0, i32 2
+  %binsum.in.read_input_outter857 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter856, align 8
+  %k858 = load i128, i128* %k, align 4
+  %fsum859 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter857, i128 0, i128 1, i128 %k858
+  store i128 %a844, i128* %fsum859, align 4
+  %hin860 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k861 = load i128, i128* %k, align 4
+  %add862 = add i128 32, %k861
+  %array_getter863 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin860, i128 0, i128 %add862
+  %hin864 = load i128, i128* %array_getter863, align 4
+  %fsum865 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter866 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum865, i128 0, i128 1
+  %fsum867 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter866, align 8
+  %struct_getter868 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum867, i32 0, i32 2
+  %binsum.in.read_input_outter869 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter868, align 8
+  %k870 = load i128, i128* %k, align 4
+  %array_getter871 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter869, i128 0, i128 0, i128 %k870
+  %fsum872 = load i128, i128* %array_getter871, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum872, i128 %hin864, i1* @constraint.125)
+  %ptr_getter873 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter874 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter873, i128 0, i128 1
+  %fsum875 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter874, align 8
+  %struct_getter876 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum875, i32 0, i32 2
+  %binsum.in.read_input_outter877 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter876, align 8
+  %k878 = load i128, i128* %k, align 4
+  %fsum879 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter877, i128 0, i128 0, i128 %k878
+  store i128 %hin864, i128* %fsum879, align 4
+  %b880 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  %k881 = load i128, i128* %k, align 4
+  %array_getter882 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b880, i128 0, i128 64, i128 %k881
+  %b883 = load i128, i128* %array_getter882, align 4
+  %fsum884 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter885 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum884, i128 0, i128 1
+  %fsum886 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter885, align 8
+  %struct_getter887 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum886, i32 0, i32 2
+  %binsum.in.read_input_outter888 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter887, align 8
+  %k889 = load i128, i128* %k, align 4
+  %array_getter890 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter888, i128 0, i128 1, i128 %k889
+  %fsum891 = load i128, i128* %array_getter890, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum891, i128 %b883, i1* @constraint.126)
+  %ptr_getter892 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter893 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter892, i128 0, i128 1
+  %fsum894 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter893, align 8
+  %struct_getter895 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum894, i32 0, i32 2
+  %binsum.in.read_input_outter896 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter895, align 8
+  %k897 = load i128, i128* %k, align 4
+  %fsum898 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter896, i128 0, i128 1, i128 %k897
+  store i128 %b883, i128* %fsum898, align 4
+  %hin899 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k900 = load i128, i128* %k, align 4
+  %add901 = add i128 64, %k900
+  %array_getter902 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin899, i128 0, i128 %add901
+  %hin903 = load i128, i128* %array_getter902, align 4
+  %fsum904 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter905 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum904, i128 0, i128 2
+  %fsum906 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter905, align 8
+  %struct_getter907 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum906, i32 0, i32 2
+  %binsum.in.read_input_outter908 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter907, align 8
+  %k909 = load i128, i128* %k, align 4
+  %array_getter910 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter908, i128 0, i128 0, i128 %k909
+  %fsum911 = load i128, i128* %array_getter910, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum911, i128 %hin903, i1* @constraint.127)
+  %ptr_getter912 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter913 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter912, i128 0, i128 2
+  %fsum914 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter913, align 8
+  %struct_getter915 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum914, i32 0, i32 2
+  %binsum.in.read_input_outter916 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter915, align 8
+  %k917 = load i128, i128* %k, align 4
+  %fsum918 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter916, i128 0, i128 0, i128 %k917
+  store i128 %hin903, i128* %fsum918, align 4
+  %c919 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  %k920 = load i128, i128* %k, align 4
+  %array_getter921 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c919, i128 0, i128 64, i128 %k920
+  %c922 = load i128, i128* %array_getter921, align 4
+  %fsum923 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter924 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum923, i128 0, i128 2
+  %fsum925 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter924, align 8
+  %struct_getter926 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum925, i32 0, i32 2
+  %binsum.in.read_input_outter927 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter926, align 8
+  %k928 = load i128, i128* %k, align 4
+  %array_getter929 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter927, i128 0, i128 1, i128 %k928
+  %fsum930 = load i128, i128* %array_getter929, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum930, i128 %c922, i1* @constraint.128)
+  %ptr_getter931 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter932 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter931, i128 0, i128 2
+  %fsum933 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter932, align 8
+  %struct_getter934 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum933, i32 0, i32 2
+  %binsum.in.read_input_outter935 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter934, align 8
+  %k936 = load i128, i128* %k, align 4
+  %fsum937 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter935, i128 0, i128 1, i128 %k936
+  store i128 %c922, i128* %fsum937, align 4
+  %hin938 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k939 = load i128, i128* %k, align 4
+  %add940 = add i128 96, %k939
+  %array_getter941 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin938, i128 0, i128 %add940
+  %hin942 = load i128, i128* %array_getter941, align 4
+  %fsum943 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter944 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum943, i128 0, i128 3
+  %fsum945 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter944, align 8
+  %struct_getter946 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum945, i32 0, i32 2
+  %binsum.in.read_input_outter947 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter946, align 8
+  %k948 = load i128, i128* %k, align 4
+  %array_getter949 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter947, i128 0, i128 0, i128 %k948
+  %fsum950 = load i128, i128* %array_getter949, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum950, i128 %hin942, i1* @constraint.129)
+  %ptr_getter951 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter952 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter951, i128 0, i128 3
+  %fsum953 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter952, align 8
+  %struct_getter954 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum953, i32 0, i32 2
+  %binsum.in.read_input_outter955 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter954, align 8
+  %k956 = load i128, i128* %k, align 4
+  %fsum957 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter955, i128 0, i128 0, i128 %k956
+  store i128 %hin942, i128* %fsum957, align 4
+  %d958 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  %k959 = load i128, i128* %k, align 4
+  %array_getter960 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d958, i128 0, i128 64, i128 %k959
+  %d961 = load i128, i128* %array_getter960, align 4
+  %fsum962 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter963 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum962, i128 0, i128 3
+  %fsum964 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter963, align 8
+  %struct_getter965 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum964, i32 0, i32 2
+  %binsum.in.read_input_outter966 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter965, align 8
+  %k967 = load i128, i128* %k, align 4
+  %array_getter968 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter966, i128 0, i128 1, i128 %k967
+  %fsum969 = load i128, i128* %array_getter968, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum969, i128 %d961, i1* @constraint.130)
+  %ptr_getter970 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter971 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter970, i128 0, i128 3
+  %fsum972 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter971, align 8
+  %struct_getter973 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum972, i32 0, i32 2
+  %binsum.in.read_input_outter974 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter973, align 8
+  %k975 = load i128, i128* %k, align 4
+  %fsum976 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter974, i128 0, i128 1, i128 %k975
+  store i128 %d961, i128* %fsum976, align 4
+  %hin977 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k978 = load i128, i128* %k, align 4
+  %add979 = add i128 128, %k978
+  %array_getter980 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin977, i128 0, i128 %add979
+  %hin981 = load i128, i128* %array_getter980, align 4
+  %fsum982 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter983 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum982, i128 0, i128 4
+  %fsum984 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter983, align 8
+  %struct_getter985 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum984, i32 0, i32 2
+  %binsum.in.read_input_outter986 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter985, align 8
+  %k987 = load i128, i128* %k, align 4
+  %array_getter988 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter986, i128 0, i128 0, i128 %k987
+  %fsum989 = load i128, i128* %array_getter988, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum989, i128 %hin981, i1* @constraint.131)
+  %ptr_getter990 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter991 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter990, i128 0, i128 4
+  %fsum992 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter991, align 8
+  %struct_getter993 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum992, i32 0, i32 2
+  %binsum.in.read_input_outter994 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter993, align 8
+  %k995 = load i128, i128* %k, align 4
+  %fsum996 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter994, i128 0, i128 0, i128 %k995
+  store i128 %hin981, i128* %fsum996, align 4
+  %e997 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  %k998 = load i128, i128* %k, align 4
+  %array_getter999 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e997, i128 0, i128 64, i128 %k998
+  %e1000 = load i128, i128* %array_getter999, align 4
+  %fsum1001 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1002 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1001, i128 0, i128 4
+  %fsum1003 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1002, align 8
+  %struct_getter1004 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1003, i32 0, i32 2
+  %binsum.in.read_input_outter1005 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1004, align 8
+  %k1006 = load i128, i128* %k, align 4
+  %array_getter1007 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1005, i128 0, i128 1, i128 %k1006
+  %fsum1008 = load i128, i128* %array_getter1007, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1008, i128 %e1000, i1* @constraint.132)
+  %ptr_getter1009 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1010 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1009, i128 0, i128 4
+  %fsum1011 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1010, align 8
+  %struct_getter1012 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1011, i32 0, i32 2
+  %binsum.in.read_input_outter1013 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1012, align 8
+  %k1014 = load i128, i128* %k, align 4
+  %fsum1015 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1013, i128 0, i128 1, i128 %k1014
+  store i128 %e1000, i128* %fsum1015, align 4
+  %hin1016 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k1017 = load i128, i128* %k, align 4
+  %add1018 = add i128 160, %k1017
+  %array_getter1019 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin1016, i128 0, i128 %add1018
+  %hin1020 = load i128, i128* %array_getter1019, align 4
+  %fsum1021 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1022 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1021, i128 0, i128 5
+  %fsum1023 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1022, align 8
+  %struct_getter1024 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1023, i32 0, i32 2
+  %binsum.in.read_input_outter1025 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1024, align 8
+  %k1026 = load i128, i128* %k, align 4
+  %array_getter1027 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1025, i128 0, i128 0, i128 %k1026
+  %fsum1028 = load i128, i128* %array_getter1027, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1028, i128 %hin1020, i1* @constraint.133)
+  %ptr_getter1029 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1030 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1029, i128 0, i128 5
+  %fsum1031 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1030, align 8
+  %struct_getter1032 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1031, i32 0, i32 2
+  %binsum.in.read_input_outter1033 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1032, align 8
+  %k1034 = load i128, i128* %k, align 4
+  %fsum1035 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1033, i128 0, i128 0, i128 %k1034
+  store i128 %hin1020, i128* %fsum1035, align 4
+  %f1036 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  %k1037 = load i128, i128* %k, align 4
+  %array_getter1038 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f1036, i128 0, i128 64, i128 %k1037
+  %f1039 = load i128, i128* %array_getter1038, align 4
+  %fsum1040 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1041 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1040, i128 0, i128 5
+  %fsum1042 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1041, align 8
+  %struct_getter1043 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1042, i32 0, i32 2
+  %binsum.in.read_input_outter1044 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1043, align 8
+  %k1045 = load i128, i128* %k, align 4
+  %array_getter1046 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1044, i128 0, i128 1, i128 %k1045
+  %fsum1047 = load i128, i128* %array_getter1046, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1047, i128 %f1039, i1* @constraint.134)
+  %ptr_getter1048 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1049 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1048, i128 0, i128 5
+  %fsum1050 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1049, align 8
+  %struct_getter1051 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1050, i32 0, i32 2
+  %binsum.in.read_input_outter1052 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1051, align 8
+  %k1053 = load i128, i128* %k, align 4
+  %fsum1054 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1052, i128 0, i128 1, i128 %k1053
+  store i128 %f1039, i128* %fsum1054, align 4
+  %hin1055 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k1056 = load i128, i128* %k, align 4
+  %add1057 = add i128 192, %k1056
+  %array_getter1058 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin1055, i128 0, i128 %add1057
+  %hin1059 = load i128, i128* %array_getter1058, align 4
+  %fsum1060 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1061 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1060, i128 0, i128 6
+  %fsum1062 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1061, align 8
+  %struct_getter1063 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1062, i32 0, i32 2
+  %binsum.in.read_input_outter1064 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1063, align 8
+  %k1065 = load i128, i128* %k, align 4
+  %array_getter1066 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1064, i128 0, i128 0, i128 %k1065
+  %fsum1067 = load i128, i128* %array_getter1066, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1067, i128 %hin1059, i1* @constraint.135)
+  %ptr_getter1068 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1069 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1068, i128 0, i128 6
+  %fsum1070 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1069, align 8
+  %struct_getter1071 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1070, i32 0, i32 2
+  %binsum.in.read_input_outter1072 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1071, align 8
+  %k1073 = load i128, i128* %k, align 4
+  %fsum1074 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1072, i128 0, i128 0, i128 %k1073
+  store i128 %hin1059, i128* %fsum1074, align 4
+  %g1075 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  %k1076 = load i128, i128* %k, align 4
+  %array_getter1077 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g1075, i128 0, i128 64, i128 %k1076
+  %g1078 = load i128, i128* %array_getter1077, align 4
+  %fsum1079 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1080 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1079, i128 0, i128 6
+  %fsum1081 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1080, align 8
+  %struct_getter1082 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1081, i32 0, i32 2
+  %binsum.in.read_input_outter1083 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1082, align 8
+  %k1084 = load i128, i128* %k, align 4
+  %array_getter1085 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1083, i128 0, i128 1, i128 %k1084
+  %fsum1086 = load i128, i128* %array_getter1085, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1086, i128 %g1078, i1* @constraint.136)
+  %ptr_getter1087 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1088 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1087, i128 0, i128 6
+  %fsum1089 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1088, align 8
+  %struct_getter1090 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1089, i32 0, i32 2
+  %binsum.in.read_input_outter1091 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1090, align 8
+  %k1092 = load i128, i128* %k, align 4
+  %fsum1093 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1091, i128 0, i128 1, i128 %k1092
+  store i128 %g1078, i128* %fsum1093, align 4
+  %hin1094 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
+  %k1095 = load i128, i128* %k, align 4
+  %add1096 = add i128 224, %k1095
+  %array_getter1097 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin1094, i128 0, i128 %add1096
+  %hin1098 = load i128, i128* %array_getter1097, align 4
+  %fsum1099 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1100 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1099, i128 0, i128 7
+  %fsum1101 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1100, align 8
+  %struct_getter1102 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1101, i32 0, i32 2
+  %binsum.in.read_input_outter1103 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1102, align 8
+  %k1104 = load i128, i128* %k, align 4
+  %array_getter1105 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1103, i128 0, i128 0, i128 %k1104
+  %fsum1106 = load i128, i128* %array_getter1105, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1106, i128 %hin1098, i1* @constraint.137)
+  %ptr_getter1107 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1108 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1107, i128 0, i128 7
+  %fsum1109 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1108, align 8
+  %struct_getter1110 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1109, i32 0, i32 2
+  %binsum.in.read_input_outter1111 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1110, align 8
+  %k1112 = load i128, i128* %k, align 4
+  %fsum1113 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1111, i128 0, i128 0, i128 %k1112
+  store i128 %hin1098, i128* %fsum1113, align 4
+  %h1114 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  %k1115 = load i128, i128* %k, align 4
+  %array_getter1116 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h1114, i128 0, i128 64, i128 %k1115
+  %h1117 = load i128, i128* %array_getter1116, align 4
+  %fsum1118 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1119 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1118, i128 0, i128 7
+  %fsum1120 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1119, align 8
+  %struct_getter1121 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1120, i32 0, i32 2
+  %binsum.in.read_input_outter1122 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1121, align 8
+  %k1123 = load i128, i128* %k, align 4
+  %array_getter1124 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1122, i128 0, i128 1, i128 %k1123
+  %fsum1125 = load i128, i128* %array_getter1124, align 4
+  call void @fn_intrinsic_add_constraint(i128 %fsum1125, i128 %h1117, i1* @constraint.138)
+  %ptr_getter1126 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1127 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1126, i128 0, i128 7
+  %fsum1128 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1127, align 8
+  %struct_getter1129 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1128, i32 0, i32 2
+  %binsum.in.read_input_outter1130 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1129, align 8
+  %k1131 = load i128, i128* %k, align 4
+  %fsum1132 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1130, i128 0, i128 1, i128 %k1131
+  store i128 %h1117, i128* %fsum1132, align 4
+  br label %loop.latch1133
 
-loop.latch809:                                    ; preds = %loop.body673
-  %k810 = load i128, i128* %k, align 4
-  %add811 = add i128 %k810, 1
-  store i128 %add811, i128* %k, align 4
-  %k812 = load i128, i128* %k, align 4
-  %slt813 = icmp slt i128 %k812, 32
-  br i1 %slt813, label %loop.body673, label %loop.exit814
+loop.latch1133:                                   ; preds = %loop.body820
+  %k1134 = load i128, i128* %k, align 4
+  %add1135 = add i128 %k1134, 1
+  store i128 %add1135, i128* %k, align 4
+  %k1136 = load i128, i128* %k, align 4
+  %slt1137 = icmp slt i128 %k1136, 32
+  br i1 %slt1137, label %loop.body820, label %loop.exit1138
 
-loop.exit814:                                     ; preds = %loop.latch809
-  br label %loop.latch815
-
-loop.latch815:                                    ; preds = %loop.exit814
-  %t816 = load i128, i128* %t, align 4
-  %add817 = add i128 %t816, 1
-  store i128 %add817, i128* %t, align 4
-  %t818 = load i128, i128* %t, align 4
-  %slt819 = icmp slt i128 %t818, 64
-  br i1 %slt819, label %loop.body369, label %loop.exit820
-
-loop.exit820:                                     ; preds = %loop.latch815
+loop.exit1138:                                    ; preds = %loop.latch1133
   store i128 0, i128* %k, align 4
-  br label %loop.body821
+  br label %loop.body1139
 
-loop.body821:                                     ; preds = %loop.latch1134, %loop.exit820
-  %hin822 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k823 = load i128, i128* %k, align 4
-  %add824 = add i128 0, %k823
-  %array_getter825 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin822, i128 0, i128 %add824
-  %hin826 = load i128, i128* %array_getter825, align 4
-  %fsum827 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter828 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum827, i128 0, i128 0
-  %fsum829 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter828, align 8
-  %struct_getter830 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum829, i32 0, i32 2
-  %binsum.in.read_input_outter831 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter830, align 8
-  %k832 = load i128, i128* %k, align 4
-  %array_getter833 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter831, i128 0, i128 0, i128 %k832
-  %fsum834 = load i128, i128* %array_getter833, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum834, i128 %hin826, i1* @constraint.123)
-  %ptr_getter835 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter836 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter835, i128 0, i128 0
-  %fsum837 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter836, align 8
-  %struct_getter838 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum837, i32 0, i32 2
-  %binsum.in.read_input_outter839 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter838, align 8
-  %k840 = load i128, i128* %k, align 4
-  %fsum841 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter839, i128 0, i128 0, i128 %k840
-  store i128 %hin826, i128* %fsum841, align 4
-  %a842 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
-  %k843 = load i128, i128* %k, align 4
-  %array_getter844 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %a842, i128 0, i128 64, i128 %k843
-  %a845 = load i128, i128* %array_getter844, align 4
-  %fsum846 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter847 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum846, i128 0, i128 0
-  %fsum848 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter847, align 8
-  %struct_getter849 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum848, i32 0, i32 2
-  %binsum.in.read_input_outter850 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter849, align 8
-  %k851 = load i128, i128* %k, align 4
-  %array_getter852 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter850, i128 0, i128 1, i128 %k851
-  %fsum853 = load i128, i128* %array_getter852, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum853, i128 %a845, i1* @constraint.124)
-  %ptr_getter854 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter855 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter854, i128 0, i128 0
-  %fsum856 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter855, align 8
-  %struct_getter857 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum856, i32 0, i32 2
-  %binsum.in.read_input_outter858 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter857, align 8
-  %k859 = load i128, i128* %k, align 4
-  %fsum860 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter858, i128 0, i128 1, i128 %k859
-  store i128 %a845, i128* %fsum860, align 4
-  %hin861 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k862 = load i128, i128* %k, align 4
-  %add863 = add i128 32, %k862
-  %array_getter864 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin861, i128 0, i128 %add863
-  %hin865 = load i128, i128* %array_getter864, align 4
-  %fsum866 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter867 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum866, i128 0, i128 1
-  %fsum868 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter867, align 8
-  %struct_getter869 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum868, i32 0, i32 2
-  %binsum.in.read_input_outter870 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter869, align 8
-  %k871 = load i128, i128* %k, align 4
-  %array_getter872 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter870, i128 0, i128 0, i128 %k871
-  %fsum873 = load i128, i128* %array_getter872, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum873, i128 %hin865, i1* @constraint.125)
-  %ptr_getter874 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter875 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter874, i128 0, i128 1
-  %fsum876 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter875, align 8
-  %struct_getter877 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum876, i32 0, i32 2
-  %binsum.in.read_input_outter878 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter877, align 8
-  %k879 = load i128, i128* %k, align 4
-  %fsum880 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter878, i128 0, i128 0, i128 %k879
-  store i128 %hin865, i128* %fsum880, align 4
-  %b881 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
-  %k882 = load i128, i128* %k, align 4
-  %array_getter883 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %b881, i128 0, i128 64, i128 %k882
-  %b884 = load i128, i128* %array_getter883, align 4
-  %fsum885 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter886 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum885, i128 0, i128 1
-  %fsum887 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter886, align 8
-  %struct_getter888 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum887, i32 0, i32 2
-  %binsum.in.read_input_outter889 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter888, align 8
-  %k890 = load i128, i128* %k, align 4
-  %array_getter891 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter889, i128 0, i128 1, i128 %k890
-  %fsum892 = load i128, i128* %array_getter891, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum892, i128 %b884, i1* @constraint.126)
-  %ptr_getter893 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter894 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter893, i128 0, i128 1
-  %fsum895 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter894, align 8
-  %struct_getter896 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum895, i32 0, i32 2
-  %binsum.in.read_input_outter897 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter896, align 8
-  %k898 = load i128, i128* %k, align 4
-  %fsum899 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter897, i128 0, i128 1, i128 %k898
-  store i128 %b884, i128* %fsum899, align 4
-  %hin900 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k901 = load i128, i128* %k, align 4
-  %add902 = add i128 64, %k901
-  %array_getter903 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin900, i128 0, i128 %add902
-  %hin904 = load i128, i128* %array_getter903, align 4
-  %fsum905 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter906 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum905, i128 0, i128 2
-  %fsum907 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter906, align 8
-  %struct_getter908 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum907, i32 0, i32 2
-  %binsum.in.read_input_outter909 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter908, align 8
-  %k910 = load i128, i128* %k, align 4
-  %array_getter911 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter909, i128 0, i128 0, i128 %k910
-  %fsum912 = load i128, i128* %array_getter911, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum912, i128 %hin904, i1* @constraint.127)
-  %ptr_getter913 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter914 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter913, i128 0, i128 2
-  %fsum915 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter914, align 8
-  %struct_getter916 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum915, i32 0, i32 2
-  %binsum.in.read_input_outter917 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter916, align 8
-  %k918 = load i128, i128* %k, align 4
-  %fsum919 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter917, i128 0, i128 0, i128 %k918
-  store i128 %hin904, i128* %fsum919, align 4
-  %c920 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
-  %k921 = load i128, i128* %k, align 4
-  %array_getter922 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %c920, i128 0, i128 64, i128 %k921
-  %c923 = load i128, i128* %array_getter922, align 4
-  %fsum924 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter925 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum924, i128 0, i128 2
-  %fsum926 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter925, align 8
-  %struct_getter927 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum926, i32 0, i32 2
-  %binsum.in.read_input_outter928 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter927, align 8
-  %k929 = load i128, i128* %k, align 4
-  %array_getter930 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter928, i128 0, i128 1, i128 %k929
-  %fsum931 = load i128, i128* %array_getter930, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum931, i128 %c923, i1* @constraint.128)
-  %ptr_getter932 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter933 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter932, i128 0, i128 2
-  %fsum934 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter933, align 8
-  %struct_getter935 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum934, i32 0, i32 2
-  %binsum.in.read_input_outter936 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter935, align 8
-  %k937 = load i128, i128* %k, align 4
-  %fsum938 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter936, i128 0, i128 1, i128 %k937
-  store i128 %c923, i128* %fsum938, align 4
-  %hin939 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k940 = load i128, i128* %k, align 4
-  %add941 = add i128 96, %k940
-  %array_getter942 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin939, i128 0, i128 %add941
-  %hin943 = load i128, i128* %array_getter942, align 4
-  %fsum944 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter945 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum944, i128 0, i128 3
-  %fsum946 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter945, align 8
-  %struct_getter947 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum946, i32 0, i32 2
-  %binsum.in.read_input_outter948 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter947, align 8
-  %k949 = load i128, i128* %k, align 4
-  %array_getter950 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter948, i128 0, i128 0, i128 %k949
-  %fsum951 = load i128, i128* %array_getter950, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum951, i128 %hin943, i1* @constraint.129)
-  %ptr_getter952 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter953 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter952, i128 0, i128 3
-  %fsum954 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter953, align 8
-  %struct_getter955 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum954, i32 0, i32 2
-  %binsum.in.read_input_outter956 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter955, align 8
-  %k957 = load i128, i128* %k, align 4
-  %fsum958 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter956, i128 0, i128 0, i128 %k957
-  store i128 %hin943, i128* %fsum958, align 4
-  %d959 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
-  %k960 = load i128, i128* %k, align 4
-  %array_getter961 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %d959, i128 0, i128 64, i128 %k960
-  %d962 = load i128, i128* %array_getter961, align 4
-  %fsum963 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter964 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum963, i128 0, i128 3
-  %fsum965 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter964, align 8
-  %struct_getter966 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum965, i32 0, i32 2
-  %binsum.in.read_input_outter967 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter966, align 8
-  %k968 = load i128, i128* %k, align 4
-  %array_getter969 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter967, i128 0, i128 1, i128 %k968
-  %fsum970 = load i128, i128* %array_getter969, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum970, i128 %d962, i1* @constraint.130)
-  %ptr_getter971 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter972 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter971, i128 0, i128 3
-  %fsum973 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter972, align 8
-  %struct_getter974 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum973, i32 0, i32 2
-  %binsum.in.read_input_outter975 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter974, align 8
-  %k976 = load i128, i128* %k, align 4
-  %fsum977 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter975, i128 0, i128 1, i128 %k976
-  store i128 %d962, i128* %fsum977, align 4
-  %hin978 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k979 = load i128, i128* %k, align 4
-  %add980 = add i128 128, %k979
-  %array_getter981 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin978, i128 0, i128 %add980
-  %hin982 = load i128, i128* %array_getter981, align 4
-  %fsum983 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter984 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum983, i128 0, i128 4
-  %fsum985 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter984, align 8
-  %struct_getter986 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum985, i32 0, i32 2
-  %binsum.in.read_input_outter987 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter986, align 8
-  %k988 = load i128, i128* %k, align 4
-  %array_getter989 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter987, i128 0, i128 0, i128 %k988
-  %fsum990 = load i128, i128* %array_getter989, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum990, i128 %hin982, i1* @constraint.131)
-  %ptr_getter991 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter992 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter991, i128 0, i128 4
-  %fsum993 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter992, align 8
-  %struct_getter994 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum993, i32 0, i32 2
-  %binsum.in.read_input_outter995 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter994, align 8
-  %k996 = load i128, i128* %k, align 4
-  %fsum997 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter995, i128 0, i128 0, i128 %k996
-  store i128 %hin982, i128* %fsum997, align 4
-  %e998 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
-  %k999 = load i128, i128* %k, align 4
-  %array_getter1000 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %e998, i128 0, i128 64, i128 %k999
-  %e1001 = load i128, i128* %array_getter1000, align 4
-  %fsum1002 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1003 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1002, i128 0, i128 4
-  %fsum1004 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1003, align 8
-  %struct_getter1005 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1004, i32 0, i32 2
-  %binsum.in.read_input_outter1006 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1005, align 8
-  %k1007 = load i128, i128* %k, align 4
-  %array_getter1008 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1006, i128 0, i128 1, i128 %k1007
-  %fsum1009 = load i128, i128* %array_getter1008, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1009, i128 %e1001, i1* @constraint.132)
-  %ptr_getter1010 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1011 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1010, i128 0, i128 4
-  %fsum1012 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1011, align 8
-  %struct_getter1013 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1012, i32 0, i32 2
-  %binsum.in.read_input_outter1014 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1013, align 8
-  %k1015 = load i128, i128* %k, align 4
-  %fsum1016 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1014, i128 0, i128 1, i128 %k1015
-  store i128 %e1001, i128* %fsum1016, align 4
-  %hin1017 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k1018 = load i128, i128* %k, align 4
-  %add1019 = add i128 160, %k1018
-  %array_getter1020 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin1017, i128 0, i128 %add1019
-  %hin1021 = load i128, i128* %array_getter1020, align 4
-  %fsum1022 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1023 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1022, i128 0, i128 5
-  %fsum1024 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1023, align 8
-  %struct_getter1025 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1024, i32 0, i32 2
-  %binsum.in.read_input_outter1026 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1025, align 8
-  %k1027 = load i128, i128* %k, align 4
-  %array_getter1028 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1026, i128 0, i128 0, i128 %k1027
-  %fsum1029 = load i128, i128* %array_getter1028, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1029, i128 %hin1021, i1* @constraint.133)
-  %ptr_getter1030 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1031 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1030, i128 0, i128 5
-  %fsum1032 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1031, align 8
-  %struct_getter1033 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1032, i32 0, i32 2
-  %binsum.in.read_input_outter1034 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1033, align 8
-  %k1035 = load i128, i128* %k, align 4
-  %fsum1036 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1034, i128 0, i128 0, i128 %k1035
-  store i128 %hin1021, i128* %fsum1036, align 4
-  %f1037 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
-  %k1038 = load i128, i128* %k, align 4
-  %array_getter1039 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %f1037, i128 0, i128 64, i128 %k1038
-  %f1040 = load i128, i128* %array_getter1039, align 4
-  %fsum1041 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1042 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1041, i128 0, i128 5
-  %fsum1043 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1042, align 8
-  %struct_getter1044 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1043, i32 0, i32 2
-  %binsum.in.read_input_outter1045 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1044, align 8
-  %k1046 = load i128, i128* %k, align 4
-  %array_getter1047 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1045, i128 0, i128 1, i128 %k1046
-  %fsum1048 = load i128, i128* %array_getter1047, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1048, i128 %f1040, i1* @constraint.134)
-  %ptr_getter1049 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1050 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1049, i128 0, i128 5
-  %fsum1051 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1050, align 8
-  %struct_getter1052 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1051, i32 0, i32 2
-  %binsum.in.read_input_outter1053 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1052, align 8
-  %k1054 = load i128, i128* %k, align 4
-  %fsum1055 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1053, i128 0, i128 1, i128 %k1054
-  store i128 %f1040, i128* %fsum1055, align 4
-  %hin1056 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k1057 = load i128, i128* %k, align 4
-  %add1058 = add i128 192, %k1057
-  %array_getter1059 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin1056, i128 0, i128 %add1058
-  %hin1060 = load i128, i128* %array_getter1059, align 4
-  %fsum1061 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1062 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1061, i128 0, i128 6
-  %fsum1063 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1062, align 8
-  %struct_getter1064 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1063, i32 0, i32 2
-  %binsum.in.read_input_outter1065 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1064, align 8
-  %k1066 = load i128, i128* %k, align 4
-  %array_getter1067 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1065, i128 0, i128 0, i128 %k1066
-  %fsum1068 = load i128, i128* %array_getter1067, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1068, i128 %hin1060, i1* @constraint.135)
-  %ptr_getter1069 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1070 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1069, i128 0, i128 6
-  %fsum1071 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1070, align 8
-  %struct_getter1072 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1071, i32 0, i32 2
-  %binsum.in.read_input_outter1073 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1072, align 8
-  %k1074 = load i128, i128* %k, align 4
-  %fsum1075 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1073, i128 0, i128 0, i128 %k1074
-  store i128 %hin1060, i128* %fsum1075, align 4
-  %g1076 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
-  %k1077 = load i128, i128* %k, align 4
-  %array_getter1078 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %g1076, i128 0, i128 64, i128 %k1077
-  %g1079 = load i128, i128* %array_getter1078, align 4
-  %fsum1080 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1081 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1080, i128 0, i128 6
-  %fsum1082 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1081, align 8
-  %struct_getter1083 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1082, i32 0, i32 2
-  %binsum.in.read_input_outter1084 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1083, align 8
-  %k1085 = load i128, i128* %k, align 4
-  %array_getter1086 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1084, i128 0, i128 1, i128 %k1085
-  %fsum1087 = load i128, i128* %array_getter1086, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1087, i128 %g1079, i1* @constraint.136)
-  %ptr_getter1088 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1089 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1088, i128 0, i128 6
-  %fsum1090 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1089, align 8
-  %struct_getter1091 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1090, i32 0, i32 2
-  %binsum.in.read_input_outter1092 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1091, align 8
-  %k1093 = load i128, i128* %k, align 4
-  %fsum1094 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1092, i128 0, i128 1, i128 %k1093
-  store i128 %g1079, i128* %fsum1094, align 4
-  %hin1095 = load [4096 x i128]*, [4096 x i128]** %sha256compression.hin.declare_input, align 8
-  %k1096 = load i128, i128* %k, align 4
-  %add1097 = add i128 224, %k1096
-  %array_getter1098 = getelementptr inbounds [4096 x i128], [4096 x i128]* %hin1095, i128 0, i128 %add1097
-  %hin1099 = load i128, i128* %array_getter1098, align 4
-  %fsum1100 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1101 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1100, i128 0, i128 7
-  %fsum1102 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1101, align 8
-  %struct_getter1103 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1102, i32 0, i32 2
-  %binsum.in.read_input_outter1104 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1103, align 8
-  %k1105 = load i128, i128* %k, align 4
-  %array_getter1106 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1104, i128 0, i128 0, i128 %k1105
-  %fsum1107 = load i128, i128* %array_getter1106, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1107, i128 %hin1099, i1* @constraint.137)
-  %ptr_getter1108 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1109 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1108, i128 0, i128 7
-  %fsum1110 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1109, align 8
-  %struct_getter1111 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1110, i32 0, i32 2
-  %binsum.in.read_input_outter1112 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1111, align 8
-  %k1113 = load i128, i128* %k, align 4
-  %fsum1114 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1112, i128 0, i128 0, i128 %k1113
-  store i128 %hin1099, i128* %fsum1114, align 4
-  %h1115 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
-  %k1116 = load i128, i128* %k, align 4
-  %array_getter1117 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %h1115, i128 0, i128 64, i128 %k1116
-  %h1118 = load i128, i128* %array_getter1117, align 4
-  %fsum1119 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1120 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1119, i128 0, i128 7
-  %fsum1121 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1120, align 8
-  %struct_getter1122 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1121, i32 0, i32 2
-  %binsum.in.read_input_outter1123 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1122, align 8
-  %k1124 = load i128, i128* %k, align 4
-  %array_getter1125 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1123, i128 0, i128 1, i128 %k1124
-  %fsum1126 = load i128, i128* %array_getter1125, align 4
-  call void @fn_intrinsic_add_constraint(i128 %fsum1126, i128 %h1118, i1* @constraint.138)
-  %ptr_getter1127 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1128 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %ptr_getter1127, i128 0, i128 7
-  %fsum1129 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1128, align 8
-  %struct_getter1130 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1129, i32 0, i32 2
-  %binsum.in.read_input_outter1131 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %struct_getter1130, align 8
-  %k1132 = load i128, i128* %k, align 4
-  %fsum1133 = getelementptr inbounds [4096 x [4096 x i128]], [4096 x [4096 x i128]]* %binsum.in.read_input_outter1131, i128 0, i128 1, i128 %k1132
-  store i128 %h1118, i128* %fsum1133, align 4
-  br label %loop.latch1134
+loop.body1139:                                    ; preds = %loop.latch1244, %loop.exit1138
+  %out1140 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1141 = load i128, i128* %k, align 4
+  %sub1142 = sub i128 31, %k1141
+  %array_getter1143 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1140, i128 0, i128 %sub1142
+  %out1144 = load i128, i128* %array_getter1143, align 4
+  %fsum1145 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1146 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1145, i128 0, i128 0
+  %fsum1147 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1146, align 8
+  %struct_getter1148 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1147, i32 0, i32 3
+  %binsum.out.read_output_outter1149 = load [4096 x i128]*, [4096 x i128]** %struct_getter1148, align 8
+  %k1150 = load i128, i128* %k, align 4
+  %array_getter1151 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1149, i128 0, i128 %k1150
+  %fsum1152 = load i128, i128* %array_getter1151, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1144, i128 %fsum1152, i1* @constraint.139)
+  %out1153 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1154 = load i128, i128* %k, align 4
+  %sub1155 = sub i128 63, %k1154
+  %array_getter1156 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1153, i128 0, i128 %sub1155
+  %out1157 = load i128, i128* %array_getter1156, align 4
+  %fsum1158 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1159 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1158, i128 0, i128 1
+  %fsum1160 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1159, align 8
+  %struct_getter1161 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1160, i32 0, i32 3
+  %binsum.out.read_output_outter1162 = load [4096 x i128]*, [4096 x i128]** %struct_getter1161, align 8
+  %k1163 = load i128, i128* %k, align 4
+  %array_getter1164 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1162, i128 0, i128 %k1163
+  %fsum1165 = load i128, i128* %array_getter1164, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1157, i128 %fsum1165, i1* @constraint.140)
+  %out1166 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1167 = load i128, i128* %k, align 4
+  %sub1168 = sub i128 95, %k1167
+  %array_getter1169 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1166, i128 0, i128 %sub1168
+  %out1170 = load i128, i128* %array_getter1169, align 4
+  %fsum1171 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1172 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1171, i128 0, i128 2
+  %fsum1173 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1172, align 8
+  %struct_getter1174 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1173, i32 0, i32 3
+  %binsum.out.read_output_outter1175 = load [4096 x i128]*, [4096 x i128]** %struct_getter1174, align 8
+  %k1176 = load i128, i128* %k, align 4
+  %array_getter1177 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1175, i128 0, i128 %k1176
+  %fsum1178 = load i128, i128* %array_getter1177, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1170, i128 %fsum1178, i1* @constraint.141)
+  %out1179 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1180 = load i128, i128* %k, align 4
+  %sub1181 = sub i128 127, %k1180
+  %array_getter1182 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1179, i128 0, i128 %sub1181
+  %out1183 = load i128, i128* %array_getter1182, align 4
+  %fsum1184 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1185 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1184, i128 0, i128 3
+  %fsum1186 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1185, align 8
+  %struct_getter1187 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1186, i32 0, i32 3
+  %binsum.out.read_output_outter1188 = load [4096 x i128]*, [4096 x i128]** %struct_getter1187, align 8
+  %k1189 = load i128, i128* %k, align 4
+  %array_getter1190 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1188, i128 0, i128 %k1189
+  %fsum1191 = load i128, i128* %array_getter1190, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1183, i128 %fsum1191, i1* @constraint.142)
+  %out1192 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1193 = load i128, i128* %k, align 4
+  %sub1194 = sub i128 159, %k1193
+  %array_getter1195 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1192, i128 0, i128 %sub1194
+  %out1196 = load i128, i128* %array_getter1195, align 4
+  %fsum1197 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1198 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1197, i128 0, i128 4
+  %fsum1199 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1198, align 8
+  %struct_getter1200 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1199, i32 0, i32 3
+  %binsum.out.read_output_outter1201 = load [4096 x i128]*, [4096 x i128]** %struct_getter1200, align 8
+  %k1202 = load i128, i128* %k, align 4
+  %array_getter1203 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1201, i128 0, i128 %k1202
+  %fsum1204 = load i128, i128* %array_getter1203, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1196, i128 %fsum1204, i1* @constraint.143)
+  %out1205 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1206 = load i128, i128* %k, align 4
+  %sub1207 = sub i128 191, %k1206
+  %array_getter1208 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1205, i128 0, i128 %sub1207
+  %out1209 = load i128, i128* %array_getter1208, align 4
+  %fsum1210 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1211 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1210, i128 0, i128 5
+  %fsum1212 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1211, align 8
+  %struct_getter1213 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1212, i32 0, i32 3
+  %binsum.out.read_output_outter1214 = load [4096 x i128]*, [4096 x i128]** %struct_getter1213, align 8
+  %k1215 = load i128, i128* %k, align 4
+  %array_getter1216 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1214, i128 0, i128 %k1215
+  %fsum1217 = load i128, i128* %array_getter1216, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1209, i128 %fsum1217, i1* @constraint.144)
+  %out1218 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1219 = load i128, i128* %k, align 4
+  %sub1220 = sub i128 223, %k1219
+  %array_getter1221 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1218, i128 0, i128 %sub1220
+  %out1222 = load i128, i128* %array_getter1221, align 4
+  %fsum1223 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1224 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1223, i128 0, i128 6
+  %fsum1225 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1224, align 8
+  %struct_getter1226 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1225, i32 0, i32 3
+  %binsum.out.read_output_outter1227 = load [4096 x i128]*, [4096 x i128]** %struct_getter1226, align 8
+  %k1228 = load i128, i128* %k, align 4
+  %array_getter1229 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1227, i128 0, i128 %k1228
+  %fsum1230 = load i128, i128* %array_getter1229, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1222, i128 %fsum1230, i1* @constraint.145)
+  %out1231 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  %k1232 = load i128, i128* %k, align 4
+  %sub1233 = sub i128 255, %k1232
+  %array_getter1234 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1231, i128 0, i128 %sub1233
+  %out1235 = load i128, i128* %array_getter1234, align 4
+  %fsum1236 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
+  %array_getter1237 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1236, i128 0, i128 7
+  %fsum1238 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1237, align 8
+  %struct_getter1239 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1238, i32 0, i32 3
+  %binsum.out.read_output_outter1240 = load [4096 x i128]*, [4096 x i128]** %struct_getter1239, align 8
+  %k1241 = load i128, i128* %k, align 4
+  %array_getter1242 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1240, i128 0, i128 %k1241
+  %fsum1243 = load i128, i128* %array_getter1242, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out1235, i128 %fsum1243, i1* @constraint.146)
+  br label %loop.latch1244
 
-loop.latch1134:                                   ; preds = %loop.body821
-  %k1135 = load i128, i128* %k, align 4
-  %add1136 = add i128 %k1135, 1
-  store i128 %add1136, i128* %k, align 4
-  %k1137 = load i128, i128* %k, align 4
-  %slt1138 = icmp slt i128 %k1137, 32
-  br i1 %slt1138, label %loop.body821, label %loop.exit1139
+loop.latch1244:                                   ; preds = %loop.body1139
+  %k1245 = load i128, i128* %k, align 4
+  %add1246 = add i128 %k1245, 1
+  store i128 %add1246, i128* %k, align 4
+  %k1247 = load i128, i128* %k, align 4
+  %slt1248 = icmp slt i128 %k1247, 32
+  br i1 %slt1248, label %loop.body1139, label %loop.exit1249
 
-loop.exit1139:                                    ; preds = %loop.latch1134
-  store i128 0, i128* %k, align 4
-  br label %loop.body1140
-
-loop.body1140:                                    ; preds = %loop.latch1245, %loop.exit1139
-  %out1141 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1142 = load i128, i128* %k, align 4
-  %sub1143 = sub i128 31, %k1142
-  %array_getter1144 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1141, i128 0, i128 %sub1143
-  %out1145 = load i128, i128* %array_getter1144, align 4
-  %fsum1146 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1147 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1146, i128 0, i128 0
-  %fsum1148 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1147, align 8
-  %struct_getter1149 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1148, i32 0, i32 3
-  %binsum.out.read_output_outter1150 = load [4096 x i128]*, [4096 x i128]** %struct_getter1149, align 8
-  %k1151 = load i128, i128* %k, align 4
-  %array_getter1152 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1150, i128 0, i128 %k1151
-  %fsum1153 = load i128, i128* %array_getter1152, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1145, i128 %fsum1153, i1* @constraint.139)
-  %out1154 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1155 = load i128, i128* %k, align 4
-  %sub1156 = sub i128 63, %k1155
-  %array_getter1157 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1154, i128 0, i128 %sub1156
-  %out1158 = load i128, i128* %array_getter1157, align 4
-  %fsum1159 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1160 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1159, i128 0, i128 1
-  %fsum1161 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1160, align 8
-  %struct_getter1162 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1161, i32 0, i32 3
-  %binsum.out.read_output_outter1163 = load [4096 x i128]*, [4096 x i128]** %struct_getter1162, align 8
-  %k1164 = load i128, i128* %k, align 4
-  %array_getter1165 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1163, i128 0, i128 %k1164
-  %fsum1166 = load i128, i128* %array_getter1165, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1158, i128 %fsum1166, i1* @constraint.140)
-  %out1167 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1168 = load i128, i128* %k, align 4
-  %sub1169 = sub i128 95, %k1168
-  %array_getter1170 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1167, i128 0, i128 %sub1169
-  %out1171 = load i128, i128* %array_getter1170, align 4
-  %fsum1172 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1173 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1172, i128 0, i128 2
-  %fsum1174 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1173, align 8
-  %struct_getter1175 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1174, i32 0, i32 3
-  %binsum.out.read_output_outter1176 = load [4096 x i128]*, [4096 x i128]** %struct_getter1175, align 8
-  %k1177 = load i128, i128* %k, align 4
-  %array_getter1178 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1176, i128 0, i128 %k1177
-  %fsum1179 = load i128, i128* %array_getter1178, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1171, i128 %fsum1179, i1* @constraint.141)
-  %out1180 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1181 = load i128, i128* %k, align 4
-  %sub1182 = sub i128 127, %k1181
-  %array_getter1183 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1180, i128 0, i128 %sub1182
-  %out1184 = load i128, i128* %array_getter1183, align 4
-  %fsum1185 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1186 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1185, i128 0, i128 3
-  %fsum1187 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1186, align 8
-  %struct_getter1188 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1187, i32 0, i32 3
-  %binsum.out.read_output_outter1189 = load [4096 x i128]*, [4096 x i128]** %struct_getter1188, align 8
-  %k1190 = load i128, i128* %k, align 4
-  %array_getter1191 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1189, i128 0, i128 %k1190
-  %fsum1192 = load i128, i128* %array_getter1191, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1184, i128 %fsum1192, i1* @constraint.142)
-  %out1193 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1194 = load i128, i128* %k, align 4
-  %sub1195 = sub i128 159, %k1194
-  %array_getter1196 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1193, i128 0, i128 %sub1195
-  %out1197 = load i128, i128* %array_getter1196, align 4
-  %fsum1198 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1199 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1198, i128 0, i128 4
-  %fsum1200 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1199, align 8
-  %struct_getter1201 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1200, i32 0, i32 3
-  %binsum.out.read_output_outter1202 = load [4096 x i128]*, [4096 x i128]** %struct_getter1201, align 8
-  %k1203 = load i128, i128* %k, align 4
-  %array_getter1204 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1202, i128 0, i128 %k1203
-  %fsum1205 = load i128, i128* %array_getter1204, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1197, i128 %fsum1205, i1* @constraint.143)
-  %out1206 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1207 = load i128, i128* %k, align 4
-  %sub1208 = sub i128 191, %k1207
-  %array_getter1209 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1206, i128 0, i128 %sub1208
-  %out1210 = load i128, i128* %array_getter1209, align 4
-  %fsum1211 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1212 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1211, i128 0, i128 5
-  %fsum1213 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1212, align 8
-  %struct_getter1214 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1213, i32 0, i32 3
-  %binsum.out.read_output_outter1215 = load [4096 x i128]*, [4096 x i128]** %struct_getter1214, align 8
-  %k1216 = load i128, i128* %k, align 4
-  %array_getter1217 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1215, i128 0, i128 %k1216
-  %fsum1218 = load i128, i128* %array_getter1217, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1210, i128 %fsum1218, i1* @constraint.144)
-  %out1219 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1220 = load i128, i128* %k, align 4
-  %sub1221 = sub i128 223, %k1220
-  %array_getter1222 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1219, i128 0, i128 %sub1221
-  %out1223 = load i128, i128* %array_getter1222, align 4
-  %fsum1224 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1225 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1224, i128 0, i128 6
-  %fsum1226 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1225, align 8
-  %struct_getter1227 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1226, i32 0, i32 3
-  %binsum.out.read_output_outter1228 = load [4096 x i128]*, [4096 x i128]** %struct_getter1227, align 8
-  %k1229 = load i128, i128* %k, align 4
-  %array_getter1230 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1228, i128 0, i128 %k1229
-  %fsum1231 = load i128, i128* %array_getter1230, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1223, i128 %fsum1231, i1* @constraint.145)
-  %out1232 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
-  %k1233 = load i128, i128* %k, align 4
-  %sub1234 = sub i128 255, %k1233
-  %array_getter1235 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out1232, i128 0, i128 %sub1234
-  %out1236 = load i128, i128* %array_getter1235, align 4
-  %fsum1237 = load [4096 x %struct_template_circuit_binsum*]*, [4096 x %struct_template_circuit_binsum*]** %fsum, align 8
-  %array_getter1238 = getelementptr inbounds [4096 x %struct_template_circuit_binsum*], [4096 x %struct_template_circuit_binsum*]* %fsum1237, i128 0, i128 7
-  %fsum1239 = load %struct_template_circuit_binsum*, %struct_template_circuit_binsum** %array_getter1238, align 8
-  %struct_getter1240 = getelementptr inbounds %struct_template_circuit_binsum, %struct_template_circuit_binsum* %fsum1239, i32 0, i32 3
-  %binsum.out.read_output_outter1241 = load [4096 x i128]*, [4096 x i128]** %struct_getter1240, align 8
-  %k1242 = load i128, i128* %k, align 4
-  %array_getter1243 = getelementptr inbounds [4096 x i128], [4096 x i128]* %binsum.out.read_output_outter1241, i128 0, i128 %k1242
-  %fsum1244 = load i128, i128* %array_getter1243, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out1236, i128 %fsum1244, i1* @constraint.146)
-  br label %loop.latch1245
-
-loop.latch1245:                                   ; preds = %loop.body1140
-  %k1246 = load i128, i128* %k, align 4
-  %add1247 = add i128 %k1246, 1
-  store i128 %add1247, i128* %k, align 4
-  %k1248 = load i128, i128* %k, align 4
-  %slt1249 = icmp slt i128 %k1248, 32
-  br i1 %slt1249, label %loop.body1140, label %loop.exit1250
-
-loop.exit1250:                                    ; preds = %loop.latch1245
+loop.exit1249:                                    ; preds = %loop.latch1244
   br label %exit
 
-exit:                                             ; preds = %loop.exit1250
-  %a1251 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
+exit:                                             ; preds = %loop.exit1249
+  %a1250 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.a.declare_inter, align 8
   %sha256compression.a.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 2
-  store [4096 x [4096 x i128]]* %a1251, [4096 x [4096 x i128]]** %sha256compression.a.write_inter_inner, align 8
-  %b1252 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %a1250, [4096 x [4096 x i128]]** %sha256compression.a.write_inter_inner, align 8
+  %b1251 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.b.declare_inter, align 8
   %sha256compression.b.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 3
-  store [4096 x [4096 x i128]]* %b1252, [4096 x [4096 x i128]]** %sha256compression.b.write_inter_inner, align 8
-  %c1253 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %b1251, [4096 x [4096 x i128]]** %sha256compression.b.write_inter_inner, align 8
+  %c1252 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.c.declare_inter, align 8
   %sha256compression.c.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 4
-  store [4096 x [4096 x i128]]* %c1253, [4096 x [4096 x i128]]** %sha256compression.c.write_inter_inner, align 8
-  %d1254 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %c1252, [4096 x [4096 x i128]]** %sha256compression.c.write_inter_inner, align 8
+  %d1253 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.d.declare_inter, align 8
   %sha256compression.d.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 5
-  store [4096 x [4096 x i128]]* %d1254, [4096 x [4096 x i128]]** %sha256compression.d.write_inter_inner, align 8
-  %e1255 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %d1253, [4096 x [4096 x i128]]** %sha256compression.d.write_inter_inner, align 8
+  %e1254 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.e.declare_inter, align 8
   %sha256compression.e.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 6
-  store [4096 x [4096 x i128]]* %e1255, [4096 x [4096 x i128]]** %sha256compression.e.write_inter_inner, align 8
-  %f1256 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %e1254, [4096 x [4096 x i128]]** %sha256compression.e.write_inter_inner, align 8
+  %f1255 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.f.declare_inter, align 8
   %sha256compression.f.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 7
-  store [4096 x [4096 x i128]]* %f1256, [4096 x [4096 x i128]]** %sha256compression.f.write_inter_inner, align 8
-  %g1257 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %f1255, [4096 x [4096 x i128]]** %sha256compression.f.write_inter_inner, align 8
+  %g1256 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.g.declare_inter, align 8
   %sha256compression.g.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 8
-  store [4096 x [4096 x i128]]* %g1257, [4096 x [4096 x i128]]** %sha256compression.g.write_inter_inner, align 8
-  %h1258 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %g1256, [4096 x [4096 x i128]]** %sha256compression.g.write_inter_inner, align 8
+  %h1257 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.h.declare_inter, align 8
   %sha256compression.h.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 9
-  store [4096 x [4096 x i128]]* %h1258, [4096 x [4096 x i128]]** %sha256compression.h.write_inter_inner, align 8
-  %w1259 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
+  store [4096 x [4096 x i128]]* %h1257, [4096 x [4096 x i128]]** %sha256compression.h.write_inter_inner, align 8
+  %w1258 = load [4096 x [4096 x i128]]*, [4096 x [4096 x i128]]** %sha256compression.w.declare_inter, align 8
   %sha256compression.w.write_inter_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 10
-  store [4096 x [4096 x i128]]* %w1259, [4096 x [4096 x i128]]** %sha256compression.w.write_inter_inner, align 8
-  %out1260 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
+  store [4096 x [4096 x i128]]* %w1258, [4096 x [4096 x i128]]** %sha256compression.w.write_inter_inner, align 8
+  %out1259 = load [4096 x i128]*, [4096 x i128]** %sha256compression.out.declare_output, align 8
   %sha256compression.out.write_output_inner = getelementptr inbounds %struct_template_circuit_sha256compression, %struct_template_circuit_sha256compression* %0, i32 0, i32 11
-  store [4096 x i128]* %out1260, [4096 x i128]** %sha256compression.out.write_output_inner, align 8
+  store [4096 x i128]* %out1259, [4096 x i128]** %sha256compression.out.write_output_inner, align 8
   ret void
 }
 
@@ -5832,37 +5832,37 @@ entry:
   %sha256.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
   %sha256.in.declare_input = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %sha256.in.read_input_inner, [4096 x i128]** %sha256.in.declare_input, align 8
-  %hh0 = alloca %struct_template_circuit_h*, align 8
-  %hc0 = alloca %struct_template_circuit_h*, align 8
-  %he0 = alloca %struct_template_circuit_h*, align 8
-  %ha0 = alloca %struct_template_circuit_h*, align 8
+  %hf0 = alloca %struct_template_circuit_h*, align 8
   %sha256.out.declare_output = alloca [4096 x i128]*, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %out, [4096 x i128]** %sha256.out.declare_output, align 8
-  %i = alloca i128, align 8
-  %i2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i2, i128* %i, align 4
-  %nBlocks = alloca i128, align 8
-  %nBlocks3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %nBlocks3, i128* %nBlocks, align 4
-  %sha256compression = alloca [4096 x %struct_template_circuit_sha256compression*]*, align 8
-  %sha256compression4 = alloca [4096 x %struct_template_circuit_sha256compression*], align 8
-  store [4096 x %struct_template_circuit_sha256compression*]* %sha256compression4, [4096 x %struct_template_circuit_sha256compression*]** %sha256compression, align 8
-  %k = alloca i128, align 8
-  %k5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %k5, i128* %k, align 4
-  %hf0 = alloca %struct_template_circuit_h*, align 8
-  %bitsLastBlock = alloca i128, align 8
-  %bitsLastBlock6 = call i128 @fn_intrinsic_inline_init()
-  store i128 %bitsLastBlock6, i128* %bitsLastBlock, align 4
+  %hh0 = alloca %struct_template_circuit_h*, align 8
   %sha256.paddedin.declare_inter = alloca [4096 x i128]*, align 8
-  %malloccall7 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %paddedIn = bitcast i8* %malloccall7 to [4096 x i128]*
+  %malloccall2 = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %paddedIn = bitcast i8* %malloccall2 to [4096 x i128]*
   store [4096 x i128]* %paddedIn, [4096 x i128]** %sha256.paddedin.declare_inter, align 8
-  %hb0 = alloca %struct_template_circuit_h*, align 8
   %hg0 = alloca %struct_template_circuit_h*, align 8
+  %bitsLastBlock = alloca i128, align 8
+  %bitsLastBlock3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %bitsLastBlock3, i128* %bitsLastBlock, align 4
+  %i = alloca i128, align 8
+  %i4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i4, i128* %i, align 4
+  %sha256compression = alloca [4096 x %struct_template_circuit_sha256compression*]*, align 8
+  %sha256compression5 = alloca [4096 x %struct_template_circuit_sha256compression*], align 8
+  store [4096 x %struct_template_circuit_sha256compression*]* %sha256compression5, [4096 x %struct_template_circuit_sha256compression*]** %sha256compression, align 8
+  %hb0 = alloca %struct_template_circuit_h*, align 8
+  %k = alloca i128, align 8
+  %k6 = call i128 @fn_intrinsic_inline_init()
+  store i128 %k6, i128* %k, align 4
+  %hc0 = alloca %struct_template_circuit_h*, align 8
   %hd0 = alloca %struct_template_circuit_h*, align 8
+  %he0 = alloca %struct_template_circuit_h*, align 8
+  %nBlocks = alloca i128, align 8
+  %nBlocks7 = call i128 @fn_intrinsic_inline_init()
+  store i128 %nBlocks7, i128* %nBlocks, align 4
+  %ha0 = alloca %struct_template_circuit_h*, align 8
   store i128 0, i128* %i, align 4
   store i128 0, i128* %k, align 4
   store i128 0, i128* %nBlocks, align 4
@@ -6632,23 +6632,23 @@ entry:
   %sha256bytes.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
   %sha256bytes.in.declare_input = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %sha256bytes.in.read_input_inner, [4096 x i128]** %sha256bytes.in.declare_input, align 8
-  %byte_to_bits = alloca [4096 x %struct_template_circuit_num2bits*]*, align 8
-  %byte_to_bits2 = alloca [4096 x %struct_template_circuit_num2bits*], align 8
-  store [4096 x %struct_template_circuit_num2bits*]* %byte_to_bits2, [4096 x %struct_template_circuit_num2bits*]** %byte_to_bits, align 8
   %sha256bytes.out.declare_output = alloca [4096 x i128]*, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %out, [4096 x i128]** %sha256bytes.out.declare_output, align 8
-  %i = alloca i128, align 8
-  %i3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i3, i128* %i, align 4
+  %byte_to_bits = alloca [4096 x %struct_template_circuit_num2bits*]*, align 8
+  %byte_to_bits2 = alloca [4096 x %struct_template_circuit_num2bits*], align 8
+  store [4096 x %struct_template_circuit_num2bits*]* %byte_to_bits2, [4096 x %struct_template_circuit_num2bits*]** %byte_to_bits, align 8
   %sha256 = alloca %struct_template_circuit_sha256*, align 8
+  %j = alloca i128, align 8
+  %j3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j3, i128* %j, align 4
   %bits_to_bytes = alloca [4096 x %struct_template_circuit_bits2num*]*, align 8
   %bits_to_bytes4 = alloca [4096 x %struct_template_circuit_bits2num*], align 8
   store [4096 x %struct_template_circuit_bits2num*]* %bits_to_bytes4, [4096 x %struct_template_circuit_bits2num*]** %bits_to_bytes, align 8
-  %j = alloca i128, align 8
-  %j5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j5, i128* %j, align 4
+  %i = alloca i128, align 8
+  %i5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i5, i128* %i, align 4
   store i128 0, i128* %i, align 4
   br label %loop.body
 
@@ -6860,12 +6860,12 @@ entry:
   %sszlayer.in.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
   %sszlayer.in.declare_input = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %sszlayer.in.read_input_inner, [4096 x i128]** %sszlayer.in.declare_input, align 8
-  %i = alloca i128, align 8
-  %i2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i2, i128* %i, align 4
   %num_pairs = alloca i128, align 8
-  %num_pairs3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %num_pairs3, i128* %num_pairs, align 4
+  %num_pairs2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %num_pairs2, i128* %num_pairs, align 4
+  %hashers = alloca [4096 x %struct_template_circuit_sha256bytes*]*, align 8
+  %hashers3 = alloca [4096 x %struct_template_circuit_sha256bytes*], align 8
+  store [4096 x %struct_template_circuit_sha256bytes*]* %hashers3, [4096 x %struct_template_circuit_sha256bytes*]** %hashers, align 8
   %j = alloca i128, align 8
   %j4 = call i128 @fn_intrinsic_inline_init()
   store i128 %j4, i128* %j, align 4
@@ -6873,9 +6873,9 @@ entry:
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %out, [4096 x i128]** %sszlayer.out.declare_output, align 8
-  %hashers = alloca [4096 x %struct_template_circuit_sha256bytes*]*, align 8
-  %hashers5 = alloca [4096 x %struct_template_circuit_sha256bytes*], align 8
-  store [4096 x %struct_template_circuit_sha256bytes*]* %hashers5, [4096 x %struct_template_circuit_sha256bytes*]** %hashers, align 8
+  %i = alloca i128, align 8
+  %i5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i5, i128* %i, align 4
   %num_bytes = load i128, i128* %sszlayer.num_bytes.declare_arg, align 4
   %sdiv = sdiv i128 %num_bytes, 64
   store i128 %sdiv, i128* %num_pairs, align 4
@@ -7035,16 +7035,16 @@ entry:
   %i = alloca i128, align 8
   %i4 = call i128 @fn_intrinsic_inline_init()
   store i128 %i4, i128* %i, align 4
+  %ssz_layers = alloca [4096 x %struct_template_circuit_sszlayer*]*, align 8
+  %ssz_layers5 = alloca [4096 x %struct_template_circuit_sszlayer*], align 8
+  store [4096 x %struct_template_circuit_sszlayer*]* %ssz_layers5, [4096 x %struct_template_circuit_sszlayer*]** %ssz_layers, align 8
   %sszarray.out.declare_output = alloca [4096 x i128]*, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %out, [4096 x i128]** %sszarray.out.declare_output, align 8
   %layer_idx = alloca i128, align 8
-  %layer_idx5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %layer_idx5, i128* %layer_idx, align 4
-  %ssz_layers = alloca [4096 x %struct_template_circuit_sszlayer*]*, align 8
-  %ssz_layers6 = alloca [4096 x %struct_template_circuit_sszlayer*], align 8
-  store [4096 x %struct_template_circuit_sszlayer*]* %ssz_layers6, [4096 x %struct_template_circuit_sszlayer*]** %ssz_layers, align 8
+  %layer_idx6 = call i128 @fn_intrinsic_inline_init()
+  store i128 %layer_idx6, i128* %layer_idx, align 4
   store i128 0, i128* %layer_idx, align 4
   br label %loop.body
 
@@ -7204,6 +7204,257 @@ entry:
   ret %struct_template_circuit_sszarray* %struct_template_circuit_sszarray
 }
 
+define void @fn_template_init_sszphase0beaconblockheader(%struct_template_circuit_sszphase0beaconblockheader* %0) {
+entry:
+  %SSZPhase0BeaconBlockHeader = alloca %struct_template_circuit_sszphase0beaconblockheader*, align 8
+  store %struct_template_circuit_sszphase0beaconblockheader* %0, %struct_template_circuit_sszphase0beaconblockheader** %SSZPhase0BeaconBlockHeader, align 8
+  %struct_getter = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 0
+  %sszphase0beaconblockheader.slot.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
+  %sszphase0beaconblockheader.slot.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sszphase0beaconblockheader.slot.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.slot.declare_input, align 8
+  %struct_getter1 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 1
+  %sszphase0beaconblockheader.proposer_index.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
+  %sszphase0beaconblockheader.proposer_index.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sszphase0beaconblockheader.proposer_index.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.proposer_index.declare_input, align 8
+  %struct_getter2 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 2
+  %sszphase0beaconblockheader.parent_root.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
+  %sszphase0beaconblockheader.parent_root.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sszphase0beaconblockheader.parent_root.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.parent_root.declare_input, align 8
+  %struct_getter3 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 3
+  %sszphase0beaconblockheader.state_root.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
+  %sszphase0beaconblockheader.state_root.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sszphase0beaconblockheader.state_root.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.state_root.declare_input, align 8
+  %struct_getter4 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 4
+  %sszphase0beaconblockheader.body_root.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
+  %sszphase0beaconblockheader.body_root.declare_input = alloca [4096 x i128]*, align 8
+  store [4096 x i128]* %sszphase0beaconblockheader.body_root.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.body_root.declare_input, align 8
+  %ssz_beacon_block_header = alloca %struct_template_circuit_sszarray*, align 8
+  %sszphase0beaconblockheader.out.declare_output = alloca [4096 x i128]*, align 8
+  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
+  %out = bitcast i8* %malloccall to [4096 x i128]*
+  store [4096 x i128]* %out, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
+  %i = alloca i128, align 8
+  %i5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i5, i128* %i, align 4
+  %call = call %struct_template_circuit_sszarray* @fn_template_build_sszarray(i128 256, i128 3)
+  store %struct_template_circuit_sszarray* %call, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %i6 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i6, 32
+  br i1 %slt, label %if.true, label %if.false
+
+if.true:                                          ; preds = %loop.body
+  %slot = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.slot.declare_input, align 8
+  %i7 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %slot, i128 0, i128 %i7
+  %slot8 = load i128, i128* %array_getter, align 4
+  %ssz_beacon_block_header9 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter10 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header9, i32 0, i32 2
+  %sszarray.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
+  %i11 = load i128, i128* %i, align 4
+  %array_getter12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter, i128 0, i128 %i11
+  %ssz_beacon_block_header13 = load i128, i128* %array_getter12, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header13, i128 %slot8, i1* @constraint.178)
+  %ptr_getter = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter14 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter, i32 0, i32 2
+  %sszarray.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
+  %i16 = load i128, i128* %i, align 4
+  %ssz_beacon_block_header17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter15, i128 0, i128 %i16
+  store i128 %slot8, i128* %ssz_beacon_block_header17, align 4
+  br label %if.exit107
+
+if.false:                                         ; preds = %loop.body
+  %i20 = load i128, i128* %i, align 4
+  %slt21 = icmp slt i128 %i20, 64
+  br i1 %slt21, label %if.true18, label %if.false19
+
+if.true18:                                        ; preds = %if.false
+  %proposer_index = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.proposer_index.declare_input, align 8
+  %i22 = load i128, i128* %i, align 4
+  %sub = sub i128 %i22, 32
+  %array_getter23 = getelementptr inbounds [4096 x i128], [4096 x i128]* %proposer_index, i128 0, i128 %sub
+  %proposer_index24 = load i128, i128* %array_getter23, align 4
+  %ssz_beacon_block_header25 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter26 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header25, i32 0, i32 2
+  %sszarray.in.read_input_outter27 = load [4096 x i128]*, [4096 x i128]** %struct_getter26, align 8
+  %i28 = load i128, i128* %i, align 4
+  %array_getter29 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter27, i128 0, i128 %i28
+  %ssz_beacon_block_header30 = load i128, i128* %array_getter29, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header30, i128 %proposer_index24, i1* @constraint.179)
+  %ptr_getter31 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter32 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter31, i32 0, i32 2
+  %sszarray.in.read_input_outter33 = load [4096 x i128]*, [4096 x i128]** %struct_getter32, align 8
+  %i34 = load i128, i128* %i, align 4
+  %ssz_beacon_block_header35 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter33, i128 0, i128 %i34
+  store i128 %proposer_index24, i128* %ssz_beacon_block_header35, align 4
+  br label %if.exit106
+
+if.false19:                                       ; preds = %if.false
+  %i38 = load i128, i128* %i, align 4
+  %slt39 = icmp slt i128 %i38, 96
+  br i1 %slt39, label %if.true36, label %if.false37
+
+if.true36:                                        ; preds = %if.false19
+  %parent_root = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.parent_root.declare_input, align 8
+  %i40 = load i128, i128* %i, align 4
+  %sub41 = sub i128 %i40, 64
+  %array_getter42 = getelementptr inbounds [4096 x i128], [4096 x i128]* %parent_root, i128 0, i128 %sub41
+  %parent_root43 = load i128, i128* %array_getter42, align 4
+  %ssz_beacon_block_header44 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter45 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header44, i32 0, i32 2
+  %sszarray.in.read_input_outter46 = load [4096 x i128]*, [4096 x i128]** %struct_getter45, align 8
+  %i47 = load i128, i128* %i, align 4
+  %array_getter48 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter46, i128 0, i128 %i47
+  %ssz_beacon_block_header49 = load i128, i128* %array_getter48, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header49, i128 %parent_root43, i1* @constraint.180)
+  %ptr_getter50 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter51 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter50, i32 0, i32 2
+  %sszarray.in.read_input_outter52 = load [4096 x i128]*, [4096 x i128]** %struct_getter51, align 8
+  %i53 = load i128, i128* %i, align 4
+  %ssz_beacon_block_header54 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter52, i128 0, i128 %i53
+  store i128 %parent_root43, i128* %ssz_beacon_block_header54, align 4
+  br label %if.exit105
+
+if.false37:                                       ; preds = %if.false19
+  %i57 = load i128, i128* %i, align 4
+  %slt58 = icmp slt i128 %i57, 128
+  br i1 %slt58, label %if.true55, label %if.false56
+
+if.true55:                                        ; preds = %if.false37
+  %state_root = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.state_root.declare_input, align 8
+  %i59 = load i128, i128* %i, align 4
+  %sub60 = sub i128 %i59, 96
+  %array_getter61 = getelementptr inbounds [4096 x i128], [4096 x i128]* %state_root, i128 0, i128 %sub60
+  %state_root62 = load i128, i128* %array_getter61, align 4
+  %ssz_beacon_block_header63 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter64 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header63, i32 0, i32 2
+  %sszarray.in.read_input_outter65 = load [4096 x i128]*, [4096 x i128]** %struct_getter64, align 8
+  %i66 = load i128, i128* %i, align 4
+  %array_getter67 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter65, i128 0, i128 %i66
+  %ssz_beacon_block_header68 = load i128, i128* %array_getter67, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header68, i128 %state_root62, i1* @constraint.181)
+  %ptr_getter69 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter70 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter69, i32 0, i32 2
+  %sszarray.in.read_input_outter71 = load [4096 x i128]*, [4096 x i128]** %struct_getter70, align 8
+  %i72 = load i128, i128* %i, align 4
+  %ssz_beacon_block_header73 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter71, i128 0, i128 %i72
+  store i128 %state_root62, i128* %ssz_beacon_block_header73, align 4
+  br label %if.exit104
+
+if.false56:                                       ; preds = %if.false37
+  %i76 = load i128, i128* %i, align 4
+  %slt77 = icmp slt i128 %i76, 160
+  br i1 %slt77, label %if.true74, label %if.false75
+
+if.true74:                                        ; preds = %if.false56
+  %body_root = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.body_root.declare_input, align 8
+  %i78 = load i128, i128* %i, align 4
+  %sub79 = sub i128 %i78, 128
+  %array_getter80 = getelementptr inbounds [4096 x i128], [4096 x i128]* %body_root, i128 0, i128 %sub79
+  %body_root81 = load i128, i128* %array_getter80, align 4
+  %ssz_beacon_block_header82 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter83 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header82, i32 0, i32 2
+  %sszarray.in.read_input_outter84 = load [4096 x i128]*, [4096 x i128]** %struct_getter83, align 8
+  %i85 = load i128, i128* %i, align 4
+  %array_getter86 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter84, i128 0, i128 %i85
+  %ssz_beacon_block_header87 = load i128, i128* %array_getter86, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header87, i128 %body_root81, i1* @constraint.182)
+  %ptr_getter88 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter89 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter88, i32 0, i32 2
+  %sszarray.in.read_input_outter90 = load [4096 x i128]*, [4096 x i128]** %struct_getter89, align 8
+  %i91 = load i128, i128* %i, align 4
+  %ssz_beacon_block_header92 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter90, i128 0, i128 %i91
+  store i128 %body_root81, i128* %ssz_beacon_block_header92, align 4
+  br label %if.exit
+
+if.false75:                                       ; preds = %if.false56
+  %ssz_beacon_block_header93 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter94 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header93, i32 0, i32 2
+  %sszarray.in.read_input_outter95 = load [4096 x i128]*, [4096 x i128]** %struct_getter94, align 8
+  %i96 = load i128, i128* %i, align 4
+  %array_getter97 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter95, i128 0, i128 %i96
+  %ssz_beacon_block_header98 = load i128, i128* %array_getter97, align 4
+  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header98, i128 0, i1* @constraint.183)
+  %ptr_getter99 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter100 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter99, i32 0, i32 2
+  %sszarray.in.read_input_outter101 = load [4096 x i128]*, [4096 x i128]** %struct_getter100, align 8
+  %i102 = load i128, i128* %i, align 4
+  %ssz_beacon_block_header103 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter101, i128 0, i128 %i102
+  store i128 0, i128* %ssz_beacon_block_header103, align 4
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false75, %if.true74
+  br label %if.exit104
+
+if.exit104:                                       ; preds = %if.exit, %if.true55
+  br label %if.exit105
+
+if.exit105:                                       ; preds = %if.exit104, %if.true36
+  br label %if.exit106
+
+if.exit106:                                       ; preds = %if.exit105, %if.true18
+  br label %if.exit107
+
+if.exit107:                                       ; preds = %if.exit106, %if.true
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %if.exit107
+  %i108 = load i128, i128* %i, align 4
+  %add = add i128 %i108, 1
+  store i128 %add, i128* %i, align 4
+  %i109 = load i128, i128* %i, align 4
+  %slt110 = icmp slt i128 %i109, 256
+  br i1 %slt110, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  store i128 0, i128* %i, align 4
+  br label %loop.body111
+
+loop.body111:                                     ; preds = %loop.latch124, %loop.exit
+  %ssz_beacon_block_header112 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
+  %struct_getter113 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header112, i32 0, i32 3
+  %sszarray.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter113, align 8
+  %i114 = load i128, i128* %i, align 4
+  %array_getter115 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.out.read_output_outter, i128 0, i128 %i114
+  %ssz_beacon_block_header116 = load i128, i128* %array_getter115, align 4
+  %out117 = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
+  %i118 = load i128, i128* %i, align 4
+  %array_getter119 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out117, i128 0, i128 %i118
+  %out120 = load i128, i128* %array_getter119, align 4
+  call void @fn_intrinsic_add_constraint(i128 %out120, i128 %ssz_beacon_block_header116, i1* @constraint.184)
+  %ptr_getter121 = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
+  %i122 = load i128, i128* %i, align 4
+  %out123 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter121, i128 0, i128 %i122
+  store i128 %ssz_beacon_block_header116, i128* %out123, align 4
+  br label %loop.latch124
+
+loop.latch124:                                    ; preds = %loop.body111
+  %i125 = load i128, i128* %i, align 4
+  %add126 = add i128 %i125, 1
+  store i128 %add126, i128* %i, align 4
+  %i127 = load i128, i128* %i, align 4
+  %slt128 = icmp slt i128 %i127, 32
+  br i1 %slt128, label %loop.body111, label %loop.exit129
+
+loop.exit129:                                     ; preds = %loop.latch124
+  br label %exit
+
+exit:                                             ; preds = %loop.exit129
+  %out130 = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
+  %sszphase0beaconblockheader.out.write_output_inner = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 5
+  store [4096 x i128]* %out130, [4096 x i128]** %sszphase0beaconblockheader.out.write_output_inner, align 8
+  ret void
+}
+
+define %struct_template_circuit_sszphase0beaconblockheader* @fn_template_build_sszphase0beaconblockheader() {
+entry:
+  %struct_template_circuit_sszphase0beaconblockheader = alloca %struct_template_circuit_sszphase0beaconblockheader, align 8
+  ret %struct_template_circuit_sszphase0beaconblockheader* %struct_template_circuit_sszphase0beaconblockheader
+}
+
 define void @fn_template_init_sszphase0synccommittee(%struct_template_circuit_sszphase0synccommittee* %0) {
 entry:
   %SSZPhase0SyncCommittee = alloca %struct_template_circuit_sszphase0synccommittee*, align 8
@@ -7216,19 +7467,19 @@ entry:
   %sszphase0synccommittee.aggregate_pubkey.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
   %sszphase0synccommittee.aggregate_pubkey.declare_input = alloca [4096 x i128]*, align 8
   store [4096 x i128]* %sszphase0synccommittee.aggregate_pubkey.read_input_inner, [4096 x i128]** %sszphase0synccommittee.aggregate_pubkey.declare_input, align 8
-  %j = alloca i128, align 8
-  %j2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j2, i128* %j, align 4
-  %ssz_pubkeys = alloca %struct_template_circuit_sszarray*, align 8
-  %i = alloca i128, align 8
-  %i3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i3, i128* %i, align 4
+  %hasher = alloca %struct_template_circuit_sha256bytes*, align 8
+  %ssz_aggregate_pubkey = alloca %struct_template_circuit_sszarray*, align 8
   %sszphase0synccommittee.out.declare_output = alloca [4096 x i128]*, align 8
   %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
   %out = bitcast i8* %malloccall to [4096 x i128]*
   store [4096 x i128]* %out, [4096 x i128]** %sszphase0synccommittee.out.declare_output, align 8
-  %hasher = alloca %struct_template_circuit_sha256bytes*, align 8
-  %ssz_aggregate_pubkey = alloca %struct_template_circuit_sszarray*, align 8
+  %i = alloca i128, align 8
+  %i2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i2, i128* %i, align 4
+  %ssz_pubkeys = alloca %struct_template_circuit_sszarray*, align 8
+  %j = alloca i128, align 8
+  %j3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j3, i128* %j, align 4
   %call = call %struct_template_circuit_sszarray* @fn_template_build_sszarray(i128 32768, i128 10)
   store %struct_template_circuit_sszarray* %call, %struct_template_circuit_sszarray** %ssz_pubkeys, align 8
   store i128 0, i128* %i, align 4
@@ -7258,7 +7509,7 @@ if.true:                                          ; preds = %loop.body4
   %add = add i128 %mul, %j12
   %array_getter13 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter, i128 0, i128 %add
   %ssz_pubkeys14 = load i128, i128* %array_getter13, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_pubkeys14, i128 %pubkeys8, i1* @constraint.178)
+  call void @fn_intrinsic_add_constraint(i128 %ssz_pubkeys14, i128 %pubkeys8, i1* @constraint.185)
   %ptr_getter = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_pubkeys, align 8
   %struct_getter15 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter, i32 0, i32 2
   %sszarray.in.read_input_outter16 = load [4096 x i128]*, [4096 x i128]** %struct_getter15, align 8
@@ -7280,7 +7531,7 @@ if.false:                                         ; preds = %loop.body4
   %add28 = add i128 %mul26, %j27
   %array_getter29 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter24, i128 0, i128 %add28
   %ssz_pubkeys30 = load i128, i128* %array_getter29, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_pubkeys30, i128 0, i1* @constraint.179)
+  call void @fn_intrinsic_add_constraint(i128 %ssz_pubkeys30, i128 0, i1* @constraint.186)
   %ptr_getter31 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_pubkeys, align 8
   %struct_getter32 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter31, i32 0, i32 2
   %sszarray.in.read_input_outter33 = load [4096 x i128]*, [4096 x i128]** %struct_getter32, align 8
@@ -7336,7 +7587,7 @@ if.true51:                                        ; preds = %loop.body50
   %i61 = load i128, i128* %i, align 4
   %array_getter62 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter60, i128 0, i128 %i61
   %ssz_aggregate_pubkey63 = load i128, i128* %array_getter62, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_aggregate_pubkey63, i128 %aggregate_pubkey57, i1* @constraint.180)
+  call void @fn_intrinsic_add_constraint(i128 %ssz_aggregate_pubkey63, i128 %aggregate_pubkey57, i1* @constraint.187)
   %ptr_getter64 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_aggregate_pubkey, align 8
   %struct_getter65 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter64, i32 0, i32 2
   %sszarray.in.read_input_outter66 = load [4096 x i128]*, [4096 x i128]** %struct_getter65, align 8
@@ -7352,7 +7603,7 @@ if.false52:                                       ; preds = %loop.body50
   %i72 = load i128, i128* %i, align 4
   %array_getter73 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter71, i128 0, i128 %i72
   %ssz_aggregate_pubkey74 = load i128, i128* %array_getter73, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_aggregate_pubkey74, i128 0, i1* @constraint.181)
+  call void @fn_intrinsic_add_constraint(i128 %ssz_aggregate_pubkey74, i128 0, i1* @constraint.188)
   %ptr_getter75 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_aggregate_pubkey, align 8
   %struct_getter76 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter75, i32 0, i32 2
   %sszarray.in.read_input_outter77 = load [4096 x i128]*, [4096 x i128]** %struct_getter76, align 8
@@ -7396,7 +7647,7 @@ if.true89:                                        ; preds = %loop.body88
   %i100 = load i128, i128* %i, align 4
   %array_getter101 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sha256bytes.in.read_input_outter, i128 0, i128 %i100
   %hasher102 = load i128, i128* %array_getter101, align 4
-  call void @fn_intrinsic_add_constraint(i128 %hasher102, i128 %ssz_pubkeys97, i1* @constraint.182)
+  call void @fn_intrinsic_add_constraint(i128 %hasher102, i128 %ssz_pubkeys97, i1* @constraint.189)
   %ptr_getter103 = load %struct_template_circuit_sha256bytes*, %struct_template_circuit_sha256bytes** %hasher, align 8
   %struct_getter104 = getelementptr inbounds %struct_template_circuit_sha256bytes, %struct_template_circuit_sha256bytes* %ptr_getter103, i32 0, i32 1
   %sha256bytes.in.read_input_outter105 = load [4096 x i128]*, [4096 x i128]** %struct_getter104, align 8
@@ -7419,7 +7670,7 @@ if.false90:                                       ; preds = %loop.body88
   %i117 = load i128, i128* %i, align 4
   %array_getter118 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sha256bytes.in.read_input_outter116, i128 0, i128 %i117
   %hasher119 = load i128, i128* %array_getter118, align 4
-  call void @fn_intrinsic_add_constraint(i128 %hasher119, i128 %ssz_aggregate_pubkey113, i1* @constraint.183)
+  call void @fn_intrinsic_add_constraint(i128 %hasher119, i128 %ssz_aggregate_pubkey113, i1* @constraint.190)
   %ptr_getter120 = load %struct_template_circuit_sha256bytes*, %struct_template_circuit_sha256bytes** %hasher, align 8
   %struct_getter121 = getelementptr inbounds %struct_template_circuit_sha256bytes, %struct_template_circuit_sha256bytes* %ptr_getter120, i32 0, i32 1
   %sha256bytes.in.read_input_outter122 = load [4096 x i128]*, [4096 x i128]** %struct_getter121, align 8
@@ -7454,7 +7705,7 @@ loop.body132:                                     ; preds = %loop.latch145, %loo
   %i139 = load i128, i128* %i, align 4
   %array_getter140 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out138, i128 0, i128 %i139
   %out141 = load i128, i128* %array_getter140, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out141, i128 %hasher137, i1* @constraint.184)
+  call void @fn_intrinsic_add_constraint(i128 %out141, i128 %hasher137, i1* @constraint.191)
   %ptr_getter142 = load [4096 x i128]*, [4096 x i128]** %sszphase0synccommittee.out.declare_output, align 8
   %i143 = load i128, i128* %i, align 4
   %out144 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter142, i128 0, i128 %i143
@@ -7483,257 +7734,6 @@ define %struct_template_circuit_sszphase0synccommittee* @fn_template_build_sszph
 entry:
   %struct_template_circuit_sszphase0synccommittee = alloca %struct_template_circuit_sszphase0synccommittee, align 8
   ret %struct_template_circuit_sszphase0synccommittee* %struct_template_circuit_sszphase0synccommittee
-}
-
-define void @fn_template_init_sszphase0beaconblockheader(%struct_template_circuit_sszphase0beaconblockheader* %0) {
-entry:
-  %SSZPhase0BeaconBlockHeader = alloca %struct_template_circuit_sszphase0beaconblockheader*, align 8
-  store %struct_template_circuit_sszphase0beaconblockheader* %0, %struct_template_circuit_sszphase0beaconblockheader** %SSZPhase0BeaconBlockHeader, align 8
-  %struct_getter = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 0
-  %sszphase0beaconblockheader.slot.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter, align 8
-  %sszphase0beaconblockheader.slot.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sszphase0beaconblockheader.slot.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.slot.declare_input, align 8
-  %struct_getter1 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 1
-  %sszphase0beaconblockheader.proposer_index.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter1, align 8
-  %sszphase0beaconblockheader.proposer_index.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sszphase0beaconblockheader.proposer_index.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.proposer_index.declare_input, align 8
-  %struct_getter2 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 2
-  %sszphase0beaconblockheader.parent_root.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter2, align 8
-  %sszphase0beaconblockheader.parent_root.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sszphase0beaconblockheader.parent_root.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.parent_root.declare_input, align 8
-  %struct_getter3 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 3
-  %sszphase0beaconblockheader.state_root.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter3, align 8
-  %sszphase0beaconblockheader.state_root.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sszphase0beaconblockheader.state_root.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.state_root.declare_input, align 8
-  %struct_getter4 = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 4
-  %sszphase0beaconblockheader.body_root.read_input_inner = load [4096 x i128]*, [4096 x i128]** %struct_getter4, align 8
-  %sszphase0beaconblockheader.body_root.declare_input = alloca [4096 x i128]*, align 8
-  store [4096 x i128]* %sszphase0beaconblockheader.body_root.read_input_inner, [4096 x i128]** %sszphase0beaconblockheader.body_root.declare_input, align 8
-  %i = alloca i128, align 8
-  %i5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i5, i128* %i, align 4
-  %sszphase0beaconblockheader.out.declare_output = alloca [4096 x i128]*, align 8
-  %malloccall = tail call i8* @malloc(i32 ptrtoint ([4096 x i128]* getelementptr ([4096 x i128], [4096 x i128]* null, i32 1) to i32))
-  %out = bitcast i8* %malloccall to [4096 x i128]*
-  store [4096 x i128]* %out, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
-  %ssz_beacon_block_header = alloca %struct_template_circuit_sszarray*, align 8
-  %call = call %struct_template_circuit_sszarray* @fn_template_build_sszarray(i128 256, i128 3)
-  store %struct_template_circuit_sszarray* %call, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %i6 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i6, 32
-  br i1 %slt, label %if.true, label %if.false
-
-if.true:                                          ; preds = %loop.body
-  %slot = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.slot.declare_input, align 8
-  %i7 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [4096 x i128], [4096 x i128]* %slot, i128 0, i128 %i7
-  %slot8 = load i128, i128* %array_getter, align 4
-  %ssz_beacon_block_header9 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter10 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header9, i32 0, i32 2
-  %sszarray.in.read_input_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter10, align 8
-  %i11 = load i128, i128* %i, align 4
-  %array_getter12 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter, i128 0, i128 %i11
-  %ssz_beacon_block_header13 = load i128, i128* %array_getter12, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header13, i128 %slot8, i1* @constraint.185)
-  %ptr_getter = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter14 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter, i32 0, i32 2
-  %sszarray.in.read_input_outter15 = load [4096 x i128]*, [4096 x i128]** %struct_getter14, align 8
-  %i16 = load i128, i128* %i, align 4
-  %ssz_beacon_block_header17 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter15, i128 0, i128 %i16
-  store i128 %slot8, i128* %ssz_beacon_block_header17, align 4
-  br label %if.exit107
-
-if.false:                                         ; preds = %loop.body
-  %i20 = load i128, i128* %i, align 4
-  %slt21 = icmp slt i128 %i20, 64
-  br i1 %slt21, label %if.true18, label %if.false19
-
-if.true18:                                        ; preds = %if.false
-  %proposer_index = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.proposer_index.declare_input, align 8
-  %i22 = load i128, i128* %i, align 4
-  %sub = sub i128 %i22, 32
-  %array_getter23 = getelementptr inbounds [4096 x i128], [4096 x i128]* %proposer_index, i128 0, i128 %sub
-  %proposer_index24 = load i128, i128* %array_getter23, align 4
-  %ssz_beacon_block_header25 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter26 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header25, i32 0, i32 2
-  %sszarray.in.read_input_outter27 = load [4096 x i128]*, [4096 x i128]** %struct_getter26, align 8
-  %i28 = load i128, i128* %i, align 4
-  %array_getter29 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter27, i128 0, i128 %i28
-  %ssz_beacon_block_header30 = load i128, i128* %array_getter29, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header30, i128 %proposer_index24, i1* @constraint.186)
-  %ptr_getter31 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter32 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter31, i32 0, i32 2
-  %sszarray.in.read_input_outter33 = load [4096 x i128]*, [4096 x i128]** %struct_getter32, align 8
-  %i34 = load i128, i128* %i, align 4
-  %ssz_beacon_block_header35 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter33, i128 0, i128 %i34
-  store i128 %proposer_index24, i128* %ssz_beacon_block_header35, align 4
-  br label %if.exit106
-
-if.false19:                                       ; preds = %if.false
-  %i38 = load i128, i128* %i, align 4
-  %slt39 = icmp slt i128 %i38, 96
-  br i1 %slt39, label %if.true36, label %if.false37
-
-if.true36:                                        ; preds = %if.false19
-  %parent_root = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.parent_root.declare_input, align 8
-  %i40 = load i128, i128* %i, align 4
-  %sub41 = sub i128 %i40, 64
-  %array_getter42 = getelementptr inbounds [4096 x i128], [4096 x i128]* %parent_root, i128 0, i128 %sub41
-  %parent_root43 = load i128, i128* %array_getter42, align 4
-  %ssz_beacon_block_header44 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter45 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header44, i32 0, i32 2
-  %sszarray.in.read_input_outter46 = load [4096 x i128]*, [4096 x i128]** %struct_getter45, align 8
-  %i47 = load i128, i128* %i, align 4
-  %array_getter48 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter46, i128 0, i128 %i47
-  %ssz_beacon_block_header49 = load i128, i128* %array_getter48, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header49, i128 %parent_root43, i1* @constraint.187)
-  %ptr_getter50 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter51 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter50, i32 0, i32 2
-  %sszarray.in.read_input_outter52 = load [4096 x i128]*, [4096 x i128]** %struct_getter51, align 8
-  %i53 = load i128, i128* %i, align 4
-  %ssz_beacon_block_header54 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter52, i128 0, i128 %i53
-  store i128 %parent_root43, i128* %ssz_beacon_block_header54, align 4
-  br label %if.exit105
-
-if.false37:                                       ; preds = %if.false19
-  %i57 = load i128, i128* %i, align 4
-  %slt58 = icmp slt i128 %i57, 128
-  br i1 %slt58, label %if.true55, label %if.false56
-
-if.true55:                                        ; preds = %if.false37
-  %state_root = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.state_root.declare_input, align 8
-  %i59 = load i128, i128* %i, align 4
-  %sub60 = sub i128 %i59, 96
-  %array_getter61 = getelementptr inbounds [4096 x i128], [4096 x i128]* %state_root, i128 0, i128 %sub60
-  %state_root62 = load i128, i128* %array_getter61, align 4
-  %ssz_beacon_block_header63 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter64 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header63, i32 0, i32 2
-  %sszarray.in.read_input_outter65 = load [4096 x i128]*, [4096 x i128]** %struct_getter64, align 8
-  %i66 = load i128, i128* %i, align 4
-  %array_getter67 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter65, i128 0, i128 %i66
-  %ssz_beacon_block_header68 = load i128, i128* %array_getter67, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header68, i128 %state_root62, i1* @constraint.188)
-  %ptr_getter69 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter70 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter69, i32 0, i32 2
-  %sszarray.in.read_input_outter71 = load [4096 x i128]*, [4096 x i128]** %struct_getter70, align 8
-  %i72 = load i128, i128* %i, align 4
-  %ssz_beacon_block_header73 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter71, i128 0, i128 %i72
-  store i128 %state_root62, i128* %ssz_beacon_block_header73, align 4
-  br label %if.exit104
-
-if.false56:                                       ; preds = %if.false37
-  %i76 = load i128, i128* %i, align 4
-  %slt77 = icmp slt i128 %i76, 160
-  br i1 %slt77, label %if.true74, label %if.false75
-
-if.true74:                                        ; preds = %if.false56
-  %body_root = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.body_root.declare_input, align 8
-  %i78 = load i128, i128* %i, align 4
-  %sub79 = sub i128 %i78, 128
-  %array_getter80 = getelementptr inbounds [4096 x i128], [4096 x i128]* %body_root, i128 0, i128 %sub79
-  %body_root81 = load i128, i128* %array_getter80, align 4
-  %ssz_beacon_block_header82 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter83 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header82, i32 0, i32 2
-  %sszarray.in.read_input_outter84 = load [4096 x i128]*, [4096 x i128]** %struct_getter83, align 8
-  %i85 = load i128, i128* %i, align 4
-  %array_getter86 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter84, i128 0, i128 %i85
-  %ssz_beacon_block_header87 = load i128, i128* %array_getter86, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header87, i128 %body_root81, i1* @constraint.189)
-  %ptr_getter88 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter89 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter88, i32 0, i32 2
-  %sszarray.in.read_input_outter90 = load [4096 x i128]*, [4096 x i128]** %struct_getter89, align 8
-  %i91 = load i128, i128* %i, align 4
-  %ssz_beacon_block_header92 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter90, i128 0, i128 %i91
-  store i128 %body_root81, i128* %ssz_beacon_block_header92, align 4
-  br label %if.exit
-
-if.false75:                                       ; preds = %if.false56
-  %ssz_beacon_block_header93 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter94 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header93, i32 0, i32 2
-  %sszarray.in.read_input_outter95 = load [4096 x i128]*, [4096 x i128]** %struct_getter94, align 8
-  %i96 = load i128, i128* %i, align 4
-  %array_getter97 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter95, i128 0, i128 %i96
-  %ssz_beacon_block_header98 = load i128, i128* %array_getter97, align 4
-  call void @fn_intrinsic_add_constraint(i128 %ssz_beacon_block_header98, i128 0, i1* @constraint.190)
-  %ptr_getter99 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter100 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ptr_getter99, i32 0, i32 2
-  %sszarray.in.read_input_outter101 = load [4096 x i128]*, [4096 x i128]** %struct_getter100, align 8
-  %i102 = load i128, i128* %i, align 4
-  %ssz_beacon_block_header103 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.in.read_input_outter101, i128 0, i128 %i102
-  store i128 0, i128* %ssz_beacon_block_header103, align 4
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false75, %if.true74
-  br label %if.exit104
-
-if.exit104:                                       ; preds = %if.exit, %if.true55
-  br label %if.exit105
-
-if.exit105:                                       ; preds = %if.exit104, %if.true36
-  br label %if.exit106
-
-if.exit106:                                       ; preds = %if.exit105, %if.true18
-  br label %if.exit107
-
-if.exit107:                                       ; preds = %if.exit106, %if.true
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %if.exit107
-  %i108 = load i128, i128* %i, align 4
-  %add = add i128 %i108, 1
-  store i128 %add, i128* %i, align 4
-  %i109 = load i128, i128* %i, align 4
-  %slt110 = icmp slt i128 %i109, 256
-  br i1 %slt110, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  store i128 0, i128* %i, align 4
-  br label %loop.body111
-
-loop.body111:                                     ; preds = %loop.latch124, %loop.exit
-  %ssz_beacon_block_header112 = load %struct_template_circuit_sszarray*, %struct_template_circuit_sszarray** %ssz_beacon_block_header, align 8
-  %struct_getter113 = getelementptr inbounds %struct_template_circuit_sszarray, %struct_template_circuit_sszarray* %ssz_beacon_block_header112, i32 0, i32 3
-  %sszarray.out.read_output_outter = load [4096 x i128]*, [4096 x i128]** %struct_getter113, align 8
-  %i114 = load i128, i128* %i, align 4
-  %array_getter115 = getelementptr inbounds [4096 x i128], [4096 x i128]* %sszarray.out.read_output_outter, i128 0, i128 %i114
-  %ssz_beacon_block_header116 = load i128, i128* %array_getter115, align 4
-  %out117 = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
-  %i118 = load i128, i128* %i, align 4
-  %array_getter119 = getelementptr inbounds [4096 x i128], [4096 x i128]* %out117, i128 0, i128 %i118
-  %out120 = load i128, i128* %array_getter119, align 4
-  call void @fn_intrinsic_add_constraint(i128 %out120, i128 %ssz_beacon_block_header116, i1* @constraint.191)
-  %ptr_getter121 = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
-  %i122 = load i128, i128* %i, align 4
-  %out123 = getelementptr inbounds [4096 x i128], [4096 x i128]* %ptr_getter121, i128 0, i128 %i122
-  store i128 %ssz_beacon_block_header116, i128* %out123, align 4
-  br label %loop.latch124
-
-loop.latch124:                                    ; preds = %loop.body111
-  %i125 = load i128, i128* %i, align 4
-  %add126 = add i128 %i125, 1
-  store i128 %add126, i128* %i, align 4
-  %i127 = load i128, i128* %i, align 4
-  %slt128 = icmp slt i128 %i127, 32
-  br i1 %slt128, label %loop.body111, label %loop.exit129
-
-loop.exit129:                                     ; preds = %loop.latch124
-  br label %exit
-
-exit:                                             ; preds = %loop.exit129
-  %out130 = load [4096 x i128]*, [4096 x i128]** %sszphase0beaconblockheader.out.declare_output, align 8
-  %sszphase0beaconblockheader.out.write_output_inner = getelementptr inbounds %struct_template_circuit_sszphase0beaconblockheader, %struct_template_circuit_sszphase0beaconblockheader* %0, i32 0, i32 5
-  store [4096 x i128]* %out130, [4096 x i128]** %sszphase0beaconblockheader.out.write_output_inner, align 8
-  ret void
-}
-
-define %struct_template_circuit_sszphase0beaconblockheader* @fn_template_build_sszphase0beaconblockheader() {
-entry:
-  %struct_template_circuit_sszphase0beaconblockheader = alloca %struct_template_circuit_sszphase0beaconblockheader, align 8
-  ret %struct_template_circuit_sszphase0beaconblockheader* %struct_template_circuit_sszphase0beaconblockheader
 }
 
 declare noalias i8* @malloc(i32)

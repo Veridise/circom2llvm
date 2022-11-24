@@ -1,1 +1,888 @@
-./auditing/zk-light-client/sync_committee_committments.ssa.ll
+/Users/hongbo/code/zk-light-client/circuits/circuits/sync_committee_committments.circom
+Detecting: aliascheck
+Template: aliascheck
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+Components: 
+compconstant
+
+in --> compconstant
+
+
+Detecting: ark
+Template: ark
+Arguments: 
+r
+c
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: assertpubkeybytesmatchespubkeyxbigintnocheck
+Template: assertpubkeybytesmatchespubkeyxbigintnocheck
+Arguments: 
+num_bytes
+k
+n
+Input Signals: 
+pubkeybytes
+pubkeyx
+Inter Signals: 
+pubkeybitsconcat
+Output Signals: 
+Components: 
+bits2num
+num2bits
+
+pubkeybytes --> num2bits
+bits2num --> pubkeyx
+
+
+Detecting: bigsigma
+Template: bigsigma
+Arguments: 
+rb
+rc
+ra
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+xor3
+rotr
+
+in --> rotr
+rotr --> xor3
+xor3 --> out
+
+
+Detecting: binsum
+Template: binsum
+Arguments: 
+ops
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+out --> in
+
+
+Detecting: bits2num
+Template: bits2num
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: bits2num_strict
+Template: bits2num_strict
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+bits2num
+aliascheck
+
+in --> bits2num
+in --> aliascheck
+bits2num --> out
+
+
+Detecting: bytes_48_to_field_ele
+Template: bytes_48_to_field_ele
+Arguments: 
+Input Signals: 
+bytes
+Inter Signals: 
+field_ele_accum
+Output Signals: 
+field_ele
+Components: 
+
+field_ele_accum --> field_ele_accum
+bytes --> field_ele_accum
+field_ele_accum --> field_ele
+
+
+Detecting: ch_t
+Template: ch_t
+Arguments: 
+n
+Input Signals: 
+b
+c
+a
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+a --> out
+b --> out
+c --> out
+
+
+Detecting: compconstant
+Template: compconstant
+Arguments: 
+ct
+Input Signals: 
+in
+Inter Signals: 
+sout
+parts
+Output Signals: 
+out
+Components: 
+num2bits
+
+in --> parts
+parts --> sout
+sout --> num2bits
+num2bits --> out
+
+
+Detecting: forceequalifenabled
+Template: forceequalifenabled
+Arguments: 
+Input Signals: 
+in
+enabled
+Inter Signals: 
+Output Signals: 
+Components: 
+iszero
+
+in --> iszero
+
+
+Detecting: greatereqthan
+Template: greatereqthan
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+lessthan
+
+in --> lessthan
+lessthan --> out
+
+
+Detecting: greaterthan
+Template: greaterthan
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+lessthan
+
+in --> lessthan
+lessthan --> out
+
+
+Detecting: h
+Unconstrainted output signal: out
+Template: h
+Arguments: 
+x
+Input Signals: 
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+
+
+Detecting: isequal
+Template: isequal
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+iszero
+
+in --> iszero
+iszero --> out
+
+
+Detecting: iszero
+Template: iszero
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+inv
+Output Signals: 
+out
+Components: 
+
+in --> out
+inv --> out
+
+
+Detecting: k
+Unconstrainted output signal: out
+Template: k
+Arguments: 
+x
+Input Signals: 
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+
+
+Detecting: lesseqthan
+Template: lesseqthan
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+lessthan
+
+in --> lessthan
+lessthan --> out
+
+
+Detecting: lessthan
+Template: lessthan
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+num2bits
+
+in --> num2bits
+num2bits --> out
+
+
+Detecting: maj_t
+Template: maj_t
+Arguments: 
+n
+Input Signals: 
+b
+c
+a
+Inter Signals: 
+mid
+Output Signals: 
+out
+Components: 
+
+b --> mid
+c --> mid
+a --> out
+b --> out
+c --> out
+mid --> out
+
+
+Detecting: mix
+Template: mix
+Arguments: 
+m
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: mixlast
+Template: mixlast
+Arguments: 
+s
+m
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: mixs
+Template: mixs
+Arguments: 
+s
+r
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: num2bits
+Template: num2bits
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: num2bits_strict
+Template: num2bits_strict
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+num2bits
+aliascheck
+
+in --> num2bits
+num2bits --> out
+num2bits --> aliascheck
+
+
+Detecting: num2bitsneg
+Template: num2bitsneg
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+iszero
+
+in --> iszero
+in --> out
+
+
+Detecting: poseidon
+Template: poseidon
+Arguments: 
+ninputs
+Input Signals: 
+inputs
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+poseidonex
+
+inputs --> poseidonex
+poseidonex --> out
+
+
+Detecting: poseidonex
+Template: poseidonex
+Arguments: 
+nouts
+ninputs
+Input Signals: 
+initialstate
+inputs
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+mixs
+mix
+sigma
+mixlast
+ark
+
+inputs --> ark
+initialstate --> ark
+ark --> sigma
+mix --> sigma
+sigma --> ark
+ark --> mix
+mixs --> sigma
+sigma --> mixs
+mix --> mixs
+mixs --> mixs
+sigma --> mixlast
+mixlast --> out
+
+
+Detecting: posiedon_generalized
+Template: posiedon_generalized
+Arguments: 
+num_eles
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+poseidon
+
+in --> poseidon
+poseidon --> poseidon
+poseidon --> out
+
+
+Detecting: pubkeyposeidon
+Template: pubkeyposeidon
+Arguments: 
+k
+b
+Input Signals: 
+pubkeys
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+posiedon_generalized
+
+pubkeys --> posiedon_generalized
+posiedon_generalized --> out
+
+
+Detecting: rotr
+Template: rotr
+Arguments: 
+r
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: sha256
+Unconstrainted output signal: out
+Template: sha256
+Arguments: 
+nbits
+Input Signals: 
+in
+Inter Signals: 
+paddedin
+Output Signals: 
+out
+Components: 
+sha256compression
+h
+
+h --> sha256compression
+sha256compression --> sha256compression
+sha256compression --> out
+
+
+Detecting: sha256bytes
+Unconstrainted output signal: out
+Template: sha256bytes
+Arguments: 
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+bits2num
+sha256
+num2bits
+
+in --> num2bits
+num2bits --> sha256
+sha256 --> bits2num
+bits2num --> out
+
+
+Detecting: sha256compression
+Template: sha256compression
+Arguments: 
+Input Signals: 
+inp
+hin
+Inter Signals: 
+h
+g
+f
+c
+e
+w
+d
+b
+a
+Output Signals: 
+out
+Components: 
+binsum
+t2
+t1
+k
+sigmaplus
+
+inp --> w
+w --> sigmaplus
+sigmaplus --> w
+hin --> a
+hin --> b
+hin --> c
+hin --> d
+hin --> e
+hin --> f
+hin --> g
+hin --> h
+h --> t1
+e --> t1
+f --> t1
+g --> t1
+k --> t1
+w --> t1
+a --> t2
+b --> t2
+c --> t2
+d --> binsum
+t1 --> binsum
+t2 --> binsum
+g --> h
+f --> g
+e --> f
+binsum --> e
+c --> d
+b --> c
+a --> b
+binsum --> a
+hin --> binsum
+a --> binsum
+b --> binsum
+c --> binsum
+e --> binsum
+f --> binsum
+g --> binsum
+h --> binsum
+binsum --> out
+
+
+Detecting: shr
+Template: shr
+Arguments: 
+r
+n
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: sigma
+Template: sigma
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+in4
+in2
+Output Signals: 
+out
+Components: 
+
+in --> in
+in2 --> in
+in4 --> out
+in --> out
+
+
+Detecting: sigmaplus
+Template: sigmaplus
+Arguments: 
+Input Signals: 
+in15
+in7
+in16
+in2
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+binsum
+smallsigma
+
+in2 --> smallsigma
+in15 --> smallsigma
+smallsigma --> binsum
+in7 --> binsum
+in16 --> binsum
+binsum --> out
+
+
+Detecting: smallsigma
+Template: smallsigma
+Arguments: 
+rb
+rc
+ra
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+xor3
+shr
+rotr
+
+in --> rotr
+in --> shr
+rotr --> xor3
+shr --> xor3
+xor3 --> out
+
+
+Detecting: sszarray
+Unconstrainted output signal: out
+Template: sszarray
+Arguments: 
+log2b
+num_bytes
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+sszlayer
+
+in --> sszlayer
+sszlayer --> sszlayer
+sszlayer --> out
+
+
+Detecting: sszlayer
+Unconstrainted output signal: out
+Template: sszlayer
+Arguments: 
+num_bytes
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+sha256bytes
+
+in --> sha256bytes
+sha256bytes --> out
+
+
+Detecting: sszphase0beaconblockheader
+Unconstrainted output signal: out
+Template: sszphase0beaconblockheader
+Arguments: 
+Input Signals: 
+body_root
+state_root
+proposer_index
+parent_root
+slot
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+sszarray
+
+slot --> sszarray
+proposer_index --> sszarray
+parent_root --> sszarray
+state_root --> sszarray
+body_root --> sszarray
+sszarray --> out
+
+
+Detecting: sszphase0synccommittee
+Unconstrainted output signal: out
+Template: sszphase0synccommittee
+Arguments: 
+Input Signals: 
+aggregate_pubkey
+pubkeys
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+sha256bytes
+sszarray
+
+pubkeys --> sszarray
+aggregate_pubkey --> sszarray
+sszarray --> sha256bytes
+sha256bytes --> out
+
+
+Detecting: synccommitteecommittments
+Unconstrainted output signal: synccommitteeposeidon
+Unconstrainted output signal: synccommitteessz
+Template: synccommitteecommittments
+Arguments: 
+k
+n
+b
+Input Signals: 
+pubkeys
+aggregatepubkeyhex
+pubkeyhex
+Inter Signals: 
+Output Signals: 
+synccommitteeposeidon
+synccommitteessz
+Components: 
+pubkeyposeidon
+sszphase0synccommittee
+assertpubkeybytesmatchespubkeyxbigintnocheck
+
+pubkeys --> assertpubkeybytesmatchespubkeyxbigintnocheck
+pubkeyhex --> assertpubkeybytesmatchespubkeyxbigintnocheck
+pubkeyhex --> sszphase0synccommittee
+aggregatepubkeyhex --> sszphase0synccommittee
+pubkeys --> pubkeyposeidon
+
+
+Detecting: t1
+Template: t1
+Arguments: 
+Input Signals: 
+w
+h
+k
+g
+e
+f
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+binsum
+bigsigma
+ch_t
+
+e --> bigsigma
+e --> ch_t
+f --> ch_t
+g --> ch_t
+h --> binsum
+bigsigma --> binsum
+ch_t --> binsum
+k --> binsum
+w --> binsum
+binsum --> out
+
+
+Detecting: t2
+Template: t2
+Arguments: 
+Input Signals: 
+b
+c
+a
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+binsum
+maj_t
+bigsigma
+
+a --> bigsigma
+a --> maj_t
+b --> maj_t
+c --> maj_t
+bigsigma --> binsum
+maj_t --> binsum
+binsum --> out
+
+
+Detecting: xor3
+Template: xor3
+Arguments: 
+n
+Input Signals: 
+b
+c
+a
+Inter Signals: 
+mid
+Output Signals: 
+out
+Components: 
+
+b --> mid
+c --> mid
+a --> out
+b --> out
+c --> out
+mid --> out
+
+

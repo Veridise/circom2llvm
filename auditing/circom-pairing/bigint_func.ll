@@ -36,179 +36,6 @@ entry:
   ret i128 0
 }
 
-define i128 @long_is_zero(i128 %0, [256 x i128]* %1) {
-entry:
-  %long_is_zero.k.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %long_is_zero.k.declare_arg, align 4
-  %long_is_zero.a.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %1, [256 x i128]** %long_is_zero.a.declare_arg, align 8
-  %idx = alloca i128, align 8
-  %idx1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %idx1, i128* %idx, align 4
-  store i128 0, i128* %idx, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %a = load [256 x i128]*, [256 x i128]** %long_is_zero.a.declare_arg, align 8
-  %idx2 = load i128, i128* %idx, align 4
-  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %a, i128 0, i128 %idx2
-  %a3 = load i128, i128* %array_getter, align 4
-  %ne = icmp ne i128 %a3, 0
-  br i1 %ne, label %if.true, label %if.false
-
-if.true:                                          ; preds = %loop.body
-  ret i128 0
-
-if.false:                                         ; preds = %loop.body
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %if.exit
-  %idx4 = load i128, i128* %idx, align 4
-  %add = add i128 %idx4, 1
-  store i128 %add, i128* %idx, align 4
-  %idx5 = load i128, i128* %idx, align 4
-  %k = load i128, i128* %long_is_zero.k.declare_arg, align 4
-  %slt = icmp slt i128 %idx5, %k
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  ret i128 1
-}
-
-define i128 @max(i128 %0, i128 %1) {
-entry:
-  %max.a.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %max.a.declare_arg, align 4
-  %max.b.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %max.b.declare_arg, align 4
-  %a = load i128, i128* %max.a.declare_arg, align 4
-  %b = load i128, i128* %max.b.declare_arg, align 4
-  %sgt = icmp sgt i128 %a, %b
-  br i1 %sgt, label %if.true, label %if.false
-
-if.true:                                          ; preds = %entry
-  %a1 = load i128, i128* %max.a.declare_arg, align 4
-  ret i128 %a1
-
-if.false:                                         ; preds = %entry
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false
-  %b2 = load i128, i128* %max.b.declare_arg, align 4
-  ret i128 %b2
-}
-
-define i128 @log_ceil(i128 %0) {
-entry:
-  %log_ceil.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %log_ceil.n.declare_arg, align 4
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %n_temp = alloca i128, align 8
-  %n_temp2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %n_temp2, i128* %n_temp, align 4
-  %n = load i128, i128* %log_ceil.n.declare_arg, align 4
-  store i128 %n, i128* %n_temp, align 4
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %n_temp3 = load i128, i128* %n_temp, align 4
-  %eq = icmp eq i128 %n_temp3, 0
-  br i1 %eq, label %if.true, label %if.false
-
-if.true:                                          ; preds = %loop.body
-  %i4 = load i128, i128* %i, align 4
-  ret i128 %i4
-
-if.false:                                         ; preds = %loop.body
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false
-  %n_temp5 = load i128, i128* %n_temp, align 4
-  %sdiv = sdiv i128 %n_temp5, 2
-  store i128 %sdiv, i128* %n_temp, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %if.exit
-  %i6 = load i128, i128* %i, align 4
-  %add = add i128 %i6, 1
-  store i128 %add, i128* %i, align 4
-  %i7 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i7, 254
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  ret i128 254
-}
-
-define i128 @min(i128 %0, i128 %1) {
-entry:
-  %min.a.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %min.a.declare_arg, align 4
-  %min.b.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %min.b.declare_arg, align 4
-  %a = load i128, i128* %min.a.declare_arg, align 4
-  %b = load i128, i128* %min.b.declare_arg, align 4
-  %slt = icmp slt i128 %a, %b
-  br i1 %slt, label %if.true, label %if.false
-
-if.true:                                          ; preds = %entry
-  %a1 = load i128, i128* %min.a.declare_arg, align 4
-  ret i128 %a1
-
-if.false:                                         ; preds = %entry
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false
-  %b2 = load i128, i128* %min.b.declare_arg, align 4
-  ret i128 %b2
-}
-
-define [3 x i128]* @SplitThreeFn(i128 %0, i128 %1, i128 %2, i128 %3) {
-entry:
-  %splitthreefn.in.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %splitthreefn.in.declare_arg, align 4
-  %splitthreefn.n.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %splitthreefn.n.declare_arg, align 4
-  %splitthreefn.m.declare_arg = alloca i128, align 8
-  store i128 %2, i128* %splitthreefn.m.declare_arg, align 4
-  %splitthreefn.k.declare_arg = alloca i128, align 8
-  store i128 %3, i128* %splitthreefn.k.declare_arg, align 4
-  %var_inline_array = alloca [3 x i128], align 8
-  %in = load i128, i128* %splitthreefn.in.declare_arg, align 4
-  %n = load i128, i128* %splitthreefn.n.declare_arg, align 4
-  %lshift = shl i128 1, %n
-  %mod = srem i128 %in, %lshift
-  %var_inline_array1 = getelementptr inbounds [3 x i128], [3 x i128]* %var_inline_array, i128 0, i128 0
-  store i128 %mod, i128* %var_inline_array1, align 4
-  %in2 = load i128, i128* %splitthreefn.in.declare_arg, align 4
-  %n3 = load i128, i128* %splitthreefn.n.declare_arg, align 4
-  %lshift4 = shl i128 1, %n3
-  %sdiv = sdiv i128 %in2, %lshift4
-  %m = load i128, i128* %splitthreefn.m.declare_arg, align 4
-  %lshift5 = shl i128 1, %m
-  %mod6 = srem i128 %sdiv, %lshift5
-  %var_inline_array7 = getelementptr inbounds [3 x i128], [3 x i128]* %var_inline_array, i128 0, i128 1
-  store i128 %mod6, i128* %var_inline_array7, align 4
-  %in8 = load i128, i128* %splitthreefn.in.declare_arg, align 4
-  %n9 = load i128, i128* %splitthreefn.n.declare_arg, align 4
-  %m10 = load i128, i128* %splitthreefn.m.declare_arg, align 4
-  %add = add i128 %n9, %m10
-  %lshift11 = shl i128 1, %add
-  %sdiv12 = sdiv i128 %in8, %lshift11
-  %k = load i128, i128* %splitthreefn.k.declare_arg, align 4
-  %lshift13 = shl i128 1, %k
-  %mod14 = srem i128 %sdiv12, %lshift13
-  %var_inline_array15 = getelementptr inbounds [3 x i128], [3 x i128]* %var_inline_array, i128 0, i128 2
-  store i128 %mod14, i128* %var_inline_array15, align 4
-  ret [3 x i128]* %var_inline_array
-}
-
 define i128 @long_gt(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
 entry:
   %long_gt.n.declare_arg = alloca i128, align 8
@@ -278,221 +105,6 @@ loop.exit:                                        ; preds = %loop.latch
   ret i128 0
 }
 
-define [2 x i128]* @SplitFn(i128 %0, i128 %1, i128 %2) {
-entry:
-  %splitfn.in.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %splitfn.in.declare_arg, align 4
-  %splitfn.n.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %splitfn.n.declare_arg, align 4
-  %splitfn.m.declare_arg = alloca i128, align 8
-  store i128 %2, i128* %splitfn.m.declare_arg, align 4
-  %var_inline_array = alloca [2 x i128], align 8
-  %in = load i128, i128* %splitfn.in.declare_arg, align 4
-  %n = load i128, i128* %splitfn.n.declare_arg, align 4
-  %lshift = shl i128 1, %n
-  %mod = srem i128 %in, %lshift
-  %var_inline_array1 = getelementptr inbounds [2 x i128], [2 x i128]* %var_inline_array, i128 0, i128 0
-  store i128 %mod, i128* %var_inline_array1, align 4
-  %in2 = load i128, i128* %splitfn.in.declare_arg, align 4
-  %n3 = load i128, i128* %splitfn.n.declare_arg, align 4
-  %lshift4 = shl i128 1, %n3
-  %sdiv = sdiv i128 %in2, %lshift4
-  %m = load i128, i128* %splitfn.m.declare_arg, align 4
-  %lshift5 = shl i128 1, %m
-  %mod6 = srem i128 %sdiv, %lshift5
-  %var_inline_array7 = getelementptr inbounds [2 x i128], [2 x i128]* %var_inline_array, i128 0, i128 1
-  store i128 %mod6, i128* %var_inline_array7, align 4
-  ret [2 x i128]* %var_inline_array
-}
-
-define [256 x i128]* @long_scalar_mult(i128 %0, i128 %1, i128 %2, [256 x i128]* %3) {
-entry:
-  %long_scalar_mult.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %long_scalar_mult.n.declare_arg, align 4
-  %long_scalar_mult.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %long_scalar_mult.k.declare_arg, align 4
-  %long_scalar_mult.a.declare_arg = alloca i128, align 8
-  store i128 %2, i128* %long_scalar_mult.a.declare_arg, align 4
-  %long_scalar_mult.b.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %3, [256 x i128]** %long_scalar_mult.b.declare_arg, align 8
-  %out = alloca [256 x i128]*, align 8
-  %out1 = alloca [256 x i128], align 8
-  store [256 x i128]* %out1, [256 x i128]** %out, align 8
-  %temp = alloca i128, align 8
-  %temp2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %temp2, i128* %temp, align 4
-  %i = alloca i128, align 8
-  %i3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i3, i128* %i, align 4
-  %uniform_array = alloca [256 x i128], align 8
-  store [256 x i128]* %uniform_array, [256 x i128]** %out, align 8
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %ptr_getter = load [256 x i128]*, [256 x i128]** %out, align 8
-  %i4 = load i128, i128* %i, align 4
-  %out5 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter, i128 0, i128 %i4
-  store i128 0, i128* %out5, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i6 = load i128, i128* %i, align 4
-  %add = add i128 %i6, 1
-  store i128 %add, i128* %i, align 4
-  %i7 = load i128, i128* %i, align 4
-  %slt = icmp slt i128 %i7, 50
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  store i128 0, i128* %i, align 4
-  br label %loop.body8
-
-loop.body8:                                       ; preds = %loop.latch33, %loop.exit
-  %out9 = load [256 x i128]*, [256 x i128]** %out, align 8
-  %i10 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %out9, i128 0, i128 %i10
-  %out11 = load i128, i128* %array_getter, align 4
-  %a = load i128, i128* %long_scalar_mult.a.declare_arg, align 4
-  %b = load [256 x i128]*, [256 x i128]** %long_scalar_mult.b.declare_arg, align 8
-  %i12 = load i128, i128* %i, align 4
-  %array_getter13 = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %i12
-  %b14 = load i128, i128* %array_getter13, align 4
-  %mul = mul i128 %a, %b14
-  %add15 = add i128 %out11, %mul
-  store i128 %add15, i128* %temp, align 4
-  %temp16 = load i128, i128* %temp, align 4
-  %n = load i128, i128* %long_scalar_mult.n.declare_arg, align 4
-  %lshift = shl i128 1, %n
-  %mod = srem i128 %temp16, %lshift
-  %ptr_getter17 = load [256 x i128]*, [256 x i128]** %out, align 8
-  %i18 = load i128, i128* %i, align 4
-  %out19 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter17, i128 0, i128 %i18
-  store i128 %mod, i128* %out19, align 4
-  %out20 = load [256 x i128]*, [256 x i128]** %out, align 8
-  %i21 = load i128, i128* %i, align 4
-  %add22 = add i128 %i21, 1
-  %array_getter23 = getelementptr inbounds [256 x i128], [256 x i128]* %out20, i128 0, i128 %add22
-  %out24 = load i128, i128* %array_getter23, align 4
-  %temp25 = load i128, i128* %temp, align 4
-  %n26 = load i128, i128* %long_scalar_mult.n.declare_arg, align 4
-  %lshift27 = shl i128 1, %n26
-  %sdiv = sdiv i128 %temp25, %lshift27
-  %add28 = add i128 %out24, %sdiv
-  %ptr_getter29 = load [256 x i128]*, [256 x i128]** %out, align 8
-  %i30 = load i128, i128* %i, align 4
-  %add31 = add i128 %i30, 1
-  %out32 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter29, i128 0, i128 %add31
-  store i128 %add28, i128* %out32, align 4
-  br label %loop.latch33
-
-loop.latch33:                                     ; preds = %loop.body8
-  %i34 = load i128, i128* %i, align 4
-  %add35 = add i128 %i34, 1
-  store i128 %add35, i128* %i, align 4
-  %i36 = load i128, i128* %i, align 4
-  %k = load i128, i128* %long_scalar_mult.k.declare_arg, align 4
-  %slt37 = icmp slt i128 %i36, %k
-  br i1 %slt37, label %loop.body8, label %loop.exit38
-
-loop.exit38:                                      ; preds = %loop.latch33
-  %out39 = load [256 x i128]*, [256 x i128]** %out, align 8
-  ret [256 x i128]* %out39
-}
-
-define [256 x i128]* @long_add4(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4, [256 x i128]* %5) {
-entry:
-  %long_add4.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %long_add4.n.declare_arg, align 4
-  %long_add4.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %long_add4.k.declare_arg, align 4
-  %long_add4.a.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %2, [256 x i128]** %long_add4.a.declare_arg, align 8
-  %long_add4.b.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %3, [256 x i128]** %long_add4.b.declare_arg, align 8
-  %long_add4.c.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %4, [256 x i128]** %long_add4.c.declare_arg, align 8
-  %long_add4.d.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %5, [256 x i128]** %long_add4.d.declare_arg, align 8
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %sumAndCarry = alloca [256 x i128]*, align 8
-  %sumAndCarry2 = alloca [256 x i128], align 8
-  store [256 x i128]* %sumAndCarry2, [256 x i128]** %sumAndCarry, align 8
-  %carry = alloca i128, align 8
-  %carry3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %carry3, i128* %carry, align 4
-  %sum = alloca [256 x i128]*, align 8
-  %sum4 = alloca [256 x i128], align 8
-  store [256 x i128]* %sum4, [256 x i128]** %sum, align 8
-  store i128 0, i128* %carry, align 4
-  %uniform_array = alloca [256 x i128], align 8
-  store [256 x i128]* %uniform_array, [256 x i128]** %sum, align 8
-  store i128 0, i128* %i, align 4
-  br label %loop.body
-
-loop.body:                                        ; preds = %loop.latch, %entry
-  %a = load [256 x i128]*, [256 x i128]** %long_add4.a.declare_arg, align 8
-  %i5 = load i128, i128* %i, align 4
-  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %a, i128 0, i128 %i5
-  %a6 = load i128, i128* %array_getter, align 4
-  %b = load [256 x i128]*, [256 x i128]** %long_add4.b.declare_arg, align 8
-  %i7 = load i128, i128* %i, align 4
-  %array_getter8 = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %i7
-  %b9 = load i128, i128* %array_getter8, align 4
-  %add = add i128 %a6, %b9
-  %c = load [256 x i128]*, [256 x i128]** %long_add4.c.declare_arg, align 8
-  %i10 = load i128, i128* %i, align 4
-  %array_getter11 = getelementptr inbounds [256 x i128], [256 x i128]* %c, i128 0, i128 %i10
-  %c12 = load i128, i128* %array_getter11, align 4
-  %add13 = add i128 %add, %c12
-  %d = load [256 x i128]*, [256 x i128]** %long_add4.d.declare_arg, align 8
-  %i14 = load i128, i128* %i, align 4
-  %array_getter15 = getelementptr inbounds [256 x i128], [256 x i128]* %d, i128 0, i128 %i14
-  %d16 = load i128, i128* %array_getter15, align 4
-  %add17 = add i128 %add13, %d16
-  %carry18 = load i128, i128* %carry, align 4
-  %add19 = add i128 %add17, %carry18
-  %n = load i128, i128* %long_add4.n.declare_arg, align 4
-  %n20 = load i128, i128* %long_add4.n.declare_arg, align 4
-  %call = call [2 x i128]* @SplitFn(i128 %add19, i128 %n, i128 %n20)
-  %memcpy_ptr = getelementptr inbounds [256 x i128]*, [256 x i128]** %sumAndCarry, i128 0
-  %6 = bitcast [256 x i128]** %memcpy_ptr to i8*
-  %7 = bitcast [2 x i128]* %call to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %6, i8* align 4 %7, i64 ptrtoint ([2 x i128]* getelementptr ([2 x i128], [2 x i128]* null, i32 1) to i64), i1 false)
-  %sumAndCarry21 = load [256 x i128]*, [256 x i128]** %sumAndCarry, align 8
-  %array_getter22 = getelementptr inbounds [256 x i128], [256 x i128]* %sumAndCarry21, i128 0, i128 0
-  %sumAndCarry23 = load i128, i128* %array_getter22, align 4
-  %ptr_getter = load [256 x i128]*, [256 x i128]** %sum, align 8
-  %i24 = load i128, i128* %i, align 4
-  %sum25 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter, i128 0, i128 %i24
-  store i128 %sumAndCarry23, i128* %sum25, align 4
-  %sumAndCarry26 = load [256 x i128]*, [256 x i128]** %sumAndCarry, align 8
-  %array_getter27 = getelementptr inbounds [256 x i128], [256 x i128]* %sumAndCarry26, i128 0, i128 1
-  %sumAndCarry28 = load i128, i128* %array_getter27, align 4
-  store i128 %sumAndCarry28, i128* %carry, align 4
-  br label %loop.latch
-
-loop.latch:                                       ; preds = %loop.body
-  %i29 = load i128, i128* %i, align 4
-  %add30 = add i128 %i29, 1
-  store i128 %add30, i128* %i, align 4
-  %i31 = load i128, i128* %i, align 4
-  %k = load i128, i128* %long_add4.k.declare_arg, align 4
-  %slt = icmp slt i128 %i31, %k
-  br i1 %slt, label %loop.body, label %loop.exit
-
-loop.exit:                                        ; preds = %loop.latch
-  %carry32 = load i128, i128* %carry, align 4
-  %ptr_getter33 = load [256 x i128]*, [256 x i128]** %sum, align 8
-  %k34 = load i128, i128* %long_add4.k.declare_arg, align 4
-  %sum35 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter33, i128 0, i128 %k34
-  store i128 %carry32, i128* %sum35, align 4
-  %sum36 = load [256 x i128]*, [256 x i128]** %sum, align 8
-  ret [256 x i128]* %sum36
-}
-
 define [256 x i128]* @long_sub(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
 entry:
   %long_sub.n.declare_arg = alloca i128, align 8
@@ -503,12 +115,12 @@ entry:
   store [256 x i128]* %2, [256 x i128]** %long_sub.a.declare_arg, align 8
   %long_sub.b.declare_arg = alloca [256 x i128]*, align 8
   store [256 x i128]* %3, [256 x i128]** %long_sub.b.declare_arg, align 8
-  %borrow = alloca [256 x i128]*, align 8
-  %borrow1 = alloca [256 x i128], align 8
-  store [256 x i128]* %borrow1, [256 x i128]** %borrow, align 8
   %diff = alloca [256 x i128]*, align 8
-  %diff2 = alloca [256 x i128], align 8
-  store [256 x i128]* %diff2, [256 x i128]** %diff, align 8
+  %diff1 = alloca [256 x i128], align 8
+  store [256 x i128]* %diff1, [256 x i128]** %diff, align 8
+  %borrow = alloca [256 x i128]*, align 8
+  %borrow2 = alloca [256 x i128], align 8
+  store [256 x i128]* %borrow2, [256 x i128]** %borrow, align 8
   %i = alloca i128, align 8
   %i3 = call i128 @fn_intrinsic_inline_init()
   store i128 %i3, i128* %i, align 4
@@ -683,27 +295,27 @@ entry:
   store i128 %1, i128* %signed_long_to_short.k.declare_arg, align 4
   %signed_long_to_short.a.declare_arg = alloca [256 x i128]*, align 8
   store [256 x i128]* %2, [256 x i128]** %signed_long_to_short.a.declare_arg, align 8
-  %carry = alloca i128, align 8
-  %carry1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %carry1, i128* %carry, align 4
+  %MAXL = alloca i128, align 8
+  %MAXL1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %MAXL1, i128* %MAXL, align 4
+  %X = alloca i128, align 8
+  %X2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %X2, i128* %X, align 4
   %out = alloca [256 x i128]*, align 8
-  %out2 = alloca [256 x i128], align 8
-  store [256 x i128]* %out2, [256 x i128]** %out, align 8
-  %temp = alloca [256 x i128]*, align 8
-  %temp3 = alloca [256 x i128], align 8
-  store [256 x i128]* %temp3, [256 x i128]** %temp, align 8
+  %out3 = alloca [256 x i128], align 8
+  store [256 x i128]* %out3, [256 x i128]** %out, align 8
   %i = alloca i128, align 8
   %i4 = call i128 @fn_intrinsic_inline_init()
   store i128 %i4, i128* %i, align 4
-  %MAXL = alloca i128, align 8
-  %MAXL5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %MAXL5, i128* %MAXL, align 4
-  %X = alloca i128, align 8
-  %X6 = call i128 @fn_intrinsic_inline_init()
-  store i128 %X6, i128* %X, align 4
   %borrow = alloca i128, align 8
-  %borrow7 = call i128 @fn_intrinsic_inline_init()
-  store i128 %borrow7, i128* %borrow, align 4
+  %borrow5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %borrow5, i128* %borrow, align 4
+  %temp = alloca [256 x i128]*, align 8
+  %temp6 = alloca [256 x i128], align 8
+  store [256 x i128]* %temp6, [256 x i128]** %temp, align 8
+  %carry = alloca i128, align 8
+  %carry7 = call i128 @fn_intrinsic_inline_init()
+  store i128 %carry7, i128* %carry, align 4
   %uniform_array = alloca [256 x i128], align 8
   store [256 x i128]* %uniform_array, [256 x i128]** %out, align 8
   store i128 50, i128* %MAXL, align 4
@@ -1017,6 +629,479 @@ loop.exit204:                                     ; preds = %loop.latch198
   ret [256 x i128]* %out208
 }
 
+define i128 @max(i128 %0, i128 %1) {
+entry:
+  %max.a.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %max.a.declare_arg, align 4
+  %max.b.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %max.b.declare_arg, align 4
+  %a = load i128, i128* %max.a.declare_arg, align 4
+  %b = load i128, i128* %max.b.declare_arg, align 4
+  %sgt = icmp sgt i128 %a, %b
+  br i1 %sgt, label %if.true, label %if.false
+
+if.true:                                          ; preds = %entry
+  %a1 = load i128, i128* %max.a.declare_arg, align 4
+  ret i128 %a1
+
+if.false:                                         ; preds = %entry
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false
+  %b2 = load i128, i128* %max.b.declare_arg, align 4
+  ret i128 %b2
+}
+
+define i128 @long_is_zero(i128 %0, [256 x i128]* %1) {
+entry:
+  %long_is_zero.k.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %long_is_zero.k.declare_arg, align 4
+  %long_is_zero.a.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %1, [256 x i128]** %long_is_zero.a.declare_arg, align 8
+  %idx = alloca i128, align 8
+  %idx1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %idx1, i128* %idx, align 4
+  store i128 0, i128* %idx, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %a = load [256 x i128]*, [256 x i128]** %long_is_zero.a.declare_arg, align 8
+  %idx2 = load i128, i128* %idx, align 4
+  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %a, i128 0, i128 %idx2
+  %a3 = load i128, i128* %array_getter, align 4
+  %ne = icmp ne i128 %a3, 0
+  br i1 %ne, label %if.true, label %if.false
+
+if.true:                                          ; preds = %loop.body
+  ret i128 0
+
+if.false:                                         ; preds = %loop.body
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %if.exit
+  %idx4 = load i128, i128* %idx, align 4
+  %add = add i128 %idx4, 1
+  store i128 %add, i128* %idx, align 4
+  %idx5 = load i128, i128* %idx, align 4
+  %k = load i128, i128* %long_is_zero.k.declare_arg, align 4
+  %slt = icmp slt i128 %idx5, %k
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  ret i128 1
+}
+
+define i128 @log_ceil(i128 %0) {
+entry:
+  %log_ceil.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %log_ceil.n.declare_arg, align 4
+  %n_temp = alloca i128, align 8
+  %n_temp1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %n_temp1, i128* %n_temp, align 4
+  %i = alloca i128, align 8
+  %i2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i2, i128* %i, align 4
+  %n = load i128, i128* %log_ceil.n.declare_arg, align 4
+  store i128 %n, i128* %n_temp, align 4
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %n_temp3 = load i128, i128* %n_temp, align 4
+  %eq = icmp eq i128 %n_temp3, 0
+  br i1 %eq, label %if.true, label %if.false
+
+if.true:                                          ; preds = %loop.body
+  %i4 = load i128, i128* %i, align 4
+  ret i128 %i4
+
+if.false:                                         ; preds = %loop.body
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false
+  %n_temp5 = load i128, i128* %n_temp, align 4
+  %sdiv = sdiv i128 %n_temp5, 2
+  store i128 %sdiv, i128* %n_temp, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %if.exit
+  %i6 = load i128, i128* %i, align 4
+  %add = add i128 %i6, 1
+  store i128 %add, i128* %i, align 4
+  %i7 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i7, 254
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  ret i128 254
+}
+
+define [3 x i128]* @SplitThreeFn(i128 %0, i128 %1, i128 %2, i128 %3) {
+entry:
+  %splitthreefn.in.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %splitthreefn.in.declare_arg, align 4
+  %splitthreefn.n.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %splitthreefn.n.declare_arg, align 4
+  %splitthreefn.m.declare_arg = alloca i128, align 8
+  store i128 %2, i128* %splitthreefn.m.declare_arg, align 4
+  %splitthreefn.k.declare_arg = alloca i128, align 8
+  store i128 %3, i128* %splitthreefn.k.declare_arg, align 4
+  %var_inline_array = alloca [3 x i128], align 8
+  %in = load i128, i128* %splitthreefn.in.declare_arg, align 4
+  %n = load i128, i128* %splitthreefn.n.declare_arg, align 4
+  %lshift = shl i128 1, %n
+  %mod = srem i128 %in, %lshift
+  %var_inline_array1 = getelementptr inbounds [3 x i128], [3 x i128]* %var_inline_array, i128 0, i128 0
+  store i128 %mod, i128* %var_inline_array1, align 4
+  %in2 = load i128, i128* %splitthreefn.in.declare_arg, align 4
+  %n3 = load i128, i128* %splitthreefn.n.declare_arg, align 4
+  %lshift4 = shl i128 1, %n3
+  %sdiv = sdiv i128 %in2, %lshift4
+  %m = load i128, i128* %splitthreefn.m.declare_arg, align 4
+  %lshift5 = shl i128 1, %m
+  %mod6 = srem i128 %sdiv, %lshift5
+  %var_inline_array7 = getelementptr inbounds [3 x i128], [3 x i128]* %var_inline_array, i128 0, i128 1
+  store i128 %mod6, i128* %var_inline_array7, align 4
+  %in8 = load i128, i128* %splitthreefn.in.declare_arg, align 4
+  %n9 = load i128, i128* %splitthreefn.n.declare_arg, align 4
+  %m10 = load i128, i128* %splitthreefn.m.declare_arg, align 4
+  %add = add i128 %n9, %m10
+  %lshift11 = shl i128 1, %add
+  %sdiv12 = sdiv i128 %in8, %lshift11
+  %k = load i128, i128* %splitthreefn.k.declare_arg, align 4
+  %lshift13 = shl i128 1, %k
+  %mod14 = srem i128 %sdiv12, %lshift13
+  %var_inline_array15 = getelementptr inbounds [3 x i128], [3 x i128]* %var_inline_array, i128 0, i128 2
+  store i128 %mod14, i128* %var_inline_array15, align 4
+  ret [3 x i128]* %var_inline_array
+}
+
+define [256 x i128]* @long_scalar_mult(i128 %0, i128 %1, i128 %2, [256 x i128]* %3) {
+entry:
+  %long_scalar_mult.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %long_scalar_mult.n.declare_arg, align 4
+  %long_scalar_mult.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %long_scalar_mult.k.declare_arg, align 4
+  %long_scalar_mult.a.declare_arg = alloca i128, align 8
+  store i128 %2, i128* %long_scalar_mult.a.declare_arg, align 4
+  %long_scalar_mult.b.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %3, [256 x i128]** %long_scalar_mult.b.declare_arg, align 8
+  %i = alloca i128, align 8
+  %i1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i1, i128* %i, align 4
+  %temp = alloca i128, align 8
+  %temp2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %temp2, i128* %temp, align 4
+  %out = alloca [256 x i128]*, align 8
+  %out3 = alloca [256 x i128], align 8
+  store [256 x i128]* %out3, [256 x i128]** %out, align 8
+  %uniform_array = alloca [256 x i128], align 8
+  store [256 x i128]* %uniform_array, [256 x i128]** %out, align 8
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch, %entry
+  %ptr_getter = load [256 x i128]*, [256 x i128]** %out, align 8
+  %i4 = load i128, i128* %i, align 4
+  %out5 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter, i128 0, i128 %i4
+  store i128 0, i128* %out5, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body
+  %i6 = load i128, i128* %i, align 4
+  %add = add i128 %i6, 1
+  store i128 %add, i128* %i, align 4
+  %i7 = load i128, i128* %i, align 4
+  %slt = icmp slt i128 %i7, 50
+  br i1 %slt, label %loop.body, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  store i128 0, i128* %i, align 4
+  br label %loop.body8
+
+loop.body8:                                       ; preds = %loop.latch33, %loop.exit
+  %out9 = load [256 x i128]*, [256 x i128]** %out, align 8
+  %i10 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %out9, i128 0, i128 %i10
+  %out11 = load i128, i128* %array_getter, align 4
+  %a = load i128, i128* %long_scalar_mult.a.declare_arg, align 4
+  %b = load [256 x i128]*, [256 x i128]** %long_scalar_mult.b.declare_arg, align 8
+  %i12 = load i128, i128* %i, align 4
+  %array_getter13 = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %i12
+  %b14 = load i128, i128* %array_getter13, align 4
+  %mul = mul i128 %a, %b14
+  %add15 = add i128 %out11, %mul
+  store i128 %add15, i128* %temp, align 4
+  %temp16 = load i128, i128* %temp, align 4
+  %n = load i128, i128* %long_scalar_mult.n.declare_arg, align 4
+  %lshift = shl i128 1, %n
+  %mod = srem i128 %temp16, %lshift
+  %ptr_getter17 = load [256 x i128]*, [256 x i128]** %out, align 8
+  %i18 = load i128, i128* %i, align 4
+  %out19 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter17, i128 0, i128 %i18
+  store i128 %mod, i128* %out19, align 4
+  %out20 = load [256 x i128]*, [256 x i128]** %out, align 8
+  %i21 = load i128, i128* %i, align 4
+  %add22 = add i128 %i21, 1
+  %array_getter23 = getelementptr inbounds [256 x i128], [256 x i128]* %out20, i128 0, i128 %add22
+  %out24 = load i128, i128* %array_getter23, align 4
+  %temp25 = load i128, i128* %temp, align 4
+  %n26 = load i128, i128* %long_scalar_mult.n.declare_arg, align 4
+  %lshift27 = shl i128 1, %n26
+  %sdiv = sdiv i128 %temp25, %lshift27
+  %add28 = add i128 %out24, %sdiv
+  %ptr_getter29 = load [256 x i128]*, [256 x i128]** %out, align 8
+  %i30 = load i128, i128* %i, align 4
+  %add31 = add i128 %i30, 1
+  %out32 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter29, i128 0, i128 %add31
+  store i128 %add28, i128* %out32, align 4
+  br label %loop.latch33
+
+loop.latch33:                                     ; preds = %loop.body8
+  %i34 = load i128, i128* %i, align 4
+  %add35 = add i128 %i34, 1
+  store i128 %add35, i128* %i, align 4
+  %i36 = load i128, i128* %i, align 4
+  %k = load i128, i128* %long_scalar_mult.k.declare_arg, align 4
+  %slt37 = icmp slt i128 %i36, %k
+  br i1 %slt37, label %loop.body8, label %loop.exit38
+
+loop.exit38:                                      ; preds = %loop.latch33
+  %out39 = load [256 x i128]*, [256 x i128]** %out, align 8
+  ret [256 x i128]* %out39
+}
+
+define i128 @min(i128 %0, i128 %1) {
+entry:
+  %min.a.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %min.a.declare_arg, align 4
+  %min.b.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %min.b.declare_arg, align 4
+  %a = load i128, i128* %min.a.declare_arg, align 4
+  %b = load i128, i128* %min.b.declare_arg, align 4
+  %slt = icmp slt i128 %a, %b
+  br i1 %slt, label %if.true, label %if.false
+
+if.true:                                          ; preds = %entry
+  %a1 = load i128, i128* %min.a.declare_arg, align 4
+  ret i128 %a1
+
+if.false:                                         ; preds = %entry
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false
+  %b2 = load i128, i128* %min.b.declare_arg, align 4
+  ret i128 %b2
+}
+
+define [2 x i128]* @SplitFn(i128 %0, i128 %1, i128 %2) {
+entry:
+  %splitfn.in.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %splitfn.in.declare_arg, align 4
+  %splitfn.n.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %splitfn.n.declare_arg, align 4
+  %splitfn.m.declare_arg = alloca i128, align 8
+  store i128 %2, i128* %splitfn.m.declare_arg, align 4
+  %var_inline_array = alloca [2 x i128], align 8
+  %in = load i128, i128* %splitfn.in.declare_arg, align 4
+  %n = load i128, i128* %splitfn.n.declare_arg, align 4
+  %lshift = shl i128 1, %n
+  %mod = srem i128 %in, %lshift
+  %var_inline_array1 = getelementptr inbounds [2 x i128], [2 x i128]* %var_inline_array, i128 0, i128 0
+  store i128 %mod, i128* %var_inline_array1, align 4
+  %in2 = load i128, i128* %splitfn.in.declare_arg, align 4
+  %n3 = load i128, i128* %splitfn.n.declare_arg, align 4
+  %lshift4 = shl i128 1, %n3
+  %sdiv = sdiv i128 %in2, %lshift4
+  %m = load i128, i128* %splitfn.m.declare_arg, align 4
+  %lshift5 = shl i128 1, %m
+  %mod6 = srem i128 %sdiv, %lshift5
+  %var_inline_array7 = getelementptr inbounds [2 x i128], [2 x i128]* %var_inline_array, i128 0, i128 1
+  store i128 %mod6, i128* %var_inline_array7, align 4
+  ret [2 x i128]* %var_inline_array
+}
+
+define i128 @short_div_norm(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
+entry:
+  %short_div_norm.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %short_div_norm.n.declare_arg, align 4
+  %short_div_norm.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %short_div_norm.k.declare_arg, align 4
+  %short_div_norm.a.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %2, [256 x i128]** %short_div_norm.a.declare_arg, align 8
+  %short_div_norm.b.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %3, [256 x i128]** %short_div_norm.b.declare_arg, align 8
+  %qhat = alloca i128, align 8
+  %qhat1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %qhat1, i128* %qhat, align 4
+  %mult = alloca [256 x i128]*, align 8
+  %mult2 = alloca [256 x i128], align 8
+  store [256 x i128]* %mult2, [256 x i128]** %mult, align 8
+  %a = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
+  %k = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %a, i128 0, i128 %k
+  %a3 = load i128, i128* %array_getter, align 4
+  %n = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %lshift = shl i128 1, %n
+  %mul = mul i128 %a3, %lshift
+  %a4 = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
+  %k5 = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %sub = sub i128 %k5, 1
+  %array_getter6 = getelementptr inbounds [256 x i128], [256 x i128]* %a4, i128 0, i128 %sub
+  %a7 = load i128, i128* %array_getter6, align 4
+  %add = add i128 %mul, %a7
+  %b = load [256 x i128]*, [256 x i128]** %short_div_norm.b.declare_arg, align 8
+  %k8 = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %sub9 = sub i128 %k8, 1
+  %array_getter10 = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %sub9
+  %b11 = load i128, i128* %array_getter10, align 4
+  %sdiv = sdiv i128 %add, %b11
+  store i128 %sdiv, i128* %qhat, align 4
+  %qhat12 = load i128, i128* %qhat, align 4
+  %n13 = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %lshift14 = shl i128 1, %n13
+  %sub15 = sub i128 %lshift14, 1
+  %sgt = icmp sgt i128 %qhat12, %sub15
+  br i1 %sgt, label %if.true, label %if.false
+
+if.true:                                          ; preds = %entry
+  %n16 = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %lshift17 = shl i128 1, %n16
+  %sub18 = sub i128 %lshift17, 1
+  store i128 %sub18, i128* %qhat, align 4
+  br label %if.exit
+
+if.false:                                         ; preds = %entry
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false, %if.true
+  %n19 = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %k20 = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %qhat21 = load i128, i128* %qhat, align 4
+  %b22 = load [256 x i128]*, [256 x i128]** %short_div_norm.b.declare_arg, align 8
+  %call = call [256 x i128]* @long_scalar_mult(i128 %n19, i128 %k20, i128 %qhat21, [256 x i128]* %b22)
+  store [256 x i128]* %call, [256 x i128]** %mult, align 8
+  %n25 = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %k26 = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %add27 = add i128 %k26, 1
+  %mult28 = load [256 x i128]*, [256 x i128]** %mult, align 8
+  %a29 = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
+  %call30 = call i128 @long_gt(i128 %n25, i128 %add27, [256 x i128]* %mult28, [256 x i128]* %a29)
+  %eq = icmp eq i128 %call30, 1
+  br i1 %eq, label %if.true23, label %if.false24
+
+if.true23:                                        ; preds = %if.exit
+  %n31 = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %k32 = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %add33 = add i128 %k32, 1
+  %mult34 = load [256 x i128]*, [256 x i128]** %mult, align 8
+  %b35 = load [256 x i128]*, [256 x i128]** %short_div_norm.b.declare_arg, align 8
+  %call36 = call [256 x i128]* @long_sub(i128 %n31, i128 %add33, [256 x i128]* %mult34, [256 x i128]* %b35)
+  store [256 x i128]* %call36, [256 x i128]** %mult, align 8
+  %n39 = load i128, i128* %short_div_norm.n.declare_arg, align 4
+  %k40 = load i128, i128* %short_div_norm.k.declare_arg, align 4
+  %add41 = add i128 %k40, 1
+  %mult42 = load [256 x i128]*, [256 x i128]** %mult, align 8
+  %a43 = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
+  %call44 = call i128 @long_gt(i128 %n39, i128 %add41, [256 x i128]* %mult42, [256 x i128]* %a43)
+  %eq45 = icmp eq i128 %call44, 1
+  br i1 %eq45, label %if.true37, label %if.false38
+
+if.false24:                                       ; preds = %if.exit
+  %qhat50 = load i128, i128* %qhat, align 4
+  ret i128 %qhat50
+
+if.true37:                                        ; preds = %if.true23
+  %qhat46 = load i128, i128* %qhat, align 4
+  %sub47 = sub i128 %qhat46, 2
+  ret i128 %sub47
+
+if.false38:                                       ; preds = %if.true23
+  %qhat48 = load i128, i128* %qhat, align 4
+  %sub49 = sub i128 %qhat48, 1
+  ret i128 %sub49
+}
+
+define i128 @short_div(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
+entry:
+  %short_div.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %short_div.n.declare_arg, align 4
+  %short_div.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %short_div.k.declare_arg, align 4
+  %short_div.a.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %2, [256 x i128]** %short_div.a.declare_arg, align 8
+  %short_div.b.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %3, [256 x i128]** %short_div.b.declare_arg, align 8
+  %norm_b = alloca [256 x i128]*, align 8
+  %norm_b1 = alloca [256 x i128], align 8
+  store [256 x i128]* %norm_b1, [256 x i128]** %norm_b, align 8
+  %scale = alloca i128, align 8
+  %scale2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %scale2, i128* %scale, align 4
+  %ret = alloca i128, align 8
+  %ret3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %ret3, i128* %ret, align 4
+  %norm_a = alloca [256 x i128]*, align 8
+  %norm_a4 = alloca [256 x i128], align 8
+  store [256 x i128]* %norm_a4, [256 x i128]** %norm_a, align 8
+  %n = load i128, i128* %short_div.n.declare_arg, align 4
+  %lshift = shl i128 1, %n
+  %b = load [256 x i128]*, [256 x i128]** %short_div.b.declare_arg, align 8
+  %k = load i128, i128* %short_div.k.declare_arg, align 4
+  %sub = sub i128 %k, 1
+  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %sub
+  %b5 = load i128, i128* %array_getter, align 4
+  %add = add i128 1, %b5
+  %sdiv = sdiv i128 %lshift, %add
+  store i128 %sdiv, i128* %scale, align 4
+  %n6 = load i128, i128* %short_div.n.declare_arg, align 4
+  %k7 = load i128, i128* %short_div.k.declare_arg, align 4
+  %add8 = add i128 %k7, 1
+  %scale9 = load i128, i128* %scale, align 4
+  %a = load [256 x i128]*, [256 x i128]** %short_div.a.declare_arg, align 8
+  %call = call [256 x i128]* @long_scalar_mult(i128 %n6, i128 %add8, i128 %scale9, [256 x i128]* %a)
+  store [256 x i128]* %call, [256 x i128]** %norm_a, align 8
+  %n10 = load i128, i128* %short_div.n.declare_arg, align 4
+  %k11 = load i128, i128* %short_div.k.declare_arg, align 4
+  %scale12 = load i128, i128* %scale, align 4
+  %b13 = load [256 x i128]*, [256 x i128]** %short_div.b.declare_arg, align 8
+  %call14 = call [256 x i128]* @long_scalar_mult(i128 %n10, i128 %k11, i128 %scale12, [256 x i128]* %b13)
+  store [256 x i128]* %call14, [256 x i128]** %norm_b, align 8
+  store i128 0, i128* %ret, align 4
+  %norm_b15 = load [256 x i128]*, [256 x i128]** %norm_b, align 8
+  %k16 = load i128, i128* %short_div.k.declare_arg, align 4
+  %array_getter17 = getelementptr inbounds [256 x i128], [256 x i128]* %norm_b15, i128 0, i128 %k16
+  %norm_b18 = load i128, i128* %array_getter17, align 4
+  %ne = icmp ne i128 %norm_b18, 0
+  br i1 %ne, label %if.true, label %if.false
+
+if.true:                                          ; preds = %entry
+  %n19 = load i128, i128* %short_div.n.declare_arg, align 4
+  %k20 = load i128, i128* %short_div.k.declare_arg, align 4
+  %add21 = add i128 %k20, 1
+  %norm_a22 = load [256 x i128]*, [256 x i128]** %norm_a, align 8
+  %norm_b23 = load [256 x i128]*, [256 x i128]** %norm_b, align 8
+  %call24 = call i128 @short_div_norm(i128 %n19, i128 %add21, [256 x i128]* %norm_a22, [256 x i128]* %norm_b23)
+  store i128 %call24, i128* %ret, align 4
+  br label %if.exit
+
+if.false:                                         ; preds = %entry
+  %n25 = load i128, i128* %short_div.n.declare_arg, align 4
+  %k26 = load i128, i128* %short_div.k.declare_arg, align 4
+  %norm_a27 = load [256 x i128]*, [256 x i128]** %norm_a, align 8
+  %norm_b28 = load [256 x i128]*, [256 x i128]** %norm_b, align 8
+  %call29 = call i128 @short_div_norm(i128 %n25, i128 %k26, [256 x i128]* %norm_a27, [256 x i128]* %norm_b28)
+  store i128 %call29, i128* %ret, align 4
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.false, %if.true
+  %ret30 = load i128, i128* %ret, align 4
+  ret i128 %ret30
+}
+
 define [256 x i128]* @prod(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
 entry:
   %prod.n.declare_arg = alloca i128, align 8
@@ -1027,27 +1112,27 @@ entry:
   store [256 x i128]* %2, [256 x i128]** %prod.a.declare_arg, align 8
   %prod.b.declare_arg = alloca [256 x i128]*, align 8
   store [256 x i128]* %3, [256 x i128]** %prod.b.declare_arg, align 8
-  %carry = alloca [256 x i128]*, align 8
-  %carry1 = alloca [256 x i128], align 8
-  store [256 x i128]* %carry1, [256 x i128]** %carry, align 8
-  %prod_val = alloca [256 x i128]*, align 8
-  %prod_val2 = alloca [256 x i128], align 8
-  store [256 x i128]* %prod_val2, [256 x i128]** %prod_val, align 8
+  %out = alloca [256 x i128]*, align 8
+  %out1 = alloca [256 x i128], align 8
+  store [256 x i128]* %out1, [256 x i128]** %out, align 8
+  %a_idx = alloca i128, align 8
+  %a_idx2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %a_idx2, i128* %a_idx, align 4
   %i = alloca i128, align 8
   %i3 = call i128 @fn_intrinsic_inline_init()
   store i128 %i3, i128* %i, align 4
+  %prod_val = alloca [256 x i128]*, align 8
+  %prod_val4 = alloca [256 x i128], align 8
+  store [256 x i128]* %prod_val4, [256 x i128]** %prod_val, align 8
   %sumAndCarry = alloca [256 x i128]*, align 8
-  %sumAndCarry4 = alloca [256 x i128], align 8
-  store [256 x i128]* %sumAndCarry4, [256 x i128]** %sumAndCarry, align 8
-  %out = alloca [256 x i128]*, align 8
-  %out5 = alloca [256 x i128], align 8
-  store [256 x i128]* %out5, [256 x i128]** %out, align 8
+  %sumAndCarry5 = alloca [256 x i128], align 8
+  store [256 x i128]* %sumAndCarry5, [256 x i128]** %sumAndCarry, align 8
   %split = alloca [256 x [256 x i128]]*, align 8
   %split6 = alloca [256 x [256 x i128]], align 8
   store [256 x [256 x i128]]* %split6, [256 x [256 x i128]]** %split, align 8
-  %a_idx = alloca i128, align 8
-  %a_idx7 = call i128 @fn_intrinsic_inline_init()
-  store i128 %a_idx7, i128* %a_idx, align 4
+  %carry = alloca [256 x i128]*, align 8
+  %carry7 = alloca [256 x i128], align 8
+  store [256 x i128]* %carry7, [256 x i128]** %carry, align 8
   %uniform_array = alloca [256 x i128], align 8
   store [256 x i128]* %uniform_array, [256 x i128]** %prod_val, align 8
   store i128 0, i128* %i, align 4
@@ -1350,441 +1435,97 @@ if.exit203:                                       ; preds = %if.false125, %loop.
   ret [256 x i128]* %out204
 }
 
-define [256 x [256 x i128]]* @prod2D(i128 %0, i128 %1, i128 %2, [256 x [256 x i128]]* %3, [256 x [256 x i128]]* %4) {
+define [256 x i128]* @long_add4(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4, [256 x i128]* %5) {
 entry:
-  %prod2d.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %prod2d.n.declare_arg, align 4
-  %prod2d.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %prod2d.k.declare_arg, align 4
-  %prod2d.l.declare_arg = alloca i128, align 8
-  store i128 %2, i128* %prod2d.l.declare_arg, align 4
-  %prod2d.a.declare_arg = alloca [256 x [256 x i128]]*, align 8
-  store [256 x [256 x i128]]* %3, [256 x [256 x i128]]** %prod2d.a.declare_arg, align 8
-  %prod2d.b.declare_arg = alloca [256 x [256 x i128]]*, align 8
-  store [256 x [256 x i128]]* %4, [256 x [256 x i128]]** %prod2d.b.declare_arg, align 8
-  %j1 = alloca i128, align 8
-  %j11 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j11, i128* %j1, align 4
-  %j2 = alloca i128, align 8
-  %j22 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j22, i128* %j2, align 4
-  %out = alloca [256 x [256 x i128]]*, align 8
-  %out3 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %out3, [256 x [256 x i128]]** %out, align 8
-  %split = alloca [256 x [256 x [256 x i128]]]*, align 8
-  %split4 = alloca [256 x [256 x [256 x i128]]], align 8
-  store [256 x [256 x [256 x i128]]]* %split4, [256 x [256 x [256 x i128]]]** %split, align 8
-  %sumAndCarry = alloca [256 x [256 x i128]]*, align 8
-  %sumAndCarry5 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %sumAndCarry5, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %carry = alloca [256 x [256 x i128]]*, align 8
-  %carry6 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %carry6, [256 x [256 x i128]]** %carry, align 8
-  %prod_val = alloca [256 x [256 x i128]]*, align 8
-  %prod_val7 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %prod_val7, [256 x [256 x i128]]** %prod_val, align 8
+  %long_add4.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %long_add4.n.declare_arg, align 4
+  %long_add4.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %long_add4.k.declare_arg, align 4
+  %long_add4.a.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %2, [256 x i128]** %long_add4.a.declare_arg, align 8
+  %long_add4.b.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %3, [256 x i128]** %long_add4.b.declare_arg, align 8
+  %long_add4.c.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %4, [256 x i128]** %long_add4.c.declare_arg, align 8
+  %long_add4.d.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %5, [256 x i128]** %long_add4.d.declare_arg, align 8
+  %carry = alloca i128, align 8
+  %carry1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %carry1, i128* %carry, align 4
   %i = alloca i128, align 8
-  %i8 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i8, i128* %i, align 4
-  %j = alloca i128, align 8
-  %j9 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j9, i128* %j, align 4
-  %i2 = alloca i128, align 8
-  %i210 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i210, i128* %i2, align 4
-  %i1 = alloca i128, align 8
-  %i111 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i111, i128* %i1, align 4
-  %uniform_array = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %uniform_array, [256 x [256 x i128]]** %prod_val, align 8
+  %i2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i2, i128* %i, align 4
+  %sumAndCarry = alloca [256 x i128]*, align 8
+  %sumAndCarry3 = alloca [256 x i128], align 8
+  store [256 x i128]* %sumAndCarry3, [256 x i128]** %sumAndCarry, align 8
+  %sum = alloca [256 x i128]*, align 8
+  %sum4 = alloca [256 x i128], align 8
+  store [256 x i128]* %sum4, [256 x i128]** %sum, align 8
+  store i128 0, i128* %carry, align 4
+  %uniform_array = alloca [256 x i128], align 8
+  store [256 x i128]* %uniform_array, [256 x i128]** %sum, align 8
   store i128 0, i128* %i, align 4
   br label %loop.body
 
-loop.body:                                        ; preds = %loop.latch18, %entry
-  store i128 0, i128* %j, align 4
-  br label %loop.body12
-
-loop.body12:                                      ; preds = %loop.latch, %loop.body
-  %ptr_getter = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
-  %j13 = load i128, i128* %j, align 4
+loop.body:                                        ; preds = %loop.latch, %entry
+  %a = load [256 x i128]*, [256 x i128]** %long_add4.a.declare_arg, align 8
+  %i5 = load i128, i128* %i, align 4
+  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %a, i128 0, i128 %i5
+  %a6 = load i128, i128* %array_getter, align 4
+  %b = load [256 x i128]*, [256 x i128]** %long_add4.b.declare_arg, align 8
+  %i7 = load i128, i128* %i, align 4
+  %array_getter8 = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %i7
+  %b9 = load i128, i128* %array_getter8, align 4
+  %add = add i128 %a6, %b9
+  %c = load [256 x i128]*, [256 x i128]** %long_add4.c.declare_arg, align 8
+  %i10 = load i128, i128* %i, align 4
+  %array_getter11 = getelementptr inbounds [256 x i128], [256 x i128]* %c, i128 0, i128 %i10
+  %c12 = load i128, i128* %array_getter11, align 4
+  %add13 = add i128 %add, %c12
+  %d = load [256 x i128]*, [256 x i128]** %long_add4.d.declare_arg, align 8
   %i14 = load i128, i128* %i, align 4
-  %prod_val15 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter, i128 0, i128 %j13, i128 %i14
-  store i128 0, i128* %prod_val15, align 4
+  %array_getter15 = getelementptr inbounds [256 x i128], [256 x i128]* %d, i128 0, i128 %i14
+  %d16 = load i128, i128* %array_getter15, align 4
+  %add17 = add i128 %add13, %d16
+  %carry18 = load i128, i128* %carry, align 4
+  %add19 = add i128 %add17, %carry18
+  %n = load i128, i128* %long_add4.n.declare_arg, align 4
+  %n20 = load i128, i128* %long_add4.n.declare_arg, align 4
+  %call = call [2 x i128]* @SplitFn(i128 %add19, i128 %n, i128 %n20)
+  %memcpy_ptr = getelementptr inbounds [256 x i128]*, [256 x i128]** %sumAndCarry, i128 0
+  %6 = bitcast [256 x i128]** %memcpy_ptr to i8*
+  %7 = bitcast [2 x i128]* %call to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %6, i8* align 4 %7, i64 ptrtoint ([2 x i128]* getelementptr ([2 x i128], [2 x i128]* null, i32 1) to i64), i1 false)
+  %sumAndCarry21 = load [256 x i128]*, [256 x i128]** %sumAndCarry, align 8
+  %array_getter22 = getelementptr inbounds [256 x i128], [256 x i128]* %sumAndCarry21, i128 0, i128 0
+  %sumAndCarry23 = load i128, i128* %array_getter22, align 4
+  %ptr_getter = load [256 x i128]*, [256 x i128]** %sum, align 8
+  %i24 = load i128, i128* %i, align 4
+  %sum25 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter, i128 0, i128 %i24
+  store i128 %sumAndCarry23, i128* %sum25, align 4
+  %sumAndCarry26 = load [256 x i128]*, [256 x i128]** %sumAndCarry, align 8
+  %array_getter27 = getelementptr inbounds [256 x i128], [256 x i128]* %sumAndCarry26, i128 0, i128 1
+  %sumAndCarry28 = load i128, i128* %array_getter27, align 4
+  store i128 %sumAndCarry28, i128* %carry, align 4
   br label %loop.latch
 
-loop.latch:                                       ; preds = %loop.body12
-  %j16 = load i128, i128* %j, align 4
-  %add = add i128 %j16, 1
-  store i128 %add, i128* %j, align 4
-  %j17 = load i128, i128* %j, align 4
-  %l = load i128, i128* %prod2d.l.declare_arg, align 4
-  %mul = mul i128 2, %l
-  %sub = sub i128 %mul, 1
-  %slt = icmp slt i128 %j17, %sub
-  br i1 %slt, label %loop.body12, label %loop.exit
+loop.latch:                                       ; preds = %loop.body
+  %i29 = load i128, i128* %i, align 4
+  %add30 = add i128 %i29, 1
+  store i128 %add30, i128* %i, align 4
+  %i31 = load i128, i128* %i, align 4
+  %k = load i128, i128* %long_add4.k.declare_arg, align 4
+  %slt = icmp slt i128 %i31, %k
+  br i1 %slt, label %loop.body, label %loop.exit
 
 loop.exit:                                        ; preds = %loop.latch
-  br label %loop.latch18
-
-loop.latch18:                                     ; preds = %loop.exit
-  %i19 = load i128, i128* %i, align 4
-  %add20 = add i128 %i19, 1
-  store i128 %add20, i128* %i, align 4
-  %i21 = load i128, i128* %i, align 4
-  %k = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul22 = mul i128 2, %k
-  %sub23 = sub i128 %mul22, 1
-  %slt24 = icmp slt i128 %i21, %sub23
-  br i1 %slt24, label %loop.body, label %loop.exit25
-
-loop.exit25:                                      ; preds = %loop.latch18
-  store i128 0, i128* %i1, align 4
-  br label %loop.body26
-
-loop.body26:                                      ; preds = %loop.latch77, %loop.exit25
-  store i128 0, i128* %i2, align 4
-  br label %loop.body27
-
-loop.body27:                                      ; preds = %loop.latch70, %loop.body26
-  store i128 0, i128* %j1, align 4
-  br label %loop.body28
-
-loop.body28:                                      ; preds = %loop.latch63, %loop.body27
-  store i128 0, i128* %j2, align 4
-  br label %loop.body29
-
-loop.body29:                                      ; preds = %loop.latch56, %loop.body28
-  %prod_val30 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
-  %j131 = load i128, i128* %j1, align 4
-  %j232 = load i128, i128* %j2, align 4
-  %add33 = add i128 %j131, %j232
-  %i134 = load i128, i128* %i1, align 4
-  %i235 = load i128, i128* %i2, align 4
-  %add36 = add i128 %i134, %i235
-  %array_getter = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %prod_val30, i128 0, i128 %add33, i128 %add36
-  %prod_val37 = load i128, i128* %array_getter, align 4
-  %a = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod2d.a.declare_arg, align 8
-  %j138 = load i128, i128* %j1, align 4
-  %i139 = load i128, i128* %i1, align 4
-  %array_getter40 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %a, i128 0, i128 %j138, i128 %i139
-  %a41 = load i128, i128* %array_getter40, align 4
-  %b = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod2d.b.declare_arg, align 8
-  %j242 = load i128, i128* %j2, align 4
-  %i243 = load i128, i128* %i2, align 4
-  %array_getter44 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %b, i128 0, i128 %j242, i128 %i243
-  %b45 = load i128, i128* %array_getter44, align 4
-  %mul46 = mul i128 %a41, %b45
-  %add47 = add i128 %prod_val37, %mul46
-  %ptr_getter48 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
-  %j149 = load i128, i128* %j1, align 4
-  %j250 = load i128, i128* %j2, align 4
-  %add51 = add i128 %j149, %j250
-  %i152 = load i128, i128* %i1, align 4
-  %i253 = load i128, i128* %i2, align 4
-  %add54 = add i128 %i152, %i253
-  %prod_val55 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter48, i128 0, i128 %add51, i128 %add54
-  store i128 %add47, i128* %prod_val55, align 4
-  br label %loop.latch56
-
-loop.latch56:                                     ; preds = %loop.body29
-  %j257 = load i128, i128* %j2, align 4
-  %add58 = add i128 %j257, 1
-  store i128 %add58, i128* %j2, align 4
-  %j259 = load i128, i128* %j2, align 4
-  %l60 = load i128, i128* %prod2d.l.declare_arg, align 4
-  %slt61 = icmp slt i128 %j259, %l60
-  br i1 %slt61, label %loop.body29, label %loop.exit62
-
-loop.exit62:                                      ; preds = %loop.latch56
-  br label %loop.latch63
-
-loop.latch63:                                     ; preds = %loop.exit62
-  %j164 = load i128, i128* %j1, align 4
-  %add65 = add i128 %j164, 1
-  store i128 %add65, i128* %j1, align 4
-  %j166 = load i128, i128* %j1, align 4
-  %l67 = load i128, i128* %prod2d.l.declare_arg, align 4
-  %slt68 = icmp slt i128 %j166, %l67
-  br i1 %slt68, label %loop.body28, label %loop.exit69
-
-loop.exit69:                                      ; preds = %loop.latch63
-  br label %loop.latch70
-
-loop.latch70:                                     ; preds = %loop.exit69
-  %i271 = load i128, i128* %i2, align 4
-  %add72 = add i128 %i271, 1
-  store i128 %add72, i128* %i2, align 4
-  %i273 = load i128, i128* %i2, align 4
-  %k74 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %slt75 = icmp slt i128 %i273, %k74
-  br i1 %slt75, label %loop.body27, label %loop.exit76
-
-loop.exit76:                                      ; preds = %loop.latch70
-  br label %loop.latch77
-
-loop.latch77:                                     ; preds = %loop.exit76
-  %i178 = load i128, i128* %i1, align 4
-  %add79 = add i128 %i178, 1
-  store i128 %add79, i128* %i1, align 4
-  %i180 = load i128, i128* %i1, align 4
-  %k81 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %slt82 = icmp slt i128 %i180, %k81
-  br i1 %slt82, label %loop.body26, label %loop.exit83
-
-loop.exit83:                                      ; preds = %loop.latch77
-  %uniform_array84 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %uniform_array84, [256 x [256 x i128]]** %out, align 8
-  %uniform_array85 = alloca [256 x [256 x [256 x i128]]], align 8
-  store [256 x [256 x [256 x i128]]]* %uniform_array85, [256 x [256 x [256 x i128]]]** %split, align 8
-  store i128 0, i128* %j, align 4
-  br label %loop.body86
-
-loop.body86:                                      ; preds = %loop.latch108, %loop.exit83
-  store i128 0, i128* %i, align 4
-  br label %loop.body87
-
-loop.body87:                                      ; preds = %loop.latch99, %loop.body86
-  %prod_val88 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
-  %j89 = load i128, i128* %j, align 4
-  %i90 = load i128, i128* %i, align 4
-  %array_getter91 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %prod_val88, i128 0, i128 %j89, i128 %i90
-  %prod_val92 = load i128, i128* %array_getter91, align 4
-  %n = load i128, i128* %prod2d.n.declare_arg, align 4
-  %n93 = load i128, i128* %prod2d.n.declare_arg, align 4
-  %n94 = load i128, i128* %prod2d.n.declare_arg, align 4
-  %call = call [3 x i128]* @SplitThreeFn(i128 %prod_val92, i128 %n, i128 %n93, i128 %n94)
-  %ptr_getter95 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j96 = load i128, i128* %j, align 4
-  %i97 = load i128, i128* %i, align 4
-  %split98 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %ptr_getter95, i128 0, i128 %j96, i128 %i97
-  %5 = bitcast [256 x i128]* %split98 to i8*
-  %6 = bitcast [3 x i128]* %call to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %5, i8* align 4 %6, i64 ptrtoint ([3 x i128]* getelementptr ([3 x i128], [3 x i128]* null, i32 1) to i64), i1 false)
-  br label %loop.latch99
-
-loop.latch99:                                     ; preds = %loop.body87
-  %i100 = load i128, i128* %i, align 4
-  %add101 = add i128 %i100, 1
-  store i128 %add101, i128* %i, align 4
-  %i102 = load i128, i128* %i, align 4
-  %k103 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul104 = mul i128 2, %k103
-  %sub105 = sub i128 %mul104, 1
-  %slt106 = icmp slt i128 %i102, %sub105
-  br i1 %slt106, label %loop.body87, label %loop.exit107
-
-loop.exit107:                                     ; preds = %loop.latch99
-  br label %loop.latch108
-
-loop.latch108:                                    ; preds = %loop.exit107
-  %j109 = load i128, i128* %j, align 4
-  %add110 = add i128 %j109, 1
-  store i128 %add110, i128* %j, align 4
-  %j111 = load i128, i128* %j, align 4
-  %l112 = load i128, i128* %prod2d.l.declare_arg, align 4
-  %mul113 = mul i128 2, %l112
-  %sub114 = sub i128 %mul113, 1
-  %slt115 = icmp slt i128 %j111, %sub114
-  br i1 %slt115, label %loop.body86, label %loop.exit116
-
-loop.exit116:                                     ; preds = %loop.latch108
-  %uniform_array117 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %uniform_array117, [256 x [256 x i128]]** %carry, align 8
-  %uniform_array118 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %uniform_array118, [256 x [256 x i128]]** %sumAndCarry, align 8
-  store i128 0, i128* %j, align 4
-  br label %loop.body119
-
-loop.body119:                                     ; preds = %loop.latch257, %loop.exit116
-  %ptr_getter120 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
-  %j121 = load i128, i128* %j, align 4
-  %carry122 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter120, i128 0, i128 %j121, i128 0
-  store i128 0, i128* %carry122, align 4
-  %split123 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j124 = load i128, i128* %j, align 4
-  %array_getter125 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split123, i128 0, i128 %j124, i128 0, i128 0
-  %split126 = load i128, i128* %array_getter125, align 4
-  %ptr_getter127 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
-  %j128 = load i128, i128* %j, align 4
-  %out129 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter127, i128 0, i128 %j128, i128 0
-  store i128 %split126, i128* %out129, align 4
-  %k130 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul131 = mul i128 2, %k130
-  %sub132 = sub i128 %mul131, 1
-  %sgt = icmp sgt i128 %sub132, 1
-  br i1 %sgt, label %if.true, label %if.false
-
-if.true:                                          ; preds = %loop.body119
-  %split133 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j134 = load i128, i128* %j, align 4
-  %array_getter135 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split133, i128 0, i128 %j134, i128 0, i128 1
-  %split136 = load i128, i128* %array_getter135, align 4
-  %split137 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j139 = load i128, i128* %j, align 4
-  %array_getter140 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split137, i128 0, i128 %j139, i128 1, i128 0
-  %split141 = load i128, i128* %array_getter140, align 4
-  %add142 = add i128 %split136, %split141
-  %n143 = load i128, i128* %prod2d.n.declare_arg, align 4
-  %n144 = load i128, i128* %prod2d.n.declare_arg, align 4
-  %call145 = call [2 x i128]* @SplitFn(i128 %add142, i128 %n143, i128 %n144)
-  %ptr_getter146 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %j147 = load i128, i128* %j, align 4
-  %sumAndCarry148 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter146, i128 0, i128 %j147
-  %7 = bitcast [256 x i128]* %sumAndCarry148 to i8*
-  %8 = bitcast [2 x i128]* %call145 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %7, i8* align 4 %8, i64 ptrtoint ([2 x i128]* getelementptr ([2 x i128], [2 x i128]* null, i32 1) to i64), i1 false)
-  %sumAndCarry149 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %j150 = load i128, i128* %j, align 4
-  %array_getter151 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry149, i128 0, i128 %j150, i128 0
-  %sumAndCarry152 = load i128, i128* %array_getter151, align 4
-  %ptr_getter153 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
-  %j154 = load i128, i128* %j, align 4
-  %out155 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter153, i128 0, i128 %j154, i128 1
-  store i128 %sumAndCarry152, i128* %out155, align 4
-  %sumAndCarry156 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %j157 = load i128, i128* %j, align 4
-  %array_getter158 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry156, i128 0, i128 %j157, i128 1
-  %sumAndCarry159 = load i128, i128* %array_getter158, align 4
-  %ptr_getter160 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
-  %j161 = load i128, i128* %j, align 4
-  %carry162 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter160, i128 0, i128 %j161, i128 1
-  store i128 %sumAndCarry159, i128* %carry162, align 4
-  br label %if.exit
-
-if.false:                                         ; preds = %loop.body119
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false, %if.true
-  %k165 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul166 = mul i128 2, %k165
-  %sub167 = sub i128 %mul166, 1
-  %sgt168 = icmp sgt i128 %sub167, 2
-  br i1 %sgt168, label %if.true163, label %if.false164
-
-if.true163:                                       ; preds = %if.exit
-  store i128 2, i128* %i, align 4
-  br label %loop.body169
-
-if.false164:                                      ; preds = %if.exit
-  br label %if.exit256
-
-loop.body169:                                     ; preds = %loop.latch218, %if.true163
-  %split170 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j171 = load i128, i128* %j, align 4
-  %i172 = load i128, i128* %i, align 4
-  %array_getter173 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split170, i128 0, i128 %j171, i128 %i172, i128 0
-  %split174 = load i128, i128* %array_getter173, align 4
-  %split175 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j176 = load i128, i128* %j, align 4
-  %i177 = load i128, i128* %i, align 4
-  %sub178 = sub i128 %i177, 1
-  %array_getter179 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split175, i128 0, i128 %j176, i128 %sub178, i128 1
-  %split180 = load i128, i128* %array_getter179, align 4
-  %add181 = add i128 %split174, %split180
-  %split182 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j183 = load i128, i128* %j, align 4
-  %i184 = load i128, i128* %i, align 4
-  %sub185 = sub i128 %i184, 2
-  %array_getter186 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split182, i128 0, i128 %j183, i128 %sub185, i128 2
-  %split187 = load i128, i128* %array_getter186, align 4
-  %add188 = add i128 %add181, %split187
-  %carry189 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
-  %j190 = load i128, i128* %j, align 4
-  %i191 = load i128, i128* %i, align 4
-  %sub192 = sub i128 %i191, 1
-  %array_getter193 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %carry189, i128 0, i128 %j190, i128 %sub192
-  %carry194 = load i128, i128* %array_getter193, align 4
-  %add195 = add i128 %add188, %carry194
-  %n196 = load i128, i128* %prod2d.n.declare_arg, align 4
-  %n197 = load i128, i128* %prod2d.n.declare_arg, align 4
-  %call198 = call [2 x i128]* @SplitFn(i128 %add195, i128 %n196, i128 %n197)
-  %ptr_getter199 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %j200 = load i128, i128* %j, align 4
-  %sumAndCarry201 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter199, i128 0, i128 %j200
-  %9 = bitcast [256 x i128]* %sumAndCarry201 to i8*
-  %10 = bitcast [2 x i128]* %call198 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %9, i8* align 4 %10, i64 ptrtoint ([2 x i128]* getelementptr ([2 x i128], [2 x i128]* null, i32 1) to i64), i1 false)
-  %sumAndCarry202 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %j203 = load i128, i128* %j, align 4
-  %array_getter204 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry202, i128 0, i128 %j203, i128 0
-  %sumAndCarry205 = load i128, i128* %array_getter204, align 4
-  %ptr_getter206 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
-  %j207 = load i128, i128* %j, align 4
-  %i208 = load i128, i128* %i, align 4
-  %out209 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter206, i128 0, i128 %j207, i128 %i208
-  store i128 %sumAndCarry205, i128* %out209, align 4
-  %sumAndCarry210 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
-  %j211 = load i128, i128* %j, align 4
-  %array_getter212 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry210, i128 0, i128 %j211, i128 1
-  %sumAndCarry213 = load i128, i128* %array_getter212, align 4
-  %ptr_getter214 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
-  %j215 = load i128, i128* %j, align 4
-  %i216 = load i128, i128* %i, align 4
-  %carry217 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter214, i128 0, i128 %j215, i128 %i216
-  store i128 %sumAndCarry213, i128* %carry217, align 4
-  br label %loop.latch218
-
-loop.latch218:                                    ; preds = %loop.body169
-  %i219 = load i128, i128* %i, align 4
-  %add220 = add i128 %i219, 1
-  store i128 %add220, i128* %i, align 4
-  %i221 = load i128, i128* %i, align 4
-  %k222 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul223 = mul i128 2, %k222
-  %sub224 = sub i128 %mul223, 1
-  %slt225 = icmp slt i128 %i221, %sub224
-  br i1 %slt225, label %loop.body169, label %loop.exit226
-
-loop.exit226:                                     ; preds = %loop.latch218
-  %split227 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j228 = load i128, i128* %j, align 4
-  %k229 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul230 = mul i128 2, %k229
-  %sub231 = sub i128 %mul230, 2
-  %array_getter232 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split227, i128 0, i128 %j228, i128 %sub231, i128 1
-  %split233 = load i128, i128* %array_getter232, align 4
-  %split234 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
-  %j235 = load i128, i128* %j, align 4
-  %k236 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul237 = mul i128 2, %k236
-  %sub238 = sub i128 %mul237, 3
-  %array_getter239 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split234, i128 0, i128 %j235, i128 %sub238, i128 2
-  %split240 = load i128, i128* %array_getter239, align 4
-  %add241 = add i128 %split233, %split240
-  %carry242 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
-  %j243 = load i128, i128* %j, align 4
-  %k244 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul245 = mul i128 2, %k244
-  %sub246 = sub i128 %mul245, 2
-  %array_getter247 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %carry242, i128 0, i128 %j243, i128 %sub246
-  %carry248 = load i128, i128* %array_getter247, align 4
-  %add249 = add i128 %add241, %carry248
-  %ptr_getter250 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
-  %j251 = load i128, i128* %j, align 4
-  %k252 = load i128, i128* %prod2d.k.declare_arg, align 4
-  %mul253 = mul i128 2, %k252
-  %sub254 = sub i128 %mul253, 1
-  %out255 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter250, i128 0, i128 %j251, i128 %sub254
-  store i128 %add249, i128* %out255, align 4
-  br label %if.exit256
-
-if.exit256:                                       ; preds = %if.false164, %loop.exit226
-  br label %loop.latch257
-
-loop.latch257:                                    ; preds = %if.exit256
-  %j258 = load i128, i128* %j, align 4
-  %add259 = add i128 %j258, 1
-  store i128 %add259, i128* %j, align 4
-  %j260 = load i128, i128* %j, align 4
-  %l261 = load i128, i128* %prod2d.l.declare_arg, align 4
-  %mul262 = mul i128 2, %l261
-  %sub263 = sub i128 %mul262, 1
-  %slt264 = icmp slt i128 %j260, %sub263
-  br i1 %slt264, label %loop.body119, label %loop.exit265
-
-loop.exit265:                                     ; preds = %loop.latch257
-  %out266 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
-  ret [256 x [256 x i128]]* %out266
+  %carry32 = load i128, i128* %carry, align 4
+  %ptr_getter33 = load [256 x i128]*, [256 x i128]** %sum, align 8
+  %k34 = load i128, i128* %long_add4.k.declare_arg, align 4
+  %sum35 = getelementptr inbounds [256 x i128], [256 x i128]* %ptr_getter33, i128 0, i128 %k34
+  store i128 %carry32, i128* %sum35, align 4
+  %sum36 = load [256 x i128]*, [256 x i128]** %sum, align 8
+  ret [256 x i128]* %sum36
 }
 
 define [256 x i128]* @long_add(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
@@ -1803,12 +1544,12 @@ entry:
   %sumAndCarry = alloca [256 x i128]*, align 8
   %sumAndCarry2 = alloca [256 x i128], align 8
   store [256 x i128]* %sumAndCarry2, [256 x i128]** %sumAndCarry, align 8
-  %i = alloca i128, align 8
-  %i3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i3, i128* %i, align 4
   %sum = alloca [256 x i128]*, align 8
-  %sum4 = alloca [256 x i128], align 8
-  store [256 x i128]* %sum4, [256 x i128]** %sum, align 8
+  %sum3 = alloca [256 x i128], align 8
+  store [256 x i128]* %sum3, [256 x i128]** %sum, align 8
+  %i = alloca i128, align 8
+  %i4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i4, i128* %i, align 4
   store i128 0, i128* %carry, align 4
   %uniform_array = alloca [256 x i128], align 8
   store [256 x i128]* %uniform_array, [256 x i128]** %sum, align 8
@@ -1866,105 +1607,482 @@ loop.exit:                                        ; preds = %loop.latch
   ret [256 x i128]* %sum28
 }
 
-define i128 @short_div_norm(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
+define [256 x [256 x i128]]* @prod2D(i128 %0, i128 %1, i128 %2, [256 x [256 x i128]]* %3, [256 x [256 x i128]]* %4) {
 entry:
-  %short_div_norm.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %short_div_norm.n.declare_arg, align 4
-  %short_div_norm.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %short_div_norm.k.declare_arg, align 4
-  %short_div_norm.a.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %2, [256 x i128]** %short_div_norm.a.declare_arg, align 8
-  %short_div_norm.b.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %3, [256 x i128]** %short_div_norm.b.declare_arg, align 8
-  %mult = alloca [256 x i128]*, align 8
-  %mult1 = alloca [256 x i128], align 8
-  store [256 x i128]* %mult1, [256 x i128]** %mult, align 8
-  %qhat = alloca i128, align 8
-  %qhat2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %qhat2, i128* %qhat, align 4
-  %a = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
-  %k = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %a, i128 0, i128 %k
-  %a3 = load i128, i128* %array_getter, align 4
-  %n = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %lshift = shl i128 1, %n
-  %mul = mul i128 %a3, %lshift
-  %a4 = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
-  %k5 = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %sub = sub i128 %k5, 1
-  %array_getter6 = getelementptr inbounds [256 x i128], [256 x i128]* %a4, i128 0, i128 %sub
-  %a7 = load i128, i128* %array_getter6, align 4
-  %add = add i128 %mul, %a7
-  %b = load [256 x i128]*, [256 x i128]** %short_div_norm.b.declare_arg, align 8
-  %k8 = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %sub9 = sub i128 %k8, 1
-  %array_getter10 = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %sub9
-  %b11 = load i128, i128* %array_getter10, align 4
-  %sdiv = sdiv i128 %add, %b11
-  store i128 %sdiv, i128* %qhat, align 4
-  %qhat12 = load i128, i128* %qhat, align 4
-  %n13 = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %lshift14 = shl i128 1, %n13
-  %sub15 = sub i128 %lshift14, 1
-  %sgt = icmp sgt i128 %qhat12, %sub15
+  %prod2d.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %prod2d.n.declare_arg, align 4
+  %prod2d.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %prod2d.k.declare_arg, align 4
+  %prod2d.l.declare_arg = alloca i128, align 8
+  store i128 %2, i128* %prod2d.l.declare_arg, align 4
+  %prod2d.a.declare_arg = alloca [256 x [256 x i128]]*, align 8
+  store [256 x [256 x i128]]* %3, [256 x [256 x i128]]** %prod2d.a.declare_arg, align 8
+  %prod2d.b.declare_arg = alloca [256 x [256 x i128]]*, align 8
+  store [256 x [256 x i128]]* %4, [256 x [256 x i128]]** %prod2d.b.declare_arg, align 8
+  %j = alloca i128, align 8
+  %j1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j1, i128* %j, align 4
+  %i1 = alloca i128, align 8
+  %i12 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i12, i128* %i1, align 4
+  %sumAndCarry = alloca [256 x [256 x i128]]*, align 8
+  %sumAndCarry3 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %sumAndCarry3, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %prod_val = alloca [256 x [256 x i128]]*, align 8
+  %prod_val4 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %prod_val4, [256 x [256 x i128]]** %prod_val, align 8
+  %i2 = alloca i128, align 8
+  %i25 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i25, i128* %i2, align 4
+  %out = alloca [256 x [256 x i128]]*, align 8
+  %out6 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %out6, [256 x [256 x i128]]** %out, align 8
+  %split = alloca [256 x [256 x [256 x i128]]]*, align 8
+  %split7 = alloca [256 x [256 x [256 x i128]]], align 8
+  store [256 x [256 x [256 x i128]]]* %split7, [256 x [256 x [256 x i128]]]** %split, align 8
+  %carry = alloca [256 x [256 x i128]]*, align 8
+  %carry8 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %carry8, [256 x [256 x i128]]** %carry, align 8
+  %j19 = alloca i128, align 8
+  %j110 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j110, i128* %j19, align 4
+  %i = alloca i128, align 8
+  %i11 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i11, i128* %i, align 4
+  %j2 = alloca i128, align 8
+  %j212 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j212, i128* %j2, align 4
+  %uniform_array = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %uniform_array, [256 x [256 x i128]]** %prod_val, align 8
+  store i128 0, i128* %i, align 4
+  br label %loop.body
+
+loop.body:                                        ; preds = %loop.latch19, %entry
+  store i128 0, i128* %j, align 4
+  br label %loop.body13
+
+loop.body13:                                      ; preds = %loop.latch, %loop.body
+  %ptr_getter = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
+  %j14 = load i128, i128* %j, align 4
+  %i15 = load i128, i128* %i, align 4
+  %prod_val16 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter, i128 0, i128 %j14, i128 %i15
+  store i128 0, i128* %prod_val16, align 4
+  br label %loop.latch
+
+loop.latch:                                       ; preds = %loop.body13
+  %j17 = load i128, i128* %j, align 4
+  %add = add i128 %j17, 1
+  store i128 %add, i128* %j, align 4
+  %j18 = load i128, i128* %j, align 4
+  %l = load i128, i128* %prod2d.l.declare_arg, align 4
+  %mul = mul i128 2, %l
+  %sub = sub i128 %mul, 1
+  %slt = icmp slt i128 %j18, %sub
+  br i1 %slt, label %loop.body13, label %loop.exit
+
+loop.exit:                                        ; preds = %loop.latch
+  br label %loop.latch19
+
+loop.latch19:                                     ; preds = %loop.exit
+  %i20 = load i128, i128* %i, align 4
+  %add21 = add i128 %i20, 1
+  store i128 %add21, i128* %i, align 4
+  %i22 = load i128, i128* %i, align 4
+  %k = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul23 = mul i128 2, %k
+  %sub24 = sub i128 %mul23, 1
+  %slt25 = icmp slt i128 %i22, %sub24
+  br i1 %slt25, label %loop.body, label %loop.exit26
+
+loop.exit26:                                      ; preds = %loop.latch19
+  store i128 0, i128* %i1, align 4
+  br label %loop.body27
+
+loop.body27:                                      ; preds = %loop.latch78, %loop.exit26
+  store i128 0, i128* %i2, align 4
+  br label %loop.body28
+
+loop.body28:                                      ; preds = %loop.latch71, %loop.body27
+  store i128 0, i128* %j19, align 4
+  br label %loop.body29
+
+loop.body29:                                      ; preds = %loop.latch64, %loop.body28
+  store i128 0, i128* %j2, align 4
+  br label %loop.body30
+
+loop.body30:                                      ; preds = %loop.latch57, %loop.body29
+  %prod_val31 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
+  %j132 = load i128, i128* %j19, align 4
+  %j233 = load i128, i128* %j2, align 4
+  %add34 = add i128 %j132, %j233
+  %i135 = load i128, i128* %i1, align 4
+  %i236 = load i128, i128* %i2, align 4
+  %add37 = add i128 %i135, %i236
+  %array_getter = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %prod_val31, i128 0, i128 %add34, i128 %add37
+  %prod_val38 = load i128, i128* %array_getter, align 4
+  %a = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod2d.a.declare_arg, align 8
+  %j139 = load i128, i128* %j19, align 4
+  %i140 = load i128, i128* %i1, align 4
+  %array_getter41 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %a, i128 0, i128 %j139, i128 %i140
+  %a42 = load i128, i128* %array_getter41, align 4
+  %b = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod2d.b.declare_arg, align 8
+  %j243 = load i128, i128* %j2, align 4
+  %i244 = load i128, i128* %i2, align 4
+  %array_getter45 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %b, i128 0, i128 %j243, i128 %i244
+  %b46 = load i128, i128* %array_getter45, align 4
+  %mul47 = mul i128 %a42, %b46
+  %add48 = add i128 %prod_val38, %mul47
+  %ptr_getter49 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
+  %j150 = load i128, i128* %j19, align 4
+  %j251 = load i128, i128* %j2, align 4
+  %add52 = add i128 %j150, %j251
+  %i153 = load i128, i128* %i1, align 4
+  %i254 = load i128, i128* %i2, align 4
+  %add55 = add i128 %i153, %i254
+  %prod_val56 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter49, i128 0, i128 %add52, i128 %add55
+  store i128 %add48, i128* %prod_val56, align 4
+  br label %loop.latch57
+
+loop.latch57:                                     ; preds = %loop.body30
+  %j258 = load i128, i128* %j2, align 4
+  %add59 = add i128 %j258, 1
+  store i128 %add59, i128* %j2, align 4
+  %j260 = load i128, i128* %j2, align 4
+  %l61 = load i128, i128* %prod2d.l.declare_arg, align 4
+  %slt62 = icmp slt i128 %j260, %l61
+  br i1 %slt62, label %loop.body30, label %loop.exit63
+
+loop.exit63:                                      ; preds = %loop.latch57
+  br label %loop.latch64
+
+loop.latch64:                                     ; preds = %loop.exit63
+  %j165 = load i128, i128* %j19, align 4
+  %add66 = add i128 %j165, 1
+  store i128 %add66, i128* %j19, align 4
+  %j167 = load i128, i128* %j19, align 4
+  %l68 = load i128, i128* %prod2d.l.declare_arg, align 4
+  %slt69 = icmp slt i128 %j167, %l68
+  br i1 %slt69, label %loop.body29, label %loop.exit70
+
+loop.exit70:                                      ; preds = %loop.latch64
+  br label %loop.latch71
+
+loop.latch71:                                     ; preds = %loop.exit70
+  %i272 = load i128, i128* %i2, align 4
+  %add73 = add i128 %i272, 1
+  store i128 %add73, i128* %i2, align 4
+  %i274 = load i128, i128* %i2, align 4
+  %k75 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %slt76 = icmp slt i128 %i274, %k75
+  br i1 %slt76, label %loop.body28, label %loop.exit77
+
+loop.exit77:                                      ; preds = %loop.latch71
+  br label %loop.latch78
+
+loop.latch78:                                     ; preds = %loop.exit77
+  %i179 = load i128, i128* %i1, align 4
+  %add80 = add i128 %i179, 1
+  store i128 %add80, i128* %i1, align 4
+  %i181 = load i128, i128* %i1, align 4
+  %k82 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %slt83 = icmp slt i128 %i181, %k82
+  br i1 %slt83, label %loop.body27, label %loop.exit84
+
+loop.exit84:                                      ; preds = %loop.latch78
+  %uniform_array85 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %uniform_array85, [256 x [256 x i128]]** %out, align 8
+  %uniform_array86 = alloca [256 x [256 x [256 x i128]]], align 8
+  store [256 x [256 x [256 x i128]]]* %uniform_array86, [256 x [256 x [256 x i128]]]** %split, align 8
+  store i128 0, i128* %j, align 4
+  br label %loop.body87
+
+loop.body87:                                      ; preds = %loop.latch109, %loop.exit84
+  store i128 0, i128* %i, align 4
+  br label %loop.body88
+
+loop.body88:                                      ; preds = %loop.latch100, %loop.body87
+  %prod_val89 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %prod_val, align 8
+  %j90 = load i128, i128* %j, align 4
+  %i91 = load i128, i128* %i, align 4
+  %array_getter92 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %prod_val89, i128 0, i128 %j90, i128 %i91
+  %prod_val93 = load i128, i128* %array_getter92, align 4
+  %n = load i128, i128* %prod2d.n.declare_arg, align 4
+  %n94 = load i128, i128* %prod2d.n.declare_arg, align 4
+  %n95 = load i128, i128* %prod2d.n.declare_arg, align 4
+  %call = call [3 x i128]* @SplitThreeFn(i128 %prod_val93, i128 %n, i128 %n94, i128 %n95)
+  %ptr_getter96 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j97 = load i128, i128* %j, align 4
+  %i98 = load i128, i128* %i, align 4
+  %split99 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %ptr_getter96, i128 0, i128 %j97, i128 %i98
+  %5 = bitcast [256 x i128]* %split99 to i8*
+  %6 = bitcast [3 x i128]* %call to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %5, i8* align 4 %6, i64 ptrtoint ([3 x i128]* getelementptr ([3 x i128], [3 x i128]* null, i32 1) to i64), i1 false)
+  br label %loop.latch100
+
+loop.latch100:                                    ; preds = %loop.body88
+  %i101 = load i128, i128* %i, align 4
+  %add102 = add i128 %i101, 1
+  store i128 %add102, i128* %i, align 4
+  %i103 = load i128, i128* %i, align 4
+  %k104 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul105 = mul i128 2, %k104
+  %sub106 = sub i128 %mul105, 1
+  %slt107 = icmp slt i128 %i103, %sub106
+  br i1 %slt107, label %loop.body88, label %loop.exit108
+
+loop.exit108:                                     ; preds = %loop.latch100
+  br label %loop.latch109
+
+loop.latch109:                                    ; preds = %loop.exit108
+  %j111 = load i128, i128* %j, align 4
+  %add112 = add i128 %j111, 1
+  store i128 %add112, i128* %j, align 4
+  %j113 = load i128, i128* %j, align 4
+  %l114 = load i128, i128* %prod2d.l.declare_arg, align 4
+  %mul115 = mul i128 2, %l114
+  %sub116 = sub i128 %mul115, 1
+  %slt117 = icmp slt i128 %j113, %sub116
+  br i1 %slt117, label %loop.body87, label %loop.exit118
+
+loop.exit118:                                     ; preds = %loop.latch109
+  %uniform_array119 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %uniform_array119, [256 x [256 x i128]]** %carry, align 8
+  %uniform_array120 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %uniform_array120, [256 x [256 x i128]]** %sumAndCarry, align 8
+  store i128 0, i128* %j, align 4
+  br label %loop.body121
+
+loop.body121:                                     ; preds = %loop.latch259, %loop.exit118
+  %ptr_getter122 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
+  %j123 = load i128, i128* %j, align 4
+  %carry124 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter122, i128 0, i128 %j123, i128 0
+  store i128 0, i128* %carry124, align 4
+  %split125 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j126 = load i128, i128* %j, align 4
+  %array_getter127 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split125, i128 0, i128 %j126, i128 0, i128 0
+  %split128 = load i128, i128* %array_getter127, align 4
+  %ptr_getter129 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
+  %j130 = load i128, i128* %j, align 4
+  %out131 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter129, i128 0, i128 %j130, i128 0
+  store i128 %split128, i128* %out131, align 4
+  %k132 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul133 = mul i128 2, %k132
+  %sub134 = sub i128 %mul133, 1
+  %sgt = icmp sgt i128 %sub134, 1
   br i1 %sgt, label %if.true, label %if.false
 
-if.true:                                          ; preds = %entry
-  %n16 = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %lshift17 = shl i128 1, %n16
-  %sub18 = sub i128 %lshift17, 1
-  store i128 %sub18, i128* %qhat, align 4
+if.true:                                          ; preds = %loop.body121
+  %split135 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j136 = load i128, i128* %j, align 4
+  %array_getter137 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split135, i128 0, i128 %j136, i128 0, i128 1
+  %split138 = load i128, i128* %array_getter137, align 4
+  %split139 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j140 = load i128, i128* %j, align 4
+  %array_getter141 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split139, i128 0, i128 %j140, i128 1, i128 0
+  %split142 = load i128, i128* %array_getter141, align 4
+  %add143 = add i128 %split138, %split142
+  %n144 = load i128, i128* %prod2d.n.declare_arg, align 4
+  %n145 = load i128, i128* %prod2d.n.declare_arg, align 4
+  %call146 = call [2 x i128]* @SplitFn(i128 %add143, i128 %n144, i128 %n145)
+  %ptr_getter147 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %j148 = load i128, i128* %j, align 4
+  %sumAndCarry149 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter147, i128 0, i128 %j148
+  %7 = bitcast [256 x i128]* %sumAndCarry149 to i8*
+  %8 = bitcast [2 x i128]* %call146 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %7, i8* align 4 %8, i64 ptrtoint ([2 x i128]* getelementptr ([2 x i128], [2 x i128]* null, i32 1) to i64), i1 false)
+  %sumAndCarry150 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %j151 = load i128, i128* %j, align 4
+  %array_getter152 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry150, i128 0, i128 %j151, i128 0
+  %sumAndCarry153 = load i128, i128* %array_getter152, align 4
+  %ptr_getter154 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
+  %j155 = load i128, i128* %j, align 4
+  %out156 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter154, i128 0, i128 %j155, i128 1
+  store i128 %sumAndCarry153, i128* %out156, align 4
+  %sumAndCarry157 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %j158 = load i128, i128* %j, align 4
+  %array_getter159 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry157, i128 0, i128 %j158, i128 1
+  %sumAndCarry160 = load i128, i128* %array_getter159, align 4
+  %ptr_getter161 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
+  %j162 = load i128, i128* %j, align 4
+  %carry163 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter161, i128 0, i128 %j162, i128 1
+  store i128 %sumAndCarry160, i128* %carry163, align 4
   br label %if.exit
 
-if.false:                                         ; preds = %entry
+if.false:                                         ; preds = %loop.body121
   br label %if.exit
 
 if.exit:                                          ; preds = %if.false, %if.true
-  %n19 = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %k20 = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %qhat21 = load i128, i128* %qhat, align 4
-  %b22 = load [256 x i128]*, [256 x i128]** %short_div_norm.b.declare_arg, align 8
-  %call = call [256 x i128]* @long_scalar_mult(i128 %n19, i128 %k20, i128 %qhat21, [256 x i128]* %b22)
-  store [256 x i128]* %call, [256 x i128]** %mult, align 8
-  %n25 = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %k26 = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %add27 = add i128 %k26, 1
-  %mult28 = load [256 x i128]*, [256 x i128]** %mult, align 8
-  %a29 = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
-  %call30 = call i128 @long_gt(i128 %n25, i128 %add27, [256 x i128]* %mult28, [256 x i128]* %a29)
-  %eq = icmp eq i128 %call30, 1
-  br i1 %eq, label %if.true23, label %if.false24
+  %k166 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul167 = mul i128 2, %k166
+  %sub168 = sub i128 %mul167, 1
+  %sgt169 = icmp sgt i128 %sub168, 2
+  br i1 %sgt169, label %if.true164, label %if.false165
 
-if.true23:                                        ; preds = %if.exit
-  %n31 = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %k32 = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %add33 = add i128 %k32, 1
-  %mult34 = load [256 x i128]*, [256 x i128]** %mult, align 8
-  %b35 = load [256 x i128]*, [256 x i128]** %short_div_norm.b.declare_arg, align 8
-  %call36 = call [256 x i128]* @long_sub(i128 %n31, i128 %add33, [256 x i128]* %mult34, [256 x i128]* %b35)
-  store [256 x i128]* %call36, [256 x i128]** %mult, align 8
-  %n39 = load i128, i128* %short_div_norm.n.declare_arg, align 4
-  %k40 = load i128, i128* %short_div_norm.k.declare_arg, align 4
-  %add41 = add i128 %k40, 1
-  %mult42 = load [256 x i128]*, [256 x i128]** %mult, align 8
-  %a43 = load [256 x i128]*, [256 x i128]** %short_div_norm.a.declare_arg, align 8
-  %call44 = call i128 @long_gt(i128 %n39, i128 %add41, [256 x i128]* %mult42, [256 x i128]* %a43)
-  %eq45 = icmp eq i128 %call44, 1
-  br i1 %eq45, label %if.true37, label %if.false38
+if.true164:                                       ; preds = %if.exit
+  store i128 2, i128* %i, align 4
+  br label %loop.body170
 
-if.false24:                                       ; preds = %if.exit
-  %qhat50 = load i128, i128* %qhat, align 4
-  ret i128 %qhat50
+if.false165:                                      ; preds = %if.exit
+  br label %if.exit258
 
-if.true37:                                        ; preds = %if.true23
-  %qhat46 = load i128, i128* %qhat, align 4
-  %sub47 = sub i128 %qhat46, 2
-  ret i128 %sub47
+loop.body170:                                     ; preds = %loop.latch220, %if.true164
+  %split171 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j172 = load i128, i128* %j, align 4
+  %i173 = load i128, i128* %i, align 4
+  %array_getter174 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split171, i128 0, i128 %j172, i128 %i173, i128 0
+  %split175 = load i128, i128* %array_getter174, align 4
+  %split176 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j177 = load i128, i128* %j, align 4
+  %i178 = load i128, i128* %i, align 4
+  %sub179 = sub i128 %i178, 1
+  %array_getter180 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split176, i128 0, i128 %j177, i128 %sub179, i128 1
+  %split181 = load i128, i128* %array_getter180, align 4
+  %add182 = add i128 %split175, %split181
+  %split183 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j184 = load i128, i128* %j, align 4
+  %i185 = load i128, i128* %i, align 4
+  %sub186 = sub i128 %i185, 2
+  %array_getter187 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split183, i128 0, i128 %j184, i128 %sub186, i128 2
+  %split188 = load i128, i128* %array_getter187, align 4
+  %add189 = add i128 %add182, %split188
+  %carry190 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
+  %j191 = load i128, i128* %j, align 4
+  %i192 = load i128, i128* %i, align 4
+  %sub193 = sub i128 %i192, 1
+  %array_getter194 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %carry190, i128 0, i128 %j191, i128 %sub193
+  %carry195 = load i128, i128* %array_getter194, align 4
+  %add196 = add i128 %add189, %carry195
+  %n197 = load i128, i128* %prod2d.n.declare_arg, align 4
+  %n198 = load i128, i128* %prod2d.n.declare_arg, align 4
+  %call199 = call [2 x i128]* @SplitFn(i128 %add196, i128 %n197, i128 %n198)
+  %ptr_getter200 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %j201 = load i128, i128* %j, align 4
+  %sumAndCarry202 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter200, i128 0, i128 %j201
+  %9 = bitcast [256 x i128]* %sumAndCarry202 to i8*
+  %10 = bitcast [2 x i128]* %call199 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 4 %9, i8* align 4 %10, i64 ptrtoint ([2 x i128]* getelementptr ([2 x i128], [2 x i128]* null, i32 1) to i64), i1 false)
+  %sumAndCarry203 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %j204 = load i128, i128* %j, align 4
+  %array_getter205 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry203, i128 0, i128 %j204, i128 0
+  %sumAndCarry206 = load i128, i128* %array_getter205, align 4
+  %ptr_getter207 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
+  %j208 = load i128, i128* %j, align 4
+  %i209 = load i128, i128* %i, align 4
+  %out210 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter207, i128 0, i128 %j208, i128 %i209
+  store i128 %sumAndCarry206, i128* %out210, align 4
+  %sumAndCarry211 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %sumAndCarry, align 8
+  %j213 = load i128, i128* %j, align 4
+  %array_getter214 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %sumAndCarry211, i128 0, i128 %j213, i128 1
+  %sumAndCarry215 = load i128, i128* %array_getter214, align 4
+  %ptr_getter216 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
+  %j217 = load i128, i128* %j, align 4
+  %i218 = load i128, i128* %i, align 4
+  %carry219 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter216, i128 0, i128 %j217, i128 %i218
+  store i128 %sumAndCarry215, i128* %carry219, align 4
+  br label %loop.latch220
 
-if.false38:                                       ; preds = %if.true23
-  %qhat48 = load i128, i128* %qhat, align 4
-  %sub49 = sub i128 %qhat48, 1
-  ret i128 %sub49
+loop.latch220:                                    ; preds = %loop.body170
+  %i221 = load i128, i128* %i, align 4
+  %add222 = add i128 %i221, 1
+  store i128 %add222, i128* %i, align 4
+  %i223 = load i128, i128* %i, align 4
+  %k224 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul225 = mul i128 2, %k224
+  %sub226 = sub i128 %mul225, 1
+  %slt227 = icmp slt i128 %i223, %sub226
+  br i1 %slt227, label %loop.body170, label %loop.exit228
+
+loop.exit228:                                     ; preds = %loop.latch220
+  %split229 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j230 = load i128, i128* %j, align 4
+  %k231 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul232 = mul i128 2, %k231
+  %sub233 = sub i128 %mul232, 2
+  %array_getter234 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split229, i128 0, i128 %j230, i128 %sub233, i128 1
+  %split235 = load i128, i128* %array_getter234, align 4
+  %split236 = load [256 x [256 x [256 x i128]]]*, [256 x [256 x [256 x i128]]]** %split, align 8
+  %j237 = load i128, i128* %j, align 4
+  %k238 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul239 = mul i128 2, %k238
+  %sub240 = sub i128 %mul239, 3
+  %array_getter241 = getelementptr inbounds [256 x [256 x [256 x i128]]], [256 x [256 x [256 x i128]]]* %split236, i128 0, i128 %j237, i128 %sub240, i128 2
+  %split242 = load i128, i128* %array_getter241, align 4
+  %add243 = add i128 %split235, %split242
+  %carry244 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %carry, align 8
+  %j245 = load i128, i128* %j, align 4
+  %k246 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul247 = mul i128 2, %k246
+  %sub248 = sub i128 %mul247, 2
+  %array_getter249 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %carry244, i128 0, i128 %j245, i128 %sub248
+  %carry250 = load i128, i128* %array_getter249, align 4
+  %add251 = add i128 %add243, %carry250
+  %ptr_getter252 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
+  %j253 = load i128, i128* %j, align 4
+  %k254 = load i128, i128* %prod2d.k.declare_arg, align 4
+  %mul255 = mul i128 2, %k254
+  %sub256 = sub i128 %mul255, 1
+  %out257 = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %ptr_getter252, i128 0, i128 %j253, i128 %sub256
+  store i128 %add251, i128* %out257, align 4
+  br label %if.exit258
+
+if.exit258:                                       ; preds = %if.false165, %loop.exit228
+  br label %loop.latch259
+
+loop.latch259:                                    ; preds = %if.exit258
+  %j261 = load i128, i128* %j, align 4
+  %add262 = add i128 %j261, 1
+  store i128 %add262, i128* %j, align 4
+  %j263 = load i128, i128* %j, align 4
+  %l264 = load i128, i128* %prod2d.l.declare_arg, align 4
+  %mul265 = mul i128 2, %l264
+  %sub266 = sub i128 %mul265, 1
+  %slt267 = icmp slt i128 %j263, %sub266
+  br i1 %slt267, label %loop.body121, label %loop.exit268
+
+loop.exit268:                                     ; preds = %loop.latch259
+  %out269 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %out, align 8
+  ret [256 x [256 x i128]]* %out269
+}
+
+define [256 x i128]* @long_sub_mod(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4) {
+entry:
+  %long_sub_mod.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %long_sub_mod.n.declare_arg, align 4
+  %long_sub_mod.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %long_sub_mod.k.declare_arg, align 4
+  %long_sub_mod.a.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %2, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
+  %long_sub_mod.b.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %3, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
+  %long_sub_mod.p.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %4, [256 x i128]** %long_sub_mod.p.declare_arg, align 8
+  %n = load i128, i128* %long_sub_mod.n.declare_arg, align 4
+  %k = load i128, i128* %long_sub_mod.k.declare_arg, align 4
+  %b = load [256 x i128]*, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
+  %a = load [256 x i128]*, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
+  %call = call i128 @long_gt(i128 %n, i128 %k, [256 x i128]* %b, [256 x i128]* %a)
+  %eq = icmp eq i128 %call, 1
+  br i1 %eq, label %if.true, label %if.false
+
+if.true:                                          ; preds = %entry
+  %n1 = load i128, i128* %long_sub_mod.n.declare_arg, align 4
+  %k2 = load i128, i128* %long_sub_mod.k.declare_arg, align 4
+  %a3 = load [256 x i128]*, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
+  %n4 = load i128, i128* %long_sub_mod.n.declare_arg, align 4
+  %k5 = load i128, i128* %long_sub_mod.k.declare_arg, align 4
+  %p = load [256 x i128]*, [256 x i128]** %long_sub_mod.p.declare_arg, align 8
+  %b6 = load [256 x i128]*, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
+  %call7 = call [256 x i128]* @long_sub(i128 %n4, i128 %k5, [256 x i128]* %p, [256 x i128]* %b6)
+  %call8 = call [256 x i128]* @long_add(i128 %n1, i128 %k2, [256 x i128]* %a3, [256 x i128]* %call7)
+  ret [256 x i128]* %call8
+
+if.false:                                         ; preds = %entry
+  %n9 = load i128, i128* %long_sub_mod.n.declare_arg, align 4
+  %k10 = load i128, i128* %long_sub_mod.k.declare_arg, align 4
+  %a11 = load [256 x i128]*, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
+  %b12 = load [256 x i128]*, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
+  %call13 = call [256 x i128]* @long_sub(i128 %n9, i128 %k10, [256 x i128]* %a11, [256 x i128]* %b12)
+  ret [256 x i128]* %call13
 }
 
 define [256 x i128]* @long_add_unequal(i128 %0, i128 %1, i128 %2, [256 x i128]* %3, [256 x i128]* %4) {
@@ -1982,15 +2100,15 @@ entry:
   %sum = alloca [256 x i128]*, align 8
   %sum1 = alloca [256 x i128], align 8
   store [256 x i128]* %sum1, [256 x i128]** %sum, align 8
-  %i = alloca i128, align 8
-  %i2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i2, i128* %i, align 4
-  %sumAndCarry = alloca [256 x i128]*, align 8
-  %sumAndCarry3 = alloca [256 x i128], align 8
-  store [256 x i128]* %sumAndCarry3, [256 x i128]** %sumAndCarry, align 8
   %carry = alloca i128, align 8
-  %carry4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %carry4, i128* %carry, align 4
+  %carry2 = call i128 @fn_intrinsic_inline_init()
+  store i128 %carry2, i128* %carry, align 4
+  %i = alloca i128, align 8
+  %i3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i3, i128* %i, align 4
+  %sumAndCarry = alloca [256 x i128]*, align 8
+  %sumAndCarry4 = alloca [256 x i128], align 8
+  store [256 x i128]* %sumAndCarry4, [256 x i128]** %sumAndCarry, align 8
   store i128 0, i128* %carry, align 4
   %uniform_array = alloca [256 x i128], align 8
   store [256 x i128]* %uniform_array, [256 x i128]** %sum, align 8
@@ -2084,124 +2202,6 @@ loop.exit:                                        ; preds = %loop.latch
   ret [256 x i128]* %sum49
 }
 
-define i128 @short_div(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3) {
-entry:
-  %short_div.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %short_div.n.declare_arg, align 4
-  %short_div.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %short_div.k.declare_arg, align 4
-  %short_div.a.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %2, [256 x i128]** %short_div.a.declare_arg, align 8
-  %short_div.b.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %3, [256 x i128]** %short_div.b.declare_arg, align 8
-  %norm_a = alloca [256 x i128]*, align 8
-  %norm_a1 = alloca [256 x i128], align 8
-  store [256 x i128]* %norm_a1, [256 x i128]** %norm_a, align 8
-  %norm_b = alloca [256 x i128]*, align 8
-  %norm_b2 = alloca [256 x i128], align 8
-  store [256 x i128]* %norm_b2, [256 x i128]** %norm_b, align 8
-  %scale = alloca i128, align 8
-  %scale3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %scale3, i128* %scale, align 4
-  %ret = alloca i128, align 8
-  %ret4 = call i128 @fn_intrinsic_inline_init()
-  store i128 %ret4, i128* %ret, align 4
-  %n = load i128, i128* %short_div.n.declare_arg, align 4
-  %lshift = shl i128 1, %n
-  %b = load [256 x i128]*, [256 x i128]** %short_div.b.declare_arg, align 8
-  %k = load i128, i128* %short_div.k.declare_arg, align 4
-  %sub = sub i128 %k, 1
-  %array_getter = getelementptr inbounds [256 x i128], [256 x i128]* %b, i128 0, i128 %sub
-  %b5 = load i128, i128* %array_getter, align 4
-  %add = add i128 1, %b5
-  %sdiv = sdiv i128 %lshift, %add
-  store i128 %sdiv, i128* %scale, align 4
-  %n6 = load i128, i128* %short_div.n.declare_arg, align 4
-  %k7 = load i128, i128* %short_div.k.declare_arg, align 4
-  %add8 = add i128 %k7, 1
-  %scale9 = load i128, i128* %scale, align 4
-  %a = load [256 x i128]*, [256 x i128]** %short_div.a.declare_arg, align 8
-  %call = call [256 x i128]* @long_scalar_mult(i128 %n6, i128 %add8, i128 %scale9, [256 x i128]* %a)
-  store [256 x i128]* %call, [256 x i128]** %norm_a, align 8
-  %n10 = load i128, i128* %short_div.n.declare_arg, align 4
-  %k11 = load i128, i128* %short_div.k.declare_arg, align 4
-  %scale12 = load i128, i128* %scale, align 4
-  %b13 = load [256 x i128]*, [256 x i128]** %short_div.b.declare_arg, align 8
-  %call14 = call [256 x i128]* @long_scalar_mult(i128 %n10, i128 %k11, i128 %scale12, [256 x i128]* %b13)
-  store [256 x i128]* %call14, [256 x i128]** %norm_b, align 8
-  store i128 0, i128* %ret, align 4
-  %norm_b15 = load [256 x i128]*, [256 x i128]** %norm_b, align 8
-  %k16 = load i128, i128* %short_div.k.declare_arg, align 4
-  %array_getter17 = getelementptr inbounds [256 x i128], [256 x i128]* %norm_b15, i128 0, i128 %k16
-  %norm_b18 = load i128, i128* %array_getter17, align 4
-  %ne = icmp ne i128 %norm_b18, 0
-  br i1 %ne, label %if.true, label %if.false
-
-if.true:                                          ; preds = %entry
-  %n19 = load i128, i128* %short_div.n.declare_arg, align 4
-  %k20 = load i128, i128* %short_div.k.declare_arg, align 4
-  %add21 = add i128 %k20, 1
-  %norm_a22 = load [256 x i128]*, [256 x i128]** %norm_a, align 8
-  %norm_b23 = load [256 x i128]*, [256 x i128]** %norm_b, align 8
-  %call24 = call i128 @short_div_norm(i128 %n19, i128 %add21, [256 x i128]* %norm_a22, [256 x i128]* %norm_b23)
-  store i128 %call24, i128* %ret, align 4
-  br label %if.exit
-
-if.false:                                         ; preds = %entry
-  %n25 = load i128, i128* %short_div.n.declare_arg, align 4
-  %k26 = load i128, i128* %short_div.k.declare_arg, align 4
-  %norm_a27 = load [256 x i128]*, [256 x i128]** %norm_a, align 8
-  %norm_b28 = load [256 x i128]*, [256 x i128]** %norm_b, align 8
-  %call29 = call i128 @short_div_norm(i128 %n25, i128 %k26, [256 x i128]* %norm_a27, [256 x i128]* %norm_b28)
-  store i128 %call29, i128* %ret, align 4
-  br label %if.exit
-
-if.exit:                                          ; preds = %if.false, %if.true
-  %ret30 = load i128, i128* %ret, align 4
-  ret i128 %ret30
-}
-
-define [256 x i128]* @long_sub_mod(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4) {
-entry:
-  %long_sub_mod.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %long_sub_mod.n.declare_arg, align 4
-  %long_sub_mod.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %long_sub_mod.k.declare_arg, align 4
-  %long_sub_mod.a.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %2, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
-  %long_sub_mod.b.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %3, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
-  %long_sub_mod.p.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %4, [256 x i128]** %long_sub_mod.p.declare_arg, align 8
-  %n = load i128, i128* %long_sub_mod.n.declare_arg, align 4
-  %k = load i128, i128* %long_sub_mod.k.declare_arg, align 4
-  %b = load [256 x i128]*, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
-  %a = load [256 x i128]*, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
-  %call = call i128 @long_gt(i128 %n, i128 %k, [256 x i128]* %b, [256 x i128]* %a)
-  %eq = icmp eq i128 %call, 1
-  br i1 %eq, label %if.true, label %if.false
-
-if.true:                                          ; preds = %entry
-  %n1 = load i128, i128* %long_sub_mod.n.declare_arg, align 4
-  %k2 = load i128, i128* %long_sub_mod.k.declare_arg, align 4
-  %a3 = load [256 x i128]*, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
-  %n4 = load i128, i128* %long_sub_mod.n.declare_arg, align 4
-  %k5 = load i128, i128* %long_sub_mod.k.declare_arg, align 4
-  %p = load [256 x i128]*, [256 x i128]** %long_sub_mod.p.declare_arg, align 8
-  %b6 = load [256 x i128]*, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
-  %call7 = call [256 x i128]* @long_sub(i128 %n4, i128 %k5, [256 x i128]* %p, [256 x i128]* %b6)
-  %call8 = call [256 x i128]* @long_add(i128 %n1, i128 %k2, [256 x i128]* %a3, [256 x i128]* %call7)
-  ret [256 x i128]* %call8
-
-if.false:                                         ; preds = %entry
-  %n9 = load i128, i128* %long_sub_mod.n.declare_arg, align 4
-  %k10 = load i128, i128* %long_sub_mod.k.declare_arg, align 4
-  %a11 = load [256 x i128]*, [256 x i128]** %long_sub_mod.a.declare_arg, align 8
-  %b12 = load [256 x i128]*, [256 x i128]** %long_sub_mod.b.declare_arg, align 8
-  %call13 = call [256 x i128]* @long_sub(i128 %n9, i128 %k10, [256 x i128]* %a11, [256 x i128]* %b12)
-  ret [256 x i128]* %call13
-}
-
 define [256 x [256 x i128]]* @long_div2(i128 %0, i128 %1, i128 %2, [256 x i128]* %3, [256 x i128]* %4) {
 entry:
   %long_div2.n.declare_arg = alloca i128, align 8
@@ -2214,27 +2214,27 @@ entry:
   store [256 x i128]* %3, [256 x i128]** %long_div2.a.declare_arg, align 8
   %long_div2.b.declare_arg = alloca [256 x i128]*, align 8
   store [256 x i128]* %4, [256 x i128]** %long_div2.b.declare_arg, align 8
-  %j = alloca i128, align 8
-  %j1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j1, i128* %j, align 4
-  %remainder = alloca [256 x i128]*, align 8
-  %remainder2 = alloca [256 x i128], align 8
-  store [256 x i128]* %remainder2, [256 x i128]** %remainder, align 8
   %i = alloca i128, align 8
-  %i3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i3, i128* %i, align 4
-  %dividend = alloca [256 x i128]*, align 8
-  %dividend4 = alloca [256 x i128], align 8
-  store [256 x i128]* %dividend4, [256 x i128]** %dividend, align 8
-  %mult_shift = alloca [256 x i128]*, align 8
-  %mult_shift5 = alloca [256 x i128], align 8
-  store [256 x i128]* %mult_shift5, [256 x i128]** %mult_shift, align 8
-  %out = alloca [256 x [256 x i128]]*, align 8
-  %out6 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %out6, [256 x [256 x i128]]** %out, align 8
+  %i1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i1, i128* %i, align 4
   %subtrahend = alloca [256 x i128]*, align 8
-  %subtrahend7 = alloca [256 x i128], align 8
-  store [256 x i128]* %subtrahend7, [256 x i128]** %subtrahend, align 8
+  %subtrahend2 = alloca [256 x i128], align 8
+  store [256 x i128]* %subtrahend2, [256 x i128]** %subtrahend, align 8
+  %j = alloca i128, align 8
+  %j3 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j3, i128* %j, align 4
+  %out = alloca [256 x [256 x i128]]*, align 8
+  %out4 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %out4, [256 x [256 x i128]]** %out, align 8
+  %remainder = alloca [256 x i128]*, align 8
+  %remainder5 = alloca [256 x i128], align 8
+  store [256 x i128]* %remainder5, [256 x i128]** %remainder, align 8
+  %mult_shift = alloca [256 x i128]*, align 8
+  %mult_shift6 = alloca [256 x i128], align 8
+  store [256 x i128]* %mult_shift6, [256 x i128]** %mult_shift, align 8
+  %dividend = alloca [256 x i128]*, align 8
+  %dividend7 = alloca [256 x i128], align 8
+  store [256 x i128]* %dividend7, [256 x i128]** %dividend, align 8
   %uniform_array = alloca [256 x [256 x i128]], align 8
   store [256 x [256 x i128]]* %uniform_array, [256 x [256 x i128]]** %out, align 8
   %uniform_array8 = alloca [256 x i128], align 8
@@ -2495,44 +2495,6 @@ entry:
   ret [256 x [256 x i128]]* %call
 }
 
-define [256 x i128]* @long_add_mod(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4) {
-entry:
-  %long_add_mod.n.declare_arg = alloca i128, align 8
-  store i128 %0, i128* %long_add_mod.n.declare_arg, align 4
-  %long_add_mod.k.declare_arg = alloca i128, align 8
-  store i128 %1, i128* %long_add_mod.k.declare_arg, align 4
-  %long_add_mod.a.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %2, [256 x i128]** %long_add_mod.a.declare_arg, align 8
-  %long_add_mod.b.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %3, [256 x i128]** %long_add_mod.b.declare_arg, align 8
-  %long_add_mod.p.declare_arg = alloca [256 x i128]*, align 8
-  store [256 x i128]* %4, [256 x i128]** %long_add_mod.p.declare_arg, align 8
-  %sum = alloca [256 x i128]*, align 8
-  %sum1 = alloca [256 x i128], align 8
-  store [256 x i128]* %sum1, [256 x i128]** %sum, align 8
-  %temp = alloca [256 x [256 x i128]]*, align 8
-  %temp2 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %temp2, [256 x [256 x i128]]** %temp, align 8
-  %n = load i128, i128* %long_add_mod.n.declare_arg, align 4
-  %k = load i128, i128* %long_add_mod.k.declare_arg, align 4
-  %a = load [256 x i128]*, [256 x i128]** %long_add_mod.a.declare_arg, align 8
-  %b = load [256 x i128]*, [256 x i128]** %long_add_mod.b.declare_arg, align 8
-  %call = call [256 x i128]* @long_add(i128 %n, i128 %k, [256 x i128]* %a, [256 x i128]* %b)
-  store [256 x i128]* %call, [256 x i128]** %sum, align 8
-  %n3 = load i128, i128* %long_add_mod.n.declare_arg, align 4
-  %k4 = load i128, i128* %long_add_mod.k.declare_arg, align 4
-  %sum5 = load [256 x i128]*, [256 x i128]** %sum, align 8
-  %p = load [256 x i128]*, [256 x i128]** %long_add_mod.p.declare_arg, align 8
-  %call6 = call [256 x [256 x i128]]* @long_div2(i128 %n3, i128 %k4, i128 1, [256 x i128]* %sum5, [256 x i128]* %p)
-  store [256 x [256 x i128]]* %call6, [256 x [256 x i128]]** %temp, align 8
-  %temp7 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %temp, align 8
-  %array_getter = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %temp7, i128 0, i128 1
-  %temp8 = load [256 x i128], [256 x i128]* %array_getter, align 4
-  %spice_inline_array = alloca [256 x i128], align 8
-  store [256 x i128] %temp8, [256 x i128]* %spice_inline_array, align 4
-  ret [256 x i128]* %spice_inline_array
-}
-
 define [256 x i128]* @prod_mod(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4) {
 entry:
   %prod_mod.n.declare_arg = alloca i128, align 8
@@ -2571,6 +2533,44 @@ entry:
   ret [256 x i128]* %spice_inline_array
 }
 
+define [256 x i128]* @long_add_mod(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4) {
+entry:
+  %long_add_mod.n.declare_arg = alloca i128, align 8
+  store i128 %0, i128* %long_add_mod.n.declare_arg, align 4
+  %long_add_mod.k.declare_arg = alloca i128, align 8
+  store i128 %1, i128* %long_add_mod.k.declare_arg, align 4
+  %long_add_mod.a.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %2, [256 x i128]** %long_add_mod.a.declare_arg, align 8
+  %long_add_mod.b.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %3, [256 x i128]** %long_add_mod.b.declare_arg, align 8
+  %long_add_mod.p.declare_arg = alloca [256 x i128]*, align 8
+  store [256 x i128]* %4, [256 x i128]** %long_add_mod.p.declare_arg, align 8
+  %sum = alloca [256 x i128]*, align 8
+  %sum1 = alloca [256 x i128], align 8
+  store [256 x i128]* %sum1, [256 x i128]** %sum, align 8
+  %temp = alloca [256 x [256 x i128]]*, align 8
+  %temp2 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %temp2, [256 x [256 x i128]]** %temp, align 8
+  %n = load i128, i128* %long_add_mod.n.declare_arg, align 4
+  %k = load i128, i128* %long_add_mod.k.declare_arg, align 4
+  %a = load [256 x i128]*, [256 x i128]** %long_add_mod.a.declare_arg, align 8
+  %b = load [256 x i128]*, [256 x i128]** %long_add_mod.b.declare_arg, align 8
+  %call = call [256 x i128]* @long_add(i128 %n, i128 %k, [256 x i128]* %a, [256 x i128]* %b)
+  store [256 x i128]* %call, [256 x i128]** %sum, align 8
+  %n3 = load i128, i128* %long_add_mod.n.declare_arg, align 4
+  %k4 = load i128, i128* %long_add_mod.k.declare_arg, align 4
+  %sum5 = load [256 x i128]*, [256 x i128]** %sum, align 8
+  %p = load [256 x i128]*, [256 x i128]** %long_add_mod.p.declare_arg, align 8
+  %call6 = call [256 x [256 x i128]]* @long_div2(i128 %n3, i128 %k4, i128 1, [256 x i128]* %sum5, [256 x i128]* %p)
+  store [256 x [256 x i128]]* %call6, [256 x [256 x i128]]** %temp, align 8
+  %temp7 = load [256 x [256 x i128]]*, [256 x [256 x i128]]** %temp, align 8
+  %array_getter = getelementptr inbounds [256 x [256 x i128]], [256 x [256 x i128]]* %temp7, i128 0, i128 1
+  %temp8 = load [256 x i128], [256 x i128]* %array_getter, align 4
+  %spice_inline_array = alloca [256 x i128], align 8
+  store [256 x i128] %temp8, [256 x i128]* %spice_inline_array, align 4
+  ret [256 x i128]* %spice_inline_array
+}
+
 define [256 x i128]* @mod_exp(i128 %0, i128 %1, [256 x i128]* %2, [256 x i128]* %3, [256 x i128]* %4) {
 entry:
   %mod_exp.n.declare_arg = alloca i128, align 8
@@ -2583,27 +2583,27 @@ entry:
   store [256 x i128]* %3, [256 x i128]** %mod_exp.p.declare_arg, align 8
   %mod_exp.e.declare_arg = alloca [256 x i128]*, align 8
   store [256 x i128]* %4, [256 x i128]** %mod_exp.e.declare_arg, align 8
-  %temp2 = alloca [256 x [256 x i128]]*, align 8
-  %temp21 = alloca [256 x [256 x i128]], align 8
-  store [256 x [256 x i128]]* %temp21, [256 x [256 x i128]]** %temp2, align 8
-  %i = alloca i128, align 8
-  %i2 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i2, i128* %i, align 4
+  %bitlength = alloca i128, align 8
+  %bitlength1 = call i128 @fn_intrinsic_inline_init()
+  store i128 %bitlength1, i128* %bitlength, align 4
+  %out = alloca [256 x i128]*, align 8
+  %out2 = alloca [256 x i128], align 8
+  store [256 x i128]* %out2, [256 x i128]** %out, align 8
   %temp = alloca [256 x i128]*, align 8
   %temp3 = alloca [256 x i128], align 8
   store [256 x i128]* %temp3, [256 x i128]** %temp, align 8
-  %eBits = alloca [256 x i128]*, align 8
-  %eBits4 = alloca [256 x i128], align 8
-  store [256 x i128]* %eBits4, [256 x i128]** %eBits, align 8
-  %bitlength = alloca i128, align 8
-  %bitlength5 = call i128 @fn_intrinsic_inline_init()
-  store i128 %bitlength5, i128* %bitlength, align 4
-  %out = alloca [256 x i128]*, align 8
-  %out6 = alloca [256 x i128], align 8
-  store [256 x i128]* %out6, [256 x i128]** %out, align 8
+  %i = alloca i128, align 8
+  %i4 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i4, i128* %i, align 4
   %j = alloca i128, align 8
-  %j7 = call i128 @fn_intrinsic_inline_init()
-  store i128 %j7, i128* %j, align 4
+  %j5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %j5, i128* %j, align 4
+  %eBits = alloca [256 x i128]*, align 8
+  %eBits6 = alloca [256 x i128], align 8
+  store [256 x i128]* %eBits6, [256 x i128]** %eBits, align 8
+  %temp2 = alloca [256 x [256 x i128]]*, align 8
+  %temp27 = alloca [256 x [256 x i128]], align 8
+  store [256 x [256 x i128]]* %temp27, [256 x [256 x i128]]** %temp2, align 8
   %uniform_array = alloca [256 x i128], align 8
   store [256 x i128]* %uniform_array, [256 x i128]** %eBits, align 8
   store i128 0, i128* %bitlength, align 4
@@ -2803,27 +2803,27 @@ entry:
   store [256 x i128]* %2, [256 x i128]** %mod_inv.a.declare_arg, align 8
   %mod_inv.p.declare_arg = alloca [256 x i128]*, align 8
   store [256 x i128]* %3, [256 x i128]** %mod_inv.p.declare_arg, align 8
-  %i = alloca i128, align 8
-  %i1 = call i128 @fn_intrinsic_inline_init()
-  store i128 %i1, i128* %i, align 4
-  %two = alloca [256 x i128]*, align 8
-  %two2 = alloca [256 x i128], align 8
-  store [256 x i128]* %two2, [256 x i128]** %two, align 8
-  %isZero = alloca i128, align 8
-  %isZero3 = call i128 @fn_intrinsic_inline_init()
-  store i128 %isZero3, i128* %isZero, align 4
-  %pCopy = alloca [256 x i128]*, align 8
-  %pCopy4 = alloca [256 x i128], align 8
-  store [256 x i128]* %pCopy4, [256 x i128]** %pCopy, align 8
-  %out = alloca [256 x i128]*, align 8
-  %out5 = alloca [256 x i128], align 8
-  store [256 x i128]* %out5, [256 x i128]** %out, align 8
-  %ret = alloca [256 x i128]*, align 8
-  %ret6 = alloca [256 x i128], align 8
-  store [256 x i128]* %ret6, [256 x i128]** %ret, align 8
   %pMinusTwo = alloca [256 x i128]*, align 8
-  %pMinusTwo7 = alloca [256 x i128], align 8
-  store [256 x i128]* %pMinusTwo7, [256 x i128]** %pMinusTwo, align 8
+  %pMinusTwo1 = alloca [256 x i128], align 8
+  store [256 x i128]* %pMinusTwo1, [256 x i128]** %pMinusTwo, align 8
+  %out = alloca [256 x i128]*, align 8
+  %out2 = alloca [256 x i128], align 8
+  store [256 x i128]* %out2, [256 x i128]** %out, align 8
+  %pCopy = alloca [256 x i128]*, align 8
+  %pCopy3 = alloca [256 x i128], align 8
+  store [256 x i128]* %pCopy3, [256 x i128]** %pCopy, align 8
+  %ret = alloca [256 x i128]*, align 8
+  %ret4 = alloca [256 x i128], align 8
+  store [256 x i128]* %ret4, [256 x i128]** %ret, align 8
+  %isZero = alloca i128, align 8
+  %isZero5 = call i128 @fn_intrinsic_inline_init()
+  store i128 %isZero5, i128* %isZero, align 4
+  %two = alloca [256 x i128]*, align 8
+  %two6 = alloca [256 x i128], align 8
+  store [256 x i128]* %two6, [256 x i128]** %two, align 8
+  %i = alloca i128, align 8
+  %i7 = call i128 @fn_intrinsic_inline_init()
+  store i128 %i7, i128* %i, align 4
   store i128 1, i128* %isZero, align 4
   store i128 0, i128* %i, align 4
   br label %loop.body

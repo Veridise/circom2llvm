@@ -1,4 +1,4 @@
-/Users/hongbo/code/zk-light-client-main/circuits/circuits/sha256_bytes.circom
+/Users/hongbo/code/zk-light-client/circuits/circuits/sha256_bytes.circom
 Detecting: aliascheck
 Template: aliascheck
 Arguments: 
@@ -519,11 +519,15 @@ out
 Components: 
 binsum
 bigsigma
-ch
+ch_t
 
 e --> bigsigma
+e --> ch_t
+f --> ch_t
+g --> ch_t
 h --> binsum
 bigsigma --> binsum
+ch_t --> binsum
 k --> binsum
 w --> binsum
 binsum --> out
@@ -541,11 +545,15 @@ Output Signals:
 out
 Components: 
 binsum
-maj
+maj_t
 bigsigma
 
 a --> bigsigma
+a --> maj_t
+b --> maj_t
+c --> maj_t
 bigsigma --> binsum
+maj_t --> binsum
 binsum --> out
 
 

@@ -1,1 +1,180 @@
-./auditing/zk-light-client/pubkey_poseidon.ssa.ll
+/Users/hongbo/code/zk-light-client/circuits/circuits/pubkey_poseidon.circom
+Detecting: ark
+Template: ark
+Arguments: 
+r
+c
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: bytes_48_to_field_ele
+Template: bytes_48_to_field_ele
+Arguments: 
+Input Signals: 
+bytes
+Inter Signals: 
+field_ele_accum
+Output Signals: 
+field_ele
+Components: 
+
+field_ele_accum --> field_ele_accum
+bytes --> field_ele_accum
+field_ele_accum --> field_ele
+
+
+Detecting: mix
+Template: mix
+Arguments: 
+m
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: mixlast
+Template: mixlast
+Arguments: 
+s
+m
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: mixs
+Template: mixs
+Arguments: 
+s
+r
+t
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+
+in --> out
+
+
+Detecting: poseidon
+Template: poseidon
+Arguments: 
+ninputs
+Input Signals: 
+inputs
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+poseidonex
+
+inputs --> poseidonex
+poseidonex --> out
+
+
+Detecting: poseidonex
+Template: poseidonex
+Arguments: 
+nouts
+ninputs
+Input Signals: 
+initialstate
+inputs
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+mixs
+mix
+sigma
+mixlast
+ark
+
+inputs --> ark
+initialstate --> ark
+ark --> sigma
+mix --> sigma
+sigma --> ark
+ark --> mix
+mixs --> sigma
+sigma --> mixs
+mix --> mixs
+mixs --> mixs
+sigma --> mixlast
+mixlast --> out
+
+
+Detecting: posiedon_generalized
+Template: posiedon_generalized
+Arguments: 
+num_eles
+Input Signals: 
+in
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+poseidon
+
+in --> poseidon
+poseidon --> poseidon
+poseidon --> out
+
+
+Detecting: pubkeyposeidon
+Template: pubkeyposeidon
+Arguments: 
+k
+b
+Input Signals: 
+pubkeys
+Inter Signals: 
+Output Signals: 
+out
+Components: 
+posiedon_generalized
+
+pubkeys --> posiedon_generalized
+posiedon_generalized --> out
+
+
+Detecting: sigma
+Template: sigma
+Arguments: 
+Input Signals: 
+in
+Inter Signals: 
+in4
+in2
+Output Signals: 
+out
+Components: 
+
+in --> in
+in2 --> in
+in4 --> out
+in --> out
+
+
