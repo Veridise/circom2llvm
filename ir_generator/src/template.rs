@@ -215,7 +215,7 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         }
 
         let current_bb = init_fn_val.get_last_basic_block().unwrap();
-        let arraydim_bb = context.append_basic_block(init_fn_val, &&name_arraydim_block());
+        let arraydim_bb = context.append_basic_block(init_fn_val, &name_arraydim_block());
         codegen.build_block_transferring(current_bb, arraydim_bb);
 
         for (name, ptr) in &self.scope.var2ptr {

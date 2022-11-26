@@ -1,6 +1,6 @@
 use crate::codegen::{CodeGen, MAX_ARRAYSIZE};
 use crate::inferrence::{construct_array_ty, construct_uniform_array_ty};
-use crate::namer::name_signal;
+use crate::namer::{name_inline_array, name_signal};
 use crate::scope::ScopeTrait;
 use crate::type_check::check_used_value;
 use inkwell::types::{BasicType, BasicTypeEnum};
@@ -179,23 +179,22 @@ fn resolve_inline_array<'ctx>(
             }
             _ => {
                 let val = resolve_expr(codegen, expr, scope);
-                let name = "var_inline_array";
+                let name = "inline_array_ptr";
                 indexes.insert(0, codegen.const_zero);
                 codegen.build_array_setter(array_ptr, &indexes, name, val);
             }
         }
     }
 
+    let name = name_inline_array(val_is_const);
     if val_is_const {
         let arr_val = convert_const_inline_array(codegen, expr);
-        let arr_ptr = codegen
-            .builder
-            .build_alloca(arr_val.get_type(), "const_inline_array");
+        let arr_ptr = codegen.builder.build_alloca(arr_val.get_type(), &name);
         codegen.builder.build_store(arr_ptr, arr_val);
         return arr_ptr.as_basic_value_enum();
     } else {
         let arr_ty = construct_array_ty(codegen.val_ty.as_basic_type_enum(), &dims);
-        let arr_ptr = codegen.builder.build_alloca(arr_ty, "var_inline_array");
+        let arr_ptr = codegen.builder.build_alloca(arr_ty, &name);
         convert_variable_inline_array(codegen, expr, scope, arr_ptr, Vec::new());
         return arr_ptr.as_basic_value_enum();
     }

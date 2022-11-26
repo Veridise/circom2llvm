@@ -110,3 +110,11 @@ pub fn name_signal(
     name = format!("{}.{}.{}", templ_name, signal_name, name).to_lowercase();
     return name;
 }
+
+pub fn name_inline_array(is_const: bool) -> String {
+    return if is_const {
+        "const_inline_array".to_string()
+    } else {
+        "var_inline_array".to_string()
+    };
+}

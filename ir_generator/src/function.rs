@@ -1,11 +1,14 @@
 use crate::codegen::CodeGen;
 use crate::expression::flat_expressions_from_statement;
-use crate::inferrence::{get_type_from_expr, infer_type_from_expression,infer_type_from_statement};
+use crate::inferrence::{
+    get_type_from_expr, infer_type_from_expression, infer_type_from_statement,
+};
 use crate::info_collector::{collect_depended_components, collect_dependences};
-use crate::namer::{name_entry_block, name_initial_var};
+use crate::namer::{name_arraydim_block, name_entry_block, name_initial_var, name_exit_block};
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
 use inkwell::types::BasicType;
+use inkwell::values::IntValue;
 use inkwell::AddressSpace;
 use program_structure::ast::Statement;
 
@@ -91,6 +94,9 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
     fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
         let fn_val = self.scope.get_main_fn();
         let current_bb = fn_val.get_first_basic_block().unwrap();
+        let CodeGen {
+            context, builder, ..
+        } = codegen;
         self.scope.set_current_exit_block(codegen, current_bb);
 
         // Bind args
@@ -112,6 +118,28 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         match body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
+                    if stmt.is_return() {
+                        let current_bb = fn_val.get_last_basic_block().unwrap();
+                        let arraydim_bb = context.append_basic_block(fn_val, &name_arraydim_block());
+                        codegen.build_block_transferring(current_bb, arraydim_bb);
+                
+                        for (name, ptr) in &self.scope.var2ptr {
+                            let dims_op = self.scope.get_var_dims(name);
+                            match dims_op {
+                                Some(dims) => {
+                                    let _dims: Vec<IntValue<'ctx>> =
+                                        dims.iter().map(|d| d.into_int_value()).collect();
+                                    let default_ptr_ty = codegen.val_ty.ptr_type(AddressSpace::Generic);
+                                    let _ptr = builder.build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
+                                    codegen.build_arraydim(_ptr, &_dims);
+                                }
+                                None => (),
+                            }
+                        }
+
+                        let exit_bb = context.append_basic_block(fn_val, &name_exit_block());
+                        codegen.build_block_transferring(arraydim_bb, exit_bb);
+                    }
                     resolve_stmt(&mut self.scope, codegen, stmt);
                 }
             }

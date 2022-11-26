@@ -15,6 +15,17 @@ parser.add_argument(
     "--outputsignaluser",
     help="Detect whether all of output signals in a component are used or not.",
     action="store_true")
+parser.add_argument(
+    "-as",
+    "--arrayshape",
+    help="Detect whether all of arrays have correct shapes.",
+    action="store_true")
+
+parser.add_argument(
+    "-ssa",
+    "--ssageneration",
+    help="Generate SSA IR files again.",
+    action="store_true")
 
 LLVM_PATH = os.environ.get("LLVM_PATH", "/Users/hongbo/app/llvm-project")
 SOURCE_FILEPATH = os.environ.get("SOURCE_FILEPATH",
@@ -54,7 +65,7 @@ def _main():
         file_paths = [input_path]
     for f in file_paths:
         ssa_path = f.replace(".ll", ".ssa.ll")
-        if os.path.exists(ssa_path):
+        if os.path.exists(ssa_path) and not args.ssageneration:
             print("Using SSA IR Cache.")
         else:
             print("Generating SSA IR.")
@@ -96,6 +107,23 @@ def _main():
                 "-enable-new-pm=0",
                 f"--load {pass_libpath}",
                 "--OutputSignalUser",
+                ssa_path,
+                "1> /dev/null",
+                f"2> {log_path}",
+            ]
+            cmd = " ".join(cmds)
+            print(cmd)
+            os.system(cmd)
+            replace_source_file_to_github(log_path)
+        if args.arrayshape:
+            print("Detecting ArrayShapes.")
+            log_path = f.replace(".ll", ".as.log")
+            cmds = [
+                opt_path,
+                "-f",
+                "-enable-new-pm=0",
+                f"--load {pass_libpath}",
+                "--ArrayShapes",
                 ssa_path,
                 "1> /dev/null",
                 f"2> {log_path}",

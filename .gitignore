@@ -17,8 +17,7 @@ cache/**
 
 examples/**
 
-detectors/examples/*.ll
-detectors/examples/*.json
-detectors/examples/*.log
+*.ll
+*.json
+*.log
 
-auditing/*.log
