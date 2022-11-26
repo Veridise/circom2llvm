@@ -25,12 +25,35 @@ bool isArrayShapeDefinedInst(llvm::Instruction* inst) {
 }
 
 bool isArrayAssignmentDefinedInst(llvm::Instruction* inst) {
-    if (!isa<ArrayAssignment>(inst)) {
+    if (!isa<Assignment>(inst)) {
         return false;
     }
-    auto store_inst = dyn_cast<ArrayAssignment>(inst);
+    auto store_inst = dyn_cast<Assignment>(inst);
     auto source = store_inst->getOperand(0);
     return isArrayPtrTy(source->getType()) && dyn_cast<llvm::CallInst>(source);
+}
+
+bool isArrayElementAssignmentDefinedInst(llvm::Instruction* inst) {
+    // clang-format off
+    // %var1 = load [256 x i128]*, [256 x i128]** %var, align 8
+    // %var_ptr = getelementptr inbounds [256 x i128], [256 x i128]* %var1, i128 0, i128 %i
+    // %var_ele = load i128, i128* %var_ptr, align 4
+    // %var_b1 = load [256 x i128]*, [256 x i128]** %var_b, align 8
+    // %var_b_ptr = getelementptr inbounds [256 x i128], [256 x i128]* %var_b1, i128 0, i128 %i
+    // store i128 %var_ele, i128* %var_b_ptr, align 4
+    // clang-format on
+    if (!isa<Assignment>(inst)) {
+        return false;
+    }
+    auto store_inst = dyn_cast<Assignment>(inst);
+    auto value = store_inst->getOperand(0);
+    if (!isa<llvm::LoadInst>(value)) {
+        return false;
+    }
+    auto source = dyn_cast<llvm::LoadInst>(value)->getOperand(0);
+    auto dest = store_inst->getOperand(1);
+    return trackArrayVariable(source) != nullptr &&
+           trackArrayVariable(dest) != nullptr;
 }
 
 bool isAssertInst(llvm::Instruction* inst) {
@@ -42,6 +65,22 @@ bool isAssertInst(llvm::Instruction* inst) {
         assert_mark);
 }
 
+llvm::Value* trackArrayVariable(llvm::Value* v) {
+    if (!isa<GetElementPtrInst>(v)) {
+        return nullptr;
+    }
+    auto ptr_inst = dyn_cast<GetElementPtrInst>(v);
+    if (!ptr_inst->getSourceElementType()->isArrayTy()) {
+        return nullptr;
+    }
+    auto value_source = ptr_inst->getOperand(0);
+    if (!isa<llvm::LoadInst>(value_source)) {
+        return nullptr;
+    }
+    auto load_inst = dyn_cast<llvm::LoadInst>(value_source);
+    return load_inst->getOperand(0);
+}
+
 ArrayShapeCollector::ArrayShapeCollector(
     llvm::Function* F,
     std::unordered_map<std::string, ArrayShapeCollector*>* all_collectors) {
@@ -49,7 +88,7 @@ ArrayShapeCollector::ArrayShapeCollector(
     this->all_collectors = all_collectors;
     this->array_shapes = std::unordered_map<llvm::Value*, ArrayShape>();
     this->assert_values = std::vector<llvm::Value*>();
-    this->array_assignments = std::vector<ArrayAssignment*>();
+    this->array_equalities = std::vector<ArrayEquality>();
 
     for (auto& bb : F->getBasicBlockList()) {
         for (auto& inst : bb.getInstList()) {
@@ -69,11 +108,23 @@ ArrayShapeCollector::ArrayShapeCollector(
                 this->array_shapes.insert({array_val, shape});
             }
             if (isArrayAssignmentDefinedInst(&inst)) {
-                auto store_inst = dyn_cast<ArrayAssignment>(&inst);
-                this->array_assignments.push_back(store_inst);
+                auto store_inst = dyn_cast<Assignment>(&inst);
+                ArrayEquality p = {store_inst->getOperand(0),
+                                   store_inst->getOperand(1)};
+                this->array_equalities.push_back(p);
+            }
+            if (isArrayElementAssignmentDefinedInst(&inst)) {
+                auto store_inst = dyn_cast<Assignment>(&inst);
+                auto value = store_inst->getOperand(0);
+                auto source = dyn_cast<llvm::LoadInst>(value)->getOperand(0);
+                auto dest = store_inst->getOperand(1);
+                auto a = trackArrayVariable(source);
+                auto b = trackArrayVariable(dest);
+                ArrayEquality p = {a, b};
+                this->array_equalities.push_back(p);
             }
             if (isAssertInst(&inst)) {
-                auto assert_inst = dyn_cast<ArrayAssignment>(&inst);
+                auto assert_inst = dyn_cast<Assignment>(&inst);
                 this->assert_values.push_back(assert_inst);
             }
         }
@@ -110,11 +161,14 @@ bool ArrayShapeCollector::compareShape(ArrayShape shapeA, ArrayShape shapeB) {
     if (shapeA.size() == 0 || shapeB.size() == 0) {
         return true;
     };
-    if (shapeA.size() != shapeB.size()) {
-        return false;
+    ArrayShape shorterShape;
+    if (shapeA.size() > shapeB.size()) {
+        shorterShape = shapeA;
+    } else {
+        shorterShape = shapeB;
     }
     bool same = true;
-    for (size_t i; i < shapeA.size(); i++) {
+    for (size_t i = 0; i < shorterShape.size(); i++) {
         same = same && (shapeA[i] == shapeB[i]);
     }
     return same;
@@ -122,26 +176,32 @@ bool ArrayShapeCollector::compareShape(ArrayShape shapeA, ArrayShape shapeB) {
 
 void ArrayShapeCollector::printShape(ArrayShape shape) {
     for (auto& dim : shape) {
-        std::cerr << dim->getName().str() << "; ";
+        dim->print(errs());
+        std::cerr << "; ";
     }
 }
 
 void ArrayShapeCollector::detect() {
     std::cerr << "Detecting: " << this->func_name << "\n";
-    for (auto assign : this->array_assignments) {
-        auto shapeA = this->getArrayShape(assign->getOperand(0));
-        auto shapeB = this->getArrayShape(assign->getOperand(1));
+    for (auto eql : this->array_equalities) {
+        auto valA = eql.first;
+        auto valB = eql.second;
+        auto shapeA = this->getArrayShape(valA);
+        auto shapeB = this->getArrayShape(valB);
         if (!this->compareShape(shapeA, shapeB)) {
             std::cerr << "    Array shape difference: \n";
-            std::cerr << "    Assignment: " << assign->getName().str() << "\n";
+            std::cerr << "    ValueA: " << valA->getName().str() << "\n";
             std::cerr << "    ShapeA: ";
             this->printShape(shapeA);
             std::cerr << "\n";
+
+            std::cerr << "    ValueB: " << valB->getName().str() << "\n";
             std::cerr << "    ShapeB: ";
             this->printShape(shapeB);
             std::cerr << "\n";
         }
     }
+    std::cerr << "\n";
 }
 
 namespace {

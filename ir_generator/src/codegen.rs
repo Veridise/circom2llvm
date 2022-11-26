@@ -57,11 +57,7 @@ impl<'ctx> CodeGen<'ctx> {
         indexes: &[IntValue<'ctx>],
         name: &str,
     ) -> BasicValueEnum<'ctx> {
-        let assign_name = "array_getter";
-        let res = unsafe {
-            self.builder
-                .build_in_bounds_gep(array_ptr, indexes, assign_name)
-        };
+        let res = unsafe { self.builder.build_in_bounds_gep(array_ptr, indexes, name) };
         return self.builder.build_load(res, name);
     }
 

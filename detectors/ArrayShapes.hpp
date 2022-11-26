@@ -11,8 +11,9 @@
 #include "llvm/Pass.h"
 
 using ArrayShapeDefinition = llvm::CallInst;
-using ArrayAssignment = llvm::StoreInst;
+using Assignment = llvm::StoreInst;
 using ArrayShape = std::vector<llvm::Value*>;
+using ArrayEquality = std::pair<llvm::Value*, llvm::Value*>;
 
 using AssertDefinition = llvm::CallInst;
 
@@ -21,7 +22,10 @@ bool isArrayReturnFunction(llvm::Function* F);
 
 bool isArrayShapeDefinedInst(llvm::Instruction* inst);
 bool isArrayAssignmentDefinedInst(llvm::Instruction* inst);
+bool isArrayElementAssignmentDefinedInst(llvm::Instruction* inst);
 bool isAssertInst(llvm::Instruction* inst);
+
+llvm::Value* trackArrayVariable(llvm::Value* v);
 
 const std::string array_shape_mark = "fn_intrinsic_utils_arraydim";
 const std::string assert_mark = "fn_intrinsic_utils_assert";
@@ -36,7 +40,7 @@ class ArrayShapeCollector {
     std::string func_name;
     std::unordered_map<llvm::Value*, ArrayShape> array_shapes;
     std::vector<llvm::Value*> assert_values;
-    std::vector<ArrayAssignment*> array_assignments;
+    std::vector<ArrayEquality> array_equalities;
 
     ArrayShape getFunctionArrayShape(llvm::Function* F);
     ArrayShape getArrayShape(llvm::Value* v);

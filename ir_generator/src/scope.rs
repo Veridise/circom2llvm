@@ -382,7 +382,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             let double_ptr = self.var2ptr.get(name).unwrap();
             let ptr = codegen
                 .builder
-                .build_load(*double_ptr, "ptr_getter")
+                .build_load(*double_ptr, &name)
                 .into_pointer_value();
             let mut idx_comp_access: Option<usize> = None;
             let mut signal_name = "".to_string();
