@@ -69,6 +69,9 @@ cargo build --bin=circom2llvm --package=circom2llvm
 A group of LLVM Pass to detect potential bugs in circuits.
 
 ### Detectors
+https://docs.google.com/spreadsheets/d/1hiEodPGrp4DlI0ULgmqxRv6j71kdi-fkb8tXaP5B59w/edit?usp=sharing
+
+### Detector Files
 1. `detectors/InfoCollector.cpp`: Provide an information collector to the generated IR file to be used.
 2. `detectors/UnderConstraints.cpp`: Detect whether every output signal is under the constraint matters at least one input signal.
 3. `detectors/OutputSignalUser.cpp`: Detect whether all of output signals in a component are used or not.
@@ -106,7 +109,3 @@ std::cerr << foo;
 llvm::Value v;
 v.print(errs());
 ```
-
-### Known Problems
-#### UnderConstraints
-1. We can't track the modification on the array element, need a solution for it.

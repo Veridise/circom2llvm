@@ -6,7 +6,7 @@ use crate::inferrence::{infer_type_from_expression, infer_type_from_statement};
 use crate::info_collector::{collect_depended_components, collect_dependences, collect_signal};
 use crate::namer::{
     name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, name_template_fn,
-    name_template_struct,
+    name_template_struct, VariableTypeEnum,
 };
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
@@ -175,15 +175,15 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         // Bind args
         for arg in &self.scope.args.clone() {
             let val = read_signal_from_struct(codegen, templ_name, arg, templ_struct_val_ptr, true);
-            let alloca_name = name_initial_var(&templ_name, arg, true, false, false);
+            let alloca_name = name_initial_var(arg, VariableTypeEnum::Argument);
             self.scope.bind_argument(codegen, arg, &alloca_name, val);
         }
 
         // Bind input signals
-        for input in &self.inputs {
+        for input in &self.inputs.clone() {
             let val =
                 read_signal_from_struct(codegen, templ_name, input, templ_struct_val_ptr, true);
-            let alloca_name = name_initial_var(&templ_name, &input, false, true, false);
+            let alloca_name = name_initial_var(input, VariableTypeEnum::InputSignal);
             self.scope.bind_argument(codegen, input, &alloca_name, val);
         }
 
@@ -195,11 +195,16 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
             let alloca = !(self.outputs.contains(&name) || self.inters.contains(&name));
             let alloca_name: String;
             if self.inters.contains(&name) {
-                alloca_name = name_initial_var(&templ_name, name, false, false, true);
+                alloca_name = name_initial_var(name, VariableTypeEnum::IntermediateSignal);
             } else if self.outputs.contains(&name) {
-                alloca_name = name_initial_var(&templ_name, name, false, false, false);
+                alloca_name = name_initial_var(name, VariableTypeEnum::OutputSignal);
             } else {
-                alloca_name = name.clone();
+                let var_ty = if self.scope.is_comp_var(name) {
+                    VariableTypeEnum::Component
+                } else {
+                    VariableTypeEnum::Variable
+                };
+                alloca_name = name_initial_var(name, var_ty);
             }
             self.scope
                 .initial_var(codegen, name, &alloca_name, &ty, alloca);

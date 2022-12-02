@@ -53,61 +53,49 @@ pub fn name_template_struct(templ_name: &str) -> String {
     return format!("struct_template_circuit_{}", templ_name).to_lowercase();
 }
 
-pub fn name_initial_var(
-    templ_name: &str,
-    signal_name: &str,
-    is_arg: bool,
-    is_input: bool,
-    is_inter: bool,
-) -> String {
-    let mut name = "declare".to_string();
-    if is_arg {
-        name = format!("{}_arg", name);
-    } else if is_input {
-        name = format!("{}_input", name);
-    } else if is_inter {
-        name = format!("{}_inter", name);
-    } else {
-        name = format!("{}_output", name);
-    }
-    name = format!("{}.{}.{}", templ_name, signal_name, name).to_lowercase();
-    return name;
-}
-
 pub fn name_opaque_struct(struct_name: &str) -> String {
     return format!("{}.opaque", struct_name).to_lowercase();
 }
 
-pub fn name_signal(
+pub enum VariableTypeEnum {
+    Argument,
+    InputSignal,
+    IntermediateSignal,
+    OutputSignal,
+    Component,
+    Variable,
+}
+
+fn variable_type_abbr(var_ty: VariableTypeEnum) -> &'static str {
+    match var_ty {
+        VariableTypeEnum::Argument => "arg",
+        VariableTypeEnum::InputSignal => "input",
+        VariableTypeEnum::IntermediateSignal => "inter",
+        VariableTypeEnum::OutputSignal => "output",
+        VariableTypeEnum::Component => "comp",
+        VariableTypeEnum::Variable => "var",
+    }
+}
+
+pub fn name_initial_var(variable_name: &str, var_ty: VariableTypeEnum) -> String {
+    let operator = "initial";
+    let abbr = variable_type_abbr(var_ty);
+    let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
+    return name;
+}
+
+pub fn name_readwrite_var(
     templ_name: &str,
-    signal_name: &str,
     is_read: bool,
-    is_arg: bool,
-    is_input: bool,
-    is_inter: bool,
-    inner: bool,
+    is_inner: bool,
+    variable_name: &str,
+    var_ty: VariableTypeEnum,
 ) -> String {
-    let mut name = "".to_string();
-    if is_read {
-        name = format!("read{}", name);
-    } else {
-        name = format!("write{}", name);
-    }
-    if is_arg {
-        name = format!("{}_arg", name);
-    } else if is_input {
-        name = format!("{}_input", name);
-    } else if is_inter {
-        name = format!("{}_inter", name);
-    } else {
-        name = format!("{}_output", name);
-    }
-    if inner {
-        name = format!("{}_inner", name);
-    } else {
-        name = format!("{}_outter", name);
-    }
-    name = format!("{}.{}.{}", templ_name, signal_name, name).to_lowercase();
+    let read_abbr = if is_read { "read" } else { "write" };
+    let inner_abbr = if is_inner { "inner" } else { "outter" };
+    let operator = format!("{}_{}_{}", templ_name, read_abbr, inner_abbr).to_lowercase();
+    let abbr = variable_type_abbr(var_ty);
+    let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
     return name;
 }
 

@@ -4,7 +4,9 @@ use crate::inferrence::{
     get_type_from_expr, infer_type_from_expression, infer_type_from_statement,
 };
 use crate::info_collector::{collect_depended_components, collect_dependences};
-use crate::namer::{name_arraydim_block, name_entry_block, name_initial_var, name_exit_block};
+use crate::namer::{
+    name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, VariableTypeEnum,
+};
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
 use inkwell::types::BasicType;
@@ -102,7 +104,7 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
         // Bind args
         for (idx, arg) in self.scope.args.clone().iter().enumerate() {
             let val = fn_val.get_nth_param(idx as u32).unwrap();
-            let alloca_name = name_initial_var(&self.scope.name, arg, true, false, false);
+            let alloca_name = name_initial_var(arg, VariableTypeEnum::Argument);
             self.scope.bind_argument(codegen, arg, &alloca_name, val);
         }
 
@@ -120,17 +122,23 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
                 for stmt in stmts {
                     if stmt.is_return() {
                         let current_bb = fn_val.get_last_basic_block().unwrap();
-                        let arraydim_bb = context.append_basic_block(fn_val, &name_arraydim_block());
+                        let arraydim_bb =
+                            context.append_basic_block(fn_val, &name_arraydim_block());
                         codegen.build_block_transferring(current_bb, arraydim_bb);
-                
+
                         for (name, ptr) in &self.scope.var2ptr {
                             let dims_op = self.scope.get_var_dims(name);
                             match dims_op {
                                 Some(dims) => {
                                     let _dims: Vec<IntValue<'ctx>> =
                                         dims.iter().map(|d| d.into_int_value()).collect();
-                                    let default_ptr_ty = codegen.val_ty.ptr_type(AddressSpace::Generic);
-                                    let _ptr = builder.build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
+                                    let default_ptr_ty =
+                                        codegen.val_ty.ptr_type(AddressSpace::Generic);
+                                    let _ptr = builder.build_pointer_cast(
+                                        ptr.clone(),
+                                        default_ptr_ty,
+                                        "ptr_cast",
+                                    );
                                     codegen.build_arraydim(_ptr, &_dims);
                                 }
                                 None => (),

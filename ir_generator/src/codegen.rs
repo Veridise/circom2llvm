@@ -116,8 +116,10 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     // Prevent constant folding
-    pub fn build_initial_var(&self, var: &String) -> BasicValueEnum<'ctx> {
-        let res = self.builder.build_call(self._utils_init_fn_val, &[], var);
+    pub fn build_initial_var(&self, assign_name: &String) -> BasicValueEnum<'ctx> {
+        let res = self
+            .builder
+            .build_call(self._utils_init_fn_val, &[], assign_name);
         return res.try_as_basic_value().left().unwrap();
     }
 

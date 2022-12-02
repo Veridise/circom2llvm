@@ -1,6 +1,6 @@
 use crate::codegen::{CodeGen, MAX_ARRAYSIZE};
 use crate::inferrence::{construct_array_ty, construct_uniform_array_ty};
-use crate::namer::{name_inline_array, name_signal};
+use crate::namer::{name_inline_array, name_readwrite_var, VariableTypeEnum};
 use crate::scope::ScopeTrait;
 use crate::type_check::check_used_value;
 use inkwell::types::{BasicType, BasicTypeEnum};
@@ -287,37 +287,28 @@ pub fn read_signal_from_struct<'ctx>(
 ) -> BasicValueEnum<'ctx> {
     let container: &Vec<String>;
     let offset: u32;
-    let mut is_arg = false;
-    let mut is_input = false;
-    let mut is_inter = false;
+    let var_ty: VariableTypeEnum;
     let (args, inputs, inters, outputs) = codegen.get_template_fields(templ_name).unwrap();
     if args.contains(signal_name) {
         container = args;
-        is_arg = true;
+        var_ty = VariableTypeEnum::Argument;
         offset = 0;
     } else if inputs.contains(signal_name) {
         container = inputs;
         offset = args.len() as u32;
-        is_input = true;
+        var_ty = VariableTypeEnum::InputSignal;
     } else if inters.contains(signal_name) {
         container = inters;
         offset = (args.len() + inputs.len()) as u32;
-        is_inter = true;
+        var_ty = VariableTypeEnum::IntermediateSignal;
     } else if outputs.contains(signal_name) {
         container = outputs;
         offset = (args.len() + inputs.len() + inters.len()) as u32;
+        var_ty = VariableTypeEnum::OutputSignal;
     } else {
         unreachable!()
     }
-    let assign_name = name_signal(
-        templ_name,
-        signal_name,
-        true,
-        is_arg,
-        is_input,
-        is_inter,
-        call_from_inner,
-    );
+    let assign_name = name_readwrite_var(templ_name, true, call_from_inner, signal_name, var_ty);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     let real_struct_ptr = codegen.get_real_strt_ptr(struct_ptr, templ_name);
@@ -334,37 +325,28 @@ pub fn write_signal_to_struct<'ctx>(
 ) -> InstructionValue<'ctx> {
     let container: &Vec<String>;
     let offset: u32;
-    let mut is_arg = false;
-    let mut is_input = false;
-    let mut is_inter = false;
+    let var_ty: VariableTypeEnum;
     let (args, inputs, inters, outputs) = codegen.get_template_fields(templ_name).unwrap();
     if args.contains(signal_name) {
         container = args;
-        is_arg = true;
+        var_ty = VariableTypeEnum::Argument;
         offset = 0;
     } else if inputs.contains(signal_name) {
         container = inputs;
         offset = args.len() as u32;
-        is_input = true;
+        var_ty = VariableTypeEnum::InputSignal;
     } else if inters.contains(signal_name) {
         container = inters;
         offset = (args.len() + inputs.len()) as u32;
-        is_inter = true;
+        var_ty = VariableTypeEnum::IntermediateSignal;
     } else if outputs.contains(signal_name) {
         container = outputs;
         offset = (args.len() + inputs.len() + inters.len()) as u32;
+        var_ty = VariableTypeEnum::OutputSignal;
     } else {
         unreachable!()
     }
-    let assign_name = name_signal(
-        templ_name,
-        signal_name,
-        false,
-        is_arg,
-        is_input,
-        is_inter,
-        call_from_inner,
-    );
+    let assign_name = name_readwrite_var(templ_name, false, call_from_inner, signal_name, var_ty);
     let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
     index += offset;
     let real_struct_ptr = codegen.get_real_strt_ptr(struct_ptr, templ_name);

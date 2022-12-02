@@ -1,6 +1,7 @@
 #include <iostream>
 #include <regex>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -14,16 +15,31 @@
 
 using namespace llvm;
 
-enum NodeType {
-    ComponentNode,
-    InputSignalNode,
-    InterSignalNode,
-    OutputSignalNode,
+enum class NodeType {
+    Argument,
+    InputSignal,
+    IntermediateSignal,
+    OutputSignal,
+    Variable,
+    ComponentInput,
+    ComponentOutput,
+    Constant,
 };
+
+enum EdgeType {
+    Assignment,
+    Constraint,
+    ComponentInternal,
+};
+
+std::string nodeTypeEnumToAbbr(NodeType ne);
+std::string edgeTypeEnumToAbbr(EdgeType ee);
 
 class ConstraintNode;
 class ConstraintEdge;
 class ConstraintGraph;
+
+using GraphMap = std::unordered_map<std::string, ConstraintGraph *>;
 
 class ConstraintNode {
    private:
@@ -36,42 +52,53 @@ class ConstraintNode {
     std::vector<ConstraintEdge *> depends;
     ConstraintNode(NodeType type, std::string name);
     void addEdge(ConstraintEdge *edge);
-
-   protected:
-    bool operator==(ConstraintNode *b);
+    std::vector<ConstraintNode *> getConstraintNeighborhoods();
+    bool operator==(const ConstraintNode& b);
+    bool operator!=(const ConstraintNode& b);
+    void print();
 };
+
+using NodeSet = std::unordered_set<ConstraintNode*>;
 
 class ConstraintEdge {
    private:
    public:
+    EdgeType type;
     ConstraintNode *from;
     ConstraintNode *to;
-    ConstraintEdge(ConstraintNode *from, ConstraintNode *to);
-
-   protected:
-    bool operator==(ConstraintEdge &b);
+    ConstraintEdge(EdgeType type, ConstraintNode *from, ConstraintNode *to);
+    void print();
+    bool operator==(const ConstraintEdge& b);
+    bool operator!=(const ConstraintEdge& b);
 };
 
 class ConstraintGraph {
    private:
-   public:
-    Collector *collector;
-    NameSet *satisfied_components;
-    NameSet satisfied_outputs;
-    NameSet satisfied_nodes;
     NameSet visited_nodes;
-    NameSet tracked_phis;
+    NameSet visited_phis;
+
+    bool is_sat;
+    bool is_hack_sat;
+    bool is_calculated;
+
+    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v);
+
+   public:
+    GraphMap global_graphs;
+    Collector *collector;
+    NameSetMap connected_inputs;
     std::vector<ConstraintNode *> nodes;
     std::vector<ConstraintEdge *> edges;
-    bool status_confirmed;
-    std::string graph_name;
-    ConstraintGraph(NameSet *satisfied_components,
-                    Function *F);
+
+    std::string getName();
+    bool getSat();
+    ConstraintGraph(GraphMap global_graphs, Collector *collector,
+                    bool is_hack_sat);
     ConstraintNode *createNode(NodeType type, std::string name);
-    ConstraintEdge *createEdge(ConstraintNode *from, ConstraintNode *to);
+    ConstraintEdge *createEdge(EdgeType type, ConstraintNode *from,
+                               ConstraintNode *to);
     ConstraintNode *getNode(NodeType type, std::string name);
-    std::vector<ConstraintNode *> determineValueDepends(llvm::Value *v);
-    bool calculate(std::vector<ConstraintGraph *> graphs);
-    bool connectedToInput(ConstraintNode * n);
+    NodeSet connectedNodes(ConstraintNode *n);
+    void calculate();
     void print();
 };

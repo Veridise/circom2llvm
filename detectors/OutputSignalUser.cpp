@@ -19,7 +19,7 @@ struct OutputSignalUser : public ModulePass {
                 continue;
             }
             auto collector = new Collector(F);
-            collectors.insert({collector->template_name, collector});
+            collectors.insert({collector->getName(), collector});
         }
 
         auto global_ignore_set = NameSet();
@@ -38,17 +38,20 @@ struct OutputSignalUser : public ModulePass {
             if (!isTemplateInitFunc(F)) {
                 continue;
             }
-            auto templ_name = canonicalizeTemplateName(F);
+            auto templ_name = extractTemplateName(F);
             std::cerr << "Detecting: " << templ_name << "\n";
             auto collector = collectors[templ_name];
             auto satisfied_component_output_signals = NameSet();
             for (auto &bb : F->getBasicBlockList()) {
                 for (auto &inst : bb.getInstList()) {
-                    if (inst.getName().contains(output_signal_reader_mark)) {
-                        auto pair =
-                            collector->canonicalizeSignalOfComponent(&inst);
-                        auto key = pair.first + pair.second;
-                        satisfied_component_output_signals.insert(key);
+                    if (isReadOutterSignal(&inst)) {
+                        auto var_op_t = extractVariable(&inst);
+                        auto ty_enum = std::get<2>(var_op_t);
+                        if (ty_enum == VariableTypeEnum::OutputSignal) {
+                            auto p = extractSignalOfComponent(&inst);
+                            auto key = p.first + "_" + p.second;
+                            satisfied_component_output_signals.insert(key);
+                        }
                     }
                 }
             }
@@ -72,7 +75,8 @@ struct OutputSignalUser : public ModulePass {
                     }
                 }
                 if (!at_least_one_used) {
-                    std::cerr << "    None output signal used. " << "\n";
+                    std::cerr << "    None output signal used. "
+                              << "\n";
                 }
             }
             std::cerr << "\n";

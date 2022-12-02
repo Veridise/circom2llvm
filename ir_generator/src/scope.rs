@@ -236,7 +236,7 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
             codegen.builder.build_store(ptr, arr_ptr);
         }
         if ty.is_int_type() {
-            let init = codegen.build_initial_var(name);
+            let init = codegen.build_initial_var(alloca_name);
             codegen.builder.build_store(ptr, init);
         }
         check_stored_value(&ptr);

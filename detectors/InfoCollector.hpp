@@ -1,6 +1,7 @@
 #include <regex>
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -11,83 +12,111 @@
 
 using namespace llvm;
 
-using SignalLoader = llvm::LoadInst;
-using SignalLoaders = std::vector<SignalLoader *>;
+// AllocaInst or CallInst
+using VariableInit = llvm::Instruction;
+using Variables = std::vector<VariableInit *>;
 
-using SignalGEP = llvm::GetElementPtrInst;
-using SignalGEPs = std::vector<SignalGEP *>;
-
-using Constraint = llvm::CallInst;
-using Constraints = std::vector<Constraint *>;
+using ConstraintInstance = llvm::CallInst;
+using Constraints = std::vector<ConstraintInstance *>;
 
 using ComponentInstance = llvm::CallInst;
 using Components = std::vector<ComponentInstance *>;
 
 using NameSet = std::unordered_set<std::string>;
+using NameSetMap = std::unordered_map<std::string, NameSet>;
 
 const std::string fn_template_prefix = "fn_template_init_";
 const std::string fn_build_prefix = "fn_template_build_";
 const std::string fn_constraint_prefix = "fn_intrinsic_utils_constraint";
-const std::string argument_mark = "arg_inner";
-const std::string input_signal_mark = "input_inner";
-const std::string inter_signal_mark = "inter_inner";
-const std::string output_signal_mark = "output_inner";
+
+enum class VariableTypeEnum {
+    Argument,
+    InputSignal,
+    IntermediateSignal,
+    OutputSignal,
+    Component,
+    Variable,
+};
+
+static const VariableTypeEnum VariableTypeAll[] = {
+    VariableTypeEnum::Argument,           VariableTypeEnum::InputSignal,
+    VariableTypeEnum::IntermediateSignal, VariableTypeEnum::OutputSignal,
+    VariableTypeEnum::Component,          VariableTypeEnum::Variable,
+};
+
+VariableTypeEnum abbrToTypeEnum(std::string s);
+std::string typeEnumToAbbr(VariableTypeEnum ve);
+
+// template_name, is_read, is_inner
+using VariableOperator = std::tuple<std::string, bool, bool>;
+
+// operator_str, variable_name, type_enum
+using VariableOpTuple = std::tuple<std::string, std::string, VariableTypeEnum>;
 
 bool isTemplateInitFunc(llvm::Function *F);
 bool isBuildFunc(llvm::Function *F);
+
+bool locatesAtEntry(llvm::Instruction *inst);
+bool locatesAtExit(llvm::Instruction *inst);
+
 bool isArgumentDefinedInst(llvm::Instruction *inst);
 bool isInputSiganlDefinedInst(llvm::Instruction *inst);
 bool isInterSiganlDefinedInst(llvm::Instruction *inst);
 bool isOutputSiganlDefinedInst(llvm::Instruction *inst);
+bool isVariableDefinedInst(llvm::Instruction *inst);
 bool isComponentDefinedInst(llvm::Instruction *inst);
 bool isConstraintDefinedInst(llvm::Instruction *inst);
-std::string canonicalizeTemplateName(llvm::Function *F);
-std::vector<std::string> stringSplit(std::string s, std::string splitor, int times);
+
+std::vector<std::string> stringSplit(std::string s, std::string splitor,
+                                     int times);
+
+bool isInitial(llvm::Instruction *inst);
+bool isReadInnerSignal(llvm::Instruction *inst);
+bool isReadOutterSignal(llvm::Instruction *inst);
+bool isWriteInnerSignal(llvm::Instruction *inst);
+bool isWriteOutterSignal(llvm::Instruction *inst);
+bool isSignal(llvm::Instruction *inst);
+
+VariableOpTuple extractVariable(llvm::Value *v);
+bool isVarOp(std::string s);
+VariableOperator resolveVarOp(std::string s);
+
+std::string extractTemplateName(llvm::Function *F);
+std::string extractTemplateName(ComponentInstance *c);
+std::string extractTemplateName(llvm::Value *v);
+std::string extractVariableName(llvm::Value *v);
+std::pair<std::string, std::string> extractSignalOfComponent(llvm::Value *v);
+
 bool compareFunction(llvm::Function *F1, llvm::Function *F2);
 std::vector<llvm::Function *> getOrderedFunctions(llvm::Module *M);
 
 class Collector {
    private:
-    void locateArguments();
-    void locateInputSignals();
-    void locateInterSignals();
-    void locateOutputSignals();
-    void locateConstraints();
-    void locateComponents();
-
-    std::string canonicalizeSignal(llvm::Value *v, std::string prefix,
-                                   NameSet& nset);
-
-   public:
     llvm::Function *F;
     std::string template_name;
+
+   public:
     Constraints constraints;
 
-    SignalLoaders arguments;
-    SignalLoaders input_signals;
-    SignalGEPs inter_signals;
-    SignalGEPs output_signals;
+    Variables arguments;
+    Variables input_signals;
+    Variables inter_signals;
+    Variables output_signals;
+    Variables variables;
+    
     Components components;
 
     NameSet argument_names;
     NameSet input_signal_names;
     NameSet inter_signal_names;
     NameSet output_signal_names;
+    NameSet variable_names;
     NameSet component_names;
 
     Collector(llvm::Function *F);
-    std::string getNameOfSignal(llvm::Value *v);
-    std::string getNameOfTemplate(ComponentInstance *c);
-    std::string canonicalizeArgument(llvm::Value *v);
-    std::string canonicalizeInputSignal(llvm::Value *v);
-    std::string canonicalizeInterSignal(llvm::Value *v);
-    std::string canonicalizeOutputSignal(llvm::Value *v);
-    std::pair<std::string, std::string> canonicalizeSignalOfComponent(
-        llvm::Value *v);
-    bool isArgument(llvm::Value *v);
-    bool isInputSignal(llvm::Value *v);
-    bool isInterSignal(llvm::Value *v);
-    bool isOutputSignal(llvm::Value *v);
-    bool isSignalOfComponent(llvm::Value *v);
+    std::string getName();
     void print();
 };
+
+std::vector<Collector *> getOrderedCollectors(
+    std::vector<llvm::Function *> funcs);
