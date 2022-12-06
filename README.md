@@ -3,11 +3,15 @@ Compile circom code to LLVM IR and detect potential bugs.
 
 # Dependencies
 ## LLVM Installation
-Use `Ninja` as the build tool default, so you need to install one before building LLVM.
+**NOTICE** Use `Ninja` as the build tool default, so you need to install one before building LLVM.
 If you don't have, please follow the offcial guide from LLVM at: https://github.com/llvm/llvm-project/tree/release/13.x .
-**NOTICE** that the building command used by us is different from the standard one.
-**NOTICE** the path/to/llvm-project should be an abstract path, such as /User/You/app/llvm-project.
+
+**NOTICE** The building command used by us is different from the standard one.
+
+**NOTICE** The path/to/llvm-project should be an abstract path, such as /User/You/app/llvm-project.
+
 **NOTICE** DLLVM_TARGETS_TO_BUILD depends on your architecture.
+
 ```bash
 git clone --depth 1 --branch release/13.x git@github.com:llvm/llvm-project.git
 cd ./llvm-project
@@ -62,50 +66,3 @@ cargo build --bin=circom2llvm --package=circom2llvm
 1. If any problem happens during BuildGEP instruction, there is perhaps a type inferrence problem. The type inferrence system is not sound.
 2. The size of every dimension of the array is limited to 256.
 3. Don't define a component without initializing it.
-
-
-## Detector
-### Description
-A group of LLVM Pass to detect potential bugs in circuits.
-
-### Detectors
-https://docs.google.com/spreadsheets/d/1hiEodPGrp4DlI0ULgmqxRv6j71kdi-fkb8tXaP5B59w/edit?usp=sharing
-
-### Detector Files
-1. `detectors/InfoCollector.cpp`: Provide an information collector to the generated IR file to be used.
-2. `detectors/UnderConstraints.cpp`: Detect whether every output signal is under the constraint matters at least one input signal.
-3. `detectors/OutputSignalUser.cpp`: Detect whether all of output signals in a component are used or not.
-
-### Build
-**Make sure the LLVM is installed.**
-```bash
-cd $LLVM_PATH
-ln -s path/to/circom2llvm/detectors ./llvm/lib/Transforms/Detectors
-echo "add_subdirectory(Detectors)" >> ./llvm/lib/Transforms/CMakeLists.txt
-cmake --build build/
-```
-
-### Usage
-Linux: .so || Mac: .dylib
-```bash
-opt -f -load -enable-new-pm=0 $LLVM_PATH/build/lib/Detectors{.so||.dylib} --UnderConstraints input.ssa.ll 1> /dev/null 2> output.uc.log
-opt -f -load -enable-new-pm=0 $LLVM_PATH/build/lib/Detectors{.so||.dylib} --OutputSignalUser input.ssa.ll 1> /dev/null 2> output.osu.log
-```
-
-Or use the script:
-
-```bash
-python ./detect.py --help
-python ./detect.py -uc --input ./auditing
-python ./detect.py -osu --input ./auditing
-```
-
-### Debug
-LLVM Pass is hard to debug because it is a dynamic lib. Thus, you could use them to print information runtimely:
-```c++
-std::string foo = "";
-std::cerr << foo;
-
-llvm::Value v;
-v.print(errs());
-```

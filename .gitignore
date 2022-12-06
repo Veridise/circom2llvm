@@ -10,14 +10,5 @@ Cargo.lock
 **/*.rs.bk
 
 # Dev
-
 .vscode
-
-cache/**
-
-examples/**
-
-*.ll
-*.json
-*.log
-
+.cache
