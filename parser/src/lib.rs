@@ -51,7 +51,7 @@ pub fn find_file(
 }
 
 pub fn run_parser(
-    file: String,
+    file: PathBuf,
     link_libraries: Vec<PathBuf>,
 ) -> Result<AST, (FileLibrary, ReportCollection)> {
     let mut file_library = FileLibrary::new();
@@ -60,7 +60,7 @@ pub fn run_parser(
     ext_link_libraries.append(&mut link_libraries2);
 
     // Find file
-    let (found, path, src, _, reports) = find_file(PathBuf::from(file), ext_link_libraries.clone());
+    let (found, path, src, _, reports) = find_file(file, ext_link_libraries.clone());
     if !found {
         return Result::Err((file_library.clone(), reports));
     }

@@ -179,7 +179,12 @@ pub fn resolve_stmt<'ctx>(
             // Get the body of while and the latch step of while.
             let (stmt_body, stmt_step) = match stmt.as_ref() {
                 Statement::Block { meta: _, stmts } => {
-                    assert!(stmts.len() == 2, "Uncanonized while block!");
+                    if stmts.len() != 2 {
+                        for stmt in stmts {
+                            println!("Type: {}", print_stmt(stmt));
+                        };
+                        unreachable!();
+                    }
                     let mut _iter = stmts.iter();
                     (_iter.next().unwrap(), _iter.next().unwrap())
                 }
@@ -253,4 +258,20 @@ pub fn flat_statements(stmt: &Statement) -> Vec<&Statement> {
         _ => (),
     }
     return all_stmts;
+}
+
+pub fn print_stmt(stmt: &Statement) -> &'static str {
+    match stmt {
+        Statement::Assert { .. } => "Assert",
+        Statement::Block { .. } => "Block",
+        Statement::ConstraintEquality { .. } => "ConstraintEquality",
+        Statement::Declaration { .. } => "Declaration",
+        Statement::IfThenElse { .. } => "IfThenElse",
+        Statement::InitializationBlock { .. } => "InitializationBlock",
+        Statement::LogCall { .. } => "LogCall",
+        Statement::MultSubstitution { .. } => "MultSubstitution",
+        Statement::Return { .. } => "Return",
+        Statement::Substitution { .. } => "Substitution",
+        Statement::While { .. } => "While",
+    }
 }

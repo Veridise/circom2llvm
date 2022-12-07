@@ -137,7 +137,13 @@ impl<'ctx> ScopeTrait<'ctx> for Scope<'ctx> {
         if name == &self.name {
             return &self.name;
         }
-        return &self.var2comp[name];
+        match self.var2comp.get(name) {
+            None => {
+                println!("Unknown component of the variable: {}", name);
+                unreachable!();
+            }
+            Some(comp_name) => comp_name,
+        }
     }
 
     fn set_known_comp(&mut self, var: &String, comp: &String) {

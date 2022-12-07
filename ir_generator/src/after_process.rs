@@ -1,7 +1,7 @@
 use crate::namer::name_opaque_struct;
 use std::fs::File;
 use std::io::{self, BufRead, LineWriter, Write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
@@ -11,7 +11,7 @@ where
     Ok(io::BufReader::new(file).lines())
 }
 
-pub fn remove_opaque_struct_name(output_path: &String) {
+pub fn remove_opaque_struct_name(output_path: &PathBuf) {
     let mut remaining_opaque_structs: Vec<String> = Vec::new();
     let mut results: Vec<String> = Vec::new();
     if let Ok(lines) = read_lines(output_path) {

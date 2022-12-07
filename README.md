@@ -1,5 +1,5 @@
 # Circom2LLVM
-Compile circom code to LLVM IR and detect potential bugs.
+Compile circom code to LLVM IR.
 
 # Dependencies
 ## LLVM Installation

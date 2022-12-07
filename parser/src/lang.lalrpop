@@ -101,7 +101,10 @@ ParseTagsList : Vec<String> = {
 
 ParseSignalType: SignalType = {
     "input" => SignalType::Input,
-    "output" => SignalType::Output
+    "output" => SignalType::Output,
+    // Support old version.
+    "private input" => SignalType::Input,
+    "private output" => SignalType::Input,
 };
 
 SignalHeader : VariableType = {
