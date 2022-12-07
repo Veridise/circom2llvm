@@ -9,7 +9,7 @@ use inkwell::intrinsics::Intrinsic;
 use inkwell::module::Module;
 use inkwell::types::{IntType, PointerType, StringRadix};
 use inkwell::values::{
-    BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionOpcode,
+    AnyValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionOpcode,
     InstructionValue, IntValue, PointerValue,
 };
 use inkwell::{AddressSpace, IntPredicate};
@@ -40,6 +40,7 @@ pub struct CodeGen<'ctx> {
 
     // Internal utils
     _utils_constraint_fn_val: FunctionValue<'ctx>,
+    _utils_constraint_array_fn_val: FunctionValue<'ctx>,
     _utils_switch_fn_val: FunctionValue<'ctx>,
     _utils_powi_fn_val: FunctionValue<'ctx>,
     _utils_init_fn_val: FunctionValue<'ctx>,
@@ -89,15 +90,38 @@ impl<'ctx> CodeGen<'ctx> {
         }
     }
 
-    pub fn build_constraint(&self, lval: IntValue<'ctx>, rval: IntValue<'ctx>) {
+    pub fn build_constraint(&self, lval: BasicValueEnum<'ctx>, rval: BasicValueEnum<'ctx>) {
         let gv = self
             .module
             .add_global(self.context.bool_type(), None, &name_constraint());
-        self.builder.build_call(
-            self._utils_constraint_fn_val,
-            &[lval.into(), rval.into(), gv.as_basic_value_enum().into()],
-            &name_constraint(),
-        );
+        if lval.get_type() != rval.get_type() {
+            println!("Error: Left value and right value should be the same type in the constraint.");
+            println!("Left value is: {}", lval.print_to_string());
+            println!("Right value is: {}", rval.print_to_string());
+            unreachable!();
+        }
+        if lval.is_int_value() {
+            self.builder.build_call(
+                self._utils_constraint_fn_val,
+                &[
+                    lval.into_int_value().into(),
+                    rval.into_int_value().into(),
+                    gv.as_basic_value_enum().into(),
+                ],
+                &name_constraint(),
+            );
+        }
+        if lval.is_array_value() {
+            self.builder.build_call(
+                self._utils_constraint_array_fn_val,
+                &[
+                    lval.into_pointer_value().into(),
+                    rval.into_pointer_value().into(),
+                    gv.as_basic_value_enum().into(),
+                ],
+                &name_constraint(),
+            );
+        }
     }
 
     pub fn build_switch(
@@ -294,6 +318,32 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: &PathBuf) -> CodeG
     builder.build_store(gv_val, eq_val);
     builder.build_return(None);
 
+    // Add constraint array function
+    let utils_constraint_array_fn_args_ty = [
+        val_ty
+            .array_type(MAX_ARRAYSIZE)
+            .ptr_type(AddressSpace::Generic)
+            .into(),
+        val_ty
+            .array_type(MAX_ARRAYSIZE)
+            .ptr_type(AddressSpace::Generic)
+            .into(),
+        utils_constraint_gv_ptr_ty.into(),
+    ];
+    let utils_constraint_array_fn_ret_ty = context.void_type();
+    let utils_constraint_array_fn_ty =
+        utils_constraint_array_fn_ret_ty.fn_type(&utils_constraint_array_fn_args_ty, false);
+    let utils_constraint_array_fn_name = name_intrinsinc_fn("utils_constraint_array");
+    let utils_constraint_array_fn_val = module.add_function(
+        &utils_constraint_array_fn_name,
+        utils_constraint_array_fn_ty,
+        None,
+    );
+    let utils_constraint_array_fn_entry_bb =
+        context.append_basic_block(utils_constraint_array_fn_val, &name_entry_block());
+    builder.position_at_end(utils_constraint_array_fn_entry_bb);
+    builder.build_return(None);
+
     // Add inline switch function
     let utils_switch_fn_args_ty = [bool_ty.into(), val_ty.into(), val_ty.into()];
     let utils_switch_fn_ret_ty = val_ty;
@@ -394,6 +444,7 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: &PathBuf) -> CodeG
         hacking_ret_ty: assert_fn_ret_ty(val_ty),
 
         _utils_constraint_fn_val: utils_constraint_fn_val,
+        _utils_constraint_array_fn_val: utils_constraint_array_fn_val,
         _utils_switch_fn_val: utils_switch_fn_val,
         _utils_powi_fn_val: utils_powi_fn_val,
         _utils_init_fn_val: utils_init_fn_val,

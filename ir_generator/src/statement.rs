@@ -23,8 +23,8 @@ pub fn resolve_stmt<'ctx>(
             }
         }
         Statement::ConstraintEquality { meta: _, lhe, rhe } => {
-            let lval = resolve_expr(codegen, lhe, scope).into_int_value();
-            let rval = resolve_expr(codegen, rhe, scope).into_int_value();
+            let lval = resolve_expr(codegen, lhe, scope);
+            let rval = resolve_expr(codegen, rhe, scope);
             codegen.build_constraint(lval, rval);
         }
         Statement::Declaration { .. } => (),
@@ -125,8 +125,8 @@ pub fn resolve_stmt<'ctx>(
             let res = resolve_expr(codegen, rhe, scope);
             match op {
                 AssignOp::AssignConstraintSignal => {
-                    let lval = scope.get_var(codegen, var, access).into_int_value();
-                    let rval = res.into_int_value();
+                    let lval = scope.get_var(codegen, var, access);
+                    let rval = res;
                     codegen.build_constraint(lval, rval);
                     if access.len() == 0 {
                         let self_comp_name = scope.get_name().clone();
@@ -177,17 +177,8 @@ pub fn resolve_stmt<'ctx>(
             let current_func = scope.get_main_fn();
 
             // Get the body of while and the latch step of while.
-            let (stmt_body, stmt_step) = match stmt.as_ref() {
-                Statement::Block { meta: _, stmts } => {
-                    if stmts.len() != 2 {
-                        for stmt in stmts {
-                            println!("Type: {}", print_stmt(stmt));
-                        };
-                        unreachable!();
-                    }
-                    let mut _iter = stmts.iter();
-                    (_iter.next().unwrap(), _iter.next().unwrap())
-                }
+            let stmts = match stmt.as_ref() {
+                Statement::Block { meta: _, stmts } => stmts,
                 _ => unreachable!(),
             };
 
@@ -198,7 +189,9 @@ pub fn resolve_stmt<'ctx>(
             let loop_bb = context.append_basic_block(current_func, &loop_bb_name);
             codegen.build_block_transferring(current_bb, loop_bb);
             scope.set_current_exit_block(codegen, loop_bb);
-            resolve_stmt(scope, codegen, stmt_body);
+            for stmt in stmts {
+                resolve_stmt(scope, codegen, stmt);
+            }
             let current_bb = scope.get_current_exit_block();
 
             // loop.body -> loop.latch
@@ -208,7 +201,6 @@ pub fn resolve_stmt<'ctx>(
                 .append_basic_block(current_func, &latch_bb_name);
             codegen.build_block_transferring(current_bb, latch_bb);
             scope.set_current_exit_block(codegen, latch_bb);
-            resolve_stmt(scope, codegen, stmt_step);
             let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
 
             // loop.latch -> loop.exit
