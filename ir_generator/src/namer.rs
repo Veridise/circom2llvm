@@ -2,6 +2,14 @@ pub fn name_entry_block() -> String {
     return "entry".to_string();
 }
 
+pub fn name_exit_block() -> String {
+    return "exit".to_string();
+}
+
+pub fn name_body_block() -> String {
+    return "body".to_string();
+}
+
 pub fn name_if_block(true_or_false: bool, is_exit: bool) -> String {
     if is_exit {
         return "if.exit".to_string();
@@ -24,10 +32,6 @@ pub fn name_loop_block(is_header: bool, is_body: bool, is_exit: bool) -> String 
         return "loop.exit".to_string();
     }
     unreachable!();
-}
-
-pub fn name_exit_block() -> String {
-    return "exit".to_string();
 }
 
 pub fn name_arraydim_block() -> String {

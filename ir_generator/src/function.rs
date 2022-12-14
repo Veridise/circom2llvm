@@ -5,7 +5,7 @@ use crate::inferrence::{
 };
 use crate::info_collector::{collect_depended_components, collect_dependences};
 use crate::namer::{
-    name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, VariableTypeEnum,
+    name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, VariableTypeEnum, name_body_block,
 };
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
@@ -89,17 +89,16 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
 
         let fn_ty = ret_ty.fn_type(&arg_tys[0..], false);
         let fn_val = module.add_function(&fn_name, fn_ty, None);
-        context.append_basic_block(fn_val, &name_entry_block());
         self.scope.set_main_fn(fn_val);
     }
 
     fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
         let fn_val = self.scope.get_main_fn();
-        let current_bb = fn_val.get_first_basic_block().unwrap();
         let CodeGen {
             context, builder, ..
         } = codegen;
-        self.scope.set_current_exit_block(codegen, current_bb);
+        let entry_bb = context.append_basic_block(fn_val, &name_entry_block());
+        self.scope.set_current_exit_block(codegen, entry_bb);
 
         // Bind args
         for (idx, arg) in self.scope.args.clone().iter().enumerate() {
@@ -116,6 +115,10 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
             let alloca_name = name;
             self.scope.initial_var(codegen, name, alloca_name, ty, true);
         }
+
+        let body_bb = context.append_basic_block(fn_val, &name_body_block());
+        codegen.build_block_transferring(entry_bb, body_bb);
+        self.scope.set_current_exit_block(codegen, body_bb);
 
         match body {
             Statement::Block { meta: _, stmts } => {

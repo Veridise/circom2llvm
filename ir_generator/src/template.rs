@@ -5,8 +5,8 @@ use crate::expression::{
 use crate::inferrence::{infer_type_from_expression, infer_type_from_statement};
 use crate::info_collector::{collect_depended_components, collect_dependences, collect_signal};
 use crate::namer::{
-    name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, name_template_fn,
-    name_template_struct, VariableTypeEnum,
+    name_arraydim_block, name_body_block, name_entry_block, name_exit_block, name_initial_var,
+    name_template_fn, name_template_struct, VariableTypeEnum,
 };
 use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
 use crate::statement::{flat_statements, resolve_stmt};
@@ -117,13 +117,11 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let init_fn_name = &name_template_fn(templ_name, "init");
         let init_fn_ty = void_ty.fn_type(&[templ_struct_ptr_ty.into()], false);
         let init_fn_val = module.add_function(init_fn_name, init_fn_ty, None);
-        context.append_basic_block(init_fn_val, &name_entry_block());
 
         // Function for generation of the circuit struct, called `build`, it returns the circuit struct.
         let build_fn_name = name_template_fn(templ_name, "build");
         let build_fn_ty = templ_struct_ptr_ty.fn_type(&templ_build_arg_tys[0..], false);
-        let build_fn_val = module.add_function(&build_fn_name, build_fn_ty, None);
-        context.append_basic_block(build_fn_val, &name_entry_block());
+        _ = module.add_function(&build_fn_name, build_fn_ty, None);
 
         self.scope.set_main_fn(init_fn_val);
     }
@@ -141,8 +139,9 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         // Build instruction in build function first.
         let build_fn_name = name_template_fn(templ_name, "build");
         let build_fn_val = module.get_function(&build_fn_name).unwrap();
-        let current_bb = build_fn_val.get_first_basic_block().unwrap();
-        self.scope.set_current_exit_block(codegen, current_bb);
+        let build_fn_entry_bb = context.append_basic_block(build_fn_val, &name_entry_block());
+        self.scope
+            .set_current_exit_block(codegen, build_fn_entry_bb);
 
         let templ_struct_name = &name_template_struct(templ_name);
         let templ_struct_ty = module.get_struct_type(templ_struct_name).unwrap();
@@ -159,8 +158,8 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         // Build instruction in init function then.
         let init_fn_name = name_template_fn(templ_name, "init");
         let init_fn_val = module.get_function(&init_fn_name).unwrap();
-        let current_bb = init_fn_val.get_first_basic_block().unwrap();
-        self.scope.set_current_exit_block(codegen, current_bb);
+        let init_fn_entry_bb = context.append_basic_block(init_fn_val, &name_entry_block());
+        self.scope.set_current_exit_block(codegen, init_fn_entry_bb);
 
         let templ_struct_val_ptr = init_fn_val.get_first_param().unwrap().into_pointer_value();
 
@@ -209,6 +208,10 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
             self.scope
                 .initial_var(codegen, name, &alloca_name, &ty, alloca);
         }
+
+        let body_bb = context.append_basic_block(init_fn_val, &name_body_block());
+        codegen.build_block_transferring(init_fn_entry_bb, body_bb);
+        self.scope.set_current_exit_block(codegen, body_bb);
 
         match body {
             Statement::Block { meta: _, stmts } => {
