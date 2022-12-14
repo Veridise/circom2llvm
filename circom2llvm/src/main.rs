@@ -146,7 +146,7 @@ fn main() {
         let mut definition_names = HashSet::new();
         let mut definitions = Vec::new();
         for ast in &asts {
-            for def in &ast.definitions {
+            for def in ast.get_definitions() {
                 match def {
                     Definition::Template { name, .. } => {
                         if definition_names.contains(name) {

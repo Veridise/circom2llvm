@@ -13,15 +13,12 @@ pub fn name_if_block(true_or_false: bool, is_exit: bool) -> String {
     }
 }
 
-pub fn name_loop_block(is_body: bool, is_iter: bool, is_latch: bool, is_exit: bool) -> String {
+pub fn name_loop_block(is_header: bool, is_body: bool, is_exit: bool) -> String {
+    if is_header {
+        return "loop.header".to_string();
+    }
     if is_body {
         return "loop.body".to_string();
-    }
-    if is_iter {
-        return "loop.iter".to_string();
-    }
-    if is_latch {
-        return "loop.latch".to_string();
     }
     if is_exit {
         return "loop.exit".to_string();

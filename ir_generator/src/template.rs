@@ -242,7 +242,6 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
         let exit_bb = context.append_basic_block(init_fn_val, &name_exit_block());
         codegen.build_block_transferring(current_bb, exit_bb);
 
-        // Notice that the name is perhaps been modified by index.
         for inter in &self.inters {
             let val = self.scope.get_var(codegen, inter, &Vec::new());
             write_signal_to_struct(codegen, templ_name, inter, templ_struct_val_ptr, true, val);

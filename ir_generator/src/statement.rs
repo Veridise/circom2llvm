@@ -3,7 +3,7 @@ use crate::expression::resolve_expr;
 use crate::namer::{name_if_block, name_loop_block};
 use crate::scope::ScopeTrait;
 use inkwell::values::{BasicValue, BasicValueEnum};
-use program_structure::ast::{Access, AssignOp, Statement};
+use program_structure::ast::{AssignOp, Statement};
 
 pub fn resolve_stmt<'ctx>(
     scope: &mut dyn ScopeTrait<'ctx>,
@@ -122,49 +122,20 @@ pub fn resolve_stmt<'ctx>(
             op,
             rhe,
         } => {
-            let res = resolve_expr(codegen, rhe, scope);
+            let rval = resolve_expr(codegen, rhe, scope);
             match op {
                 AssignOp::AssignConstraintSignal => {
                     let lval = scope.get_var(codegen, var, access);
-                    let rval = res;
                     codegen.build_constraint(lval, rval);
-                    if access.len() == 0 {
-                        let self_comp_name = scope.get_name().clone();
-                        let _access = vec![Access::ComponentAccess(var.clone())];
-                        // Write in signal
-                        scope.set_var(
-                            codegen,
-                            &self_comp_name,
-                            &_access,
-                            res.as_basic_value_enum(),
-                        );
-                        let new_var = scope.get_var(codegen, &self_comp_name, &_access);
-                        // Read signal to local
-                        scope.set_var(codegen, var, access, new_var);
-                    } else {
-                        scope.set_var(codegen, var, access, res.as_basic_value_enum());
-                    }
                 }
-                AssignOp::AssignSignal => {
-                    if access.len() == 0 {
-                        let self_comp_name = scope.get_name().clone();
-                        let _access = vec![Access::ComponentAccess(var.clone())];
-                        // Write in signal
-                        scope.set_var(
-                            codegen,
-                            &self_comp_name,
-                            &_access,
-                            res.as_basic_value_enum(),
-                        );
-                        let new_var = scope.get_var(codegen, &self_comp_name, &_access);
-                        // Read signal to local
-                        scope.set_var(codegen, var, access, new_var);
-                    } else {
-                        scope.set_var(codegen, var, access, res.as_basic_value_enum());
-                    }
+                _ => (),
+            }
+            match op {
+                AssignOp::AssignConstraintSignal | AssignOp::AssignSignal => {
+                    scope.set_var(codegen, var, access, rval);
                 }
                 AssignOp::AssignVar => {
-                    scope.set_var(codegen, var, access, res.as_basic_value_enum());
+                    scope.set_var(codegen, var, access, rval);
                 }
             };
         }
@@ -184,33 +155,35 @@ pub fn resolve_stmt<'ctx>(
 
             let current_bb = scope.get_current_exit_block();
 
-            // current -> loop.body
-            let loop_bb_name = name_loop_block(true, false, false, false);
-            let loop_bb = context.append_basic_block(current_func, &loop_bb_name);
-            codegen.build_block_transferring(current_bb, loop_bb);
-            scope.set_current_exit_block(codegen, loop_bb);
+            // current -> loop.header
+            let header_bb_name = name_loop_block(true, false, false);
+            let header_bb = codegen
+                .context
+                .append_basic_block(current_func, &header_bb_name);
+            codegen.build_block_transferring(current_bb, header_bb);
+            scope.set_current_exit_block(codegen, header_bb);
+            let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
+
+            // loop.header -> loop.body
+            let body_bb_name = name_loop_block(false, true, false);
+            let body_bb = context.append_basic_block(current_func, &body_bb_name);
+            scope.set_current_exit_block(codegen, body_bb);
             for stmt in stmts {
                 resolve_stmt(scope, codegen, stmt);
             }
             let current_bb = scope.get_current_exit_block();
+            codegen.build_block_transferring(current_bb, header_bb);
 
-            // loop.body -> loop.latch
-            let latch_bb_name = name_loop_block(false, false, true, false);
-            let latch_bb = codegen
-                .context
-                .append_basic_block(current_func, &latch_bb_name);
-            codegen.build_block_transferring(current_bb, latch_bb);
-            scope.set_current_exit_block(codegen, latch_bb);
-            let cond_var = resolve_expr(codegen, cond, scope).into_int_value();
-
-            // loop.latch -> loop.exit
-            let exit_bb_name = name_loop_block(false, false, false, true);
+            // loop.header -> loop.exit
+            let exit_bb_name = name_loop_block(false, false, true);
             let exit_bb = codegen
                 .context
                 .append_basic_block(current_func, &exit_bb_name);
+
+            codegen.builder.position_at_end(header_bb);
             codegen
                 .builder
-                .build_conditional_branch(cond_var, loop_bb, exit_bb);
+                .build_conditional_branch(cond_var, body_bb, exit_bb);
 
             // loop.exit
             scope.set_current_exit_block(codegen, exit_bb);

@@ -95,7 +95,9 @@ impl<'ctx> CodeGen<'ctx> {
             .module
             .add_global(self.context.bool_type(), None, &name_constraint());
         if lval.get_type() != rval.get_type() {
-            println!("Error: Left value and right value should be the same type in the constraint.");
+            println!(
+                "Error: Left value and right value should be the same type in the constraint."
+            );
             println!("Left value is: {}", lval.print_to_string());
             println!("Right value is: {}", rval.print_to_string());
             unreachable!();
