@@ -1,5 +1,5 @@
 use crate::codegen::{CodeGen, MAX_ARRAYSIZE};
-use crate::inferrence::{construct_array_ty, construct_uniform_array_ty};
+use crate::inferrence::construct_array_ty;
 use crate::namer::{name_inline_array, name_readwrite_var, VariableTypeEnum};
 use crate::scope::ScopeTrait;
 use crate::type_check::check_used_value;
@@ -71,9 +71,8 @@ pub fn resolve_expr<'ctx>(
             unreachable!()
         }
         Expression::UniformArray { .. } => {
-            let arr_ty = construct_uniform_array_ty(codegen, expr, scope);
-            let ptr = codegen.builder.build_alloca(arr_ty, "uniform_array");
-            ptr.as_basic_value_enum()
+            let val = resolve_uniform_array(codegen, expr, scope);
+            val.as_basic_value_enum()
         }
         Expression::Variable {
             meta: _,
@@ -198,6 +197,46 @@ fn resolve_inline_array<'ctx>(
         convert_variable_inline_array(codegen, expr, scope, arr_ptr, Vec::new());
         return arr_ptr.as_basic_value_enum();
     }
+}
+
+pub fn resolve_uniform_array<'ctx>(
+    codegen: &CodeGen<'ctx>,
+    expr: &Expression,
+    scope: &dyn ScopeTrait<'ctx>,
+) -> PointerValue<'ctx> {
+    let mut end = false;
+    let mut current_expr = expr;
+    let mut number = 0;
+    let mut dims = 0;
+    while !end {
+        match current_expr {
+            Expression::UniformArray { value, .. } => {
+                current_expr = value.as_ref();
+                dims += 1;
+            }
+            Expression::Number(_, bigint) => {
+                number = (bigint % u64::MAX).to_u64().unwrap();
+                end = true;
+            }
+            _ => {
+                println!("Error: This UniformArray isn't supported now.");
+                unreachable!()
+            }
+        }
+    }
+    let val = codegen.val_ty.const_int(number, false);
+    let mut res = codegen
+        .val_ty
+        .const_array(&vec![val; MAX_ARRAYSIZE as usize]);
+    for _ in 1..dims {
+        res = res
+            .get_type()
+            .const_array(&vec![res; MAX_ARRAYSIZE as usize]);
+    }
+    let name = format!("{}.uniform_array", scope.get_name().to_lowercase());
+    let g_val = codegen.module.add_global(res.get_type(), None, &name);
+    g_val.set_initializer(&res);
+    return g_val.as_pointer_value();
 }
 
 fn resolve_prefix_op<'ctx>(
@@ -459,4 +498,20 @@ pub fn flat_expressions_from_statement<'ctx>(stmt: &Statement) -> Vec<&Expressio
         }
     }
     return all_exprs;
+}
+
+pub fn print_expr(expr: &Expression) -> &'static str {
+    match expr {
+        Expression::AnonymousComp { .. } => "AnonymousComp",
+        Expression::ArrayInLine { .. } => "ArrayInLine",
+        Expression::Call { .. } => "Call",
+        Expression::InfixOp { .. } => "InfixOp",
+        Expression::InlineSwitchOp { .. } => "InlineSwitchOp",
+        Expression::Number(..) => "Number",
+        Expression::ParallelOp { .. } => "ParallelOp",
+        Expression::PrefixOp { .. } => "PrefixOp",
+        Expression::Tuple { .. } => "Tuple",
+        Expression::UniformArray { .. } => "UniformArray",
+        Expression::Variable { .. } => "Variable",
+    }
 }
