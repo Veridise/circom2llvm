@@ -53,31 +53,36 @@ pub fn name_template_struct(templ_name: &str) -> String {
 pub fn name_opaque_struct(struct_name: &str) -> String {
     return format!("{}.opaque", struct_name).to_lowercase();
 }
-
-pub enum VariableTypeEnum {
-    Argument,
+#[derive(PartialEq)]
+pub enum ValueTypeEnum {
     InputSignal,
     IntermediateSignal,
     OutputSignal,
-    Component,
+    ComponentInput,
+    ComponentOutput,
+
+    Argument,
+    Constant,
     Variable,
 }
 
-fn print_variable_type(var_ty: VariableTypeEnum) -> &'static str {
+pub fn print_variable_type(var_ty: &ValueTypeEnum) -> &'static str {
     match var_ty {
-        VariableTypeEnum::Argument => "arg",
-        VariableTypeEnum::InputSignal => "input",
-        VariableTypeEnum::IntermediateSignal => "inter",
-        VariableTypeEnum::OutputSignal => "output",
-        VariableTypeEnum::Component => "comp",
-        VariableTypeEnum::Variable => "var",
+        ValueTypeEnum::InputSignal => "input",
+        ValueTypeEnum::IntermediateSignal => "inter",
+        ValueTypeEnum::OutputSignal => "output",
+        ValueTypeEnum::ComponentInput => "compinput",
+        ValueTypeEnum::ComponentOutput => "compoutput",
+
+        ValueTypeEnum::Argument => "arg",
+        ValueTypeEnum::Constant => "const",
+        ValueTypeEnum::Variable => "var",
     }
 }
 
-pub fn name_initial_var(variable_name: &str, var_ty: VariableTypeEnum) -> String {
+pub fn name_initial_var(var_name: &str, var_ty_abbr: &str) -> String {
     let operator = "initial";
-    let abbr = print_variable_type(var_ty);
-    let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
+    let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr).to_lowercase();
     return name;
 }
 
@@ -86,20 +91,12 @@ pub fn name_readwrite_var(
     is_read: bool,
     is_inner: bool,
     variable_name: &str,
-    var_ty: VariableTypeEnum,
-    is_compinput: bool,
+    var_ty: ValueTypeEnum,
 ) -> String {
     let read_abbr = if is_read { "read" } else { "write" };
     let inner_abbr = if is_inner { "inner" } else { "outter" };
     let operator = format!("{}_{}_{}", templ_name, read_abbr, inner_abbr).to_lowercase();
-    let mut abbr = print_variable_type(var_ty).to_string();
-    if abbr == "comp" {
-        if is_compinput {
-            abbr +="input"
-        } else {
-            abbr += "output"
-        }
-    }
+    let abbr = print_variable_type(&var_ty);
     let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
     return name;
 }
