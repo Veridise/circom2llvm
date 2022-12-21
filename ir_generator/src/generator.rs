@@ -1,10 +1,17 @@
-use crate::codegen::CodeGen;
-use crate::function::Function;
-use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
-use crate::summarygen::SummaryGen;
-use crate::template::Template;
-use program_structure::ast::{Definition, Statement};
+use crate::after_process::remove_opaque_struct_name;
+use crate::codegen::init_codegen;
+use crate::environment::{init_env, init_instantiation_manager};
+use crate::expression_static::{print_expr, resolve_number_static, Instantiation};
+use crate::function::{infer_fn, Function};
+use crate::info_collector::collect_instantiations;
+use crate::scope::init_scope;
+use crate::scope_information::{init_scope_info, ScopeInformation};
+use crate::summarygen::init_summarygen;
+use crate::template::{infer_templ, Template};
+use inkwell::context::Context;
+use program_structure::ast::{Definition, Expression, Statement};
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Vec<String> {
     let mut all = dependence_graph.len().clone();
@@ -50,11 +57,42 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
     return output;
 }
 
-pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, summarygen: &mut SummaryGen) {
-    let mut template_scopes: Vec<(Template, &Statement)> = Vec::new();
-    let mut function_scopes: Vec<(Function, &Statement)> = Vec::new();
+pub fn generate<'ctx>(
+    arraysize: u32,
+    main_expression: Option<Expression>,
+    definitions: Vec<&Definition>,
+    input_path: &PathBuf,
+    output_path: &PathBuf,
+    output_summary_path: &PathBuf,
+) {
+    let context = Context::create();
+    let mut env = init_env(&context, arraysize, !main_expression.is_none());
+    let mut i_manager = init_instantiation_manager();
+    match main_expression {
+        Some(expr) => match expr {
+            Expression::Call { meta: _, id, args } => {
+                let instantiation: Instantiation = args
+                    .iter()
+                    .map(|a| resolve_number_static(a) as u32)
+                    .collect();
+                i_manager.set_instantiations(&id, &instantiation);
+            }
+            _ => {
+                println!(
+                    "Error: Unknown main component instantiation expression: {}",
+                    print_expr(&expr)
+                );
+                unreachable!();
+            }
+        },
+        None => (),
+    }
+    let codegen = init_codegen(&context, &env, input_path);
+    let mut summarygen = init_summarygen();
+    let mut scope_info_stmt_pairs: Vec<(ScopeInformation, &Statement)> = Vec::new();
+    let val_ty = env.val_ty.clone();
     for defin in definitions {
-        match defin {
+        let (mut scope_info, body) = match defin {
             Definition::Template {
                 meta: _,
                 name,
@@ -63,72 +101,34 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, summarygen
                 body,
                 parallel: _,
                 is_custom_gate: _,
-            } => {
-                let scope = Scope {
-                    name: name.clone(),
-                    args: args.to_vec(),
-                    arg_tys: Vec::new(),
-                    val_ty: codegen.val_ty,
-
-                    dependences: Vec::new(),
-                    var2dims: HashMap::new(),
-
-                    var2ty: HashMap::new(),
-                    var2comp: HashMap::new(),
-
-                    main_fn_val: None,
-
-                    var2ptr: HashMap::new(),
-                    current_exit_block: None,
-                };
-                let mut template_scope = Template {
-                    scope,
-                    inputs: Vec::new(),
-                    inters: Vec::new(),
-                    outputs: Vec::new(),
-                };
-                template_scope.resolve_dependences(codegen, &body);
-                template_scopes.push((template_scope, &body));
-            }
+            } => (
+                init_scope_info(true, val_ty, name.clone(), args.clone()),
+                body,
+            ),
             Definition::Function {
                 meta: _,
                 name,
                 args,
                 arg_location: _,
                 body,
-            } => {
-                let scope = Scope {
-                    name: name.clone(),
-                    args: args.to_vec(),
-                    arg_tys: Vec::new(),
-                    val_ty: codegen.val_ty,
-
-                    dependences: Vec::new(),
-                    var2dims: HashMap::new(),
-
-                    var2ptr: HashMap::new(),
-                    var2ty: HashMap::new(),
-
-                    main_fn_val: None,
-
-                    var2comp: HashMap::new(),
-                    current_exit_block: None,
-                };
-                let mut function_scope = Function { scope };
-                function_scope.resolve_dependences(codegen, &body);
-                function_scopes.push((function_scope, &body));
-            }
-        }
+            } => (
+                init_scope_info(false, val_ty, name.clone(), args.clone()),
+                body,
+            ),
+        };
+        scope_info.resolve_dependences(body);
+        scope_info_stmt_pairs.push((scope_info, body));
     }
     let mut dependence_graph: HashMap<String, Vec<String>> = HashMap::new();
-    for (t, _) in &template_scopes {
-        let owned_deps = t.scope.deps().iter().map(|s| s.clone()).collect();
-        dependence_graph.insert(t.scope.name.clone(), owned_deps);
+    for (scope_info, _) in &scope_info_stmt_pairs {
+        let owned_deps = scope_info
+            .get_dependences()
+            .iter()
+            .map(|s| s.clone())
+            .collect();
+        dependence_graph.insert(scope_info.get_name().clone(), owned_deps);
     }
-    for (f, _) in &function_scopes {
-        let owned_deps = f.scope.deps().iter().map(|s| s.clone()).collect();
-        dependence_graph.insert(f.scope.name.clone(), owned_deps);
-    }
+
     let compile_order = resolve_dependence(&dependence_graph);
     let mut unique_compile_order: Vec<String> = Vec::new();
     for c in compile_order {
@@ -136,32 +136,99 @@ pub fn generate(definitions: Vec<&Definition>, codegen: &mut CodeGen, summarygen
             unique_compile_order.push(c);
         }
     }
-    for c in &unique_compile_order {
-        for (f, body) in &mut function_scopes[0..] {
-            if &f.scope.name == c {
-                f.infer_types(codegen, body);
-                f.build_function(codegen, body);
-            }
-        }
-        for (t, body) in &mut template_scopes[0..] {
-            if &t.scope.name == c {
-                t.infer_types(codegen, body);
-                t.build_function(codegen, body);
-            }
+
+    fn index(order: &Vec<String>, s: &String) -> usize {
+        order.iter().position(|r| r == s).unwrap()
+    }
+
+    scope_info_stmt_pairs.sort_by(|a, b| {
+        index(&unique_compile_order, a.0.get_name())
+            .cmp(&index(&unique_compile_order, b.0.get_name()))
+    });
+
+    let mut templ_pairs: Vec<(ScopeInformation, &Statement)> = Vec::new();
+    let mut fn_pairs: Vec<(ScopeInformation, &Statement)> = Vec::new();
+
+    for (scope_info, body) in scope_info_stmt_pairs.into_iter() {
+        if scope_info.is_template {
+            templ_pairs.push((scope_info, body));
+        } else {
+            fn_pairs.push((scope_info, body));
         }
     }
-    for c in &unique_compile_order {
-        for (f, body) in &mut function_scopes[0..] {
-            if &f.scope.name == c {
-                f.build_instrustions(codegen, body);
-                summarygen.add_function(f);
-            }
+
+    for (mut scope_info, body) in fn_pairs {
+        infer_fn(&env, &mut scope_info, body);
+        env.set_scope_info(&scope_info);
+        let i = HashMap::new();
+        let scope = init_scope(scope_info.clone(), i);
+        let mut f = Function { scope };
+        f.build(&env, &codegen, body);
+        summarygen.add_function(&f);
+    }
+
+    if env.is_instantiation {
+        // todo inline loop and if-else
+        for (scope_info, body) in &templ_pairs {
+            collect_instantiations(&mut env, &mut i_manager, scope_info, body);
         }
-        for (t, body) in &mut template_scopes[0..] {
-            if &t.scope.name == c {
-                t.build_instrustions(codegen, body);
-                summarygen.add_component(t);
+    }
+
+    let mut templates: Vec<(Template, &Statement)> = Vec::new();
+
+    for (mut scope_info, body) in templ_pairs {
+        let scope_name = scope_info.get_name().clone();
+        let templ_info = infer_templ(&context, &mut env, &mut scope_info, body);
+        env.set_scope_info(&scope_info);
+        env.set_template_info(&scope_name, templ_info.clone());
+        let scope_info = env.get_scope_info(&scope_name);
+
+        if env.is_instantiation {
+            let p_instantiations = i_manager.get_instantiations(&scope_name);
+            for arg_vals in p_instantiations {
+                let arg_table = scope_info.gen_arg_table(arg_vals);
+                let scope = init_scope(scope_info.clone(), arg_table);
+                let t = Template {
+                    scope,
+                    templ_info: templ_info.clone(),
+                };
+                templates.push((t, body));
             }
+        } else {
+            let arg_table = HashMap::new();
+            let scope = init_scope(scope_info.clone(), arg_table);
+            let t = Template {
+                scope,
+                templ_info: templ_info.clone(),
+            };
+            templates.push((t, body));
+        }
+    }
+
+    for (t, body) in &mut templates {
+        t.build_function(&env, &codegen, body);
+    }
+
+    for (t, body) in &mut templates {
+        env.set_current_instantiation(t.scope.get_name(), &t.scope.instantiation);
+        t.build_instrustions(&env, &codegen, body);
+        summarygen.add_component(t);
+    }
+
+    let json_result = summarygen.print_to_file(output_summary_path);
+    match json_result {
+        Ok(..) => (),
+        Err(err) => {
+            println!("Error: {}", err);
+        }
+    }
+    let result = codegen.module.print_to_file(&output_path);
+    match result {
+        Ok(_) => {
+            remove_opaque_struct_name(&output_path);
+        }
+        Err(err) => {
+            println!("Error: {}", err.to_string());
         }
     }
 }

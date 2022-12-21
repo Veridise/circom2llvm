@@ -1,43 +1,23 @@
-use crate::hacking::assert_fn_ret_ty;
-use crate::namer::{
-    name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_template_struct,
-};
+use crate::environment::GlobalInformation;
+use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
+use crate::utils::is_terminated_basicblock;
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::Module;
-use inkwell::types::{IntType, PointerType, StringRadix};
+use inkwell::types::BasicTypeEnum;
 use inkwell::values::{
-    AnyValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, InstructionOpcode,
-    InstructionValue, IntValue, PointerValue,
+    AnyValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue,
+    PointerValue,
 };
 use inkwell::{AddressSpace, IntPredicate};
-use std::collections::HashMap;
 use std::path::PathBuf;
-
-pub const GLOBAL_P: &str = "12539295309507511577697735";
-pub const APPLY_MOD: bool = false;
-pub const MAX_ARRAYSIZE: u32 = if option_env!("CIRCOM2LLVM_LARGEARRAY").is_none() {
-    256
-} else {
-    4096
-};
-
-type Fields = (Vec<String>, Vec<String>, Vec<String>, Vec<String>);
 
 pub struct CodeGen<'ctx> {
     pub context: &'ctx Context,
     pub module: Module<'ctx>,
     pub builder: Builder<'ctx>,
-
-    pub val_ty: IntType<'ctx>,
-
-    pub const_p: IntValue<'ctx>,
-    pub const_zero: IntValue<'ctx>,
-
-    pub hacking_ret_ty: HashMap<String, PointerType<'ctx>>,
-
     // Internal utils
     _utils_constraint_fn_val: FunctionValue<'ctx>,
     _utils_constraint_array_fn_val: FunctionValue<'ctx>,
@@ -46,47 +26,27 @@ pub struct CodeGen<'ctx> {
     _utils_init_fn_val: FunctionValue<'ctx>,
     _utils_assert_fn_val: FunctionValue<'ctx>,
     _utils_arraydim_fn_val: FunctionValue<'ctx>,
-
-    // Global Information
-    _global_template_fields: HashMap<String, Fields>,
 }
 
 impl<'ctx> CodeGen<'ctx> {
-    pub fn build_array_getter(
+    pub fn build_alloca(
         &self,
-        array_ptr: PointerValue<'ctx>,
-        indexes: &[IntValue<'ctx>],
-        name: &str,
-    ) -> BasicValueEnum<'ctx> {
-        let res = unsafe { self.builder.build_in_bounds_gep(array_ptr, indexes, name) };
-        return self.builder.build_load(res, name);
-    }
-
-    pub fn build_array_setter<V: BasicValue<'ctx>>(
-        &self,
-        array_ptr: PointerValue<'ctx>,
-        indexes: &[IntValue<'ctx>],
-        name: &str,
-        value: V,
-    ) {
-        let res = unsafe { self.builder.build_in_bounds_gep(array_ptr, indexes, name) };
-        let val_ty = value.as_basic_value_enum().get_type();
-        if val_ty.is_pointer_type()
-            && val_ty
-                .into_pointer_type()
-                .get_element_type()
-                .is_array_type()
-        {
-            let val_ptr = value.as_basic_value_enum().into_pointer_value();
-            let val_arr_ty = val_ty
-                .into_pointer_type()
-                .get_element_type()
-                .into_array_type();
-            _ = self
-                .builder
-                .build_memcpy(res, 4, val_ptr, 4, val_arr_ty.size_of().unwrap());
+        val_ty: BasicTypeEnum<'ctx>,
+        alloca_name: &String,
+    ) -> PointerValue<'ctx> {
+        let current_block = self.builder.get_insert_block().unwrap();
+        let entry_block = current_block
+            .get_parent()
+            .unwrap()
+            .get_first_basic_block()
+            .unwrap();
+        if current_block == entry_block {
+            self.builder.build_alloca(val_ty, alloca_name)
         } else {
-            self.builder.build_store(res, value);
+            self.builder.position_at_end(entry_block);
+            let res = self.builder.build_alloca(val_ty, alloca_name);
+            self.builder.position_at_end(current_block);
+            res
         }
     }
 
@@ -161,34 +121,6 @@ impl<'ctx> CodeGen<'ctx> {
         return value;
     }
 
-    pub fn build_struct_getter(
-        &self,
-        struct_ptr: PointerValue<'ctx>,
-        index: u32,
-        name: &str,
-    ) -> BasicValueEnum<'ctx> {
-        let assign_name = "struct_getter";
-        let res = self
-            .builder
-            .build_struct_gep(struct_ptr, index, assign_name)
-            .unwrap();
-        return self.builder.build_load(res, name);
-    }
-
-    pub fn build_struct_setter<V: BasicValue<'ctx>>(
-        &self,
-        struct_ptr: PointerValue<'ctx>,
-        index: u32,
-        name: &str,
-        value: V,
-    ) -> InstructionValue<'ctx> {
-        let res = self
-            .builder
-            .build_struct_gep(struct_ptr, index, name)
-            .unwrap();
-        return self.builder.build_store(res, value);
-    }
-
     pub fn build_pow(&self, args: &[BasicMetadataValueEnum<'ctx>], name: &str) -> IntValue<'ctx> {
         return self
             .builder
@@ -198,29 +130,12 @@ impl<'ctx> CodeGen<'ctx> {
             .into_int_value();
     }
 
-    pub fn get_template_fields(&self, templ_name: &String) -> Option<&Fields> {
-        return self._global_template_fields.get(templ_name);
-    }
-
-    pub fn set_template_fields(&mut self, templ_name: &String, v: Fields) {
-        self._global_template_fields.insert(templ_name.clone(), v);
-    }
-
-    pub fn ends_with_return(&self, bb: BasicBlock<'ctx>) -> bool {
-        let last_inst_op = bb.get_last_instruction();
-        let has_return = match last_inst_op {
-            Some(last_inst) => last_inst.get_opcode() == InstructionOpcode::Return,
-            None => false,
-        };
-        return has_return;
-    }
-
     pub fn build_block_transferring(
         &self,
         source_bb: BasicBlock<'ctx>,
         destination_bb: BasicBlock<'ctx>,
     ) {
-        if !self.ends_with_return(source_bb) {
+        if !is_terminated_basicblock(&source_bb) {
             self.builder.position_at_end(source_bb);
             self.builder.build_unconditional_branch(destination_bb);
         }
@@ -232,59 +147,37 @@ impl<'ctx> CodeGen<'ctx> {
             .build_call(self._utils_assert_fn_val, &[val.into()], "assert");
     }
 
-    pub fn build_arraydim(&self, ptr: PointerValue<'ctx>, dims: &Vec<IntValue<'ctx>>) {
-        let mut vals = vec![ptr.into()];
+    pub fn build_arraydim(&self, ptr: &PointerValue<'ctx>, dims: &Vec<IntValue<'ctx>>) {
+        let default_ptr_ty = self.context.i128_type().ptr_type(AddressSpace::Generic);
+        let _ptr = self
+            .builder
+            .build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
+        let mut vals = vec![_ptr.into()];
         for d in dims {
             vals.push(d.clone().into());
         }
         self.builder
             .build_call(self._utils_arraydim_fn_val, &vals, "arraydim");
     }
-
-    pub fn get_real_strt_ptr(
-        &self,
-        struct_ptr: PointerValue<'ctx>,
-        templ_name: &str,
-    ) -> PointerValue<'ctx> {
-        let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
-        let real_struct_ptr;
-        if strt_ty.count_fields() == 0 {
-            let real_strt_ty = self
-                .module
-                .get_struct_type(&name_template_struct(templ_name))
-                .unwrap();
-            real_struct_ptr = self.builder.build_pointer_cast(
-                struct_ptr,
-                real_strt_ty.ptr_type(AddressSpace::Generic),
-                "ptr_cast",
-            );
-        } else {
-            real_struct_ptr = struct_ptr;
-        }
-        return real_struct_ptr;
-    }
 }
 
-pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: &PathBuf) -> CodeGen<'ctx> {
+pub fn init_codegen<'ctx>(
+    context: &'ctx Context,
+    env: &GlobalInformation<'ctx>,
+    input_path: &PathBuf,
+) -> CodeGen<'ctx> {
     let file_path = input_path.as_os_str().to_str().unwrap();
     let file_name = input_path.file_name().unwrap().to_str().unwrap();
     let module = context.create_module(file_name);
     module.set_source_file_name(file_path);
     let builder = context.create_builder();
-
-    // Value Types
-    let val_ty = context.i128_type();
     let bool_ty = context.bool_type();
-    let utils_constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
-
-    // Global Prime
-    let const_p = val_ty
-        .const_int_from_string(GLOBAL_P, StringRadix::Decimal)
-        .unwrap();
-
-    let const_zero = val_ty.const_zero();
+    let val_ty = env.val_ty;
+    let arraysize = env.arraysize;
+    let const_zero = env.const_zero;
 
     // Add constraint function
+    let utils_constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
     let utils_constraint_fn_args_ty = [
         val_ty.into(),
         val_ty.into(),
@@ -323,11 +216,11 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: &PathBuf) -> CodeG
     // Add constraint array function
     let utils_constraint_array_fn_args_ty = [
         val_ty
-            .array_type(MAX_ARRAYSIZE)
+            .array_type(arraysize as u32)
             .ptr_type(AddressSpace::Generic)
             .into(),
         val_ty
-            .array_type(MAX_ARRAYSIZE)
+            .array_type(arraysize as u32)
             .ptr_type(AddressSpace::Generic)
             .into(),
         utils_constraint_gv_ptr_ty.into(),
@@ -439,12 +332,6 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: &PathBuf) -> CodeG
         module,
         builder,
 
-        val_ty,
-        const_p,
-        const_zero,
-
-        hacking_ret_ty: assert_fn_ret_ty(val_ty),
-
         _utils_constraint_fn_val: utils_constraint_fn_val,
         _utils_constraint_array_fn_val: utils_constraint_array_fn_val,
         _utils_switch_fn_val: utils_switch_fn_val,
@@ -452,7 +339,6 @@ pub fn init_codegen<'ctx>(context: &'ctx Context, input_path: &PathBuf) -> CodeG
         _utils_init_fn_val: utils_init_fn_val,
         _utils_assert_fn_val: utils_assert_fn_val,
         _utils_arraydim_fn_val: utils_arraydim_fn_val,
-        _global_template_fields: HashMap::new(),
     };
     return codegen;
 }

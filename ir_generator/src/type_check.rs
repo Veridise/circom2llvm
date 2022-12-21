@@ -1,6 +1,7 @@
 use inkwell::{
-    types::{AnyTypeEnum, BasicTypeEnum, PointerType},
+    types::{AnyTypeEnum, BasicType, BasicTypeEnum, PointerType},
     values::{BasicValueEnum, PointerValue},
+    AddressSpace,
 };
 
 pub fn check_used_value(val: &BasicValueEnum) {
@@ -54,6 +55,40 @@ pub fn check_used_type(ty: &BasicTypeEnum) {
                 ty.print_to_string()
             );
             unreachable!();
+        }
+    }
+}
+
+pub fn stored_type2used_type<'ctx>(ty: &BasicTypeEnum<'ctx>) -> BasicTypeEnum<'ctx> {
+    match ty {
+        BasicTypeEnum::ArrayType(arr_ty) => {
+            return arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
+        }
+        BasicTypeEnum::StructType(strt_ty) => {
+            return strt_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
+        }
+        _ => {
+            return ty.clone();
+        }
+    }
+}
+
+pub fn used_type2stored_type<'ctx>(ty: &BasicTypeEnum<'ctx>) -> BasicTypeEnum<'ctx> {
+    match ty {
+        BasicTypeEnum::PointerType(ptr_ty) => {
+            let ele_ty = ptr_ty.get_element_type();
+            match ele_ty {
+                AnyTypeEnum::ArrayType(arr_ty) => arr_ty.as_basic_type_enum(),
+                AnyTypeEnum::StructType(strt_ty) => strt_ty.as_basic_type_enum(),
+                AnyTypeEnum::IntType(int_ty) => int_ty.as_basic_type_enum(),
+                _ => {
+                    println!("Error: Unknown type: {}", ele_ty.print_to_string());
+                    unreachable!();
+                }
+            }
+        }
+        _ => {
+            return ty.clone();
         }
     }
 }

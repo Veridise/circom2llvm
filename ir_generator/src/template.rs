@@ -1,28 +1,30 @@
 use crate::codegen::CodeGen;
-use crate::expression::{
-    flat_expressions_from_statement, read_signal_from_struct, write_signal_to_struct,
-};
-use crate::inferrence::{infer_type_from_expression, infer_type_from_statement};
-use crate::info_collector::{collect_depended_components, collect_dependences, collect_signal};
+use crate::environment::GlobalInformation;
+use crate::expression_codegen::flat_expressions_from_statement;
+use crate::info_collector::init_template_info;
 use crate::namer::{
-    name_arraydim_block, name_body_block, name_entry_block, name_exit_block, name_initial_var,
-    name_template_fn, name_template_struct, VariableTypeEnum,
+    name_body_block, name_entry_block, name_initial_var, name_template_fn, name_template_struct,
+    VariableTypeEnum,
 };
-use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
+use crate::scope::Scope;
+use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
-use inkwell::values::{BasicValue, IntValue};
-use inkwell::AddressSpace;
+use crate::type_check::stored_type2used_type;
+use crate::type_infer::{infer_type_from_expression, infer_type_from_statement};
+use inkwell::context::Context;
+use inkwell::types::BasicType;
+use inkwell::values::BasicValue;
 use program_structure::ast::Statement;
 
-pub struct Template<'ctx> {
-    pub scope: Scope<'ctx>,
-
+#[derive(Clone)]
+pub struct TemplateInformation {
+    // Static information of a template.
     pub inputs: Vec<String>,
     pub inters: Vec<String>,
     pub outputs: Vec<String>,
 }
 
-impl<'ctx> Template<'ctx> {
+impl TemplateInformation {
     pub fn add_input(&mut self, v: &String) {
         self.inputs.push(v.clone());
     }
@@ -34,225 +36,242 @@ impl<'ctx> Template<'ctx> {
     pub fn add_output(&mut self, v: &String) {
         self.outputs.push(v.clone());
     }
+
+    pub fn get_signal_info(&self, signal_name: &String) -> (u32, VariableTypeEnum) {
+        let container: &Vec<String>;
+        let offset: u32;
+        let var_ty: VariableTypeEnum;
+        if self.inputs.contains(signal_name) {
+            container = &self.inputs;
+            offset = 0;
+            var_ty = VariableTypeEnum::InputSignal;
+        } else if self.inters.contains(signal_name) {
+            container = &self.inters;
+            offset = self.inputs.len() as u32;
+            var_ty = VariableTypeEnum::IntermediateSignal;
+        } else if self.outputs.contains(signal_name) {
+            container = &self.outputs;
+            offset = (self.inputs.len() + self.inters.len()) as u32;
+            var_ty = VariableTypeEnum::OutputSignal;
+        } else {
+            unreachable!()
+        }
+        let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
+        index += offset;
+        (index, var_ty)
+    }
 }
 
-impl<'ctx> CodegenStagesTrait<'ctx> for Template<'ctx> {
-    fn resolve_dependences(&mut self, _codegen: &mut CodeGen<'ctx>, body: &Statement) {
-        let stmts = flat_statements(body);
-        let mut exprs = Vec::new();
-        for stmt in stmts {
-            collect_depended_components(stmt, &mut self.scope);
-            exprs.append(&mut flat_expressions_from_statement(stmt));
-        }
-        for expr in exprs {
-            collect_dependences(expr, &mut self.scope);
-        }
+pub struct Template<'ctx> {
+    pub scope: Scope<'ctx>,
+    pub templ_info: TemplateInformation,
+}
+
+pub fn infer_templ<'ctx>(
+    context: &'ctx Context,
+    env: &mut GlobalInformation<'ctx>,
+    scope_info: &mut ScopeInformation<'ctx>,
+    body: &Statement,
+) -> TemplateInformation {
+    let stmts = flat_statements(body);
+    let mut exprs = Vec::new();
+    for stmt in &stmts {
+        infer_type_from_statement(env, scope_info, stmt);
+        exprs.append(&mut flat_expressions_from_statement(stmt));
+    }
+    for expr in &exprs {
+        infer_type_from_expression(env, scope_info, expr);
     }
 
-    fn infer_types(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
-        let stmts = flat_statements(body);
-        let mut exprs = Vec::new();
-        for stmt in stmts {
-            infer_type_from_statement(codegen, stmt, &mut self.scope);
-            exprs.append(&mut flat_expressions_from_statement(stmt));
-            collect_signal(stmt, self);
-        }
-        codegen.set_template_fields(
-            &self.scope.name,
-            (
-                self.scope.args.to_vec(),
-                self.inputs.to_vec(),
-                self.inters.to_vec(),
-                self.outputs.to_vec(),
-            ),
-        );
-        for expr in exprs {
-            infer_type_from_expression(codegen, expr, &mut self.scope);
-        }
+    let templ_info = init_template_info(&stmts);
+
+    // Template struct
+    let mut templ_struct_fields = Vec::new();
+    for input in &templ_info.inputs {
+        let field_ty = scope_info.get_var_used_ty(input);
+        templ_struct_fields.push(field_ty);
     }
 
-    fn build_function(&mut self, codegen: &CodeGen<'ctx>, _body: &Statement) {
-        let CodeGen {
-            context, module, ..
-        } = codegen;
+    for inter in &templ_info.inters {
+        let field_ty = scope_info.get_var_used_ty(inter);
+        templ_struct_fields.push(field_ty);
+    }
 
-        let void_ty = context.void_type();
-        let templ_name = &self.scope.name.clone();
-        let templ_struct_name = name_template_struct(templ_name);
-        let mut templ_build_arg_tys = Vec::new();
-        let mut templ_struct_fields = Vec::new();
+    for output in &templ_info.outputs {
+        let field_ty = scope_info.get_var_used_ty(output);
+        templ_struct_fields.push(field_ty);
+    }
+    let templ_struct_name = name_template_struct(&scope_info.get_name());
+    let templ_struct_ty = context.opaque_struct_type(&templ_struct_name);
+    templ_struct_ty.set_body(&templ_struct_fields[0..], false);
 
-        for arg in &self.scope.args {
-            let arg_meta_ty = self.scope.get_var_ty_as_ptr(arg);
-            templ_build_arg_tys.push(arg_meta_ty.into());
-            self.scope.arg_tys.push(arg_meta_ty);
-        }
+    let ret_ty = templ_struct_ty.as_basic_type_enum();
+    scope_info.set_ret_ty(ret_ty);
 
-        for arg in &self.scope.args.clone() {
-            let field_ty = self.scope.get_var_ty_as_ptr(arg).into();
-            templ_struct_fields.push(field_ty);
-        }
+    let mut arg_tys = Vec::new();
+    for a in &scope_info.args {
+        arg_tys.push(scope_info.get_var_used_ty(a));
+    }
+    scope_info.set_arg_tys(arg_tys);
+    scope_info.check();
+    templ_info
+}
 
-        for input in &self.inputs {
-            let field_ty = self.scope.get_var_ty_as_ptr(input);
-            templ_struct_fields.push(field_ty);
-        }
-
-        for inter in &self.inters {
-            let field_ty = self.scope.get_var_ty_as_ptr(inter);
-            templ_struct_fields.push(field_ty);
-        }
-
-        for output in &self.outputs {
-            let field_ty = self.scope.get_var_ty_as_ptr(output);
-            templ_struct_fields.push(field_ty);
-        }
-
-        let templ_struct_ty = codegen.context.opaque_struct_type(&templ_struct_name);
-        templ_struct_ty.set_body(&templ_struct_fields[0..], false);
-
-        let templ_struct_ptr_ty = templ_struct_ty.ptr_type(AddressSpace::Generic);
-
-        // Function for initialization of the circuit struct, called `init`, it returns void.
-        let init_fn_name = &name_template_fn(templ_name, "init");
-        let init_fn_ty = void_ty.fn_type(&[templ_struct_ptr_ty.into()], false);
-        let init_fn_val = module.add_function(init_fn_name, init_fn_ty, None);
+impl<'ctx> Template<'ctx> {
+    pub fn build_function(
+        &mut self,
+        _env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        _body: &Statement,
+    ) {
+        let templ_name = self.scope.get_name();
+        let templ_signature = self.scope.get_signature();
+        let templ_struct_name = name_template_struct(&templ_name);
+        let templ_struct_ty = self.scope.info.get_ret_ty();
 
         // Function for generation of the circuit struct, called `build`, it returns the circuit struct.
-        let build_fn_name = name_template_fn(templ_name, "build");
-        let build_fn_ty = templ_struct_ptr_ty.fn_type(&templ_build_arg_tys[0..], false);
-        _ = module.add_function(&build_fn_name, build_fn_ty, None);
+        let params_ty = self.scope.info.gen_arg_metadata_tys();
+        let ret_ty = stored_type2used_type(&templ_struct_ty);
+        let build_fn_name = name_template_fn("build", &templ_signature);
+        let build_fn_ty = ret_ty.fn_type(&params_ty, false);
+        let build_fn_val = codegen
+            .module
+            .add_function(&build_fn_name, build_fn_ty, None);
+        let build_fn_entry_bb = codegen
+            .context
+            .append_basic_block(build_fn_val, &name_entry_block());
+        codegen.builder.position_at_end(build_fn_entry_bb);
+        let templ_struct_val_ptr = codegen
+            .builder
+            .build_malloc(templ_struct_ty, &templ_struct_name)
+            .unwrap();
+        codegen.builder.build_return(Some(&templ_struct_val_ptr));
+
+        // Function for initialization of the circuit struct, called `init`, it returns void.
+        let mut params_ty = self.scope.info.gen_arg_metadata_tys();
+        params_ty.push(ret_ty.into());
+        let void_ty = codegen.context.void_type();
+        let init_fn_name = name_template_fn("init", &templ_signature);
+        let init_fn_ty = void_ty.fn_type(&params_ty, false);
+        let init_fn_val = codegen.module.add_function(&init_fn_name, init_fn_ty, None);
 
         self.scope.set_main_fn(init_fn_val);
     }
 
-    fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        let CodeGen {
-            context,
-            module,
-            builder,
-            ..
-        } = codegen;
+    pub fn build_instrustions(
+        &mut self,
+        env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        body: &Statement,
+    ) {
+        let templ_name = self.scope.get_name().clone();
+        let args = self.scope.info.args.clone();
 
-        let templ_name = &self.scope.name.clone();
-
-        // Build instruction in build function first.
-        let build_fn_name = name_template_fn(templ_name, "build");
-        let build_fn_val = module.get_function(&build_fn_name).unwrap();
-        let build_fn_entry_bb = context.append_basic_block(build_fn_val, &name_entry_block());
-        self.scope
-            .set_current_exit_block(codegen, build_fn_entry_bb);
-
-        let templ_struct_name = &name_template_struct(templ_name);
-        let templ_struct_ty = module.get_struct_type(templ_struct_name).unwrap();
-        let templ_struct_val_ptr = builder.build_alloca(templ_struct_ty, templ_struct_name);
-
-        // Bind args
-        for (idx, arg) in self.scope.args.iter().enumerate() {
-            let val = build_fn_val.get_nth_param(idx as u32).unwrap();
-            write_signal_to_struct(codegen, templ_name, arg, templ_struct_val_ptr, true, val);
-        }
-
-        builder.build_return(Some(&templ_struct_val_ptr));
-
-        // Build instruction in init function then.
-        let init_fn_name = name_template_fn(templ_name, "init");
-        let init_fn_val = module.get_function(&init_fn_name).unwrap();
-        let init_fn_entry_bb = context.append_basic_block(init_fn_val, &name_entry_block());
+        let init_fn_val = self.scope.get_main_fn();
+        let init_fn_entry_bb = codegen
+            .context
+            .append_basic_block(init_fn_val, &name_entry_block());
         self.scope.set_current_exit_block(codegen, init_fn_entry_bb);
 
-        let templ_struct_val_ptr = init_fn_val.get_first_param().unwrap().into_pointer_value();
-
-        // Bind struct
-        self.scope.bind_argument(
-            codegen,
-            templ_name,
-            templ_name,
-            templ_struct_val_ptr.as_basic_value_enum(),
-        );
-
         // Bind args
-        for arg in &self.scope.args.clone() {
-            let val = read_signal_from_struct(codegen, templ_name, arg, templ_struct_val_ptr, true);
-            let alloca_name = name_initial_var(arg, VariableTypeEnum::Argument);
-            self.scope.bind_argument(codegen, arg, &alloca_name, val);
+        for (idx, arg) in args.iter().enumerate() {
+            let val = match self.scope.instantiation.get(arg) {
+                Some(val) => env
+                    .val_ty
+                    .const_int(*val as u64, true)
+                    .as_basic_value_enum(),
+                None => init_fn_val.get_nth_param(idx as u32).unwrap(),
+            };
+            self.scope.set_arg_val(arg, &val);
         }
 
+        let templ_struct_val = init_fn_val.get_last_param().unwrap().into_pointer_value();
+
+        // // Bind struct
+        self.scope
+            .set_arg_val(&templ_name, &templ_struct_val.as_basic_value_enum());
+
         // Bind input signals
-        for input in &self.inputs.clone() {
-            let val =
-                read_signal_from_struct(codegen, templ_name, input, templ_struct_val_ptr, true);
-            let alloca_name = name_initial_var(input, VariableTypeEnum::InputSignal);
-            self.scope.bind_argument(codegen, input, &alloca_name, val);
+        for input in &self.templ_info.inputs {
+            let gep = self.scope.build_struct_gep(
+                env,
+                codegen,
+                &templ_name,
+                &input,
+                templ_struct_val,
+                true,
+                true,
+            );
+            let val = codegen.builder.build_load(gep, "load");
+            self.scope.set_arg_val(&input, &val);
         }
 
         // Initial variables
-        for (name, ty) in &self.scope.var2ty.clone() {
-            if self.scope.is_initialized(name) {
-                continue;
-            };
-            let alloca = !(self.outputs.contains(&name) || self.inters.contains(&name));
-            let alloca_name: String;
-            if self.inters.contains(&name) {
-                alloca_name = name_initial_var(name, VariableTypeEnum::IntermediateSignal);
-            } else if self.outputs.contains(&name) {
-                alloca_name = name_initial_var(name, VariableTypeEnum::OutputSignal);
+        for (name, ty) in &self.scope.info.get_var2ty() {
+            if self.templ_info.inters.contains(&name) {
+                let alloca_name = name_initial_var(&name, VariableTypeEnum::IntermediateSignal);
+                self.scope
+                    .initial_var(codegen, &name, &alloca_name, &ty, false);
+            } else if self.templ_info.outputs.contains(&name) {
+                let alloca_name = name_initial_var(&name, VariableTypeEnum::OutputSignal);
+                self.scope
+                    .initial_var(codegen, &name, &alloca_name, &ty, false);
+            } else if self.scope.info.is_component_var(&name) {
+                let alloca_name = name_initial_var(&name, VariableTypeEnum::Component);
+                self.scope
+                    .initial_var(codegen, &name, &alloca_name, &ty, true);
             } else {
-                let var_ty = if self.scope.is_comp_var(name) {
-                    VariableTypeEnum::Component
-                } else {
-                    VariableTypeEnum::Variable
-                };
-                alloca_name = name_initial_var(name, var_ty);
+                let alloca_name = name_initial_var(&name, VariableTypeEnum::Variable);
+                self.scope
+                    .initial_var(codegen, &name, &alloca_name, &ty, true);
             }
-            self.scope
-                .initial_var(codegen, name, &alloca_name, &ty, alloca);
         }
 
-        let body_bb = context.append_basic_block(init_fn_val, &name_body_block());
+        let body_bb = codegen
+            .context
+            .append_basic_block(init_fn_val, &name_body_block());
         codegen.build_block_transferring(init_fn_entry_bb, body_bb);
         self.scope.set_current_exit_block(codegen, body_bb);
 
         match body {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
-                    resolve_stmt(&mut self.scope, codegen, stmt);
+                    resolve_stmt(env, codegen, &mut self.scope, stmt);
                 }
             }
             _ => unreachable!(),
         }
 
-        let current_bb = init_fn_val.get_last_basic_block().unwrap();
-        let arraydim_bb = context.append_basic_block(init_fn_val, &name_arraydim_block());
-        codegen.build_block_transferring(current_bb, arraydim_bb);
-
-        for (name, ptr) in &self.scope.var2ptr {
-            let dims_op = self.scope.get_var_dims(name);
-            match dims_op {
-                Some(dims) => {
-                    let _dims: Vec<IntValue<'ctx>> =
-                        dims.iter().map(|d| d.into_int_value()).collect();
-                    let default_ptr_ty = codegen.val_ty.ptr_type(AddressSpace::Generic);
-                    let _ptr = builder.build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
-                    codegen.build_arraydim(_ptr, &_dims);
-                }
-                None => (),
-            }
-        }
+        self.scope.build_exit(codegen);
 
         // Write-in output signals
-        let current_bb = init_fn_val.get_last_basic_block().unwrap();
-        let exit_bb = context.append_basic_block(init_fn_val, &name_exit_block());
-        codegen.build_block_transferring(current_bb, exit_bb);
 
-        for inter in &self.inters {
-            let val = self.scope.get_var(codegen, inter, &Vec::new());
-            write_signal_to_struct(codegen, templ_name, inter, templ_struct_val_ptr, true, val);
+        for inter in &self.templ_info.inters {
+            let val = self.scope.get_var(env, codegen, inter, &Vec::new());
+            let gep = self.scope.build_struct_gep(
+                env,
+                codegen,
+                &templ_name,
+                inter,
+                templ_struct_val,
+                false,
+                true,
+            );
+            codegen.builder.build_store(gep, val);
         }
 
-        for output in &self.outputs {
-            let val = self.scope.get_var(codegen, output, &Vec::new());
-            write_signal_to_struct(codegen, templ_name, output, templ_struct_val_ptr, true, val);
+        for output in &self.templ_info.outputs {
+            let val = self.scope.get_var(env, codegen, output, &Vec::new());
+            let gep = self.scope.build_struct_gep(
+                env,
+                codegen,
+                &templ_name,
+                output,
+                templ_struct_val,
+                false,
+                true,
+            );
+            codegen.builder.build_store(gep, val);
         }
 
         codegen.builder.build_return(None);

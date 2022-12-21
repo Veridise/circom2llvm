@@ -1,8 +1,6 @@
 use crate::{
-    codegen::{APPLY_MOD, GLOBAL_P, MAX_ARRAYSIZE},
     function::Function,
     namer::name_template_fn,
-    scope::ScopeTrait,
     template::Template,
 };
 use inkwell::types::{
@@ -23,9 +21,7 @@ pub struct SummaryGen {
 
 #[derive(Serialize, Deserialize)]
 struct Meta {
-    apply_mod_p: bool,
     is_ir_ssa: bool,
-    p: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -101,7 +97,7 @@ impl LLVMType2TypeDescriber for ArrayType<'_> {
         let ele_ty = Box::new(self.get_element_type().gen());
         return TypeDescriber {
             type_name: "array".to_string(),
-            size: MAX_ARRAYSIZE,
+            size: self.len(),
             fields: Vec::new(),
             element_type: Some(ele_ty),
         };
@@ -157,12 +153,12 @@ impl LLVMType2TypeDescriber for VoidType<'_> {
 
 impl SummaryGen {
     pub fn add_component(&mut self, template: &Template) {
-        let templ_name = template.scope.name.clone();
-        let func_val = template.scope.main_fn_val.unwrap();
+        let templ_name = template.scope.get_name().clone();
+        let func_val = template.scope.fn_val.unwrap();
         let struct_ty = func_val.get_first_param().unwrap().get_type();
         let mut signals = Vec::new();
-        for input in &template.inputs {
-            let signal_type = template.scope.get_var_ty_as_ptr(input);
+        for input in &template.templ_info.inputs {
+            let signal_type = template.scope.info.get_var_used_ty(input);
             let signal = SignalDescriber {
                 name: input.clone(),
                 signal_type: signal_type.gen(),
@@ -171,8 +167,8 @@ impl SummaryGen {
             };
             signals.push(signal);
         }
-        for output in &template.outputs {
-            let signal_type = template.scope.get_var_ty_as_ptr(output);
+        for output in &template.templ_info.outputs {
+            let signal_type = template.scope.info.get_var_used_ty(output);
             let signal = SignalDescriber {
                 name: output.clone(),
                 signal_type: signal_type.gen(),
@@ -181,8 +177,8 @@ impl SummaryGen {
             };
             signals.push(signal);
         }
-        for inter in &template.inters {
-            let signal_type = template.scope.get_var_ty_as_ptr(inter);
+        for inter in &template.templ_info.inters {
+            let signal_type = template.scope.info.get_var_used_ty(inter);
             let signal = SignalDescriber {
                 name: inter.clone(),
                 signal_type: signal_type.gen(),
@@ -193,9 +189,9 @@ impl SummaryGen {
         }
         let component = ComponentSummary {
             name: templ_name.clone(),
-            main: template.scope.name == "main",
+            main: template.scope.get_name() == "main",
             storage: struct_ty.gen(),
-            params: template.scope.arg_tys.iter().map(|a| a.gen()).collect(),
+            params: template.scope.info.get_arg_tys().iter().map(|a| a.gen()).collect(),
             signals,
             logic_fn_name: name_template_fn(&templ_name, "init"),
         };
@@ -203,13 +199,13 @@ impl SummaryGen {
     }
 
     pub fn add_function(&mut self, function: &Function) {
-        let func_name = function.scope.name.clone();
-        let func_val = function.scope.main_fn_val.unwrap();
+        let func_name = function.scope.get_name().clone();
+        let func_val = function.scope.fn_val.unwrap();
         let return_type = func_val.get_type().get_return_type().unwrap().gen();
         let returns = return_type.type_name == "void";
         let func = FunctionSummary {
             name: func_name.clone(),
-            params: function.scope.arg_tys.iter().map(|a| a.gen()).collect(),
+            params: function.scope.info.get_arg_tys().iter().map(|a| a.gen()).collect(),
             logic_fn_name: func_name.clone(),
             return_type,
             returns,
@@ -217,7 +213,7 @@ impl SummaryGen {
         self.functions.push(func);
     }
 
-    pub fn print_to_file(&self, path: PathBuf) -> Result<(), serde_json::Error> {
+    pub fn print_to_file(&self, path: &PathBuf) -> Result<(), serde_json::Error> {
         let writer = File::create(path).unwrap();
         return serde_json::to_writer(writer, &self);
     }
@@ -225,9 +221,7 @@ impl SummaryGen {
 
 pub fn init_summarygen() -> SummaryGen {
     let meta = Meta {
-        apply_mod_p: APPLY_MOD,
         is_ir_ssa: false,
-        p: GLOBAL_P.to_string(),
     };
     let summarygen = SummaryGen {
         compiler: "circom".to_string(),

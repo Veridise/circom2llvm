@@ -1,122 +1,88 @@
 use crate::codegen::CodeGen;
-use crate::expression::flat_expressions_from_statement;
-use crate::inferrence::{
-    get_type_from_expr, infer_type_from_expression, infer_type_from_statement,
-};
-use crate::info_collector::{collect_depended_components, collect_dependences};
-use crate::namer::{
-    name_arraydim_block, name_entry_block, name_exit_block, name_initial_var, VariableTypeEnum, name_body_block,
-};
-use crate::scope::{CodegenStagesTrait, Scope, ScopeTrait};
+use crate::environment::GlobalInformation;
+use crate::expression_codegen::flat_expressions_from_statement;
+use crate::namer::{name_body_block, name_entry_block};
+use crate::scope::Scope;
+use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
+use crate::type_infer::{get_type_of_expr, infer_type_from_expression, infer_type_from_statement};
 use inkwell::types::BasicType;
-use inkwell::values::IntValue;
-use inkwell::AddressSpace;
 use program_structure::ast::Statement;
 
 pub struct Function<'ctx> {
     pub scope: Scope<'ctx>,
 }
 
-impl<'ctx> Function<'ctx> {}
-
-impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
-    fn resolve_dependences(&mut self, _codegen: &mut CodeGen<'ctx>, body: &Statement) {
-        let stmts = flat_statements(body);
-        let mut exprs = Vec::new();
-        for stmt in stmts {
-            collect_depended_components(stmt, &mut self.scope);
-            exprs.append(&mut flat_expressions_from_statement(stmt));
-        }
-        for expr in exprs {
-            collect_dependences(expr, &mut self.scope);
-        }
+pub fn infer_fn<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    scope_info: &mut ScopeInformation<'ctx>,
+    body: &Statement,
+) {
+    let mut ret_ty = env.val_ty.as_basic_type_enum();
+    let stmts = flat_statements(body);
+    let mut exprs = Vec::new();
+    for stmt in &stmts {
+        infer_type_from_statement(env, scope_info, stmt);
+        exprs.append(&mut flat_expressions_from_statement(stmt));
     }
-
-    fn infer_types(&mut self, codegen: &mut CodeGen<'ctx>, body: &Statement) {
-        let stmts = flat_statements(body);
-        let mut exprs = Vec::new();
-        for stmt in stmts {
-            infer_type_from_statement(codegen, stmt, &mut self.scope);
-            exprs.append(&mut flat_expressions_from_statement(stmt));
-        }
-        for expr in exprs {
-            infer_type_from_expression(codegen, expr, &mut self.scope);
-        }
+    for expr in &exprs {
+        infer_type_from_expression(env, scope_info, expr);
     }
-    fn build_function(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        let CodeGen {
-            context, module, ..
-        } = codegen;
-
-        let fn_name = self.scope.name.clone();
-        let mut ret_ty = codegen.val_ty.as_basic_type_enum();
-        let stmts = flat_statements(body);
-        for stmt in stmts {
-            match stmt {
-                Statement::Return { meta: _, value } => {
-                    let ret_ty_op = get_type_from_expr(codegen, value, &self.scope);
-                    match ret_ty_op {
-                        Some(_ret_ty) => {
-                            ret_ty = _ret_ty;
-                        }
-                        None => {}
-                    }
-                    break;
+    for stmt in &stmts {
+        match stmt {
+            Statement::Return { meta: _, value } => {
+                let ty = get_type_of_expr(env, &scope_info, value);
+                match ty {
+                    Some(ty) => ret_ty = ty,
+                    None => (),
                 }
-                _ => (),
             }
+            _ => (),
         }
-        if ret_ty.is_array_type() {
-            ret_ty = ret_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
-        }
-
-        let hacking_key = format!("{}.return", fn_name);
-        if codegen.hacking_ret_ty.contains_key(&hacking_key) {
-            ret_ty = codegen
-                .hacking_ret_ty
-                .get(&hacking_key)
-                .unwrap()
-                .as_basic_type_enum();
-        }
-
-        let mut arg_tys = Vec::new();
-        for name in &self.scope.args.clone() {
-            let arg_ty = self.scope.get_var_ty_as_ptr(&name);
-            self.scope.arg_tys.push(arg_ty);
-            arg_tys.push(arg_ty.into());
-        }
-
-        let fn_ty = ret_ty.fn_type(&arg_tys[0..], false);
-        let fn_val = module.add_function(&fn_name, fn_ty, None);
-        self.scope.set_main_fn(fn_val);
     }
+    scope_info.set_ret_ty(ret_ty);
+    let mut arg_tys = Vec::new();
+    for a in &scope_info.args {
+        arg_tys.push(scope_info.get_var_used_ty(a));
+    }
+    scope_info.set_arg_tys(arg_tys);
+    scope_info.check();
+}
 
-    fn build_instrustions(&mut self, codegen: &CodeGen<'ctx>, body: &Statement) {
-        let fn_val = self.scope.get_main_fn();
-        let CodeGen {
-            context, builder, ..
-        } = codegen;
-        let entry_bb = context.append_basic_block(fn_val, &name_entry_block());
+impl<'ctx> Function<'ctx> {
+    pub fn build(
+        &mut self,
+        env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        body: &Statement,
+    ) {
+        let fn_name = self.scope.get_name().clone();
+        let ret_ty = self.scope.info.get_ret_ty();
+        let fn_ty = ret_ty.fn_type(&self.scope.info.gen_arg_metadata_tys(), false);
+        let fn_val = codegen.module.add_function(&fn_name, fn_ty, None);
+        self.scope.set_main_fn(fn_val);
+
+        let entry_bb = codegen
+            .context
+            .append_basic_block(fn_val, &name_entry_block());
         self.scope.set_current_exit_block(codegen, entry_bb);
 
         // Bind args
-        for (idx, arg) in self.scope.args.clone().iter().enumerate() {
+        for (idx, arg) in self.scope.info.args.clone().iter().enumerate() {
             let val = fn_val.get_nth_param(idx as u32).unwrap();
-            let alloca_name = name_initial_var(arg, VariableTypeEnum::Argument);
-            self.scope.bind_argument(codegen, arg, &alloca_name, val);
+            self.scope.set_arg_val(arg, &val);
         }
 
         // Initial variable
-        for (name, ty) in &self.scope.var2ty.clone() {
-            if self.scope.is_initialized(name) {
-                continue;
-            };
+        let var_table = self.scope.info.get_var2ty();
+        for (name, ty) in &var_table {
             let alloca_name = name;
             self.scope.initial_var(codegen, name, alloca_name, ty, true);
         }
 
-        let body_bb = context.append_basic_block(fn_val, &name_body_block());
+        let body_bb = codegen
+            .context
+            .append_basic_block(fn_val, &name_body_block());
         codegen.build_block_transferring(entry_bb, body_bb);
         self.scope.set_current_exit_block(codegen, body_bb);
 
@@ -124,34 +90,9 @@ impl<'ctx> CodegenStagesTrait<'ctx> for Function<'ctx> {
             Statement::Block { meta: _, stmts } => {
                 for stmt in stmts {
                     if stmt.is_return() {
-                        let current_bb = fn_val.get_last_basic_block().unwrap();
-                        let arraydim_bb =
-                            context.append_basic_block(fn_val, &name_arraydim_block());
-                        codegen.build_block_transferring(current_bb, arraydim_bb);
-
-                        for (name, ptr) in &self.scope.var2ptr {
-                            let dims_op = self.scope.get_var_dims(name);
-                            match dims_op {
-                                Some(dims) => {
-                                    let _dims: Vec<IntValue<'ctx>> =
-                                        dims.iter().map(|d| d.into_int_value()).collect();
-                                    let default_ptr_ty =
-                                        codegen.val_ty.ptr_type(AddressSpace::Generic);
-                                    let _ptr = builder.build_pointer_cast(
-                                        ptr.clone(),
-                                        default_ptr_ty,
-                                        "ptr_cast",
-                                    );
-                                    codegen.build_arraydim(_ptr, &_dims);
-                                }
-                                None => (),
-                            }
-                        }
-
-                        let exit_bb = context.append_basic_block(fn_val, &name_exit_block());
-                        codegen.build_block_transferring(arraydim_bb, exit_bb);
+                        self.scope.build_exit(codegen);
                     }
-                    resolve_stmt(&mut self.scope, codegen, stmt);
+                    resolve_stmt(env, codegen, &mut self.scope, stmt);
                 }
             }
             _ => unreachable!(),

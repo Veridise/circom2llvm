@@ -34,10 +34,6 @@ pub fn name_loop_block(is_header: bool, is_body: bool, is_exit: bool) -> String 
     unreachable!();
 }
 
-pub fn name_arraydim_block() -> String {
-    return "arraydim".to_string();
-}
-
 pub fn name_constraint() -> String {
     return "constraint".to_string();
 }
@@ -46,12 +42,12 @@ pub fn name_intrinsinc_fn(fn_name: &str) -> String {
     return format!("fn_intrinsic_{}", fn_name).to_lowercase();
 }
 
-pub fn name_template_fn(templ_name: &str, fn_name: &str) -> String {
-    return format!("fn_template_{}_{}", fn_name, templ_name).to_lowercase();
+pub fn name_template_fn(fn_name: &str, templ_signature: &str) -> String {
+    return format!("fn_template_{}_{}", fn_name, templ_signature).to_lowercase();
 }
 
-pub fn name_template_struct(templ_name: &str) -> String {
-    return format!("struct_template_circuit_{}", templ_name).to_lowercase();
+pub fn name_template_struct(templ_signature: &str) -> String {
+    return format!("struct_template_{}", templ_signature).to_lowercase();
 }
 
 pub fn name_opaque_struct(struct_name: &str) -> String {
@@ -67,7 +63,7 @@ pub enum VariableTypeEnum {
     Variable,
 }
 
-fn variable_type_abbr(var_ty: VariableTypeEnum) -> &'static str {
+fn print_variable_type(var_ty: VariableTypeEnum) -> &'static str {
     match var_ty {
         VariableTypeEnum::Argument => "arg",
         VariableTypeEnum::InputSignal => "input",
@@ -80,7 +76,7 @@ fn variable_type_abbr(var_ty: VariableTypeEnum) -> &'static str {
 
 pub fn name_initial_var(variable_name: &str, var_ty: VariableTypeEnum) -> String {
     let operator = "initial";
-    let abbr = variable_type_abbr(var_ty);
+    let abbr = print_variable_type(var_ty);
     let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
     return name;
 }
@@ -91,19 +87,27 @@ pub fn name_readwrite_var(
     is_inner: bool,
     variable_name: &str,
     var_ty: VariableTypeEnum,
+    is_compinput: bool,
 ) -> String {
     let read_abbr = if is_read { "read" } else { "write" };
     let inner_abbr = if is_inner { "inner" } else { "outter" };
     let operator = format!("{}_{}_{}", templ_name, read_abbr, inner_abbr).to_lowercase();
-    let abbr = variable_type_abbr(var_ty);
+    let mut abbr = print_variable_type(var_ty).to_string();
+    if abbr == "comp" {
+        if is_compinput {
+            abbr +="input"
+        } else {
+            abbr += "output"
+        }
+    }
     let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
     return name;
 }
 
-pub fn name_inline_array(is_const: bool) -> String {
-    return if is_const {
-        "const_inline_array".to_string()
-    } else {
-        "var_inline_array".to_string()
-    };
+pub fn name_uniform_array(scope_name: &str) -> String {
+    return format!("{}.uniform_array", scope_name).to_lowercase();
+}
+
+pub fn name_inline_array(scope_name: &str) -> String {
+    return format!("{}.inline_array", scope_name).to_lowercase();
 }

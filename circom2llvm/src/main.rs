@@ -1,16 +1,10 @@
 use clap::Parser;
-use inkwell::context::Context;
-use ir_generator::after_process::remove_opaque_struct_name;
 use ir_generator::generator::generate;
-use ir_generator::{codegen::init_codegen, summarygen::init_summarygen};
-use program_structure::ast::{Definition, AST};
+use program_structure::ast::{Definition, AST, Expression};
 use program_structure::error_definition::Report;
 use std::collections::HashSet;
-use std::{
-    env,
-    fs::{self, canonicalize},
-    path::PathBuf,
-};
+use std::fs;
+use std::{env, fs::canonicalize, path::PathBuf};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -31,6 +25,9 @@ struct Args {
     /// If provided, systematically rewrite all of the paths about circomlib.
     #[arg(short, long)]
     rewrite_circomlib: Option<String>,
+
+    #[arg(short, long, default_value_t = 256)]
+    arraysize: u32,
 }
 
 fn main() {
@@ -84,12 +81,25 @@ fn main() {
         let output_summary_path = output.join(input_filename).with_extension("json");
         println!("Compiling: {}", input_path.to_string_lossy());
         println!("Output: {}", output_path.to_string_lossy());
-
-        let context = Context::create();
-        let mut codegen = init_codegen(&context, &input_path);
-        let mut summarygen = init_summarygen();
-
         // Parsing
+        let main_expression: Option<Expression>;
+        let entry_ast = parser::run_parser(input_path.clone(), Vec::new());
+        match entry_ast {
+            Ok(ast) => {
+                match ast.main_component {
+                    Some((_, expr)) => {
+                        main_expression = Some(expr);
+                    }
+                    None => {
+                        main_expression = None;
+                    }
+                }
+            }
+            Err((file_library, report_collection)) => {
+                Report::print_reports(&report_collection, &file_library);
+                unreachable!();
+            }
+        }
         let mut todo_paths: Vec<PathBuf> = vec![input_path.clone()];
         let mut done_paths: HashSet<PathBuf> = HashSet::new();
         let mut asts: Vec<AST> = vec![];
@@ -165,22 +175,13 @@ fn main() {
                 }
             }
         }
-        generate(definitions, &mut codegen, &mut summarygen);
-        let json_result = summarygen.print_to_file(output_summary_path);
-        match json_result {
-            Ok(..) => (),
-            Err(err) => {
-                println!("Error: {}", err);
-            }
-        }
-        let result = codegen.module.print_to_file(&output_path);
-        match result {
-            Ok(_) => {
-                remove_opaque_struct_name(&output_path);
-            }
-            Err(err) => {
-                println!("Error: {}", err.to_string());
-            }
-        }
+        generate(
+            args.arraysize,
+            main_expression,
+            definitions,
+            &input_path,
+            &output_path,
+            &output_summary_path,
+        );
     }
 }
