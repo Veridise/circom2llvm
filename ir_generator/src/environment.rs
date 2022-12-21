@@ -45,6 +45,7 @@ pub struct GlobalInformation<'ctx> {
     pub val_ty: IntType<'ctx>,
     pub const_p: IntValue<'ctx>,
     pub const_zero: IntValue<'ctx>,
+    pub context: &'ctx Context,
 
     // Current template instantiation
     current_instantiation: HashMap<String, ArgTable>,
@@ -131,6 +132,7 @@ pub fn init_env<'ctx>(
         val_ty,
         const_p,
         const_zero,
+        context,
         current_instantiation: HashMap::new(),
         name2template_infos: HashMap::new(),
         name2scope_infos: HashMap::new(),

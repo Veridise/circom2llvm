@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
 use crate::expression_static::{
@@ -34,13 +36,17 @@ pub fn resolve_expr<'ctx>(
             let fn_name: String;
             if scope.info.is_component(id) {
                 let target_scope_info = env.get_scope_info(id);
-                let instantiation: Instantiation = args
+                let arg_table = if env.is_instantiation {
+                    let instantiation: Instantiation = args
                     .iter()
                     .map(|a| {
                         resolve_expr_static(env, &scope.info, a).unwrap() as u32
                     })
                     .collect();
-                let arg_table = target_scope_info.gen_arg_table(&instantiation);
+                    target_scope_info.gen_arg_table(&instantiation)
+                } else {
+                    HashMap::new()
+                };
                 fn_name = name_template_fn("build", &target_scope_info.gen_signature(&arg_table));
             } else {
                 fn_name = id.to_string();

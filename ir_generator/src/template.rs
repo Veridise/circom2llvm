@@ -9,7 +9,7 @@ use crate::namer::{
 use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
-use crate::type_check::stored_type2used_type;
+use crate::type_check::wrap_type2used;
 use crate::type_infer::{infer_type_from_expression, infer_type_from_statement};
 use inkwell::context::Context;
 use inkwell::types::BasicType;
@@ -131,7 +131,7 @@ impl<'ctx> Template<'ctx> {
 
         // Function for generation of the circuit struct, called `build`, it returns the circuit struct.
         let params_ty = self.scope.info.gen_arg_metadata_tys();
-        let ret_ty = stored_type2used_type(&templ_struct_ty);
+        let ret_ty = wrap_type2used(&templ_struct_ty);
         let build_fn_name = name_template_fn("build", &templ_signature);
         let build_fn_ty = ret_ty.fn_type(&params_ty, false);
         let build_fn_val = codegen
@@ -185,24 +185,17 @@ impl<'ctx> Template<'ctx> {
             self.scope.set_arg_val(arg, &val);
         }
 
-        let templ_struct_val = init_fn_val.get_last_param().unwrap().into_pointer_value();
+        let struct_ptr = init_fn_val.get_last_param().unwrap().into_pointer_value();
 
         // // Bind struct
         self.scope
-            .set_arg_val(&templ_name, &templ_struct_val.as_basic_value_enum());
+            .set_arg_val(&templ_name, &struct_ptr.as_basic_value_enum());
 
         // Bind input signals
         for input in &self.templ_info.inputs {
-            let gep = self.scope.build_struct_gep(
-                env,
-                codegen,
-                &templ_name,
-                &input,
-                templ_struct_val,
-                true,
-                true,
-            );
-            let val = codegen.builder.build_load(gep, "load");
+            let val =
+                self.scope
+                    .get_from_struct(env, codegen, &templ_name, input, struct_ptr, true);
             self.scope.set_arg_val(&input, &val);
         }
 
@@ -248,30 +241,14 @@ impl<'ctx> Template<'ctx> {
 
         for inter in &self.templ_info.inters {
             let val = self.scope.get_var(env, codegen, inter, &Vec::new());
-            let gep = self.scope.build_struct_gep(
-                env,
-                codegen,
-                &templ_name,
-                inter,
-                templ_struct_val,
-                false,
-                true,
-            );
-            codegen.builder.build_store(gep, val);
+            self.scope
+                .set_to_struct(env, codegen, &templ_name, inter, struct_ptr, true, val);
         }
 
         for output in &self.templ_info.outputs {
             let val = self.scope.get_var(env, codegen, output, &Vec::new());
-            let gep = self.scope.build_struct_gep(
-                env,
-                codegen,
-                &templ_name,
-                output,
-                templ_struct_val,
-                false,
-                true,
-            );
-            codegen.builder.build_store(gep, val);
+            self.scope
+                .set_to_struct(env, codegen, &templ_name, output, struct_ptr, true, val);
         }
 
         codegen.builder.build_return(None);

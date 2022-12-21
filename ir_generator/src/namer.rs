@@ -46,8 +46,8 @@ pub fn name_template_fn(fn_name: &str, templ_signature: &str) -> String {
     return format!("fn_template_{}_{}", fn_name, templ_signature).to_lowercase();
 }
 
-pub fn name_template_struct(templ_signature: &str) -> String {
-    return format!("struct_template_{}", templ_signature).to_lowercase();
+pub fn name_template_struct(templ_name: &str) -> String {
+    return format!("struct_template_{}", templ_name).to_lowercase();
 }
 
 pub fn name_opaque_struct(struct_name: &str) -> String {

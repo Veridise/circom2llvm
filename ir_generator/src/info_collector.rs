@@ -21,7 +21,9 @@ pub fn collect_depended_components<'ctx>(
         },
         Statement::Substitution { var, rhe, .. } => match rhe {
             Expression::Call { id, .. } => {
-                scope_info.set_component_var(var, id);
+                if scope_info.is_component_var(var) {
+                    scope_info.set_component_var(var, id);
+                }
                 scope_info.set_dependence(id);
             }
             _ => (),

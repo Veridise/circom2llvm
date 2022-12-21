@@ -191,7 +191,15 @@ pub fn resolve_inline_array_static<'ctx>(
 pub fn resolve_number_static<'ctx>(expr: &Expression) -> i64 {
     use Expression::*;
     match expr {
-        Number(_, bigint) => bigint.to_i64().unwrap(),
+        Number(_, bigint) => {
+            match (bigint % u64::MAX).to_u64() {
+                Some(i) => i as i64,
+                None => {
+                    println!("{}", bigint.to_string());
+                    unreachable!()
+                }
+            }
+        },
         _ => {
             println!("Error: Unknown number expression: {}", print_expr(&expr));
             unreachable!()

@@ -8,7 +8,7 @@ use crate::{
     info_collector::{collect_depended_components, collect_dependences},
     namer::name_template_fn,
     statement::flat_statements,
-    type_check::stored_type2used_type,
+    type_check::wrap_type2used,
 };
 
 #[derive(Clone)]
@@ -99,7 +99,7 @@ impl<'ctx> ScopeInformation<'ctx> {
 
     pub fn get_var_used_ty(&self, name: &String) -> BasicTypeEnum<'ctx> {
         let ty = self.get_var_ty(name);
-        stored_type2used_type(&ty)
+        wrap_type2used(&ty)
     }
 
     pub fn gen_arg_table(&self, instantiation: &Instantiation) -> ArgTable {
@@ -188,7 +188,6 @@ impl<'ctx> ScopeInformation<'ctx> {
     pub fn check(&self) {
         assert!(self.args.len() == self.arg_tys.len());
         assert!(self.ret_ty.is_some());
-        assert!(self.var2ty.len() > 0);
     }
 }
 

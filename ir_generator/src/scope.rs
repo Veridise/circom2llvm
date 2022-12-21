@@ -2,14 +2,12 @@ use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
 use crate::expression_codegen::resolve_expr;
 use crate::expression_static::ArgTable;
-use crate::namer::{name_exit_block, name_readwrite_var, name_template_fn};
+use crate::namer::{name_exit_block, name_inline_array, name_readwrite_var, name_template_fn};
 use crate::scope_information::ScopeInformation;
-use crate::type_check::{
-    check_stored_value, check_used_type, check_used_value, stored_type2used_type,
-};
+use crate::type_check::{check_used_type, check_used_value, wrap_type2used};
 use inkwell::basic_block::BasicBlock;
 use inkwell::types::{BasicType, BasicTypeEnum};
-use inkwell::values::{BasicValueEnum, FunctionValue, IntValue, PointerValue};
+use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue};
 use inkwell::AddressSpace;
 use program_structure::ast::{Access, Expression};
 use std::collections::HashMap;
@@ -55,7 +53,7 @@ impl<'ctx> Scope<'ctx> {
         ty: &BasicTypeEnum<'ctx>,
         alloca: bool,
     ) -> PointerValue<'ctx> {
-        let used_ty = stored_type2used_type(ty);
+        let used_ty = wrap_type2used(ty);
         check_used_type(&used_ty);
         let ptr = codegen.build_alloca(used_ty, alloca_name);
         if ty.is_array_type() {
@@ -67,7 +65,6 @@ impl<'ctx> Scope<'ctx> {
             };
             codegen.builder.build_store(ptr, arr_ptr);
         }
-        check_stored_value(&ptr);
         self.var2ptr.insert(name.clone(), ptr);
         return ptr;
     }
@@ -79,39 +76,62 @@ impl<'ctx> Scope<'ctx> {
         name: &String,
         access: &Vec<Access>,
     ) -> BasicValueEnum<'ctx> {
-        let val: BasicValueEnum;
+        let val;
         if self.info.is_arg(name) {
             val = self.arg2val[name];
         } else {
             let ptr = self.var2ptr[name];
             val = codegen.builder.build_load(ptr, name);
-        }
-        let mut res: BasicValueEnum = val;
-        for a in access {
-            match a {
-                Access::ArrayAccess(expr) => {
-                    let gep = self.build_array_gep(
+        };
+        let mut res;
+        if access.len() == 0 {
+            res = val;
+        } else {
+            let mut comp_access_idx: Option<usize> = None;
+            let mut templ_name = "".to_string();
+            let mut signal_name = "".to_string();
+            let mut is_inner = false;
+            for (idx, a) in access.iter().enumerate() {
+                match a {
+                    Access::ArrayAccess(..) => (),
+                    Access::ComponentAccess(signal) => {
+                        comp_access_idx = Some(idx);
+                        templ_name = self.info.get_component_name(name).clone();
+                        signal_name = signal.clone();
+                        is_inner = &templ_name == self.get_name();
+                    }
+                }
+            }
+            match comp_access_idx {
+                Some(idx) => {
+                    let arr_ptr0 = val;
+                    let strt_ptr = self
+                        .get_from_array(env, codegen, &access[0..idx], arr_ptr0, name)
+                        .into_pointer_value();
+                    let arr_ptr1 = self.get_from_struct(
                         env,
                         codegen,
-                        expr,
-                        res.into_pointer_value(),
-                        "array_access",
+                        &templ_name,
+                        &signal_name,
+                        strt_ptr,
+                        is_inner,
                     );
-                    res = codegen.builder.build_load(gep, "load");
-                }
-                Access::ComponentAccess(signal) => {
-                    let templ_name = self.info.get_component_name(name);
-                    let gep = self.build_struct_gep(
+                    res = self.get_from_array(
                         env,
                         codegen,
-                        templ_name,
-                        signal,
-                        res.into_pointer_value(),
-                        true,
-                        false,
+                        &access[idx + 1..],
+                        arr_ptr1.as_basic_value_enum(),
+                        name,
                     );
-                    res = codegen.builder.build_load(gep, "load");
                 }
+                None => {
+                    res = self.get_from_array(env, codegen, access, val, name);
+                }
+            }
+            if res.is_array_value() {
+                let ptr = codegen.build_alloca(res.get_type(), &name_inline_array(self.get_name()));
+                codegen.builder.build_store(ptr, res);
+                res = ptr.as_basic_value_enum();
             }
         }
         check_used_value(&res);
@@ -132,38 +152,203 @@ impl<'ctx> Scope<'ctx> {
             codegen.builder.build_store(ptr, value);
         } else {
             ptr = codegen.builder.build_load(ptr, name).into_pointer_value();
-            for a in access {
+            let mut comp_access_idx: Option<usize> = None;
+            let mut templ_name = "".to_string();
+            let mut signal_name = "".to_string();
+            let mut is_inner = false;
+            for (idx, a) in access.iter().enumerate() {
                 match a {
-                    Access::ArrayAccess(expr) => {
-                        ptr = self.build_array_gep(env, codegen, expr, ptr, "array_access");
-                    }
+                    Access::ArrayAccess(..) => (),
                     Access::ComponentAccess(signal) => {
-                        let templ_name = self.info.get_component_name(name);
-                        ptr = self.build_struct_gep(env, codegen, templ_name, signal, ptr, false, false);
+                        comp_access_idx = Some(idx);
+                        templ_name = self.info.get_component_name(name).clone();
+                        signal_name = signal.clone();
+                        is_inner = &templ_name == self.get_name();
                     }
                 }
             }
-            codegen.builder.build_store(ptr, value);
+            match comp_access_idx {
+                Some(idx) => {
+                    if idx == 0 {
+                        if access.len() == 1 {
+                            self.set_to_struct(
+                                env,
+                                codegen,
+                                &templ_name,
+                                &signal_name,
+                                ptr,
+                                is_inner,
+                                value,
+                            );
+                        } else {
+                            let arr_ptr = self
+                                .get_from_struct(
+                                    env,
+                                    codegen,
+                                    &templ_name,
+                                    &signal_name,
+                                    ptr,
+                                    is_inner,
+                                )
+                                .into_pointer_value();
+                            self.set_to_array(env, codegen, &access[1..], arr_ptr, name, value);
+                        }
+                    } else if idx == access.len() - 1 {
+                        let struct_ptr = self
+                            .get_from_array(
+                                env,
+                                codegen,
+                                &access[0..idx],
+                                ptr.as_basic_value_enum(),
+                                name,
+                            )
+                            .into_pointer_value();
+                        self.set_to_struct(
+                            env,
+                            codegen,
+                            &templ_name,
+                            &signal_name,
+                            struct_ptr,
+                            is_inner,
+                            value,
+                        );
+                    } else {
+                        let struct_ptr = self
+                            .get_from_array(
+                                env,
+                                codegen,
+                                &access[0..idx],
+                                ptr.as_basic_value_enum(),
+                                name,
+                            )
+                            .into_pointer_value();
+                        let arr_ptr = self
+                            .get_from_struct(
+                                env,
+                                codegen,
+                                &templ_name,
+                                &signal_name,
+                                struct_ptr,
+                                is_inner,
+                            )
+                            .into_pointer_value();
+                        self.set_to_array(env, codegen, &access[idx + 1..], arr_ptr, name, value);
+                    }
+                }
+                None => self.set_to_array(env, codegen, access, ptr, name, value),
+            }
         }
+    }
+
+    fn get_from_array(
+        &self,
+        env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        access: &[Access],
+        arr_ptr: BasicValueEnum<'ctx>,
+        name: &str,
+    ) -> BasicValueEnum<'ctx> {
+        if access.len() == 0 {
+            return arr_ptr;
+        }
+        let gep = self.build_array_gep(env, codegen, access, arr_ptr.into_pointer_value(), name);
+        let res = codegen.builder.build_load(gep, name);
+        res
+    }
+
+    fn set_to_array(
+        &self,
+        env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        access: &[Access],
+        arr_ptr: PointerValue<'ctx>,
+        name: &str,
+        value: BasicValueEnum<'ctx>,
+    ) {
+        if access.len() == 0 {
+            return;
+        }
+        let gep = self.build_array_gep(env, codegen, access, arr_ptr, name);
+        let mut val = value;
+        if value.is_pointer_value() {
+            let strt_ptr = value.into_pointer_value();
+            if strt_ptr.get_type().get_element_type().is_struct_type() {
+                val = self
+                    .build_struct_ptr_cast(env, codegen, self.get_name(), strt_ptr)
+                    .as_basic_value_enum();
+            }
+        }
+        codegen.builder.build_store(gep, val);
     }
 
     pub fn build_array_gep(
         &self,
         env: &GlobalInformation<'ctx>,
         codegen: &CodeGen<'ctx>,
-        access_expr: &Expression,
+        access: &[Access],
         ptr: PointerValue<'ctx>,
         assign_name: &str,
     ) -> PointerValue<'ctx> {
-        let indexes = [
-            env.const_zero,
-            resolve_expr(env, codegen, self, access_expr).into_int_value(),
-        ];
+        let mut indexes: Vec<IntValue<'ctx>> = access
+            .iter()
+            .map(|s| match s {
+                Access::ComponentAccess(_) => unreachable!(),
+                Access::ArrayAccess(expr) => {
+                    resolve_expr(env, codegen, self, &expr).into_int_value()
+                }
+            })
+            .collect();
+        indexes.insert(0, env.const_zero);
         return unsafe {
             codegen
                 .builder
                 .build_in_bounds_gep(ptr, &indexes, assign_name)
         };
+    }
+
+    pub fn get_from_struct(
+        &self,
+        env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        templ_name: &String,
+        signal_name: &String,
+        struct_ptr: PointerValue<'ctx>,
+        is_inner: bool,
+    ) -> BasicValueEnum<'ctx> {
+        let struct_ptr = self.build_struct_ptr_cast(env, codegen, templ_name, struct_ptr);
+        let gep = self.build_struct_gep(
+            env,
+            codegen,
+            &templ_name,
+            &signal_name,
+            struct_ptr,
+            true,
+            is_inner,
+        );
+        codegen.builder.build_load(gep, "load")
+    }
+
+    pub fn set_to_struct(
+        &self,
+        env: &GlobalInformation<'ctx>,
+        codegen: &CodeGen<'ctx>,
+        templ_name: &String,
+        signal_name: &String,
+        struct_ptr: PointerValue<'ctx>,
+        is_inner: bool,
+        v: BasicValueEnum<'ctx>,
+    ) {
+        let struct_ptr = self.build_struct_ptr_cast(env, codegen, templ_name, struct_ptr);
+        let gep = self.build_struct_gep(
+            env,
+            codegen,
+            &templ_name,
+            &signal_name,
+            struct_ptr,
+            false,
+            is_inner,
+        );
+        codegen.builder.build_store(gep, v);
     }
 
     pub fn build_struct_gep(
