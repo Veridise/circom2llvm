@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use inkwell::{
     context::Context,
-    types::{IntType, PointerType},
+    types::{BasicTypeEnum, IntType},
     values::IntValue,
 };
 
@@ -95,11 +95,8 @@ impl<'ctx> GlobalInformation<'ctx> {
         res
     }
 
-    pub fn get_scope_ret_ty(&self, scope_info_name: &String) -> PointerType<'ctx> {
-        let scope_ret_ty = self
-            .get_scope_info(scope_info_name)
-            .get_ret_ty()
-            .into_pointer_type();
+    pub fn get_scope_ret_ty(&self, scope_info_name: &String) -> BasicTypeEnum<'ctx> {
+        let scope_ret_ty = self.get_scope_info(scope_info_name).get_ret_ty();
         scope_ret_ty
     }
 }

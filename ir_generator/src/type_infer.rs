@@ -97,7 +97,7 @@ pub fn infer_type_from_statement<'ctx>(
                             .opaque_struct_type(&name_opaque_struct(&strt_name));
                         val_ty = wrap_type2used(&strt_ty.as_basic_type_enum());
                     } else {
-                        val_ty = env.get_scope_ret_ty(templ_name).as_basic_type_enum();
+                        val_ty = env.get_scope_ret_ty(templ_name);
                     }
                 }
                 VariableType::Signal(..) => {
@@ -130,7 +130,7 @@ fn infer_type_from_access<'ctx>(
             }
             Access::ComponentAccess(_) => {
                 let templ_name = scope_info.get_component_name(name);
-                current_ty = env.get_scope_ret_ty(templ_name).as_basic_type_enum();
+                current_ty = env.get_scope_ret_ty(templ_name);
             }
         }
     }
@@ -151,7 +151,7 @@ pub fn get_type_of_expr<'ctx>(
             let (arr_ty, _) = resolve_inline_array_static(env, expr);
             Some(arr_ty.as_basic_type_enum())
         }
-        Expression::Call { id, .. } => Some(env.get_scope_ret_ty(id).clone().as_basic_type_enum()),
+        Expression::Call { id, .. } => Some(env.get_scope_ret_ty(id).clone()),
         Expression::InfixOp { lhe, rhe, .. } => {
             let lty = get_type_of_expr(env, scope_info, lhe);
             let rty = get_type_of_expr(env, scope_info, rhe);

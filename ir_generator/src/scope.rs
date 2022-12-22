@@ -356,7 +356,7 @@ impl<'ctx> Scope<'ctx> {
         let strt_ty = struct_ptr.get_type().get_element_type().into_struct_type();
         let real_struct_ptr;
         if strt_ty.count_fields() == 0 {
-            let real_strt_ty = env.get_scope_ret_ty(templ_name);
+            let real_strt_ty = env.get_scope_ret_ty(templ_name).into_pointer_type();
             real_struct_ptr =
                 codegen
                     .builder
