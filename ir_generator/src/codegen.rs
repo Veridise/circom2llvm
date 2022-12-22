@@ -43,7 +43,8 @@ impl<'ctx> CodeGen<'ctx> {
         if current_block == entry_block {
             self.builder.build_alloca(val_ty, alloca_name)
         } else {
-            self.builder.position_at_end(entry_block);
+            // Last instruction is branch.
+            self.builder.position_at(entry_block, &entry_block.get_last_instruction().unwrap());
             let res = self.builder.build_alloca(val_ty, alloca_name);
             self.builder.position_at_end(current_block);
             res
