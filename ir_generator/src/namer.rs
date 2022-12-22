@@ -105,9 +105,9 @@ pub fn name_readwrite_var(
 }
 
 pub fn name_uniform_array(scope_name: &str) -> String {
-    return format!("{}.uniform_array", scope_name).to_lowercase();
+    return format!("{}uniformarray", scope_name).to_lowercase();
 }
 
 pub fn name_inline_array(scope_name: &str) -> String {
-    return format!("{}.inline_array", scope_name).to_lowercase();
+    return format!("{}inlinearray", scope_name).to_lowercase();
 }

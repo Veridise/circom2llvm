@@ -3,8 +3,8 @@ use crate::environment::GlobalInformation;
 use crate::expression_codegen::resolve_expr;
 use crate::expression_static::ArgTable;
 use crate::namer::{
-    name_exit_block, name_inline_array, name_readwrite_var, name_template_fn, print_variable_type,
-    ValueTypeEnum, name_initial_var,
+    name_exit_block, name_initial_var, name_inline_array, name_readwrite_var, name_template_fn,
+    print_variable_type, ValueTypeEnum,
 };
 use crate::scope_information::ScopeInformation;
 use crate::type_check::{check_used_type, check_used_value, unwrap_used_type, wrap_type2used};
@@ -131,7 +131,8 @@ impl<'ctx> Scope<'ctx> {
                 }
             }
             if res.is_array_value() {
-                let assign_name = name_initial_var(&name_inline_array(self.get_name()), ValueTypeEnum::Variable);
+                let assign_name =
+                    name_initial_var(&name_inline_array(self.get_name()), ValueTypeEnum::Variable);
                 let ptr = codegen.build_alloca(res.get_type(), &assign_name);
                 codegen.builder.build_store(ptr, res);
                 res = ptr.as_basic_value_enum();
@@ -269,7 +270,14 @@ impl<'ctx> Scope<'ctx> {
             return;
         }
         let gep = self.build_array_gep(env, codegen, access, arr_ptr, assign_name);
-        codegen.builder.build_store(gep, value);
+        if gep.get_type().get_element_type().is_array_type() {
+            let size = env.val_ty.const_int(env.arraysize as u64, false);
+            _ = codegen
+                .builder
+                .build_memcpy(gep, 8, value.into_pointer_value(), 8, size);
+        } else {
+            codegen.builder.build_store(gep, value);
+        }
     }
 
     pub fn build_array_gep(
