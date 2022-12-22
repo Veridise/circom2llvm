@@ -131,8 +131,7 @@ impl<'ctx> Scope<'ctx> {
                 }
             }
             if res.is_array_value() {
-                let abbr = print_variable_type(&ValueTypeEnum::Variable);
-                let assign_name = name_initial_var(&name_inline_array(self.get_name()), abbr);
+                let assign_name = name_initial_var(&name_inline_array(self.get_name()), ValueTypeEnum::Variable);
                 let ptr = codegen.build_alloca(res.get_type(), &assign_name);
                 codegen.builder.build_store(ptr, res);
                 res = ptr.as_basic_value_enum();

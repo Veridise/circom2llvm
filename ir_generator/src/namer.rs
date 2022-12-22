@@ -64,6 +64,7 @@ pub enum ValueTypeEnum {
     Argument,
     Constant,
     Variable,
+    Component,
 }
 
 pub fn print_variable_type(var_ty: &ValueTypeEnum) -> &'static str {
@@ -77,10 +78,12 @@ pub fn print_variable_type(var_ty: &ValueTypeEnum) -> &'static str {
         ValueTypeEnum::Argument => "arg",
         ValueTypeEnum::Constant => "const",
         ValueTypeEnum::Variable => "var",
+        ValueTypeEnum::Component => "comp",
     }
 }
 
-pub fn name_initial_var(var_name: &str, var_ty_abbr: &str) -> String {
+pub fn name_initial_var(var_name: &str, var_ty: ValueTypeEnum) -> String {
+    let var_ty_abbr = print_variable_type(&var_ty);
     let operator = "initial";
     let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr).to_lowercase();
     return name;

@@ -7,8 +7,7 @@ use crate::expression_static::{
     resolve_uniform_array_static, Instantiation,
 };
 use crate::namer::{
-    name_initial_var, name_inline_array, name_template_fn, name_uniform_array, print_variable_type,
-    ValueTypeEnum,
+    name_initial_var, name_inline_array, name_template_fn, name_uniform_array, ValueTypeEnum,
 };
 use crate::scope::Scope;
 use crate::type_check::check_used_value;
@@ -140,8 +139,10 @@ fn resolve_inline_array<'ctx>(
     expr: &Expression,
 ) -> PointerValue<'ctx> {
     let (array_ty, dim_record) = resolve_inline_array_static(env, expr);
-    let abbr = print_variable_type(&ValueTypeEnum::Variable);
-    let alloca_name = name_initial_var(&name_inline_array(&scope.get_name()), abbr);
+    let alloca_name = name_initial_var(
+        &name_inline_array(&scope.get_name()),
+        ValueTypeEnum::Variable,
+    );
     let ptr = codegen.build_alloca(array_ty.as_basic_type_enum(), &alloca_name);
     resolve_inline_array_internal(env, codegen, scope, expr, ptr, vec![0]);
     let dims = dim_record
@@ -221,8 +222,10 @@ fn resolve_uniform_array<'ctx>(
 ) -> PointerValue<'ctx> {
     let dims = resolve_uniform_array_dims(env, codegen, scope, expr);
     let value = resolve_uniform_array_static(env, &scope.info, expr);
-    let abbr = print_variable_type(&ValueTypeEnum::Variable);
-    let alloca_name = name_initial_var(&name_uniform_array(&scope.get_name()), abbr);
+    let alloca_name = name_initial_var(
+        &name_uniform_array(&scope.get_name()),
+        ValueTypeEnum::Variable,
+    );
     let ptr = codegen.build_alloca(value.get_type().as_basic_type_enum(), &alloca_name);
     codegen.builder.build_store(ptr, value);
     codegen.build_arraydim(&ptr, &dims);

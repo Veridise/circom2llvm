@@ -4,12 +4,12 @@ use crate::expression_codegen::flat_expressions_from_statement;
 use crate::info_collector::init_template_info;
 use crate::namer::{
     name_body_block, name_entry_block, name_initial_var, name_template_fn, name_template_struct,
-    print_variable_type, ValueTypeEnum,
+    ValueTypeEnum,
 };
 use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
-use crate::type_check::{wrap_type2used, unwrap_used_type};
+use crate::type_check::{unwrap_used_type, wrap_type2used};
 use crate::type_infer::{infer_type_from_expression, infer_type_from_statement};
 use inkwell::context::Context;
 use inkwell::types::BasicType;
@@ -212,23 +212,19 @@ impl<'ctx> Template<'ctx> {
                 continue;
             }
             if self.templ_info.inters.contains(&name) {
-                let var_abbr = print_variable_type(&ValueTypeEnum::IntermediateSignal);
-                let alloca_name = name_initial_var(&name, var_abbr);
+                let alloca_name = name_initial_var(&name, ValueTypeEnum::IntermediateSignal);
                 self.scope
                     .initial_var(codegen, &name, &alloca_name, &ty, false);
             } else if self.templ_info.outputs.contains(&name) {
-                let var_abbr = print_variable_type(&ValueTypeEnum::OutputSignal);
-                let alloca_name = name_initial_var(&name, var_abbr);
+                let alloca_name = name_initial_var(&name, ValueTypeEnum::OutputSignal);
                 self.scope
                     .initial_var(codegen, &name, &alloca_name, &ty, false);
             } else if self.scope.info.is_component_var(&name) {
-                let var_abbr = "comp";
-                let alloca_name = name_initial_var(&name, var_abbr);
+                let alloca_name = name_initial_var(&name, ValueTypeEnum::Component);
                 self.scope
                     .initial_var(codegen, &name, &alloca_name, &ty, true);
             } else {
-                let var_abbr = print_variable_type(&ValueTypeEnum::Variable);
-                let alloca_name = name_initial_var(&name, var_abbr);
+                let alloca_name = name_initial_var(&name, ValueTypeEnum::Variable);
                 self.scope
                     .initial_var(codegen, &name, &alloca_name, &ty, true);
             }
