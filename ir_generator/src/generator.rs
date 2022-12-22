@@ -169,7 +169,7 @@ pub fn generate<'ctx>(
     }
 
     if env.is_instantiation {
-        // todo inline loop and if-else
+        codegen.build_instantiation_flag();
         for (scope_info, body) in &templ_pairs {
             collect_instantiations(&mut env, &mut i_manager, scope_info, body);
         }

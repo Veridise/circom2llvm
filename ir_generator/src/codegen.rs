@@ -44,7 +44,8 @@ impl<'ctx> CodeGen<'ctx> {
             self.builder.build_alloca(val_ty, alloca_name)
         } else {
             // Last instruction is branch.
-            self.builder.position_at(entry_block, &entry_block.get_last_instruction().unwrap());
+            self.builder
+                .position_at(entry_block, &entry_block.get_last_instruction().unwrap());
             let res = self.builder.build_alloca(val_ty, alloca_name);
             self.builder.position_at_end(current_block);
             res
@@ -159,6 +160,11 @@ impl<'ctx> CodeGen<'ctx> {
         }
         self.builder
             .build_call(self._utils_arraydim_fn_val, &vals, "arraydim");
+    }
+
+    pub fn build_instantiation_flag(&self) {
+        self.module
+            .add_global(self.context.bool_type(), None, "is_instantiation");
     }
 }
 

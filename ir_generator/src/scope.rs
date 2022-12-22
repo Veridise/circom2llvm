@@ -4,7 +4,7 @@ use crate::expression_codegen::resolve_expr;
 use crate::expression_static::ArgTable;
 use crate::namer::{
     name_exit_block, name_inline_array, name_readwrite_var, name_template_fn, print_variable_type,
-    ValueTypeEnum,
+    ValueTypeEnum, name_initial_var,
 };
 use crate::scope_information::ScopeInformation;
 use crate::type_check::{check_used_type, check_used_value, unwrap_used_type, wrap_type2used};
@@ -131,7 +131,9 @@ impl<'ctx> Scope<'ctx> {
                 }
             }
             if res.is_array_value() {
-                let ptr = codegen.build_alloca(res.get_type(), &name_inline_array(self.get_name()));
+                let abbr = print_variable_type(&ValueTypeEnum::Variable);
+                let assign_name = name_initial_var(&name_inline_array(self.get_name()), abbr);
+                let ptr = codegen.build_alloca(res.get_type(), &assign_name);
                 codegen.builder.build_store(ptr, res);
                 res = ptr.as_basic_value_enum();
             }
