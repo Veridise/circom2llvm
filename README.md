@@ -30,21 +30,25 @@ export LLVM_SYS_130_PREFIX=$LLVM_PATH
 ## Rust & Cargo
 This repo works on `rustc & cargo 1.64.0`, and all of the crates dependencies will be installed automatically.
 
-
 ## Compiler
-### Core Idea
-1. One circom File => One LLVM .ll file, with a module named `main`.
-2. All functions and templates are concluded into the .ll file.
-2. Circom Template(args) => Two LLVM functions:
-    1.  Build(args) => Return a struct represents the template.
-    2.  Initial(the struct template) => Executes the logic inside the template.
-3. Circom Function => LLVM function.
+### Compilation Rule
+1. One circom file will => one LLVM `.ll` file, with a module named `main`.
+2. All functions and templates are concluded into the `.ll` file.
+3. If the main component isn't provided:
+    One circom template => two LLVM functions:
+    Name the parameters of the circom template as `p`
+    1. `Build(p)` => Returns an LLVM struct represents the template, named as `s`.
+    2. `Init(p, s)` => Executes the logic inside the template.
+4. Else, all possible instantiations will be collected, and for every instantiation, two functions mentioned before will be generated under that instantiation.
+5. One circom Function => one LLVM function.
 
 ### Compilation Stage
-1. Dependencies collection and resolveing.
-2. Type inference.
-3. Function construction.
-4. Instructions generation.
+1. Collect and resolve dependencies.
+2. Infer types and collect all possible instantiations (if provided).
+3. Unroll all of the `while` loop and `if-else` statements if the instantiation is provided.
+4. Generate LLVM functions and instructions of circom functions.
+5. Generate LLVM functions of circom templates.
+6. Generate LLVM instructions of circom templates.
 
 ### Build
 ```bash
@@ -60,9 +64,9 @@ cargo build --bin=circom2llvm --package=circom2llvm
 
 ### Hints
 1. Critical variables and functions are named in `ir_generator/src/namer.rs`.
-2. The IR format is based on load-store, you could transfer it to by mem2reg pass.
+2. The IR is Load-Store format, you could transfer it to SSA format by mem2reg pass.
 
 ### Potential Problems
 1. If any problem happens during BuildGEP instruction, there is perhaps a type inferrence problem. The type inferrence system is not sound.
-2. The size of every dimension of the array is limited to 256.
-3. Don't define a component without initializing it.
+2. The size of every dimension of the array is limited to a constant, the default is 256 and could be provided by the command line.
+3. Don't define a component variable without initializing it.
