@@ -2,13 +2,12 @@ use std::collections::{HashMap, HashSet};
 
 use inkwell::{
     context::Context,
-    types::{BasicTypeEnum, IntType},
+    types::{IntType, PointerType},
     values::IntValue,
 };
 
 use crate::{
-    expression_static::{ArgTable, Instantiation},
-    scope_information::ScopeInformation,
+    expression_static::Instantiation, scope_information::ScopeInformation,
     template::TemplateInformation,
 };
 
@@ -46,9 +45,6 @@ pub struct GlobalInformation<'ctx> {
     pub const_p: IntValue<'ctx>,
     pub const_zero: IntValue<'ctx>,
     pub context: &'ctx Context,
-
-    // Current template instantiation
-    current_instantiation: HashMap<String, ArgTable>,
 
     // Global template information
     name2template_infos: HashMap<String, TemplateInformation>,
@@ -99,21 +95,12 @@ impl<'ctx> GlobalInformation<'ctx> {
         res
     }
 
-    pub fn get_scope_ret_ty(&self, scope_info_name: &String) -> BasicTypeEnum<'ctx> {
-        let scope_ret_ty = self.get_scope_info(scope_info_name).get_ret_ty();
+    pub fn get_scope_ret_ty(&self, scope_info_name: &String) -> PointerType<'ctx> {
+        let scope_ret_ty = self
+            .get_scope_info(scope_info_name)
+            .get_ret_ty()
+            .into_pointer_type();
         scope_ret_ty
-    }
-
-    pub fn get_current_instantiation(&self, templ_name: &String) -> ArgTable {
-        match self.current_instantiation.get(templ_name) {
-            Some(res) => res.clone(),
-            None => HashMap::new(),
-        }
-    }
-
-    pub fn set_current_instantiation(&mut self, templ_name: &String, v: &ArgTable) {
-        self.current_instantiation
-            .insert(templ_name.clone(), v.clone());
     }
 }
 
@@ -133,7 +120,6 @@ pub fn init_env<'ctx>(
         const_p,
         const_zero,
         context,
-        current_instantiation: HashMap::new(),
         name2template_infos: HashMap::new(),
         name2scope_infos: HashMap::new(),
         fn_scope_names: Vec::new(),

@@ -1,8 +1,10 @@
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
 use crate::expression_codegen::{resolve_dimension_as_record, resolve_expr};
+use crate::expression_static::{resolve_expr_static, ArgTable};
 use crate::namer::{name_if_block, name_loop_block};
 use crate::scope::Scope;
+use crate::scope_information::ScopeInformation;
 use crate::utils::is_terminated_basicblock;
 use inkwell::values::BasicValue;
 use program_structure::ast::{AssignOp, Statement};
@@ -247,5 +249,113 @@ pub fn print_stmt(stmt: &Statement) -> &'static str {
         Statement::Return { .. } => "Return",
         Statement::Substitution { .. } => "Substitution",
         Statement::While { .. } => "While",
+    }
+}
+
+pub fn rewrite_stmt<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    scope_info: &ScopeInformation<'ctx>,
+    arg2val: &mut ArgTable,
+    stmt: &Statement,
+) -> Statement {
+    use Statement::*;
+    match stmt {
+        Block { meta, stmts } => {
+            let stmts = stmts
+                .iter()
+                .map(|s| rewrite_stmt(env, scope_info, arg2val, s))
+                .collect();
+            Block {
+                meta: meta.clone(),
+                stmts,
+            }
+        }
+        IfThenElse {
+            meta,
+            cond,
+            if_case,
+            else_case,
+        } => {
+            let res = resolve_expr_static(env, scope_info, &arg2val, cond);
+            match res {
+                Some(b) => {
+                    if b == 1 {
+                        if_case.as_ref().clone()
+                    } else {
+                        match else_case {
+                            Some(else_case) => else_case.as_ref().clone(),
+                            // Empty Statement
+                            None => Block {
+                                meta: meta.clone(),
+                                stmts: Vec::new(),
+                            },
+                        }
+                    }
+                }
+                None => stmt.clone(),
+            }
+        }
+        InitializationBlock {
+            meta,
+            xtype,
+            initializations,
+        } => {
+            let initializations = initializations
+                .iter()
+                .map(|i| rewrite_stmt(env, scope_info, arg2val, i))
+                .collect();
+            InitializationBlock {
+                meta: meta.clone(),
+                xtype: xtype.clone(),
+                initializations,
+            }
+        }
+        Substitution {
+            meta: _,
+            var,
+            access,
+            op,
+            rhe,
+        } => {
+            if access.len() == 0 {
+                match op {
+                    AssignOp::AssignVar => {
+                        let res = resolve_expr_static(env, scope_info, arg2val, rhe);
+                        match res {
+                            Some(v) => {
+                                arg2val.insert(var.clone(), v as u32);
+                            }
+                            None => (),
+                        }
+                    }
+                    AssignOp::AssignSignal => (),
+                    AssignOp::AssignConstraintSignal => (),
+                }
+            }
+            stmt.clone()
+        }
+        While {
+            meta,
+            cond,
+            stmt: i_stmt,
+        } => {
+            let res = resolve_expr_static(env, scope_info, arg2val, cond);
+            match res {
+                Some(b) => {
+                    let mut initial_cond = b;
+                    let mut stmts = vec![];
+                    while initial_cond != 0 {
+                        stmts.push(rewrite_stmt(env, scope_info, arg2val, i_stmt));
+                        initial_cond = resolve_expr_static(env, scope_info, arg2val, cond).unwrap();
+                    }
+                    Block {
+                        meta: meta.clone(),
+                        stmts,
+                    }
+                }
+                None => stmt.clone(),
+            }
+        }
+        _ => stmt.clone(),
     }
 }

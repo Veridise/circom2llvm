@@ -9,7 +9,7 @@ use crate::namer::{
 use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
-use crate::type_check::wrap_type2used;
+use crate::type_check::{wrap_type2used, unwrap_used_type};
 use crate::type_infer::{infer_type_from_expression, infer_type_from_statement};
 use inkwell::context::Context;
 use inkwell::types::BasicType;
@@ -105,7 +105,7 @@ pub fn infer_templ<'ctx>(
     let templ_struct_ty = context.opaque_struct_type(&templ_struct_name);
     templ_struct_ty.set_body(&templ_struct_fields[0..], false);
 
-    let ret_ty = templ_struct_ty.as_basic_type_enum();
+    let ret_ty = wrap_type2used(&templ_struct_ty.as_basic_type_enum());
     scope_info.set_ret_ty(ret_ty);
 
     let mut arg_tys = Vec::new();
@@ -127,11 +127,11 @@ impl<'ctx> Template<'ctx> {
         let templ_name = self.scope.get_name();
         let templ_signature = self.scope.get_signature();
         let templ_struct_name = name_template_struct(&templ_name);
-        let templ_struct_ty = self.scope.info.get_ret_ty();
+        let templ_struct_ptr_ty = self.scope.info.get_ret_ty();
 
         // Function for generation of the circuit struct, called `build`, it returns the circuit struct.
         let params_ty = self.scope.info.gen_arg_metadata_tys();
-        let ret_ty = wrap_type2used(&templ_struct_ty);
+        let ret_ty = templ_struct_ptr_ty;
         let build_fn_name = name_template_fn("build", &templ_signature);
         let build_fn_ty = ret_ty.fn_type(&params_ty, false);
         let build_fn_val = codegen
@@ -143,7 +143,7 @@ impl<'ctx> Template<'ctx> {
         codegen.builder.position_at_end(build_fn_entry_bb);
         let templ_struct_val_ptr = codegen
             .builder
-            .build_malloc(templ_struct_ty, &templ_struct_name)
+            .build_malloc(unwrap_used_type(&templ_struct_ptr_ty), &templ_struct_name)
             .unwrap();
         codegen.builder.build_return(Some(&templ_struct_val_ptr));
 
@@ -208,6 +208,9 @@ impl<'ctx> Template<'ctx> {
 
         // Initial variables
         for (name, ty) in &self.scope.info.get_var2ty() {
+            if self.templ_info.inputs.contains(&name) {
+                continue;
+            }
             if self.templ_info.inters.contains(&name) {
                 let var_abbr = print_variable_type(&ValueTypeEnum::IntermediateSignal);
                 let alloca_name = name_initial_var(&name, var_abbr);

@@ -6,6 +6,7 @@ use crate::function::{infer_fn, Function};
 use crate::info_collector::collect_instantiations;
 use crate::scope::init_scope;
 use crate::scope_information::{init_scope_info, ScopeInformation};
+use crate::statement::rewrite_stmt;
 use crate::summarygen::init_summarygen;
 use crate::template::{infer_templ, Template};
 use inkwell::context::Context;
@@ -174,7 +175,7 @@ pub fn generate<'ctx>(
         }
     }
 
-    let mut templates: Vec<(Template, &Statement)> = Vec::new();
+    let mut templates: Vec<(Template, Statement)> = Vec::new();
 
     for (mut scope_info, body) in templ_pairs {
         let scope_name = scope_info.get_name().clone();
@@ -187,11 +188,13 @@ pub fn generate<'ctx>(
             let p_instantiations = i_manager.get_instantiations(&scope_name);
             for arg_vals in p_instantiations {
                 let arg_table = scope_info.gen_arg_table(arg_vals);
+                let mut arg2val = arg_table.clone();
                 let scope = init_scope(scope_info.clone(), arg_table);
                 let t = Template {
                     scope,
                     templ_info: templ_info.clone(),
                 };
+                let body = rewrite_stmt(&env, scope_info, &mut arg2val, body);
                 templates.push((t, body));
             }
         } else {
@@ -201,7 +204,7 @@ pub fn generate<'ctx>(
                 scope,
                 templ_info: templ_info.clone(),
             };
-            templates.push((t, body));
+            templates.push((t, body.clone()));
         }
     }
 
@@ -210,7 +213,6 @@ pub fn generate<'ctx>(
     }
 
     for (t, body) in &mut templates {
-        env.set_current_instantiation(t.scope.get_name(), &t.scope.instantiation);
         t.build_instrustions(&env, &codegen, body);
         summarygen.add_component(t);
     }

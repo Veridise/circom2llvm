@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
 use crate::scope_information::ScopeInformation;
-use inkwell::types::{BasicType, ArrayType};
+use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
+use inkwell::types::{ArrayType, BasicType};
 use inkwell::values::ArrayValue;
 use num_traits::ToPrimitive;
 use program_structure::ast::{Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode};
@@ -13,6 +13,7 @@ pub type ArgTable = HashMap<String, u32>;
 pub fn resolve_expr_static<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation,
+    arg2val: &ArgTable,
     expr: &Expression,
 ) -> Option<i64> {
     use Expression::*;
@@ -23,8 +24,8 @@ pub fn resolve_expr_static<'ctx>(
             infix_op,
             rhe,
         } => {
-            let lval = resolve_expr_static(env, scope_info, lhe.as_ref());
-            let rval = resolve_expr_static(env, scope_info, rhe.as_ref());
+            let lval = resolve_expr_static(env, scope_info, arg2val, lhe.as_ref());
+            let rval = resolve_expr_static(env, scope_info, arg2val, rhe.as_ref());
             if lval.is_none() || rval.is_none() {
                 None
             } else {
@@ -41,9 +42,9 @@ pub fn resolve_expr_static<'ctx>(
             if_true,
             if_false,
         } => {
-            let cond = resolve_expr_static(env, scope_info, cond.as_ref());
-            let lval = resolve_expr_static(env, scope_info, if_true.as_ref());
-            let rval = resolve_expr_static(env, scope_info, if_false.as_ref());
+            let cond = resolve_expr_static(env, scope_info, arg2val, cond.as_ref());
+            let lval = resolve_expr_static(env, scope_info, arg2val, if_true.as_ref());
+            let rval = resolve_expr_static(env, scope_info, arg2val, if_false.as_ref());
             match cond {
                 Some(v) => {
                     if v == 1 {
@@ -60,7 +61,7 @@ pub fn resolve_expr_static<'ctx>(
             prefix_op,
             rhe,
         } => {
-            let rval = resolve_expr_static(env, scope_info, rhe.as_ref());
+            let rval = resolve_expr_static(env, scope_info, arg2val, rhe.as_ref());
             if rval.is_none() {
                 None
             } else {
@@ -75,9 +76,8 @@ pub fn resolve_expr_static<'ctx>(
             if access.len() != 0 {
                 None
             } else {
-                let i = env.get_current_instantiation(scope_info.get_name());
-                if i.contains_key(name) {
-                    Some(i.get(name).unwrap().clone() as i64)
+                if arg2val.contains_key(name) {
+                    Some(arg2val.get(name).unwrap().clone() as i64)
                 } else {
                     None
                 }
@@ -148,7 +148,7 @@ pub fn resolve_uniform_array_static<'ctx>(
                 current_expr = value.as_ref();
             }
             _ => {
-                match resolve_expr_static(env, scope_info, expr) {
+                match resolve_expr_static(env, scope_info, &HashMap::new(), expr) {
                     Some(v) => element_val = v as u64,
                     None => (),
                 }
@@ -159,7 +159,9 @@ pub fn resolve_uniform_array_static<'ctx>(
     let val = env.val_ty.const_int(element_val, true);
     let mut res = env.val_ty.const_array(&vec![val; env.arraysize as usize]);
     for _ in 1..dims {
-        res = res.get_type().const_array(&vec![res; env.arraysize as usize]);
+        res = res
+            .get_type()
+            .const_array(&vec![res; env.arraysize as usize]);
     }
     res
 }
@@ -191,13 +193,11 @@ pub fn resolve_inline_array_static<'ctx>(
 pub fn resolve_number_static<'ctx>(expr: &Expression) -> i64 {
     use Expression::*;
     match expr {
-        Number(_, bigint) => {
-            match (bigint % u64::MAX).to_u64() {
-                Some(i) => i as i64,
-                None => {
-                    println!("{}", bigint.to_string());
-                    unreachable!()
-                }
+        Number(_, bigint) => match (bigint % u64::MAX).to_u64() {
+            Some(i) => i as i64,
+            None => {
+                println!("Error: Unknown bigint: {}", bigint.to_string());
+                unreachable!()
             }
         },
         _ => {
@@ -210,6 +210,7 @@ pub fn resolve_number_static<'ctx>(expr: &Expression) -> i64 {
 pub fn resolve_component_instantiation<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation,
+    arg2val: &ArgTable,
     expr: &Expression,
 ) -> Option<(String, Instantiation)> {
     match expr {
@@ -217,9 +218,7 @@ pub fn resolve_component_instantiation<'ctx>(
             if scope_info.is_component(id) {
                 let instantiation: Instantiation = args
                     .iter()
-                    .map(|a| {
-                        resolve_expr_static(env, scope_info, a).unwrap() as u32
-                    })
+                    .map(|a| resolve_expr_static(env, scope_info, arg2val, a).unwrap() as u32)
                     .collect();
                 Some((id.clone(), instantiation))
             } else {

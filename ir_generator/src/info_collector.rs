@@ -83,7 +83,7 @@ pub fn init_template_info(stmts: &Vec<&Statement>) -> TemplateInformation {
 }
 
 pub fn collect_instantiations<'ctx>(
-    env: &mut GlobalInformation<'ctx>,
+    env: &GlobalInformation<'ctx>,
     i_manager: &mut InstantiationManager,
     scope_info: &ScopeInformation<'ctx>,
     body: &Statement,
@@ -93,7 +93,6 @@ pub fn collect_instantiations<'ctx>(
     let mut new_instantiations = Vec::new();
     for i in p_instantiations {
         let arg_table = scope_info.gen_arg_table(i);
-        env.set_current_instantiation(templ_name, &arg_table);
         let stmts = flat_statements(body);
         let mut exprs = Vec::new();
         for stmt in stmts {
@@ -101,7 +100,7 @@ pub fn collect_instantiations<'ctx>(
         }
         for expr in exprs {
             if expr.is_call() {
-                let res = resolve_component_instantiation(env, scope_info, expr);
+                let res = resolve_component_instantiation(env, scope_info, &arg_table, expr);
                 match res {
                     Some(p) => {
                         new_instantiations.push(p);

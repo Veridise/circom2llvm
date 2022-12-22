@@ -6,7 +6,7 @@ use crate::expression_static::{
     resolve_expr_static, resolve_inline_array_static, resolve_number_static,
     resolve_uniform_array_static, Instantiation,
 };
-use crate::namer::{name_inline_array, name_uniform_array, name_template_fn};
+use crate::namer::{name_inline_array, name_template_fn, name_uniform_array};
 use crate::scope::Scope;
 use crate::type_check::check_used_value;
 use inkwell::types::BasicType;
@@ -38,11 +38,12 @@ pub fn resolve_expr<'ctx>(
                 let target_scope_info = env.get_scope_info(id);
                 let arg_table = if env.is_instantiation {
                     let instantiation: Instantiation = args
-                    .iter()
-                    .map(|a| {
-                        resolve_expr_static(env, &scope.info, a).unwrap() as u32
-                    })
-                    .collect();
+                        .iter()
+                        .map(|a| {
+                            resolve_expr_static(env, &scope.info, &scope.instantiation, a).unwrap()
+                                as u32
+                        })
+                        .collect();
                     target_scope_info.gen_arg_table(&instantiation)
                 } else {
                     HashMap::new()
@@ -171,7 +172,11 @@ fn resolve_inline_array_internal<'ctx>(
                 .map(|i| env.val_ty.const_int(*i as u64, true))
                 .collect();
             let assign_name = name_inline_array(&scope.get_name());
-            let gep = unsafe { codegen.builder.build_in_bounds_gep(ptr, &gep_indexes, &assign_name) };
+            let gep = unsafe {
+                codegen
+                    .builder
+                    .build_in_bounds_gep(ptr, &gep_indexes, &assign_name)
+            };
             codegen.builder.build_store(gep, val);
         }
     }
@@ -402,7 +407,7 @@ pub fn resolve_dimension_as_record<'ctx>(
     scope: &Scope<'ctx>,
     expr: &Expression,
 ) -> IntValue<'ctx> {
-    let res = resolve_expr_static(env, &scope.info, expr);
+    let res = resolve_expr_static(env, &scope.info, &scope.instantiation, expr);
     match res {
         Some(i) => env.val_ty.const_int(i as u64, true),
         None => resolve_expr(env, codegen, scope, expr).into_int_value(),

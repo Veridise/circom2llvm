@@ -90,17 +90,15 @@ pub fn infer_type_from_statement<'ctx>(
                 }
                 VariableType::Component => {
                     let templ_name = scope_info.get_component_name(name);
-                    let strt_ty;
                     if templ_name == scope_info.get_name() {
                         let strt_name = name_template_struct(templ_name);
-                        strt_ty = env
+                        let strt_ty = env
                             .context
-                            .opaque_struct_type(&name_opaque_struct(&strt_name))
-                            .as_basic_type_enum();
+                            .opaque_struct_type(&name_opaque_struct(&strt_name));
+                        val_ty = wrap_type2used(&strt_ty.as_basic_type_enum());
                     } else {
-                        strt_ty = env.get_scope_ret_ty(templ_name);
+                        val_ty = env.get_scope_ret_ty(templ_name).as_basic_type_enum();
                     }
-                    val_ty = wrap_type2used(&strt_ty);
                 }
                 VariableType::Signal(..) => {
                     val_ty = env.val_ty.as_basic_type_enum();
@@ -153,7 +151,7 @@ pub fn get_type_of_expr<'ctx>(
             let (arr_ty, _) = resolve_inline_array_static(env, expr);
             Some(arr_ty.as_basic_type_enum())
         }
-        Expression::Call { id, .. } => Some(env.get_scope_ret_ty(id).clone()),
+        Expression::Call { id, .. } => Some(env.get_scope_ret_ty(id).clone().as_basic_type_enum()),
         Expression::InfixOp { lhe, rhe, .. } => {
             let lty = get_type_of_expr(env, scope_info, lhe);
             let rty = get_type_of_expr(env, scope_info, rhe);

@@ -2,13 +2,15 @@ use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
 use crate::expression_codegen::resolve_expr;
 use crate::expression_static::ArgTable;
-use crate::namer::{name_exit_block, name_inline_array, name_readwrite_var, name_template_fn, ValueTypeEnum, print_variable_type};
+use crate::namer::{
+    name_exit_block, name_inline_array, name_readwrite_var, name_template_fn, print_variable_type,
+    ValueTypeEnum,
+};
 use crate::scope_information::ScopeInformation;
-use crate::type_check::{check_used_type, check_used_value, wrap_type2used};
+use crate::type_check::{check_used_type, check_used_value, unwrap_used_type, wrap_type2used};
 use inkwell::basic_block::BasicBlock;
-use inkwell::types::{BasicType, BasicTypeEnum};
+use inkwell::types::BasicTypeEnum;
 use inkwell::values::{BasicValue, BasicValueEnum, FunctionValue, IntValue, PointerValue};
-use inkwell::AddressSpace;
 use program_structure::ast::Access;
 use std::collections::HashMap;
 
@@ -57,7 +59,7 @@ impl<'ctx> Scope<'ctx> {
         check_used_type(&used_ty);
         let ptr = codegen.build_alloca(used_ty, alloca_name);
         if ty.is_array_type() {
-            let basic_ty = ty.as_basic_type_enum();
+            let basic_ty = unwrap_used_type(ty);
             let arr_ptr = if alloca {
                 codegen.build_alloca(basic_ty, name)
             } else {
@@ -77,7 +79,7 @@ impl<'ctx> Scope<'ctx> {
         access: &Vec<Access>,
     ) -> BasicValueEnum<'ctx> {
         let val;
-        if self.info.is_arg(name) {
+        if self.arg2val.contains_key(name) {
             val = self.arg2val[name];
         } else {
             let ptr = self.var2ptr[name];
@@ -329,7 +331,10 @@ impl<'ctx> Scope<'ctx> {
             } else if var_ty == ValueTypeEnum::OutputSignal {
                 var_ty = ValueTypeEnum::ComponentOutput
             } else {
-                println!("Error: Unexpected value type: {}", print_variable_type(&var_ty));
+                println!(
+                    "Error: Unexpected value type: {}",
+                    print_variable_type(&var_ty)
+                );
             }
         }
         let assign_name = name_readwrite_var(templ_name, is_read, is_inner, signal_name, var_ty);
@@ -352,11 +357,10 @@ impl<'ctx> Scope<'ctx> {
         let real_struct_ptr;
         if strt_ty.count_fields() == 0 {
             let real_strt_ty = env.get_scope_ret_ty(templ_name);
-            real_struct_ptr = codegen.builder.build_pointer_cast(
-                struct_ptr,
-                real_strt_ty.ptr_type(AddressSpace::Generic),
-                "ptr_cast",
-            );
+            real_struct_ptr =
+                codegen
+                    .builder
+                    .build_pointer_cast(struct_ptr, real_strt_ty, "ptr_cast");
         } else {
             real_struct_ptr = struct_ptr;
         }
@@ -364,6 +368,7 @@ impl<'ctx> Scope<'ctx> {
     }
 
     pub fn set_arg_val(&mut self, arg_name: &String, value: &BasicValueEnum<'ctx>) {
+        check_used_value(value);
         self.arg2val.insert(arg_name.clone(), value.clone());
     }
 
