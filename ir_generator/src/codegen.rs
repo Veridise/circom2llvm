@@ -148,7 +148,7 @@ impl<'ctx> CodeGen<'ctx> {
     }
 
     pub fn build_arraydim(&self, ptr: &PointerValue<'ctx>, dims: &Vec<IntValue<'ctx>>) {
-        let default_ptr_ty = self.context.i128_type().ptr_type(AddressSpace::Generic);
+        let default_ptr_ty = self.context.i128_type().ptr_type(AddressSpace::default());
         let _ptr = self
             .builder
             .build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
@@ -177,7 +177,7 @@ pub fn init_codegen<'ctx>(
     let const_zero = env.const_zero;
 
     // Add constraint function
-    let utils_constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::Generic);
+    let utils_constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::default());
     let utils_constraint_fn_args_ty = [
         val_ty.into(),
         val_ty.into(),
@@ -217,11 +217,11 @@ pub fn init_codegen<'ctx>(
     let utils_constraint_array_fn_args_ty = [
         val_ty
             .array_type(arraysize as u32)
-            .ptr_type(AddressSpace::Generic)
+            .ptr_type(AddressSpace::default())
             .into(),
         val_ty
             .array_type(arraysize as u32)
-            .ptr_type(AddressSpace::Generic)
+            .ptr_type(AddressSpace::default())
             .into(),
         utils_constraint_gv_ptr_ty.into(),
     ];
@@ -315,7 +315,7 @@ pub fn init_codegen<'ctx>(
     builder.position_at_end(utils_assert_fn_entry_bb);
     builder.build_return(None);
 
-    let default_ptr_ty = val_ty.ptr_type(AddressSpace::Generic);
+    let default_ptr_ty = val_ty.ptr_type(AddressSpace::default());
     let utils_arraydim_fn_args_ty = [default_ptr_ty.into()];
     let utils_arraydim_fn_ret_ty = context.void_type();
     let utils_arraydim_fn_ty = utils_arraydim_fn_ret_ty.fn_type(&utils_arraydim_fn_args_ty, true);

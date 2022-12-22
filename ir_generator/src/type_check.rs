@@ -34,10 +34,10 @@ pub fn check_used_type(ty: &BasicTypeEnum) {
 pub fn wrap_type2used<'ctx>(ty: &BasicTypeEnum<'ctx>) -> BasicTypeEnum<'ctx> {
     match ty {
         BasicTypeEnum::ArrayType(arr_ty) => {
-            return arr_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
+            return arr_ty.ptr_type(AddressSpace::default()).as_basic_type_enum();
         }
         BasicTypeEnum::StructType(strt_ty) => {
-            return strt_ty.ptr_type(AddressSpace::Generic).as_basic_type_enum();
+            return strt_ty.ptr_type(AddressSpace::default()).as_basic_type_enum();
         }
         _ => {
             return ty.clone();
