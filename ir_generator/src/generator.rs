@@ -59,35 +59,17 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
 }
 
 pub fn generate<'ctx>(
+    is_instantiation: bool,
     arraysize: u32,
-    main_expression: Option<Expression>,
+    main_expr: Option<Expression>,
     definitions: Vec<&Definition>,
     input_path: &PathBuf,
     output_path: &PathBuf,
     output_summary_path: &PathBuf,
 ) {
     let context = Context::create();
-    let mut env = init_env(&context, arraysize, !main_expression.is_none());
+    let mut env = init_env(&context, arraysize, is_instantiation);
     let mut i_manager = init_instantiation_manager();
-    match main_expression {
-        Some(expr) => match expr {
-            Expression::Call { meta: _, id, args } => {
-                let instantiation: Instantiation = args
-                    .iter()
-                    .map(|a| resolve_number_static(a) as u32)
-                    .collect();
-                i_manager.set_instantiations(&id, &instantiation);
-            }
-            _ => {
-                println!(
-                    "Error: Unknown main component instantiation expression: {}",
-                    print_expr(&expr)
-                );
-                unreachable!();
-            }
-        },
-        None => (),
-    }
     let codegen = init_codegen(&context, &env, input_path);
     let mut summarygen = init_summarygen();
     let mut scope_info_stmt_pairs: Vec<(ScopeInformation, &Statement)> = Vec::new();
@@ -168,7 +150,28 @@ pub fn generate<'ctx>(
         summarygen.add_function(&f);
     }
 
-    if env.is_instantiation {
+    if is_instantiation {
+        if main_expr.is_none() {
+            println!("Error: No main component is provided under instantiation compilation.");
+            unreachable!();
+        }
+        let main_expr = main_expr.unwrap();
+        match main_expr {
+            Expression::Call { meta: _, id, args } => {
+                let instantiation: Instantiation = args
+                    .iter()
+                    .map(|a| resolve_number_static(a) as u32)
+                    .collect();
+                i_manager.set_instantiations(&id, &instantiation);
+            }
+            _ => {
+                println!(
+                    "Error: Unknown main component instantiation expression: {}",
+                    print_expr(&main_expr)
+                );
+                unreachable!();
+            }
+        }
         codegen.build_instantiation_flag();
         for (scope_info, body) in &templ_pairs {
             collect_instantiations(&mut env, &mut i_manager, scope_info, body);
@@ -184,7 +187,7 @@ pub fn generate<'ctx>(
         env.set_template_info(&scope_name, templ_info.clone());
         let scope_info = env.get_scope_info(&scope_name);
 
-        if env.is_instantiation {
+        if is_instantiation {
             let p_instantiations = i_manager.get_instantiations(&scope_name);
             for arg_vals in p_instantiations {
                 let arg_table = scope_info.gen_arg_table(arg_vals);

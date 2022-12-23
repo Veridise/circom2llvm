@@ -54,20 +54,25 @@ pub fn resolve_expr<'ctx>(
             } else {
                 fn_name = id.to_string();
             }
-            let called_fn = codegen.module.get_function(&fn_name).unwrap();
-            let arg_vals: Vec<BasicMetadataValueEnum> = args
-                .iter()
-                .map(|a| {
-                    let basic_val = resolve_expr(env, codegen, scope, a);
-                    return BasicMetadataValueEnum::from(basic_val);
-                })
-                .collect();
-            return codegen
-                .builder
-                .build_call(called_fn, &arg_vals, "call")
-                .try_as_basic_value()
-                .left()
-                .unwrap();
+            let called_fn = codegen.module.get_function(&fn_name);
+            match called_fn {
+                Some(called_fn) => {
+                    let arg_vals: Vec<BasicMetadataValueEnum> = args
+                        .iter()
+                        .map(|a| {
+                            let basic_val = resolve_expr(env, codegen, scope, a);
+                            BasicMetadataValueEnum::from(basic_val)
+                        })
+                        .collect();
+                    codegen
+                        .builder
+                        .build_call(called_fn, &arg_vals, "call")
+                        .try_as_basic_value()
+                        .left()
+                        .unwrap()
+                }
+                None => env.get_scope_ret_ty(id).const_zero(),
+            }
         }
         InfixOp {
             meta: _,

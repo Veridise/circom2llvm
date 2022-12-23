@@ -1,6 +1,6 @@
 use clap::Parser;
 use ir_generator::generator::generate;
-use program_structure::ast::{Definition, AST, Expression};
+use program_structure::ast::{Definition, Expression, AST};
 use program_structure::error_definition::Report;
 use std::collections::HashSet;
 use std::fs;
@@ -26,8 +26,13 @@ struct Args {
     #[arg(short, long)]
     rewrite_circomlib: Option<String>,
 
+    /// The static size of array.
     #[arg(short, long, default_value_t = 256)]
     arraysize: u32,
+
+    /// The compilation mode, instantiation or abstraction.
+    #[arg(long, default_value_t = false)]
+    instantiation: bool,
 }
 
 fn main() {
@@ -64,7 +69,7 @@ fn main() {
     };
     if !output.is_dir() {
         println!(
-            "Error: output is NOT a directory, current is : {}",
+            "Error: output is NOT a directory or doesn't exist, current is : {}",
             output.to_string_lossy()
         );
         return;
@@ -82,16 +87,16 @@ fn main() {
         println!("Compiling: {}", input_path.to_string_lossy());
         println!("Output: {}", output_path.to_string_lossy());
         // Parsing
-        let main_expression: Option<Expression>;
+        let main_expr: Option<Expression>;
         let entry_ast = parser::run_parser(input_path.clone(), Vec::new());
         match entry_ast {
             Ok(ast) => {
                 match ast.main_component {
                     Some((_, expr)) => {
-                        main_expression = Some(expr);
+                        main_expr = Some(expr);
                     }
                     None => {
-                        main_expression = None;
+                        main_expr = None;
                     }
                 }
             }
@@ -120,7 +125,7 @@ fn main() {
                                     if has_circomlib {
                                         actual_path.push(p);
                                     }
-                                    if p == "circomlib" {
+                                    if p.to_string_lossy().contains("circomlib") {
                                         has_circomlib = true;
                                     }
                                 }
@@ -176,8 +181,9 @@ fn main() {
             }
         }
         generate(
+            args.instantiation,
             args.arraysize,
-            main_expression,
+            main_expr,
             definitions,
             &input_path,
             &output_path,
