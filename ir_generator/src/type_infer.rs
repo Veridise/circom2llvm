@@ -8,65 +8,69 @@ use crate::type_check::{unwrap_used_type, wrap_type2used};
 use inkwell::types::{ArrayType, BasicType, BasicTypeEnum};
 use program_structure::ast::{Access, Expression, Statement, VariableType};
 
-pub fn infer_type_from_expression<'ctx>(
+pub fn infer_arg_ty_from_expr<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &mut ScopeInformation<'ctx>,
     expr: &Expression,
+    given_ty: BasicTypeEnum<'ctx>,
 ) {
     match expr {
-        Expression::Variable {
-            meta: _,
-            name,
-            access,
-        } => {
-            if scope_info.has_var_ty(name) {
-                return;
-            }
-            if access.len() == 0 {
-                return;
-            }
-            let ty = infer_type_from_access(env, name, access, scope_info);
-            scope_info.set_var_ty(name, ty);
-        }
         Expression::Call { meta: _, id, args } => {
             // See long_gt as the motivating example.
             if id == scope_info.get_name() {
                 // Ignore self-called function.
                 return;
             }
-            let target_scope = env.get_scope_info(id);
-            let target_arg_tys = target_scope.get_arg_tys();
+            let target_scope_info = env.get_scope_info(id);
+            let target_arg_tys = target_scope_info.get_arg_tys();
             assert!(args.len() == target_arg_tys.len());
             for (arg, ty) in zip(args, target_arg_tys) {
                 let mut arg_ty = ty.clone();
                 arg_ty = unwrap_used_type(&arg_ty);
-                match arg {
-                    Expression::Variable { name, access, .. } => {
-                        if scope_info.is_component_var(name) {
-                            continue;
-                        }
-                        for a in access {
-                            match a {
-                                Access::ArrayAccess(..) => {
-                                    arg_ty =
-                                        construct_array_ty(env, arg_ty, 1).as_basic_type_enum();
-                                }
-                                // Didn't find any example using a signal as an argument.
-                                Access::ComponentAccess(..) => (),
-                            }
-                        }
-                        scope_info.set_var_ty(name, arg_ty);
-                    }
-                    _ => (),
-                }
+                infer_arg_ty_from_expr(env, scope_info, arg, arg_ty);
             }
-            // todo
+        }
+        Expression::InfixOp { lhe, rhe, .. } => {
+            infer_arg_ty_from_expr(env, scope_info, &lhe, env.val_ty.as_basic_type_enum());
+            infer_arg_ty_from_expr(env, scope_info, &rhe, env.val_ty.as_basic_type_enum());
+        }
+        Expression::InlineSwitchOp {
+            meta: _,
+            cond,
+            if_true,
+            if_false,
+        } => {
+            infer_arg_ty_from_expr(env, scope_info, &cond, env.val_ty.as_basic_type_enum());
+            infer_arg_ty_from_expr(env, scope_info, &if_true, env.val_ty.as_basic_type_enum());
+            infer_arg_ty_from_expr(env, scope_info, &if_false, env.val_ty.as_basic_type_enum());
+        }
+        Expression::PrefixOp { rhe, .. } => {
+            infer_arg_ty_from_expr(env, scope_info, &rhe, env.val_ty.as_basic_type_enum());
+        }
+        Expression::Variable {
+            meta: _,
+            name,
+            access,
+        } => {
+            if scope_info.is_arg(name) {
+                let mut current_ty = given_ty;
+                for a in access.iter().rev() {
+                    match a {
+                        Access::ArrayAccess(_) => {
+                            current_ty =
+                                construct_array_ty(env, current_ty, 1).as_basic_type_enum();
+                        }
+                        Access::ComponentAccess(_) => unreachable!(),
+                    }
+                }
+                scope_info.set_var_ty(name, current_ty);
+            }
         }
         _ => (),
     }
 }
 
-pub fn infer_type_from_statement<'ctx>(
+pub fn infer_ty_from_stmt<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &mut ScopeInformation<'ctx>,
     stmt: &Statement,
@@ -112,29 +116,32 @@ pub fn infer_type_from_statement<'ctx>(
                 scope_info.set_var_ty(name, val_ty);
             }
         }
+        Statement::Substitution {
+            meta,
+            var,
+            access,
+            op: _,
+            rhe,
+        } => {
+            let expr = Expression::Variable {
+                meta: meta.clone(),
+                name: var.clone(),
+                access: access.clone(),
+            };
+            let ty = get_type_of_expr(env, scope_info, &expr).unwrap();
+            infer_arg_ty_from_expr(env, scope_info, &rhe, ty);
+        }
+        Statement::IfThenElse { cond, .. } => {
+            infer_arg_ty_from_expr(env, scope_info, &cond, env.val_ty.as_basic_type_enum());
+        }
+        Statement::Return { meta: _, value } => {
+            infer_arg_ty_from_expr(env, scope_info, value, env.val_ty.as_basic_type_enum());
+        }
+        Statement::While { cond, .. } => {
+            infer_arg_ty_from_expr(env, scope_info, &cond, env.val_ty.as_basic_type_enum());
+        }
         _ => (),
     }
-}
-
-fn infer_type_from_access<'ctx>(
-    env: &GlobalInformation<'ctx>,
-    name: &String,
-    access: &Vec<Access>,
-    scope_info: &ScopeInformation<'ctx>,
-) -> BasicTypeEnum<'ctx> {
-    let mut current_ty = env.val_ty.as_basic_type_enum();
-    for a in access.iter().rev() {
-        match a {
-            Access::ArrayAccess(_) => {
-                current_ty = construct_array_ty(env, current_ty, 1).as_basic_type_enum();
-            }
-            Access::ComponentAccess(_) => {
-                let templ_name = scope_info.get_component_name(name);
-                current_ty = env.get_scope_ret_ty(templ_name);
-            }
-        }
-    }
-    return current_ty;
 }
 
 pub fn get_type_of_expr<'ctx>(
@@ -185,7 +192,11 @@ pub fn get_type_of_expr<'ctx>(
                     }
                     Access::ComponentAccess(signal) => {
                         let templ_name = scope_info.get_component_name(name);
-                        let target_scope_info = env.get_scope_info(templ_name);
+                        let target_scope_info = if templ_name == scope_info.get_name() {
+                            scope_info
+                        } else {
+                            env.get_scope_info(templ_name)
+                        };
                         var_ty = target_scope_info.get_var_ty(signal)
                     }
                 }

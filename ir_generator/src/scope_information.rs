@@ -87,8 +87,12 @@ impl<'ctx> ScopeInformation<'ctx> {
         if !self.var2ty.contains_key(name) {
             self.var2ty.insert(name.clone(), ty);
         } else {
-            if *self.var2ty.get(name).unwrap() != ty {
-                println!("Debug: Different type!");
+            let current_ty = self.var2ty.get(name).unwrap();
+            if current_ty != &ty {
+                println!("Error: Different type is set to var: {}!", name);
+                println!("Current type is: {}", current_ty.print_to_string());
+                println!("New type is: {}", ty.print_to_string());
+                unreachable!();
             }
         }
     }

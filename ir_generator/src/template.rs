@@ -1,6 +1,5 @@
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
-use crate::expression_codegen::flat_expressions_from_statement;
 use crate::info_collector::init_template_info;
 use crate::namer::{
     name_body_block, name_entry_block, name_initial_var, name_template_fn, name_template_struct,
@@ -10,7 +9,7 @@ use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
 use crate::type_check::{unwrap_used_type, wrap_type2used};
-use crate::type_infer::{infer_type_from_expression, infer_type_from_statement};
+use crate::type_infer::infer_ty_from_stmt;
 use inkwell::context::Context;
 use inkwell::types::BasicType;
 use inkwell::values::BasicValue;
@@ -74,13 +73,8 @@ pub fn infer_templ<'ctx>(
     body: &Statement,
 ) -> TemplateInformation {
     let stmts = flat_statements(body);
-    let mut exprs = Vec::new();
     for stmt in &stmts {
-        infer_type_from_statement(env, scope_info, stmt);
-        exprs.append(&mut flat_expressions_from_statement(stmt));
-    }
-    for expr in &exprs {
-        infer_type_from_expression(env, scope_info, expr);
+        infer_ty_from_stmt(env, scope_info, stmt);
     }
 
     let templ_info = init_template_info(&stmts);

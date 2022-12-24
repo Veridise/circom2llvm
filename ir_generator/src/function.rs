@@ -1,11 +1,10 @@
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
-use crate::expression_codegen::flat_expressions_from_statement;
 use crate::namer::{name_body_block, name_entry_block};
 use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::statement::{flat_statements, resolve_stmt};
-use crate::type_infer::{get_type_of_expr, infer_type_from_expression, infer_type_from_statement};
+use crate::type_infer::{get_type_of_expr, infer_ty_from_stmt};
 use inkwell::types::BasicType;
 use program_structure::ast::Statement;
 
@@ -20,13 +19,8 @@ pub fn infer_fn<'ctx>(
 ) {
     let mut ret_ty = env.val_ty.as_basic_type_enum();
     let stmts = flat_statements(body);
-    let mut exprs = Vec::new();
     for stmt in &stmts {
-        infer_type_from_statement(env, scope_info, stmt);
-        exprs.append(&mut flat_expressions_from_statement(stmt));
-    }
-    for expr in &exprs {
-        infer_type_from_expression(env, scope_info, expr);
+        infer_ty_from_stmt(env, scope_info, stmt);
     }
     for stmt in &stmts {
         match stmt {
