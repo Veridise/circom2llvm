@@ -15,7 +15,7 @@ pub fn resolve_expr_static<'ctx>(
     scope_info: &ScopeInformation,
     arg2val: &ArgTable,
     expr: &Expression,
-) -> Option<i64> {
+) -> Option<i128> {
     use Expression::*;
     match expr {
         InfixOp {
@@ -77,7 +77,7 @@ pub fn resolve_expr_static<'ctx>(
                 None
             } else {
                 if arg2val.contains_key(name) {
-                    Some(arg2val.get(name).unwrap().clone() as i64)
+                    Some(arg2val.get(name).unwrap().clone() as i128)
                 } else {
                     None
                 }
@@ -107,11 +107,11 @@ pub fn resolve_expr_static<'ctx>(
     }
 }
 
-fn resolve_prefix_op_static<'ctx>(prefix_op: &ExpressionPrefixOpcode, rval: i64) -> i64 {
+fn resolve_prefix_op_static<'ctx>(prefix_op: &ExpressionPrefixOpcode, rval: i128) -> i128 {
     use ExpressionPrefixOpcode::*;
     match prefix_op {
         Sub => -rval,
-        BoolNot => !rval as i64,
+        BoolNot => !rval as i128,
         Complement => {
             println!("Error: Complement isn't supported now.");
             unreachable!();
@@ -119,7 +119,7 @@ fn resolve_prefix_op_static<'ctx>(prefix_op: &ExpressionPrefixOpcode, rval: i64)
     }
 }
 
-fn resolve_infix_op_static<'ctx>(infix_op: &ExpressionInfixOpcode, lval: i64, rval: i64) -> i64 {
+fn resolve_infix_op_static<'ctx>(infix_op: &ExpressionInfixOpcode, lval: i128, rval: i128) -> i128 {
     use ExpressionInfixOpcode::*;
     match infix_op {
         Add => lval + rval,
@@ -133,17 +133,17 @@ fn resolve_infix_op_static<'ctx>(infix_op: &ExpressionInfixOpcode, lval: i64, rv
         Mod => lval % rval,
         Mul => lval * rval,
         Pow => lval.pow(rval as u32),
-        ShiftL => lval << rval,
-        ShiftR => lval >> rval,
+        ShiftL => lval << (rval % 128),
+        ShiftR => lval >> (rval % 128),
         Sub => lval - rval,
 
         // Comparison
-        Eq => (lval == rval) as i64,
-        Greater => (lval > rval) as i64,
-        GreaterEq => (lval >= rval) as i64,
-        NotEq => (lval != rval) as i64,
-        Lesser => (lval < rval) as i64,
-        LesserEq => (lval <= rval) as i64,
+        Eq => (lval == rval) as i128,
+        Greater => (lval > rval) as i128,
+        GreaterEq => (lval >= rval) as i128,
+        NotEq => (lval != rval) as i128,
+        Lesser => (lval < rval) as i128,
+        LesserEq => (lval <= rval) as i128,
     }
 }
 
@@ -209,11 +209,11 @@ pub fn resolve_inline_array_static<'ctx>(
     (ty, dims_record)
 }
 
-pub fn resolve_number_static<'ctx>(expr: &Expression) -> i64 {
+pub fn resolve_number_static<'ctx>(expr: &Expression) -> i128 {
     use Expression::*;
     match expr {
         Number(_, bigint) => match (bigint % u64::MAX).to_u64() {
-            Some(i) => i as i64,
+            Some(i) => i as i128,
             None => {
                 println!("Error: Unknown bigint: {}", bigint.to_string());
                 unreachable!()
