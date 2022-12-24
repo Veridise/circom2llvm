@@ -70,6 +70,9 @@ impl<'ctx> Function<'ctx> {
         // Initial variable
         let var_table = self.scope.info.get_var2ty();
         for (name, ty) in &var_table {
+            if self.scope.info.is_arg(&name) {
+                continue;
+            }
             let alloca_name = name;
             self.scope.initial_var(codegen, name, alloca_name, ty, true);
         }

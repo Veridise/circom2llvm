@@ -58,7 +58,7 @@ pub fn resolve_dependence(dependence_graph: &HashMap<String, Vec<String>>) -> Ve
     return output;
 }
 
-pub fn generate<'ctx>(
+pub fn generate(
     is_instantiation: bool,
     arraysize: u32,
     main_expr: Option<Expression>,
@@ -68,9 +68,14 @@ pub fn generate<'ctx>(
     output_summary_path: &PathBuf,
 ) {
     let context = Context::create();
-    let mut env = init_env(&context, arraysize, is_instantiation);
+    let file_path = input_path.as_os_str().to_str().unwrap();
+    let file_name = input_path.file_name().unwrap().to_str().unwrap();
+    let module = context.create_module(file_name);
+    module.set_source_file_name(file_path);
+    let val_ty = context.i128_type();
+    let codegen = init_codegen(&context, module, val_ty, arraysize);
+    let mut env = init_env(&context, val_ty, arraysize, is_instantiation);
     let mut i_manager = init_instantiation_manager();
-    let codegen = init_codegen(&context, &env, input_path);
     let mut summarygen = init_summarygen();
     let mut scope_info_stmt_pairs: Vec<(ScopeInformation, &Statement)> = Vec::new();
     let val_ty = env.val_ty.clone();

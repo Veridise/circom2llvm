@@ -103,19 +103,19 @@ impl<'ctx> GlobalInformation<'ctx> {
 
 pub fn init_env<'ctx>(
     context: &'ctx Context,
+    val_ty: IntType<'ctx>,
     arraysize: u32,
     is_instantiation: bool,
 ) -> GlobalInformation<'ctx> {
-    let val_ty = context.i128_type();
     let const_p = val_ty.const_int(18446744073709551557, false);
     let const_zero = val_ty.const_zero();
     return GlobalInformation {
         arraysize,
         is_instantiation,
-
         val_ty,
         const_p,
         const_zero,
+
         context,
         name2template_infos: HashMap::new(),
         name2scope_infos: HashMap::new(),

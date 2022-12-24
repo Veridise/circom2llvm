@@ -1,4 +1,3 @@
-use crate::environment::GlobalInformation;
 use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
 use crate::utils::is_terminated_basicblock;
 use inkwell::basic_block::BasicBlock;
@@ -6,13 +5,12 @@ use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::Module;
-use inkwell::types::BasicTypeEnum;
+use inkwell::types::{BasicTypeEnum, IntType};
 use inkwell::values::{
     AnyValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue,
     PointerValue,
 };
 use inkwell::{AddressSpace, IntPredicate};
-use std::path::PathBuf;
 
 pub struct CodeGen<'ctx> {
     pub context: &'ctx Context,
@@ -170,18 +168,13 @@ impl<'ctx> CodeGen<'ctx> {
 
 pub fn init_codegen<'ctx>(
     context: &'ctx Context,
-    env: &GlobalInformation<'ctx>,
-    input_path: &PathBuf,
+    module: Module<'ctx>,
+    val_ty: IntType<'ctx>,
+    arraysize: u32,
 ) -> CodeGen<'ctx> {
-    let file_path = input_path.as_os_str().to_str().unwrap();
-    let file_name = input_path.file_name().unwrap().to_str().unwrap();
-    let module = context.create_module(file_name);
-    module.set_source_file_name(file_path);
     let builder = context.create_builder();
     let bool_ty = context.bool_type();
-    let val_ty = env.val_ty;
-    let arraysize = env.arraysize;
-    let const_zero = env.const_zero;
+    let const_zero = val_ty.const_zero();
 
     // Add constraint function
     let utils_constraint_gv_ptr_ty = bool_ty.ptr_type(AddressSpace::default());

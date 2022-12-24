@@ -201,7 +201,11 @@ impl<'ctx> Template<'ctx> {
         }
 
         // Initial variables
-        for (name, ty) in &self.scope.info.get_var2ty() {
+        let var_table = self.scope.info.get_var2ty();
+        for (name, ty) in &var_table {
+            if self.scope.info.is_arg(&name) {
+                continue;
+            }
             if self.templ_info.inputs.contains(&name) {
                 continue;
             }

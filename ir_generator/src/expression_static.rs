@@ -84,6 +84,25 @@ pub fn resolve_expr_static<'ctx>(
             }
         }
         Number { .. } => Some(resolve_number_static(expr)),
+        Call { meta: _, id, args } => {
+            if scope_info.is_component(id) {
+                None
+            } else {
+                // Hacking
+                if id == "log_ceil" {
+                    let mut n_temp = resolve_expr_static(env, scope_info, arg2val, &args[0]).unwrap();
+                    for i in 0..254 {
+                        if n_temp == 0 {
+                           return Some(i);
+                        };
+                        n_temp = n_temp / 2
+                    }
+                    return Some(254);
+                } else {
+                    None
+                }
+            }
+        },
         _ => None,
     }
 }
