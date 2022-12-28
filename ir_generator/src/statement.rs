@@ -428,7 +428,7 @@ pub fn instant_stmt<'ctx>(
                     }
                 }
                 ConcreteValue::Array(..) => unreachable!(),
-                ConcreteValue::Unknown => instant_stmt(env, scope_info, arg2val, n, stmt),
+                ConcreteValue::Unknown => stmt.clone(),
             }
         }
         InitializationBlock {

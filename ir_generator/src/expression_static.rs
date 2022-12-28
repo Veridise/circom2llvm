@@ -350,8 +350,8 @@ pub fn resolve_inline_array_static<'ctx>(
 pub fn resolve_number_static<'ctx>(expr: &Expression) -> u128 {
     use Expression::*;
     match expr {
-        Number(_, bigint) => match (bigint % u64::MAX).to_u64() {
-            Some(i) => i as u128,
+        Number(_, bigint) => match (bigint % u128::MAX).to_u128() {
+            Some(i) => i,
             None => {
                 println!("Error: Unknown bigint: {}", bigint.to_string());
                 unreachable!()

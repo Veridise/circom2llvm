@@ -176,10 +176,14 @@ impl<'ctx> Template<'ctx> {
                         env.val_ty.const_int(*i as u64, true).as_basic_value_enum()
                     }
                     ConcreteValue::Array(arr) => {
-                        let vals: Vec<IntValue> = arr
-                            .iter()
-                            .map(|a| env.val_ty.const_int(*a as u64, true))
-                            .collect();
+                        let mut vals: Vec<IntValue> = Vec::new();
+                        for i in 0..env.arraysize as usize {
+                            if i < arr.len() {
+                                vals.push(env.val_ty.const_int(arr[i] as u64, true))
+                            } else {
+                                vals.push(env.const_zero)
+                            }
+                        }
                         let arr_val = env.val_ty.const_array(&vals);
                         let ptr = codegen.build_direct_array_store(arr_val, &self.scope.get_name());
                         ptr.as_basic_value_enum()
