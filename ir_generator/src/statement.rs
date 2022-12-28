@@ -1,13 +1,17 @@
+use std::collections::HashSet;
+
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
 use crate::expression_codegen::{resolve_dimension_as_record, resolve_expr};
-use crate::expression_static::{resolve_expr_static, ArgTable};
+use crate::expression_static::{resolve_expr_static, ArgTable, ArgValues, ConcreteValue};
 use crate::namer::{name_if_block, name_loop_block};
 use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::utils::is_terminated_basicblock;
 use inkwell::values::BasicValue;
-use program_structure::ast::{AssignOp, Statement};
+use num_bigint_dig::BigInt;
+use num_traits::FromPrimitive;
+use program_structure::ast::{Access, AssignOp, Expression, Statement};
 
 pub fn resolve_stmt<'ctx>(
     env: &GlobalInformation<'ctx>,
@@ -252,10 +256,139 @@ pub fn print_stmt(stmt: &Statement) -> &'static str {
     }
 }
 
-pub fn rewrite_stmt<'ctx>(
+fn instant_access<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    scope_info: &ScopeInformation<'ctx>,
+    arg2val: &ArgTable,
+    access: &Vec<Access>,
+) -> Vec<Access> {
+    let new_access = access
+        .iter()
+        .map(|a| match a {
+            Access::ArrayAccess(expr) => {
+                Access::ArrayAccess(instant_expr(env, scope_info, arg2val, expr))
+            }
+            Access::ComponentAccess(..) => a.clone(),
+        })
+        .collect();
+    new_access
+}
+
+fn instant_expr<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    scope_info: &ScopeInformation<'ctx>,
+    arg2val: &ArgTable,
+    expr: &Expression,
+) -> Expression {
+    let res = resolve_expr_static(env, scope_info, arg2val, expr);
+    if res.is_int() {
+        return Expression::Number(
+            expr.get_meta().clone(),
+            BigInt::from_u128(res.as_int()).unwrap(),
+        );
+    }
+    match expr {
+        Expression::Call { meta, id, args } => {
+            if scope_info.is_component(id) {
+                // Hacking template K and template H.
+                let instantiation: ArgValues = if id == "H" || id == "K" {
+                    vec![ConcreteValue::Int(1)]
+                } else {
+                    args.iter()
+                        .map(|a| resolve_expr_static(env, scope_info, &arg2val, a))
+                        .collect()
+                };
+                let target_scope_info = env.get_scope_info(id);
+                let arg2val = target_scope_info.gen_arg2val(&instantiation);
+                let target_signature = target_scope_info.gen_signature(&arg2val);
+                let new_expr = Expression::Call {
+                    meta: meta.clone(),
+                    id: target_signature,
+                    args: args.clone(),
+                };
+                new_expr
+            } else {
+                let args = args
+                    .iter()
+                    .map(|a| instant_expr(env, scope_info, arg2val, a))
+                    .collect();
+                Expression::Call {
+                    meta: meta.clone(),
+                    id: id.clone(),
+                    args,
+                }
+            }
+        }
+        Expression::InfixOp {
+            meta,
+            lhe,
+            infix_op,
+            rhe,
+        } => {
+            let lhe = Box::new(instant_expr(env, scope_info, arg2val, &lhe.as_ref()));
+            let rhe = Box::new(instant_expr(env, scope_info, arg2val, &rhe.as_ref()));
+            Expression::InfixOp {
+                meta: meta.clone(),
+                lhe,
+                infix_op: infix_op.clone(),
+                rhe,
+            }
+        }
+        Expression::InlineSwitchOp {
+            meta,
+            cond,
+            if_true,
+            if_false,
+        } => {
+            let if_true = instant_expr(env, scope_info, arg2val, &if_true.as_ref());
+            let if_false = instant_expr(env, scope_info, arg2val, &if_false.as_ref());
+            let res = resolve_expr_static(env, scope_info, &arg2val, cond);
+            match res {
+                ConcreteValue::Int(i) => {
+                    if i == 1 {
+                        if_true
+                    } else {
+                        if_false
+                    }
+                }
+                ConcreteValue::Array(..) => unreachable!(),
+                ConcreteValue::Unknown => Expression::InlineSwitchOp {
+                    meta: meta.clone(),
+                    cond: cond.clone(),
+                    if_true: Box::new(if_true),
+                    if_false: Box::new(if_false),
+                },
+            }
+        }
+        Expression::PrefixOp {
+            meta,
+            prefix_op,
+            rhe,
+        } => {
+            let rhe = Box::new(instant_expr(env, scope_info, arg2val, &rhe.as_ref()));
+            Expression::PrefixOp {
+                meta: meta.clone(),
+                prefix_op: prefix_op.clone(),
+                rhe,
+            }
+        }
+        Expression::Variable { meta, name, access } => {
+            let access = instant_access(env, scope_info, arg2val, access);
+            Expression::Variable {
+                meta: meta.clone(),
+                name: name.clone(),
+                access,
+            }
+        }
+        _ => expr.clone(),
+    }
+}
+
+pub fn instant_stmt<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation<'ctx>,
     arg2val: &mut ArgTable,
+    n: &mut HashSet<(String, Vec<ConcreteValue>)>,
     stmt: &Statement,
 ) -> Statement {
     use Statement::*;
@@ -263,7 +396,7 @@ pub fn rewrite_stmt<'ctx>(
         Block { meta, stmts } => {
             let stmts = stmts
                 .iter()
-                .map(|s| rewrite_stmt(env, scope_info, arg2val, s))
+                .map(|s| instant_stmt(env, scope_info, arg2val, n, s))
                 .collect();
             Block {
                 meta: meta.clone(),
@@ -278,8 +411,8 @@ pub fn rewrite_stmt<'ctx>(
         } => {
             let res = resolve_expr_static(env, scope_info, &arg2val, cond);
             match res {
-                Some(b) => {
-                    if b == 1 {
+                ConcreteValue::Int(i) => {
+                    if i == 1 {
                         if_case.as_ref().clone()
                     } else {
                         match else_case {
@@ -292,7 +425,8 @@ pub fn rewrite_stmt<'ctx>(
                         }
                     }
                 }
-                None => stmt.clone(),
+                ConcreteValue::Array(..) => unreachable!(),
+                ConcreteValue::Unknown => stmt.clone(),
             }
         }
         InitializationBlock {
@@ -302,7 +436,7 @@ pub fn rewrite_stmt<'ctx>(
         } => {
             let initializations = initializations
                 .iter()
-                .map(|i| rewrite_stmt(env, scope_info, arg2val, i))
+                .map(|i| instant_stmt(env, scope_info, arg2val, n, i))
                 .collect();
             InitializationBlock {
                 meta: meta.clone(),
@@ -311,28 +445,50 @@ pub fn rewrite_stmt<'ctx>(
             }
         }
         Substitution {
-            meta: _,
+            meta,
             var,
             access,
             op,
             rhe,
         } => {
-            if access.len() == 0 {
-                match op {
-                    AssignOp::AssignVar => {
-                        let res = resolve_expr_static(env, scope_info, arg2val, rhe);
-                        match res {
-                            Some(v) => {
-                                arg2val.insert(var.clone(), v as u32);
+            match op {
+                AssignOp::AssignVar => {
+                    match rhe {
+                        Expression::Call { meta: _, id, args } => {
+                            if scope_info.is_component(id) {
+                                // Hacking template K and template H.
+                                let instantiation: ArgValues = if id == "H" || id == "K" {
+                                    vec![ConcreteValue::Int(1)]
+                                } else {
+                                    args.iter()
+                                        .map(|a| resolve_expr_static(env, scope_info, &arg2val, a))
+                                        .collect()
+                                };
+                                let p = (id.clone(), instantiation);
+                                n.insert(p);
                             }
-                            None => (),
                         }
+                        _ => (),
                     }
-                    AssignOp::AssignSignal => (),
-                    AssignOp::AssignConstraintSignal => (),
+                }
+                AssignOp::AssignSignal => (),
+                AssignOp::AssignConstraintSignal => (),
+            }
+            let new_access = instant_access(env, scope_info, arg2val, access);
+            let new_rhe = instant_expr(env, scope_info, arg2val, rhe);
+            let res = resolve_expr_static(env, scope_info, arg2val, rhe);
+            if access.len() == 0 {
+                if !res.is_unknown() {
+                    arg2val.insert(var.clone(), res);
                 }
             }
-            stmt.clone()
+            Substitution {
+                meta: meta.clone(),
+                var: var.clone(),
+                access: new_access,
+                op: op.clone(),
+                rhe: new_rhe,
+            }
         }
         While {
             meta,
@@ -341,19 +497,36 @@ pub fn rewrite_stmt<'ctx>(
         } => {
             let res = resolve_expr_static(env, scope_info, arg2val, cond);
             match res {
-                Some(b) => {
-                    let mut initial_cond = b;
+                ConcreteValue::Int(i) => {
+                    let mut initial_cond = i;
                     let mut stmts = vec![];
                     while initial_cond != 0 {
-                        stmts.push(rewrite_stmt(env, scope_info, arg2val, i_stmt));
-                        initial_cond = resolve_expr_static(env, scope_info, arg2val, cond).unwrap();
+                        stmts.push(instant_stmt(env, scope_info, arg2val, n, i_stmt));
+                        initial_cond = resolve_expr_static(env, scope_info, arg2val, cond).as_int();
                     }
                     Block {
                         meta: meta.clone(),
                         stmts,
                     }
                 }
-                None => stmt.clone(),
+                ConcreteValue::Array(..) => unreachable!(),
+                ConcreteValue::Unknown => stmt.clone(),
+            }
+        }
+        ConstraintEquality { meta, lhe, rhe } => {
+            let lhe = instant_expr(env, scope_info, arg2val, lhe);
+            let rhe = instant_expr(env, scope_info, arg2val, rhe);
+            ConstraintEquality {
+                meta: meta.clone(),
+                lhe,
+                rhe,
+            }
+        }
+        Return { meta, value } => {
+            let value = instant_expr(env, scope_info, arg2val, value);
+            Return {
+                meta: meta.clone(),
+                value,
             }
         }
         _ => stmt.clone(),

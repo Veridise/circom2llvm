@@ -1,11 +1,4 @@
-use crate::{
-    environment::{GlobalInformation, InstantiationManager},
-    expression_codegen::flat_expressions_from_statement,
-    expression_static::resolve_component_instantiation,
-    scope_information::ScopeInformation,
-    statement::flat_statements,
-    template::TemplateInformation,
-};
+use crate::{scope_information::ScopeInformation, template::TemplateInformation};
 use program_structure::ast::{Expression, SignalType, Statement, VariableType};
 
 pub fn collect_depended_components<'ctx>(
@@ -80,37 +73,4 @@ pub fn init_template_info(stmts: &Vec<&Statement>) -> TemplateInformation {
         }
     }
     template
-}
-
-pub fn collect_instantiations<'ctx>(
-    env: &GlobalInformation<'ctx>,
-    i_manager: &mut InstantiationManager,
-    scope_info: &ScopeInformation<'ctx>,
-    body: &Statement,
-) {
-    let templ_name = scope_info.get_name();
-    let p_instantiations = i_manager.get_instantiations(&templ_name);
-    let mut new_instantiations = Vec::new();
-    for i in p_instantiations {
-        let arg_table = scope_info.gen_arg_table(i);
-        let stmts = flat_statements(body);
-        let mut exprs = Vec::new();
-        for stmt in stmts {
-            exprs.append(&mut flat_expressions_from_statement(stmt));
-        }
-        for expr in exprs {
-            if expr.is_call() {
-                let res = resolve_component_instantiation(env, scope_info, &arg_table, expr);
-                match res {
-                    Some(p) => {
-                        new_instantiations.push(p);
-                    }
-                    None => {}
-                }
-            }
-        }
-    }
-    for (templ_name, arg_vals) in new_instantiations {
-        i_manager.set_instantiations(&templ_name, &arg_vals);
-    }
 }

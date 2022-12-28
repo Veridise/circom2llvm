@@ -1,14 +1,14 @@
-use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn};
+use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_inline_array};
 use crate::utils::is_terminated_basicblock;
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
 use inkwell::context::Context;
 use inkwell::intrinsics::Intrinsic;
 use inkwell::module::Module;
-use inkwell::types::{BasicTypeEnum, IntType};
+use inkwell::types::{BasicType, BasicTypeEnum, IntType};
 use inkwell::values::{
-    AnyValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue, IntValue,
-    PointerValue,
+    AnyValue, ArrayValue, BasicMetadataValueEnum, BasicValue, BasicValueEnum, FunctionValue,
+    IntValue, PointerValue,
 };
 use inkwell::{AddressSpace, IntPredicate};
 
@@ -92,20 +92,20 @@ impl<'ctx> CodeGen<'ctx> {
         lval: IntValue<'ctx>,
         rval: IntValue<'ctx>,
     ) -> IntValue<'ctx> {
-        let assign_name = "utils_switch";
+        let inst_name = "utils_switch";
         let res = self.builder.build_call(
             self._utils_switch_fn_val,
             &[cond.into(), lval.into(), rval.into()],
-            assign_name,
+            inst_name,
         );
         return res.try_as_basic_value().left().unwrap().into_int_value();
     }
 
     // Prevent constant folding
-    pub fn build_initial_var(&self, assign_name: &String) -> BasicValueEnum<'ctx> {
+    pub fn build_initial_var(&self, inst_name: &String) -> BasicValueEnum<'ctx> {
         let res = self
             .builder
-            .build_call(self._utils_init_fn_val, &[], assign_name);
+            .build_call(self._utils_init_fn_val, &[], inst_name);
         return res.try_as_basic_value().left().unwrap();
     }
 
@@ -164,6 +164,18 @@ impl<'ctx> CodeGen<'ctx> {
         self.module
             .add_global(self.context.bool_type(), None, "is_instantiation");
     }
+
+    pub fn build_direct_array_store(
+        &self,
+        arr_val: ArrayValue<'ctx>,
+        scope_name: &String,
+    ) -> PointerValue<'ctx> {
+        let arr_name = &name_inline_array(scope_name);
+        let ptr = self.build_alloca(arr_val.get_type().as_basic_type_enum(), arr_name);
+        // Example name: tempinlinearray
+        self.builder.build_store(ptr, arr_val);
+        ptr
+    }
 }
 
 pub fn init_codegen<'ctx>(
@@ -193,7 +205,7 @@ pub fn init_codegen<'ctx>(
         context.append_basic_block(utils_constraint_fn_val, &name_entry_block());
     builder.position_at_end(utils_constraint_fn_entry_bb);
 
-    let assign_name = name_constraint();
+    let inst_name = name_constraint();
     let eq_val = builder.build_int_compare(
         IntPredicate::EQ,
         utils_constraint_fn_val
@@ -204,7 +216,7 @@ pub fn init_codegen<'ctx>(
             .get_nth_param(1)
             .unwrap()
             .into_int_value(),
-        &assign_name,
+        &inst_name,
     );
     let gv_val = utils_constraint_fn_val
         .get_last_param()

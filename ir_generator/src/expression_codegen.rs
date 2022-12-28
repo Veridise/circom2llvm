@@ -1,14 +1,10 @@
-use std::collections::HashMap;
-
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
 use crate::expression_static::{
     resolve_expr_static, resolve_inline_array_static, resolve_number_static,
-    resolve_uniform_array_static, Instantiation,
+    resolve_uniform_array_static, ConcreteValue,
 };
-use crate::namer::{
-    name_initial_var, name_inline_array, name_template_fn, name_uniform_array, ValueTypeEnum,
-};
+use crate::namer::{name_inline_array, name_template_fn};
 use crate::scope::Scope;
 use crate::type_check::check_used_value;
 use inkwell::types::BasicType;
@@ -37,30 +33,21 @@ pub fn resolve_expr<'ctx>(
         Call { meta: _, id, args } => {
             let fn_name: String;
             if scope.info.is_component(id) {
-                let target_scope_info = env.get_scope_info(id);
-                let arg_table = if env.is_instantiation {
-                    let instantiation: Instantiation = args
-                        .iter()
-                        .map(|a| {
-                            resolve_expr_static(env, &scope.info, &scope.instantiation, a).unwrap()
-                                as u32
-                        })
-                        .collect();
-                    target_scope_info.gen_arg_table(&instantiation)
-                } else {
-                    HashMap::new()
-                };
-                fn_name = name_template_fn("build", &target_scope_info.gen_signature(&arg_table));
+                fn_name = name_template_fn("build", id);
             } else {
                 fn_name = id.to_string();
             }
             let called_fn = codegen.module.get_function(&fn_name);
             match called_fn {
                 Some(called_fn) => {
+                    // println!("Func:");
+                    // called_fn.print_to_stderr();
                     let arg_vals: Vec<BasicMetadataValueEnum> = args
                         .iter()
                         .map(|a| {
                             let basic_val = resolve_expr(env, codegen, scope, a);
+                            // println!("Value: {}", basic_val.print_to_string());
+                            // println!("Type: {}", basic_val.get_type().print_to_string());
                             BasicMetadataValueEnum::from(basic_val)
                         })
                         .collect();
@@ -143,12 +130,9 @@ fn resolve_inline_array<'ctx>(
     scope: &Scope<'ctx>,
     expr: &Expression,
 ) -> PointerValue<'ctx> {
-    let (array_ty, dim_record) = resolve_inline_array_static(env, expr);
-    let alloca_name = name_initial_var(
-        &name_inline_array(&scope.get_name()),
-        ValueTypeEnum::Variable,
-    );
-    let ptr = codegen.build_alloca(array_ty.as_basic_type_enum(), &alloca_name);
+    let (arr_ty, dim_record) = resolve_inline_array_static(env, expr);
+    let arr_name = name_inline_array(&scope.get_name());
+    let ptr = codegen.build_alloca(arr_ty.as_basic_type_enum(), &arr_name);
     resolve_inline_array_internal(env, codegen, scope, expr, ptr, vec![0]);
     let dims = dim_record
         .iter()
@@ -163,7 +147,7 @@ fn resolve_inline_array_internal<'ctx>(
     codegen: &CodeGen<'ctx>,
     scope: &Scope<'ctx>,
     expr: &Expression,
-    ptr: PointerValue<'ctx>,
+    arr_ptr: PointerValue<'ctx>,
     indexes: Vec<u32>,
 ) {
     use Expression::*;
@@ -172,21 +156,16 @@ fn resolve_inline_array_internal<'ctx>(
             for (idx, v) in values.iter().enumerate() {
                 let mut new_indexes = indexes.clone();
                 new_indexes.push(idx as u32);
-                resolve_inline_array_internal(env, codegen, scope, v, ptr, new_indexes);
+                resolve_inline_array_internal(env, codegen, scope, v, arr_ptr, new_indexes);
             }
         }
         _ => {
             let val = resolve_expr(env, codegen, scope, expr);
-            let gep_indexes: Vec<IntValue> = indexes
+            let indexes: Vec<IntValue> = indexes
                 .iter()
                 .map(|i| env.val_ty.const_int(*i as u64, true))
                 .collect();
-            let assign_name = name_inline_array(&scope.get_name());
-            let gep = unsafe {
-                codegen
-                    .builder
-                    .build_in_bounds_gep(ptr, &gep_indexes, &assign_name)
-            };
+            let gep = scope.build_array_gep(codegen, &indexes, arr_ptr, "init_inlinearray");
             codegen.builder.build_store(gep, val);
         }
     }
@@ -226,13 +205,8 @@ fn resolve_uniform_array<'ctx>(
     expr: &Expression,
 ) -> PointerValue<'ctx> {
     let dims = resolve_uniform_array_dims(env, codegen, scope, expr);
-    let value = resolve_uniform_array_static(env, &scope.info, expr);
-    let alloca_name = name_initial_var(
-        &name_uniform_array(&scope.get_name()),
-        ValueTypeEnum::Variable,
-    );
-    let ptr = codegen.build_alloca(value.get_type().as_basic_type_enum(), &alloca_name);
-    codegen.builder.build_store(ptr, value);
+    let arr_val = resolve_uniform_array_static(env, &scope.info, expr);
+    let ptr = codegen.build_direct_array_store(arr_val, &scope.get_name());
     codegen.build_arraydim(&ptr, &dims);
     return ptr;
 }
@@ -422,7 +396,7 @@ pub fn resolve_dimension_as_record<'ctx>(
 ) -> IntValue<'ctx> {
     let res = resolve_expr_static(env, &scope.info, &scope.instantiation, expr);
     match res {
-        Some(i) => env.val_ty.const_int(i as u64, true),
-        None => resolve_expr(env, codegen, scope, expr).into_int_value(),
+        ConcreteValue::Int(i) => env.val_ty.const_int(i as u64, true),
+        _ => resolve_expr(env, codegen, scope, expr).into_int_value(),
     }
 }

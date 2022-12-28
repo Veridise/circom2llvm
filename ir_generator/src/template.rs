@@ -1,9 +1,10 @@
 use crate::codegen::CodeGen;
 use crate::environment::GlobalInformation;
+use crate::expression_static::ConcreteValue;
 use crate::info_collector::init_template_info;
 use crate::namer::{
-    name_body_block, name_entry_block, name_initial_var, name_template_fn, name_template_struct,
-    ValueTypeEnum,
+    name_body_block, name_entry_block, name_initial_var, name_readwrite_var, name_template_fn,
+    name_template_struct, ValueTypeEnum,
 };
 use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
@@ -12,7 +13,7 @@ use crate::type_check::{unwrap_used_type, wrap_type2used};
 use crate::type_infer::infer_ty_from_stmt;
 use inkwell::context::Context;
 use inkwell::types::BasicType;
-use inkwell::values::BasicValue;
+use inkwell::values::{BasicValue, IntValue};
 use program_structure::ast::Statement;
 
 #[derive(Clone)]
@@ -36,7 +37,7 @@ impl TemplateInformation {
         self.outputs.push(v.clone());
     }
 
-    pub fn get_signal_info(&self, signal_name: &String) -> (u32, ValueTypeEnum) {
+    pub fn get_signal_info(&self, signal_name: &String) -> Option<(u32, ValueTypeEnum)> {
         let container: &Vec<String>;
         let offset: u32;
         let var_ty: ValueTypeEnum;
@@ -53,11 +54,11 @@ impl TemplateInformation {
             offset = (self.inputs.len() + self.inters.len()) as u32;
             var_ty = ValueTypeEnum::OutputSignal;
         } else {
-            unreachable!()
+            return None;
         }
         let mut index = container.iter().position(|s| s == signal_name).unwrap() as u32;
         index += offset;
-        (index, var_ty)
+        Some((index, var_ty))
     }
 }
 
@@ -170,10 +171,21 @@ impl<'ctx> Template<'ctx> {
         // Bind args
         for (idx, arg) in args.iter().enumerate() {
             let val = match self.scope.instantiation.get(arg) {
-                Some(val) => env
-                    .val_ty
-                    .const_int(*val as u64, true)
-                    .as_basic_value_enum(),
+                Some(cv) => match cv {
+                    ConcreteValue::Int(i) => {
+                        env.val_ty.const_int(*i as u64, true).as_basic_value_enum()
+                    }
+                    ConcreteValue::Array(arr) => {
+                        let vals: Vec<IntValue> = arr
+                            .iter()
+                            .map(|a| env.val_ty.const_int(*a as u64, true))
+                            .collect();
+                        let arr_val = env.val_ty.const_array(&vals);
+                        let ptr = codegen.build_direct_array_store(arr_val, &self.scope.get_name());
+                        ptr.as_basic_value_enum()
+                    }
+                    ConcreteValue::Unknown => unreachable!(),
+                },
                 None => init_fn_val.get_nth_param(idx as u32).unwrap(),
             };
             self.scope.set_arg_val(arg, &val);
@@ -185,21 +197,6 @@ impl<'ctx> Template<'ctx> {
         self.scope
             .set_arg_val(&templ_name, &struct_ptr.as_basic_value_enum());
 
-        // Bind input signals
-        for input in &self.templ_info.inputs {
-            let gep = self.scope.build_struct_gep(
-                env,
-                codegen,
-                &templ_name,
-                input,
-                struct_ptr,
-                true,
-                true,
-            );
-            let val = self.scope.get_from_struct(codegen, gep);
-            self.scope.set_arg_val(&input, &val);
-        }
-
         // Initial variables
         let var_table = self.scope.info.get_var2ty();
         for (name, ty) in &var_table {
@@ -207,9 +204,16 @@ impl<'ctx> Template<'ctx> {
                 continue;
             }
             if self.templ_info.inputs.contains(&name) {
-                continue;
-            }
-            if self.templ_info.inters.contains(&name) {
+                let alloca_name = name_initial_var(&name, ValueTypeEnum::InputSignal);
+                self.scope
+                    .initial_var(codegen, &name, &alloca_name, &ty, false);
+                let gep =
+                    self.scope
+                        .build_struct_gep(env, codegen, &templ_name, name, struct_ptr, true);
+                let inst_name1 = name_readwrite_var(true, &name, ValueTypeEnum::InputSignal);
+                let val = self.scope.get_from_struct(codegen, gep, &inst_name1);
+                self.scope.set_var(env, codegen, name, &vec![], val);
+            } else if self.templ_info.inters.contains(&name) {
                 let alloca_name = name_initial_var(&name, ValueTypeEnum::IntermediateSignal);
                 self.scope
                     .initial_var(codegen, &name, &alloca_name, &ty, false);
@@ -246,32 +250,19 @@ impl<'ctx> Template<'ctx> {
         self.scope.build_exit(codegen);
 
         // Write-in output signals
-
         for inter in &self.templ_info.inters {
             let val = self.scope.get_var(env, codegen, inter, &Vec::new());
-            let gep = self.scope.build_struct_gep(
-                env,
-                codegen,
-                &templ_name,
-                inter,
-                struct_ptr,
-                false,
-                true,
-            );
+            let gep =
+                self.scope
+                    .build_struct_gep(env, codegen, &templ_name, inter, struct_ptr, true);
             self.scope.set_to_struct(codegen, gep, val);
         }
 
         for output in &self.templ_info.outputs {
             let val = self.scope.get_var(env, codegen, output, &Vec::new());
-            let gep = self.scope.build_struct_gep(
-                env,
-                codegen,
-                &templ_name,
-                output,
-                struct_ptr,
-                false,
-                true,
-            );
+            let gep =
+                self.scope
+                    .build_struct_gep(env, codegen, &templ_name, output, struct_ptr, true);
             self.scope.set_to_struct(codegen, gep, val);
         }
 

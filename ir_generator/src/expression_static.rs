@@ -1,21 +1,95 @@
 use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 
 use crate::scope_information::ScopeInformation;
 use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
 use inkwell::types::{ArrayType, BasicType};
 use inkwell::values::ArrayValue;
 use num_traits::ToPrimitive;
-use program_structure::ast::{Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode};
+use program_structure::ast::{Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Access, Statement};
 
-pub type Instantiation = Vec<u32>;
-pub type ArgTable = HashMap<String, u32>;
+#[derive(Clone, PartialEq, Eq)]
+pub enum ConcreteValue {
+    Int(u128),
+    Array(Vec<u128>),
+    Unknown,
+}
+
+impl ConcreteValue {
+    pub fn as_int(&self) -> u128 {
+        match self {
+            ConcreteValue::Int(i) => *i,
+            ConcreteValue::Array(..) => unreachable!(),
+            ConcreteValue::Unknown => unreachable!(),
+        }
+    }
+
+    pub fn as_array(&self) -> Vec<u128> {
+        match self {
+            ConcreteValue::Int(..) => unreachable!(),
+            ConcreteValue::Array(v) => v.clone(),
+            ConcreteValue::Unknown => unreachable!(),
+        }
+    }
+
+    pub fn is_int(&self) -> bool {
+        match self {
+            ConcreteValue::Int(..) => true,
+            ConcreteValue::Array(..) => false,
+            ConcreteValue::Unknown => false,
+        }
+    }
+
+    pub fn is_array(&self) -> bool {
+        match self {
+            ConcreteValue::Int(..) => false,
+            ConcreteValue::Array(..) => true,
+            ConcreteValue::Unknown => false,
+        }
+    }
+
+    pub fn is_unknown(&self) -> bool {
+        match self {
+            ConcreteValue::Int(..) => false,
+            ConcreteValue::Array(..) => false,
+            ConcreteValue::Unknown => true,
+        }
+    }
+
+    pub fn to_string(&self) -> String {
+        match self {
+            ConcreteValue::Int(i) => i.to_string(),
+            ConcreteValue::Array(v) => {
+                let mut res = "[".to_string();
+                for i in v {
+                    res += &i.to_string();
+                    res += ","
+                }
+                res.pop();
+                res += "]";
+                res
+            }
+            ConcreteValue::Unknown => "unknown".to_string(),
+        }
+    }
+}
+
+impl Hash for ConcreteValue {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.to_string().hash(state);
+    }
+}
+
+pub type ArgValues = Vec<ConcreteValue>;
+pub type ArgTable = HashMap<String, ConcreteValue>;
+pub type Instantiation = (ArgTable, Statement);
 
 pub fn resolve_expr_static<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation,
     arg2val: &ArgTable,
     expr: &Expression,
-) -> Option<i128> {
+) -> ConcreteValue {
     use Expression::*;
     match expr {
         InfixOp {
@@ -26,14 +100,11 @@ pub fn resolve_expr_static<'ctx>(
         } => {
             let lval = resolve_expr_static(env, scope_info, arg2val, lhe.as_ref());
             let rval = resolve_expr_static(env, scope_info, arg2val, rhe.as_ref());
-            if lval.is_none() || rval.is_none() {
-                None
+            if lval.is_unknown() || rval.is_unknown() {
+                ConcreteValue::Unknown
             } else {
-                Some(resolve_infix_op_static(
-                    infix_op,
-                    lval.unwrap(),
-                    rval.unwrap(),
-                ))
+                let i = resolve_infix_op_static(env, infix_op, lval.as_int(), rval.as_int());
+                ConcreteValue::Int(i)
             }
         }
         InlineSwitchOp {
@@ -46,14 +117,12 @@ pub fn resolve_expr_static<'ctx>(
             let lval = resolve_expr_static(env, scope_info, arg2val, if_true.as_ref());
             let rval = resolve_expr_static(env, scope_info, arg2val, if_false.as_ref());
             match cond {
-                Some(v) => {
-                    if v == 1 {
-                        lval
-                    } else {
-                        rval
-                    }
+                ConcreteValue::Int(v) => {
+                    let i = if v == 1 { lval } else { rval };
+                    i
                 }
-                None => None,
+                ConcreteValue::Array(..) => unreachable!(),
+                ConcreteValue::Unknown => ConcreteValue::Unknown,
             }
         }
         PrefixOp {
@@ -62,10 +131,13 @@ pub fn resolve_expr_static<'ctx>(
             rhe,
         } => {
             let rval = resolve_expr_static(env, scope_info, arg2val, rhe.as_ref());
-            if rval.is_none() {
-                None
-            } else {
-                Some(resolve_prefix_op_static(prefix_op, rval.unwrap()))
+            match rval {
+                ConcreteValue::Int(i) => {
+                    let r = resolve_prefix_op_static(env, prefix_op, i);
+                    ConcreteValue::Int(r)
+                }
+                ConcreteValue::Array(..) => unreachable!(),
+                ConcreteValue::Unknown => ConcreteValue::Unknown,
             }
         }
         Variable {
@@ -73,55 +145,96 @@ pub fn resolve_expr_static<'ctx>(
             name,
             access,
         } => {
-            if access.len() != 0 {
-                None
-            } else {
-                if arg2val.contains_key(name) {
-                    Some(arg2val.get(name).unwrap().clone() as i128)
-                } else {
-                    None
+            if access.len() <= 1 && arg2val.contains_key(name) {
+                let v = &arg2val[name];
+                match v {
+                    ConcreteValue::Int(..) => v.clone(),
+                    ConcreteValue::Array(arr) => {
+                        if access.len() == 0 {
+                            v.clone()
+                        } else {
+                            let idx = match &access[0] {
+                                Access::ArrayAccess(a) => {
+                                    resolve_expr_static(env, scope_info, arg2val, a).as_int()
+                                },
+                                Access::ComponentAccess(..) => unreachable!(),
+                            };
+                            ConcreteValue::Int(arr[idx as usize])
+                        }
+                    }
+                    ConcreteValue::Unknown => unreachable!(),
                 }
+            } else {
+                ConcreteValue::Unknown
             }
         }
-        Number { .. } => Some(resolve_number_static(expr)),
+        Number { .. } => ConcreteValue::Int(resolve_number_static(expr)),
         Call { meta: _, id, args } => {
             if scope_info.is_component(id) {
-                None
+                ConcreteValue::Unknown
             } else {
                 // Hacking
                 if id == "log_ceil" {
-                    let mut n_temp = resolve_expr_static(env, scope_info, arg2val, &args[0]).unwrap();
-                    for i in 0..254 {
-                        if n_temp == 0 {
-                           return Some(i);
-                        };
-                        n_temp = n_temp / 2
-                    }
-                    return Some(254);
+                    let n = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+                    let res = hacking_log_ceil(n);
+                    ConcreteValue::Int(res)
                 } else {
-                    None
+                    ConcreteValue::Unknown
                 }
             }
-        },
-        _ => None,
+        }
+        ArrayInLine { meta: _, values } => {
+            let mut arr = Vec::new();
+            for expr in values {
+                let v = resolve_expr_static(env, scope_info, arg2val, expr);
+                if v.is_int() {
+                    arr.push(v.as_int());
+                } else {
+                    return ConcreteValue::Unknown;
+                }
+            }
+            ConcreteValue::Array(arr)
+        }
+        _ => ConcreteValue::Unknown,
     }
 }
 
-fn resolve_prefix_op_static<'ctx>(prefix_op: &ExpressionPrefixOpcode, rval: i128) -> i128 {
+fn hacking_log_ceil(n: u128) -> u128 {
+    let mut n_temp = n;
+    for i in 0..254 {
+        if n_temp == 0 {
+            return i;
+        };
+        n_temp = n_temp / 2
+    }
+    return 254;
+}
+
+fn resolve_prefix_op_static<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    prefix_op: &ExpressionPrefixOpcode,
+    rval: u128,
+) -> u128 {
     use ExpressionPrefixOpcode::*;
-    match prefix_op {
-        Sub => -rval,
-        BoolNot => !rval as i128,
+    let res = match prefix_op {
+        Sub => !rval,
+        BoolNot => !rval,
         Complement => {
             println!("Error: Complement isn't supported now.");
             unreachable!();
         }
-    }
+    };
+    res % env.p as u128
 }
 
-fn resolve_infix_op_static<'ctx>(infix_op: &ExpressionInfixOpcode, lval: i128, rval: i128) -> i128 {
+fn resolve_infix_op_static<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    infix_op: &ExpressionInfixOpcode,
+    lval: u128,
+    rval: u128,
+) -> u128 {
     use ExpressionInfixOpcode::*;
-    match infix_op {
+    let res = match infix_op {
         Add => lval + rval,
         BitAnd => lval & rval,
         BitOr => lval | rval,
@@ -135,16 +248,24 @@ fn resolve_infix_op_static<'ctx>(infix_op: &ExpressionInfixOpcode, lval: i128, r
         Pow => lval.pow(rval as u32),
         ShiftL => lval << (rval % 128),
         ShiftR => lval >> (rval % 128),
-        Sub => lval - rval,
+        Sub => {
+            if rval > lval {
+                let res = u128::MAX - rval + lval;
+                res + 1
+            } else {
+                lval - rval
+            }
+        }
 
         // Comparison
-        Eq => (lval == rval) as i128,
-        Greater => (lval > rval) as i128,
-        GreaterEq => (lval >= rval) as i128,
-        NotEq => (lval != rval) as i128,
-        Lesser => (lval < rval) as i128,
-        LesserEq => (lval <= rval) as i128,
-    }
+        Eq => (lval == rval) as u128,
+        Greater => (lval > rval) as u128,
+        GreaterEq => (lval >= rval) as u128,
+        NotEq => (lval != rval) as u128,
+        Lesser => (lval < rval) as u128,
+        LesserEq => (lval <= rval) as u128,
+    };
+    res % env.p as u128
 }
 
 pub fn resolve_uniform_array_static<'ctx>(
@@ -168,8 +289,9 @@ pub fn resolve_uniform_array_static<'ctx>(
             }
             _ => {
                 match resolve_expr_static(env, scope_info, &HashMap::new(), expr) {
-                    Some(v) => element_val = v as u64,
-                    None => (),
+                    ConcreteValue::Int(i) => element_val = i as u64,
+                    ConcreteValue::Array(..) => (),
+                    ConcreteValue::Unknown => (),
                 }
                 end = true;
             }
@@ -209,11 +331,11 @@ pub fn resolve_inline_array_static<'ctx>(
     (ty, dims_record)
 }
 
-pub fn resolve_number_static<'ctx>(expr: &Expression) -> i128 {
+pub fn resolve_number_static<'ctx>(expr: &Expression) -> u128 {
     use Expression::*;
     match expr {
         Number(_, bigint) => match (bigint % u64::MAX).to_u64() {
-            Some(i) => i as i128,
+            Some(i) => i as u128,
             None => {
                 println!("Error: Unknown bigint: {}", bigint.to_string());
                 unreachable!()
@@ -222,34 +344,6 @@ pub fn resolve_number_static<'ctx>(expr: &Expression) -> i128 {
         _ => {
             println!("Error: Unknown number expression: {}", print_expr(&expr));
             unreachable!()
-        }
-    }
-}
-
-pub fn resolve_component_instantiation<'ctx>(
-    env: &GlobalInformation<'ctx>,
-    scope_info: &ScopeInformation,
-    arg2val: &ArgTable,
-    expr: &Expression,
-) -> Option<(String, Instantiation)> {
-    match expr {
-        Expression::Call { meta: _, id, args } => {
-            if scope_info.is_component(id) {
-                let instantiation: Instantiation = args
-                    .iter()
-                    .map(|a| resolve_expr_static(env, scope_info, arg2val, a).unwrap() as u32)
-                    .collect();
-                Some((id.clone(), instantiation))
-            } else {
-                None
-            }
-        }
-        _ => {
-            println!(
-                "Error: Unknown main component instantiation expression: {}",
-                print_expr(&expr)
-            );
-            unreachable!();
         }
     }
 }

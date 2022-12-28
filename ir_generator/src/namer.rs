@@ -83,31 +83,39 @@ pub fn print_variable_type(var_ty: &ValueTypeEnum) -> &'static str {
 }
 
 pub fn name_initial_var(var_name: &str, var_ty: ValueTypeEnum) -> String {
-    let var_ty_abbr = print_variable_type(&var_ty);
     let operator = "initial";
+    let var_ty_abbr = print_variable_type(&var_ty);
     let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr).to_lowercase();
     return name;
 }
 
-pub fn name_readwrite_var(
+pub fn name_signal(
     templ_name: &str,
-    is_read: bool,
-    is_inner: bool,
-    variable_name: &str,
+    signal_name: &str,
     var_ty: ValueTypeEnum,
 ) -> String {
-    let read_abbr = if is_read { "read" } else { "write" };
-    let inner_abbr = if is_inner { "inner" } else { "outter" };
-    let operator = format!("{}_{}_{}", templ_name, read_abbr, inner_abbr).to_lowercase();
-    let abbr = print_variable_type(&var_ty);
-    let name = format!("{}.{}.{}", operator, variable_name, abbr).to_lowercase();
+    let operator = "gep";
+    let name = format!("{}_{}", templ_name, signal_name).to_lowercase();
+    let var_ty_abbr = print_variable_type(&var_ty);
+    let name = format!("{}.{}.{}", operator, name, var_ty_abbr).to_lowercase();
     return name;
 }
 
-pub fn name_uniform_array(scope_name: &str) -> String {
-    return format!("{}uniformarray", scope_name).to_lowercase();
+pub fn name_readwrite_var(
+    is_read: bool,
+    var_name: &str,
+    var_ty: ValueTypeEnum,
+) -> String {
+    let operator = if is_read { "read" } else { "write" };
+    let var_ty_abbr = print_variable_type(&var_ty);
+    let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr).to_lowercase();
+    return name;
 }
 
 pub fn name_inline_array(scope_name: &str) -> String {
     return format!("{}inlinearray", scope_name).to_lowercase();
+}
+
+pub fn name_getter(ty: &str) -> String {
+    return format!("{}_getter", ty);
 }

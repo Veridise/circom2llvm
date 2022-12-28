@@ -2,9 +2,12 @@ use inkwell::types::{BasicMetadataTypeEnum, BasicType, BasicTypeEnum, IntType};
 use program_structure::ast::Statement;
 use std::{collections::HashMap, iter::zip};
 
+use crate::environment::GlobalInformation;
+use crate::namer::ValueTypeEnum;
+
 use crate::{
     expression_codegen::flat_expressions_from_statement,
-    expression_static::{ArgTable, Instantiation},
+    expression_static::{ArgTable, ArgValues},
     info_collector::{collect_depended_components, collect_dependences},
     namer::name_template_fn,
     statement::flat_statements,
@@ -57,8 +60,8 @@ impl<'ctx> ScopeInformation<'ctx> {
     }
 
     pub fn is_component(&self, comp_or_fn_name: &String) -> bool {
-        for (_, v) in &self.var2comp {
-            if v == comp_or_fn_name {
+        for (_, comp) in &self.var2comp {
+            if comp_or_fn_name.starts_with(comp) {
                 return true;
             }
         }
@@ -106,7 +109,7 @@ impl<'ctx> ScopeInformation<'ctx> {
         wrap_type2used(&ty)
     }
 
-    pub fn gen_arg_table(&self, instantiation: &Instantiation) -> ArgTable {
+    pub fn gen_arg2val(&self, instantiation: &ArgValues) -> ArgTable {
         let mut arg2val = HashMap::new();
         for (arg_name, arg_val) in zip(&self.args, instantiation) {
             arg2val.insert(arg_name.clone(), arg_val.clone());
@@ -192,6 +195,25 @@ impl<'ctx> ScopeInformation<'ctx> {
     pub fn check(&self) {
         assert!(self.args.len() == self.arg_tys.len());
         assert!(self.ret_ty.is_some());
+    }
+
+    pub fn get_var_ty_enum(&self, env: &GlobalInformation, var_name: &String) -> ValueTypeEnum {
+        if self.is_arg(var_name) {
+            return ValueTypeEnum::Argument;
+        }
+        if self.is_template {
+            if self.is_component_var(var_name) {
+                return ValueTypeEnum::Component;
+            };
+            let templ_info = env.get_template_info(self.get_name());
+            let res = templ_info.get_signal_info(var_name);
+            match res {
+                Some((_, val_ty_enum)) => val_ty_enum,
+                None => ValueTypeEnum::Variable
+            }
+        } else {
+            ValueTypeEnum::Variable
+        }
     }
 }
 
