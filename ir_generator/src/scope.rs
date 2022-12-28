@@ -127,9 +127,9 @@ impl<'ctx> Scope<'ctx> {
                         false,
                     );
                     let inst_name1 = if idx == access.len() - 1 {
-                        name_getter("struct")
-                    } else {
                         final_inst_name.clone()
+                    } else {
+                        name_getter("struct")
                     };
                     let arr_ptr1 = self.get_from_struct(codegen, gep, &inst_name1);
                     val = self.get_from_array(

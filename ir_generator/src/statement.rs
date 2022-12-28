@@ -413,10 +413,12 @@ pub fn instant_stmt<'ctx>(
             match res {
                 ConcreteValue::Int(i) => {
                     if i == 1 {
-                        if_case.as_ref().clone()
+                        instant_stmt(env, scope_info, arg2val, n, if_case.as_ref())
                     } else {
                         match else_case {
-                            Some(else_case) => else_case.as_ref().clone(),
+                            Some(else_case) => {
+                                instant_stmt(env, scope_info, arg2val, n, else_case.as_ref())
+                            }
                             // Empty Statement
                             None => Block {
                                 meta: meta.clone(),
@@ -426,7 +428,7 @@ pub fn instant_stmt<'ctx>(
                     }
                 }
                 ConcreteValue::Array(..) => unreachable!(),
-                ConcreteValue::Unknown => stmt.clone(),
+                ConcreteValue::Unknown => instant_stmt(env, scope_info, arg2val, n, stmt),
             }
         }
         InitializationBlock {
@@ -527,6 +529,25 @@ pub fn instant_stmt<'ctx>(
             Return {
                 meta: meta.clone(),
                 value,
+            }
+        }
+        Declaration {
+            meta,
+            xtype,
+            name,
+            dimensions,
+            is_constant,
+        } => {
+            let dimensions = dimensions
+                .iter()
+                .map(|d| instant_expr(env, scope_info, arg2val, d))
+                .collect();
+            Declaration {
+                meta: meta.clone(),
+                xtype: xtype.clone(),
+                name: name.clone(),
+                dimensions,
+                is_constant: is_constant.clone(),
             }
         }
         _ => stmt.clone(),

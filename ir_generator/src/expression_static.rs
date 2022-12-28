@@ -6,7 +6,9 @@ use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
 use inkwell::types::{ArrayType, BasicType};
 use inkwell::values::ArrayValue;
 use num_traits::ToPrimitive;
-use program_structure::ast::{Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Access, Statement};
+use program_structure::ast::{
+    Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement,
+};
 
 #[derive(Clone, PartialEq, Eq)]
 pub enum ConcreteValue {
@@ -156,7 +158,7 @@ pub fn resolve_expr_static<'ctx>(
                             let idx = match &access[0] {
                                 Access::ArrayAccess(a) => {
                                     resolve_expr_static(env, scope_info, arg2val, a).as_int()
-                                },
+                                }
                                 Access::ComponentAccess(..) => unreachable!(),
                             };
                             ConcreteValue::Int(arr[idx as usize])
@@ -177,6 +179,10 @@ pub fn resolve_expr_static<'ctx>(
                 if id == "log_ceil" {
                     let n = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
                     let res = hacking_log_ceil(n);
+                    ConcreteValue::Int(res)
+                } else if id == "nbits" {
+                    let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+                    let res = hacking_nbits(a);
                     ConcreteValue::Int(res)
                 } else {
                     ConcreteValue::Unknown
@@ -208,6 +214,16 @@ fn hacking_log_ceil(n: u128) -> u128 {
         n_temp = n_temp / 2
     }
     return 254;
+}
+
+fn hacking_nbits(a: u128) -> u128 {
+    let mut n = 1;
+    let mut r = 0;
+    while n - 1 < a {
+        r += 1;
+        n *= 2;
+    }
+    return r;
 }
 
 fn resolve_prefix_op_static<'ctx>(
