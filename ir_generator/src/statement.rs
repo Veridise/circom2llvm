@@ -482,6 +482,8 @@ pub fn instant_stmt<'ctx>(
             if access.len() == 0 {
                 if !res.is_unknown() {
                     arg2val.insert(var.clone(), res);
+                } else {
+                    arg2val.remove(var);
                 }
             }
             Substitution {
