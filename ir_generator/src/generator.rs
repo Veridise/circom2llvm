@@ -220,11 +220,12 @@ pub fn generate(
                     let v = resolve_expr_static(&env, &empty_scope_info, &HashMap::new(), &expr);
                     arg2val.insert(a.clone(), v);
                 }
+                let signature = target_scope_info.gen_signature(&arg2val);
+                codegen.build_instantiation_flag(&signature);
                 i_manager.set_arg2val(&id, arg2val);
             }
             _ => unreachable!(),
         }
-        codegen.build_instantiation_flag();
 
         // Collect instantiations from the main component to other components, so we use .rev().
         for (scope_name, body) in templ_name_pairs.iter().rev() {
@@ -247,7 +248,7 @@ pub fn generate(
             // Add all argument->concrete_value mappings of sub-components which are collected during the rewriting.
             for (sub_templ_name, arg_vals) in &sub_templ_arg_vals {
                 let target_scope_info = env.get_scope_info(&sub_templ_name);
-                let arg2val = target_scope_info.gen_arg2val(&arg_vals);
+                let arg2val = target_scope_info.gen_arg2val(&env, &arg_vals);
                 i_manager.set_arg2val(sub_templ_name, arg2val);
             }
 

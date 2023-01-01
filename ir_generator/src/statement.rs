@@ -284,7 +284,7 @@ fn instant_expr<'ctx>(
     if res.is_int() {
         return Expression::Number(
             expr.get_meta().clone(),
-            BigInt::from_u128(res.as_int()).unwrap(),
+            BigInt::from_i128(res.as_int()).unwrap(),
         );
     }
     match expr {
@@ -299,7 +299,7 @@ fn instant_expr<'ctx>(
                         .collect()
                 };
                 let target_scope_info = env.get_scope_info(id);
-                let arg2val = target_scope_info.gen_arg2val(&instantiation);
+                let arg2val = target_scope_info.gen_arg2val(&env, &instantiation);
                 let target_signature = target_scope_info.gen_signature(&arg2val);
                 let new_expr = Expression::Call {
                     meta: meta.clone(),

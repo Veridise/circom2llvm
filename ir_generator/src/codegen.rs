@@ -1,4 +1,4 @@
-use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_inline_array};
+use crate::namer::{name_constraint, name_entry_block, name_if_block, name_intrinsinc_fn, name_inline_array, name_main_comp};
 use crate::utils::is_terminated_basicblock;
 use inkwell::basic_block::BasicBlock;
 use inkwell::builder::Builder;
@@ -160,9 +160,10 @@ impl<'ctx> CodeGen<'ctx> {
             .build_call(self._utils_arraydim_fn_val, &vals, "arraydim");
     }
 
-    pub fn build_instantiation_flag(&self) {
+    pub fn build_instantiation_flag(&self, main_signature: &String) {
         self.module
             .add_global(self.context.bool_type(), None, "is_instantiation");
+        self.module.add_global(self.context.bool_type(), None, &name_main_comp(&main_signature));
     }
 
     pub fn build_direct_array_store(

@@ -109,10 +109,19 @@ impl<'ctx> ScopeInformation<'ctx> {
         wrap_type2used(&ty)
     }
 
-    pub fn gen_arg2val(&self, instantiation: &ArgValues) -> ArgTable {
+    pub fn gen_arg2val(&self, env: &GlobalInformation, instantiation: &ArgValues) -> ArgTable {
         let mut arg2val = HashMap::new();
-        for (arg_name, arg_val) in zip(&self.args, instantiation) {
-            arg2val.insert(arg_name.clone(), arg_val.clone());
+        for (idx, (arg_name, arg_val)) in zip(&self.args, instantiation).enumerate() {
+            if arg_val.is_unknown() {
+                let arg_ty = self.arg_tys[idx];
+                if arg_ty.is_int_type() {
+                    arg2val.insert(arg_name.clone(), arg_val.one_int());
+                } else {
+                    arg2val.insert(arg_name.clone(), arg_val.one_array(env));
+                }
+            } else {
+                arg2val.insert(arg_name.clone(), arg_val.clone());
+            }
         }
         arg2val
     }
@@ -121,9 +130,9 @@ impl<'ctx> ScopeInformation<'ctx> {
         let mut s = self.name.clone();
         if i.len() > 0 {
             for a in &self.args {
-                s += ".";
+                s += "@";
                 s += a;
-                s += ".";
+                s += "=";
                 s += &i[a].to_string();
             }
         }

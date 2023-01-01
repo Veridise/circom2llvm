@@ -5,20 +5,21 @@ use crate::scope_information::ScopeInformation;
 use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
 use inkwell::types::{ArrayType, BasicType};
 use inkwell::values::ArrayValue;
-use num_traits::ToPrimitive;
+use num_bigint_dig::BigInt;
+use num_traits::{ToPrimitive, Pow, FromPrimitive, Signed};
 use program_structure::ast::{
     Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement,
 };
 
 #[derive(Clone, PartialEq, Eq)]
 pub enum ConcreteValue {
-    Int(u128),
-    Array(Vec<u128>),
+    Int(i128),
+    Array(Vec<i128>),
     Unknown,
 }
 
 impl ConcreteValue {
-    pub fn as_int(&self) -> u128 {
+    pub fn as_int(&self) -> i128 {
         match self {
             ConcreteValue::Int(i) => *i,
             ConcreteValue::Array(..) => unreachable!(),
@@ -26,7 +27,7 @@ impl ConcreteValue {
         }
     }
 
-    pub fn as_array(&self) -> Vec<u128> {
+    pub fn as_array(&self) -> Vec<i128> {
         match self {
             ConcreteValue::Int(..) => unreachable!(),
             ConcreteValue::Array(v) => v.clone(),
@@ -58,18 +59,19 @@ impl ConcreteValue {
         }
     }
 
+    pub fn one_int(&self) -> ConcreteValue {
+        ConcreteValue::Int(1)
+    }
+
+    pub fn one_array(&self, env: &GlobalInformation) -> ConcreteValue {
+        ConcreteValue::Array(vec![1; env.arraysize as usize])
+    }
+
     pub fn to_string(&self) -> String {
         match self {
             ConcreteValue::Int(i) => i.to_string(),
             ConcreteValue::Array(v) => {
-                let mut res = "[".to_string();
-                for i in v {
-                    res += &i.to_string();
-                    res += ","
-                }
-                res.pop();
-                res += "]";
-                res
+                format!("array{}", v.len())
             }
             ConcreteValue::Unknown => "unknown".to_string(),
         }
@@ -205,7 +207,7 @@ pub fn resolve_expr_static<'ctx>(
     }
 }
 
-fn hacking_log_ceil(n: u128) -> u128 {
+fn hacking_log_ceil(n: i128) -> i128 {
     let mut n_temp = n;
     for i in 0..254 {
         if n_temp == 0 {
@@ -216,7 +218,7 @@ fn hacking_log_ceil(n: u128) -> u128 {
     return 254;
 }
 
-fn hacking_nbits(a: u128) -> u128 {
+fn hacking_nbits(a: i128) -> i128 {
     let mut n = 1;
     let mut r = 0;
     while n - 1 < a {
@@ -227,10 +229,10 @@ fn hacking_nbits(a: u128) -> u128 {
 }
 
 fn resolve_prefix_op_static<'ctx>(
-    env: &GlobalInformation<'ctx>,
+    _env: &GlobalInformation<'ctx>,
     prefix_op: &ExpressionPrefixOpcode,
-    rval: u128,
-) -> u128 {
+    rval: i128,
+) -> i128 {
     use ExpressionPrefixOpcode::*;
     let res = match prefix_op {
         Sub => !rval,
@@ -240,48 +242,43 @@ fn resolve_prefix_op_static<'ctx>(
             unreachable!();
         }
     };
-    res % env.p as u128
+    res
 }
 
 fn resolve_infix_op_static<'ctx>(
-    env: &GlobalInformation<'ctx>,
+    _env: &GlobalInformation<'ctx>,
     infix_op: &ExpressionInfixOpcode,
-    lval: u128,
-    rval: u128,
-) -> u128 {
+    lval: i128,
+    rval: i128,
+) -> i128 {
+    let _lval = BigInt::from_i128(lval).unwrap();
+    let _rval = BigInt::from_i128(rval).unwrap();
     use ExpressionInfixOpcode::*;
     let res = match infix_op {
-        Add => lval + rval,
-        BitAnd => lval & rval,
-        BitOr => lval | rval,
-        BitXor => lval ^ rval,
-        BoolAnd => lval & rval,
-        BoolOr => lval | rval,
-        Div => lval / rval,
-        IntDiv => lval / rval,
-        Mod => lval % rval,
-        Mul => lval * rval,
-        Pow => lval.pow(rval as u32),
-        ShiftL => lval << (rval % 128),
-        ShiftR => lval >> (rval % 128),
-        Sub => {
-            if rval > lval {
-                let res = u128::MAX - rval + lval;
-                res + 1
-            } else {
-                lval - rval
-            }
-        }
+        Add => _lval + _rval,
+        BitAnd => _lval & _rval,
+        BitOr => _lval | _rval,
+        BitXor => _lval ^ _rval,
+        BoolAnd => _lval & _rval,
+        BoolOr => _lval | _rval,
+        Div => _lval / _rval,
+        IntDiv => _lval / _rval,
+        Mod => _lval % _rval,
+        Mul => _lval * _rval,
+        Pow => _lval.pow(_rval.to_u32().unwrap()),
+        ShiftL => _lval << _rval.abs().to_usize().unwrap(),
+        ShiftR => _lval >> _rval.abs().to_usize().unwrap(),
+        Sub => _lval - _rval,
 
         // Comparison
-        Eq => (lval == rval) as u128,
-        Greater => (lval > rval) as u128,
-        GreaterEq => (lval >= rval) as u128,
-        NotEq => (lval != rval) as u128,
-        Lesser => (lval < rval) as u128,
-        LesserEq => (lval <= rval) as u128,
+        Eq => BigInt::from_u8((_lval == _rval) as u8).unwrap(),
+        Greater => BigInt::from_u8((_lval > _rval) as u8).unwrap(),
+        GreaterEq => BigInt::from_u8((_lval >= _rval) as u8).unwrap(),
+        NotEq => BigInt::from_u8((_lval != _rval) as u8).unwrap(),
+        Lesser => BigInt::from_u8((_lval < _rval) as u8).unwrap(),
+        LesserEq => BigInt::from_u8((_lval <= _rval) as u8).unwrap(),
     };
-    res % env.p as u128
+    (res % i128::MAX).to_i128().unwrap()
 }
 
 pub fn resolve_uniform_array_static<'ctx>(
@@ -347,10 +344,10 @@ pub fn resolve_inline_array_static<'ctx>(
     (ty, dims_record)
 }
 
-pub fn resolve_number_static<'ctx>(expr: &Expression) -> u128 {
+pub fn resolve_number_static<'ctx>(expr: &Expression) -> i128 {
     use Expression::*;
     match expr {
-        Number(_, bigint) => match (bigint % u128::MAX).to_u128() {
+        Number(_, bigint) => match (bigint % i128::MAX).to_i128() {
             Some(i) => i,
             None => {
                 println!("Error: Unknown bigint: {}", bigint.to_string());

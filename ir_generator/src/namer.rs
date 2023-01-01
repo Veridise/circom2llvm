@@ -119,3 +119,7 @@ pub fn name_inline_array(scope_name: &str) -> String {
 pub fn name_getter(ty: &str) -> String {
     return format!("{}_getter", ty);
 }
+
+pub fn name_main_comp(main_signature: &String) -> String {
+    return format!("main_comp={}", main_signature).to_lowercase();
+}

@@ -125,7 +125,7 @@ fn main() {
                                     if has_circomlib {
                                         actual_path.push(p);
                                     }
-                                    if p.to_string_lossy().contains("circomlib") {
+                                    if p.to_string_lossy() == "circomlib" {
                                         has_circomlib = true;
                                     }
                                 }
