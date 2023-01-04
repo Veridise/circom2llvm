@@ -153,7 +153,7 @@ impl LLVMType2TypeDescriber for VoidType<'_> {
 
 impl SummaryGen {
     pub fn add_component(&mut self, template: &Template) {
-        let templ_name = template.scope.get_name().clone();
+        let templ_name = template.scope.get_signature().clone();
         let func_val = template.scope.fn_val.unwrap();
         let struct_ty = func_val.get_first_param().unwrap().get_type();
         let mut signals = Vec::new();
@@ -193,7 +193,7 @@ impl SummaryGen {
             storage: struct_ty.gen(),
             params: template.scope.info.get_arg_tys().iter().map(|a| a.gen()).collect(),
             signals,
-            logic_fn_name: name_template_fn(&templ_name, "init"),
+            logic_fn_name: name_template_fn("init", &templ_name),
         };
         self.components.push(component);
     }
