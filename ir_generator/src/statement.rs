@@ -291,13 +291,7 @@ fn instant_expr<'ctx>(
         Expression::Call { meta, id, args } => {
             if scope_info.is_component(id) {
                 // Hacking template K and template H.
-                let instantiation: ArgValues = if id == "H" || id == "K" {
-                    vec![ConcreteValue::Int(1)]
-                } else {
-                    args.iter()
-                        .map(|a| resolve_expr_static(env, scope_info, &arg2val, a))
-                        .collect()
-                };
+                let instantiation = instant_subcomp(env, scope_info, &arg2val, id, args);
                 let target_scope_info = env.get_scope_info(id);
                 let arg2val = target_scope_info.gen_arg2val(&env, &instantiation);
                 let target_signature = target_scope_info.gen_signature(&arg2val);
@@ -384,6 +378,31 @@ fn instant_expr<'ctx>(
     }
 }
 
+pub fn instant_subcomp<'ctx>(
+    env: &GlobalInformation<'ctx>,
+    scope_info: &ScopeInformation<'ctx>,
+    arg2val: &ArgTable,
+    comp_id: &String,
+    args: &Vec<Expression>,
+) -> ArgValues {
+    // Hacking template K and template H.
+    let instantiation: ArgValues = if comp_id == "H" || comp_id == "K" {
+        vec![ConcreteValue::one_int()]
+    } else {
+        args.iter()
+            .map(|a| {
+                let v = resolve_expr_static(env, scope_info, &arg2val, a);
+                if v.is_int() && v.as_int() < 0 {
+                    // Hacking
+                    return ConcreteValue::one_int();
+                }
+                v
+            })
+            .collect()
+    };
+    instantiation
+}
+
 pub fn instant_stmt<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation<'ctx>,
@@ -459,13 +478,8 @@ pub fn instant_stmt<'ctx>(
                         Expression::Call { meta: _, id, args } => {
                             if scope_info.is_component(id) {
                                 // Hacking template K and template H.
-                                let instantiation: ArgValues = if id == "H" || id == "K" {
-                                    vec![ConcreteValue::Int(1)]
-                                } else {
-                                    args.iter()
-                                        .map(|a| resolve_expr_static(env, scope_info, &arg2val, a))
-                                        .collect()
-                                };
+                                let instantiation =
+                                    instant_subcomp(env, scope_info, &arg2val, id, args);
                                 let p = (id.clone(), instantiation);
                                 n.insert(p);
                             }

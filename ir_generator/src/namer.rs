@@ -39,19 +39,19 @@ pub fn name_constraint() -> String {
 }
 
 pub fn name_intrinsinc_fn(fn_name: &str) -> String {
-    return format!("fn_intrinsic_{}", fn_name).to_lowercase();
+    return format!("fn_intrinsic_{}", fn_name);
 }
 
 pub fn name_template_fn(fn_name: &str, templ_signature: &str) -> String {
-    return format!("fn_template_{}_{}", fn_name, templ_signature).to_lowercase();
+    return format!("fn_template_{}_{}", fn_name, templ_signature);
 }
 
 pub fn name_template_struct(templ_name: &str) -> String {
-    return format!("struct_template_{}", templ_name).to_lowercase();
+    return format!("struct_template_{}", templ_name);
 }
 
 pub fn name_opaque_struct(struct_name: &str) -> String {
-    return format!("{}.opaque", struct_name).to_lowercase();
+    return format!("{}.opaque", struct_name);
 }
 #[derive(PartialEq)]
 pub enum ValueTypeEnum {
@@ -85,7 +85,7 @@ pub fn print_variable_type(var_ty: &ValueTypeEnum) -> &'static str {
 pub fn name_initial_var(var_name: &str, var_ty: ValueTypeEnum) -> String {
     let operator = "initial";
     let var_ty_abbr = print_variable_type(&var_ty);
-    let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr).to_lowercase();
+    let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr);
     return name;
 }
 
@@ -95,9 +95,9 @@ pub fn name_signal(
     var_ty: ValueTypeEnum,
 ) -> String {
     let operator = "gep";
-    let name = format!("{}_{}", templ_name, signal_name).to_lowercase();
+    let name = format!("{}_{}", templ_name, signal_name);
     let var_ty_abbr = print_variable_type(&var_ty);
-    let name = format!("{}.{}.{}", operator, name, var_ty_abbr).to_lowercase();
+    let name = format!("{}.{}.{}", operator, name, var_ty_abbr);
     return name;
 }
 
@@ -108,12 +108,12 @@ pub fn name_readwrite_var(
 ) -> String {
     let operator = if is_read { "read" } else { "write" };
     let var_ty_abbr = print_variable_type(&var_ty);
-    let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr).to_lowercase();
+    let name = format!("{}.{}.{}", operator, var_name, var_ty_abbr);
     return name;
 }
 
 pub fn name_inline_array(scope_name: &str) -> String {
-    return format!("{}inlinearray", scope_name).to_lowercase();
+    return format!("{}inlinearray", scope_name);
 }
 
 pub fn name_getter(ty: &str) -> String {
@@ -121,5 +121,5 @@ pub fn name_getter(ty: &str) -> String {
 }
 
 pub fn name_main_comp(main_signature: &String) -> String {
-    return format!("main_comp={}", main_signature).to_lowercase();
+    return format!("main_comp={}", main_signature);
 }

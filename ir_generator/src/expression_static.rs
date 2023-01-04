@@ -1,3 +1,4 @@
+use std::cmp::max;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
@@ -59,11 +60,11 @@ impl ConcreteValue {
         }
     }
 
-    pub fn one_int(&self) -> ConcreteValue {
+    pub fn one_int() -> ConcreteValue {
         ConcreteValue::Int(1)
     }
 
-    pub fn one_array(&self, env: &GlobalInformation) -> ConcreteValue {
+    pub fn one_array(env: &GlobalInformation) -> ConcreteValue {
         ConcreteValue::Array(vec![1; env.arraysize as usize])
     }
 
@@ -185,6 +186,11 @@ pub fn resolve_expr_static<'ctx>(
                 } else if id == "nbits" {
                     let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
                     let res = hacking_nbits(a);
+                    ConcreteValue::Int(res)
+                } else if id == "max" {
+                    let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+                    let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+                    let res = max(a, b);
                     ConcreteValue::Int(res)
                 } else {
                     ConcreteValue::Unknown

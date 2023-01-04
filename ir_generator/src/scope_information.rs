@@ -3,6 +3,7 @@ use program_structure::ast::Statement;
 use std::{collections::HashMap, iter::zip};
 
 use crate::environment::GlobalInformation;
+use crate::expression_static::ConcreteValue;
 use crate::namer::ValueTypeEnum;
 
 use crate::{
@@ -115,9 +116,9 @@ impl<'ctx> ScopeInformation<'ctx> {
             if arg_val.is_unknown() {
                 let arg_ty = self.arg_tys[idx];
                 if arg_ty.is_int_type() {
-                    arg2val.insert(arg_name.clone(), arg_val.one_int());
+                    arg2val.insert(arg_name.clone(), ConcreteValue::one_int());
                 } else {
-                    arg2val.insert(arg_name.clone(), arg_val.one_array(env));
+                    arg2val.insert(arg_name.clone(), ConcreteValue::one_array(env));
                 }
             } else {
                 arg2val.insert(arg_name.clone(), arg_val.clone());
@@ -218,7 +219,7 @@ impl<'ctx> ScopeInformation<'ctx> {
             let res = templ_info.get_signal_info(var_name);
             match res {
                 Some((_, val_ty_enum)) => val_ty_enum,
-                None => ValueTypeEnum::Variable
+                None => ValueTypeEnum::Variable,
             }
         } else {
             ValueTypeEnum::Variable

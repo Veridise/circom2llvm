@@ -65,8 +65,8 @@ cargo build --bin=circom2llvm --package=circom2llvm
 ### Hints
 1. Critical variables and functions are named in `ir_generator/src/namer.rs`.
 2. The IR is Load-Store format, you could transfer it to SSA format by mem2reg pass.
+3. The size of every dimension of the array is limited to a constant, the default is 256 and could be provided by the command line.
+4. Don't define a component variable without initializing it.
 
-### Potential Problems
-1. If any problem happens during BuildGEP instruction, there is perhaps a type inferrence problem. The type inferrence system is not sound.
-2. The size of every dimension of the array is limited to a constant, the default is 256 and could be provided by the command line.
-3. Don't define a component variable without initializing it.
+### TODO
+1. Support the function interpretation during the instantiation.
