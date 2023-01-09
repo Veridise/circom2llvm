@@ -3,7 +3,6 @@ use program_structure::ast::Statement;
 use std::{collections::HashMap, iter::zip};
 
 use crate::environment::GlobalInformation;
-use crate::expression_static::ConcreteValue;
 use crate::namer::ValueTypeEnum;
 
 use crate::{
@@ -110,16 +109,12 @@ impl<'ctx> ScopeInformation<'ctx> {
         wrap_type2used(&ty)
     }
 
-    pub fn gen_arg2val(&self, env: &GlobalInformation, instantiation: &ArgValues) -> ArgTable {
+    pub fn gen_arg2val(&self, instantiation: &ArgValues) -> ArgTable {
         let mut arg2val = HashMap::new();
-        for (idx, (arg_name, arg_val)) in zip(&self.args, instantiation).enumerate() {
+        for (arg_name, arg_val) in zip(&self.args, instantiation) {
             if arg_val.is_unknown() {
-                let arg_ty = self.arg_tys[idx];
-                if arg_ty.is_int_type() {
-                    arg2val.insert(arg_name.clone(), ConcreteValue::one_int());
-                } else {
-                    arg2val.insert(arg_name.clone(), ConcreteValue::one_array(env));
-                }
+                println!("Error: Argument {} is unknown", arg_name);
+                unreachable!();
             } else {
                 arg2val.insert(arg_name.clone(), arg_val.clone());
             }

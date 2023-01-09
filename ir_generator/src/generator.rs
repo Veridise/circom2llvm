@@ -241,14 +241,20 @@ pub fn generate(
             // Rewrite the body by possible argument->concrete_value mappings.
             for origin_arg2val in arg2vals {
                 let mut arg2val = origin_arg2val.clone();
-                let new_body = instant_stmt(&env, scope_info, &mut arg2val, &mut sub_templ_arg_vals, &body);
+                let new_body = instant_stmt(
+                    &env,
+                    scope_info,
+                    &mut arg2val,
+                    &mut sub_templ_arg_vals,
+                    &body,
+                );
                 instantiations.push((origin_arg2val.clone(), new_body));
             }
 
             // Add all argument->concrete_value mappings of sub-components which are collected during the rewriting.
             for (sub_templ_name, arg_vals) in &sub_templ_arg_vals {
                 let target_scope_info = env.get_scope_info(&sub_templ_name);
-                let arg2val = target_scope_info.gen_arg2val(&env, &arg_vals);
+                let arg2val = target_scope_info.gen_arg2val(&arg_vals);
                 i_manager.set_arg2val(sub_templ_name, arg2val);
             }
 

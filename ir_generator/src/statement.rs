@@ -9,6 +9,7 @@ use crate::scope::Scope;
 use crate::scope_information::ScopeInformation;
 use crate::utils::is_terminated_basicblock;
 use inkwell::values::BasicValue;
+use inkwell::IntPredicate;
 use num_bigint_dig::BigInt;
 use num_traits::FromPrimitive;
 use program_structure::ast::{Access, AssignOp, Expression, Statement};
@@ -52,7 +53,13 @@ pub fn resolve_stmt<'ctx>(
                 .append_basic_block(current_fnc, &name_if_block(false, false));
 
             // current -> if.true
-            let cond = resolve_expr(env, codegen, scope, cond).into_int_value();
+            let mut cond = resolve_expr(env, codegen, scope, cond).into_int_value();
+            if cond.get_type() != codegen.context.bool_type() {
+                cond =
+                    codegen
+                        .builder
+                        .build_int_compare(IntPredicate::EQ, cond, env.const_zero, "eq");
+            }
             codegen
                 .builder
                 .build_conditional_branch(cond, if_bb, else_bb);
@@ -290,10 +297,9 @@ fn instant_expr<'ctx>(
     match expr {
         Expression::Call { meta, id, args } => {
             if scope_info.is_component(id) {
-                // Hacking template K and template H.
-                let instantiation = instant_subcomp(env, scope_info, &arg2val, id, args);
+                let instantiation = instant_subcomp(env, scope_info, &arg2val, args);
                 let target_scope_info = env.get_scope_info(id);
-                let arg2val = target_scope_info.gen_arg2val(&env, &instantiation);
+                let arg2val = target_scope_info.gen_arg2val(&instantiation);
                 let target_signature = target_scope_info.gen_signature(&arg2val);
                 let new_expr = Expression::Call {
                     meta: meta.clone(),
@@ -382,24 +388,15 @@ pub fn instant_subcomp<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation<'ctx>,
     arg2val: &ArgTable,
-    comp_id: &String,
     args: &Vec<Expression>,
 ) -> ArgValues {
-    // Hacking template K and template H.
-    let instantiation: ArgValues = if comp_id == "H" || comp_id == "K" {
-        vec![ConcreteValue::one_int()]
-    } else {
-        args.iter()
-            .map(|a| {
-                let v = resolve_expr_static(env, scope_info, &arg2val, a);
-                if v.is_int() && v.as_int() < 0 {
-                    // Hacking
-                    return ConcreteValue::one_int();
-                }
-                v
-            })
-            .collect()
-    };
+    let instantiation: ArgValues = args
+        .iter()
+        .map(|a| {
+            let v = resolve_expr_static(env, scope_info, &arg2val, a);
+            v
+        })
+        .collect();
     instantiation
 }
 
@@ -473,20 +470,16 @@ pub fn instant_stmt<'ctx>(
             rhe,
         } => {
             match op {
-                AssignOp::AssignVar => {
-                    match rhe {
-                        Expression::Call { meta: _, id, args } => {
-                            if scope_info.is_component(id) {
-                                // Hacking template K and template H.
-                                let instantiation =
-                                    instant_subcomp(env, scope_info, &arg2val, id, args);
-                                let p = (id.clone(), instantiation);
-                                n.insert(p);
-                            }
+                AssignOp::AssignVar => match rhe {
+                    Expression::Call { meta: _, id, args } => {
+                        if scope_info.is_component(id) {
+                            let instantiation = instant_subcomp(env, scope_info, &arg2val, args);
+                            let p = (id.clone(), instantiation);
+                            n.insert(p);
                         }
-                        _ => (),
                     }
-                }
+                    _ => (),
+                },
                 AssignOp::AssignSignal => (),
                 AssignOp::AssignConstraintSignal => (),
             }

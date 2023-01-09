@@ -7,7 +7,7 @@ use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
 use inkwell::types::{ArrayType, BasicType};
 use inkwell::values::ArrayValue;
 use num_bigint_dig::BigInt;
-use num_traits::{ToPrimitive, Pow, FromPrimitive, Signed};
+use num_traits::{FromPrimitive, Pow, Signed, ToPrimitive};
 use program_structure::ast::{
     Access, Expression, ExpressionInfixOpcode, ExpressionPrefixOpcode, Statement,
 };
@@ -58,14 +58,6 @@ impl ConcreteValue {
             ConcreteValue::Array(..) => false,
             ConcreteValue::Unknown => true,
         }
-    }
-
-    pub fn one_int() -> ConcreteValue {
-        ConcreteValue::Int(1)
-    }
-
-    pub fn one_array(env: &GlobalInformation) -> ConcreteValue {
-        ConcreteValue::Array(vec![1; env.arraysize as usize])
     }
 
     pub fn to_string(&self) -> String {
@@ -192,7 +184,15 @@ pub fn resolve_expr_static<'ctx>(
                     let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
                     let res = max(a, b);
                     ConcreteValue::Int(res)
-                } else {
+                } else if id == "get_BLS12_381_prime" {
+                    let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+                    let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+                    let res = get_bls12_381_prime(a, b);
+                    ConcreteValue::Array(res)
+                } else if id == "get_BLS12_381_parameter" {
+                    ConcreteValue::Int(15132376222941642752)
+                }
+                else {
                     ConcreteValue::Unknown
                 }
             }
@@ -232,6 +232,43 @@ fn hacking_nbits(a: i128) -> i128 {
         n *= 2;
     }
     return r;
+}
+
+fn get_bls12_381_prime(n: i128, k: i128) -> Vec<i128> {
+    let p: Vec<i128>;
+    if n == 96 && k == 4 {
+        p = [
+            54880396502181392957329877675,
+            31935979117156477062286671870,
+            20826981314825584179608359615,
+            8047903782086192180586325942,
+        ]
+        .to_vec();
+    } else if n == 77 && k == 5 {
+        p = [
+            151110683138771015150251,
+            101672770061349971921567,
+            5845403419599137187901,
+            110079541992039310225047,
+            7675079137884323292337,
+        ]
+        .to_vec();
+    } else if n == 55 && k == 7 {
+        p = [
+            35747322042231467,
+            36025922209447795,
+            1084959616957103,
+            7925923977987733,
+            16551456537884751,
+            23443114579904617,
+            1829881462546425,
+        ]
+        .to_vec();
+    } else {
+        println!("Invalid n, k pair");
+        unreachable!();
+    }
+    return p;
 }
 
 fn resolve_prefix_op_static<'ctx>(
