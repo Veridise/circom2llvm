@@ -5,6 +5,7 @@ mod expression_codegen;
 mod expression_static;
 mod function;
 pub mod generator;
+mod interpret_fn;
 mod info_collector;
 mod namer;
 pub mod scope_information;
