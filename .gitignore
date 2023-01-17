@@ -12,3 +12,5 @@ Cargo.lock
 # Dev
 .vscode
 .cache
+outputs/
+.idea/
