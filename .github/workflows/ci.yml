@@ -1,0 +1,12 @@
+name: CI
+on:
+  push:
+    branches: [ stable ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v2.4.0
