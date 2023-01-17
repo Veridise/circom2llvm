@@ -15,7 +15,7 @@ use program_structure::ast::{
 #[derive(Clone, PartialEq, Eq)]
 pub enum ConcreteValue {
     Int(i128),
-    Array(Vec<i128>),
+    Array(Box<Vec<ConcreteValue>>),
     Unknown,
 }
 
@@ -28,10 +28,10 @@ impl ConcreteValue {
         }
     }
 
-    pub fn as_array(&self) -> Vec<i128> {
+    pub fn as_array(&self) -> &Box<Vec<ConcreteValue>> {
         match self {
             ConcreteValue::Int(..) => unreachable!(),
-            ConcreteValue::Array(v) => v.clone(),
+            ConcreteValue::Array(v) => v,
             ConcreteValue::Unknown => unreachable!(),
         }
     }
@@ -68,6 +68,24 @@ impl ConcreteValue {
             }
             ConcreteValue::Unknown => "unknown".to_string(),
         }
+    }
+
+    pub fn get_from_access(&self, mut access: Vec<usize>) -> ConcreteValue {
+        match self {
+            ConcreteValue::Array(arr) => {
+                let a = access.pop();
+                match a {
+                    None => self.clone(),
+                    Some(idx) => arr.as_ref()[idx].get_from_access(access),
+                }
+            }
+            _ => self.clone(),
+        }
+    }
+
+    pub fn init_array(ints: Vec<i128>) -> ConcreteValue {
+        let vals = ints.into_iter().map(|i| ConcreteValue::Int(i)).collect();
+        ConcreteValue::Array(Box::new(vals))
     }
 }
 
@@ -142,25 +160,18 @@ pub fn resolve_expr_static<'ctx>(
             name,
             access,
         } => {
-            if access.len() <= 1 && arg2val.contains_key(name) {
+            if arg2val.contains_key(name) {
                 let v = &arg2val[name];
-                match v {
-                    ConcreteValue::Int(..) => v.clone(),
-                    ConcreteValue::Array(arr) => {
-                        if access.len() == 0 {
-                            v.clone()
-                        } else {
-                            let idx = match &access[0] {
-                                Access::ArrayAccess(a) => {
-                                    resolve_expr_static(env, scope_info, arg2val, a).as_int()
-                                }
-                                Access::ComponentAccess(..) => unreachable!(),
-                            };
-                            ConcreteValue::Int(arr[idx as usize])
+                let access_idxes: Vec<usize> = access
+                    .iter()
+                    .map(|a| match a {
+                        Access::ArrayAccess(a) => {
+                            resolve_expr_static(env, scope_info, arg2val, a).as_int() as usize
                         }
-                    }
-                    ConcreteValue::Unknown => unreachable!(),
-                }
+                        Access::ComponentAccess(..) => unreachable!(),
+                    })
+                    .collect();
+                v.get_from_access(access_idxes)
             } else {
                 ConcreteValue::Unknown
             }
@@ -177,13 +188,9 @@ pub fn resolve_expr_static<'ctx>(
             let mut arr = Vec::new();
             for expr in values {
                 let v = resolve_expr_static(env, scope_info, arg2val, expr);
-                if v.is_int() {
-                    arr.push(v.as_int());
-                } else {
-                    return ConcreteValue::Unknown;
-                }
+                arr.push(v);
             }
-            ConcreteValue::Array(arr)
+            ConcreteValue::Array(Box::new(arr))
         }
         _ => ConcreteValue::Unknown,
     }
