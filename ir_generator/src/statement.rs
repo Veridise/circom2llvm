@@ -325,8 +325,8 @@ fn instant_expr<'ctx>(
             infix_op,
             rhe,
         } => {
-            let lhe = Box::new(instant_expr(env, scope_info, arg2val, &lhe.as_ref()));
-            let rhe = Box::new(instant_expr(env, scope_info, arg2val, &rhe.as_ref()));
+            let lhe = Box::new(instant_expr(env, scope_info, arg2val, lhe.as_ref()));
+            let rhe = Box::new(instant_expr(env, scope_info, arg2val, rhe.as_ref()));
             Expression::InfixOp {
                 meta: meta.clone(),
                 lhe,
@@ -340,8 +340,8 @@ fn instant_expr<'ctx>(
             if_true,
             if_false,
         } => {
-            let if_true = instant_expr(env, scope_info, arg2val, &if_true.as_ref());
-            let if_false = instant_expr(env, scope_info, arg2val, &if_false.as_ref());
+            let if_true = instant_expr(env, scope_info, arg2val, if_true.as_ref());
+            let if_false = instant_expr(env, scope_info, arg2val, if_false.as_ref());
             let res = resolve_expr_static(env, scope_info, &arg2val, cond);
             match res {
                 ConcreteValue::Int(i) => {
@@ -365,11 +365,20 @@ fn instant_expr<'ctx>(
             prefix_op,
             rhe,
         } => {
-            let rhe = Box::new(instant_expr(env, scope_info, arg2val, &rhe.as_ref()));
+            let rhe = Box::new(instant_expr(env, scope_info, arg2val, rhe.as_ref()));
             Expression::PrefixOp {
                 meta: meta.clone(),
                 prefix_op: prefix_op.clone(),
                 rhe,
+            }
+        }
+        Expression::UniformArray { meta, value, dimension } => {
+            let value = Box::new(instant_expr(env, scope_info, arg2val, value.as_ref()));
+            let dimension = Box::new(instant_expr(env, scope_info, arg2val, dimension.as_ref()));
+            Expression::UniformArray { 
+                meta: meta.clone(), 
+                value,
+                dimension,
             }
         }
         Expression::Variable { meta, name, access } => {
