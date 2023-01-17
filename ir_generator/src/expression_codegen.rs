@@ -138,7 +138,9 @@ fn resolve_inline_array<'ctx>(
         .iter()
         .map(|d| env.val_ty.const_int(*d as u64, true))
         .collect();
-    codegen.build_arraydim(&ptr, &dims);
+    if scope.info.is_template {
+        codegen.build_arraydim(&ptr, &dims);
+    }
     ptr
 }
 
@@ -207,7 +209,9 @@ fn resolve_uniform_array<'ctx>(
     let dims = resolve_uniform_array_dims(env, codegen, scope, expr);
     let arr_val = resolve_uniform_array_static(env, &scope.info, expr);
     let ptr = codegen.build_direct_array_store(arr_val, &scope.get_name());
-    codegen.build_arraydim(&ptr, &dims);
+    if scope.info.is_template {
+        codegen.build_arraydim(&ptr, &dims);
+    }
     return ptr;
 }
 

@@ -436,13 +436,15 @@ impl<'ctx> Scope<'ctx> {
             .append_basic_block(fn_val, &name_exit_block());
         codegen.build_block_transferring(current_bb, exit_bb);
 
-        for (name, ptr) in &self.var2ptr {
-            let dims_op = self.get_var_dims(name);
-            match dims_op {
-                Some(dims) => {
-                    codegen.build_arraydim(ptr, &dims);
+        if self.info.is_template {
+            for (name, ptr) in &self.var2ptr {
+                let dims_op = self.get_var_dims(name);
+                match dims_op {
+                    Some(dims) => {
+                        codegen.build_arraydim(ptr, &dims);
+                    }
+                    None => (),
                 }
-                None => (),
             }
         }
     }
