@@ -13,7 +13,7 @@ use crate::type_check::{unwrap_used_type, wrap_type2used};
 use crate::type_infer::infer_ty_from_stmt;
 use inkwell::context::Context;
 use inkwell::types::BasicType;
-use inkwell::values::{BasicValue, IntValue};
+use inkwell::values::BasicValue;
 use program_structure::ast::Statement;
 
 #[derive(Clone)]
@@ -175,19 +175,7 @@ impl<'ctx> Template<'ctx> {
                     ConcreteValue::Int(i) => {
                         env.val_ty.const_int(*i as u64, true).as_basic_value_enum()
                     }
-                    ConcreteValue::Array(arr) => {
-                        let mut vals: Vec<IntValue> = Vec::new();
-                        for i in 0..env.arraysize as usize {
-                            if i < arr.len() {
-                                vals.push(env.val_ty.const_int(arr[i] as u64, true))
-                            } else {
-                                vals.push(env.const_zero)
-                            }
-                        }
-                        let arr_val = env.val_ty.const_array(&vals);
-                        let ptr = codegen.build_direct_array_store(arr_val, &self.scope.get_name());
-                        ptr.as_basic_value_enum()
-                    }
+                    ConcreteValue::Array(_) => init_fn_val.get_nth_param(idx as u32).unwrap(),
                     ConcreteValue::Unknown => unreachable!(),
                 },
                 None => init_fn_val.get_nth_param(idx as u32).unwrap(),

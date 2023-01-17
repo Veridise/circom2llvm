@@ -1,7 +1,7 @@
-use std::cmp::max;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
+use crate::interpret_fn::interpret_func;
 use crate::scope_information::ScopeInformation;
 use crate::{environment::GlobalInformation, type_infer::construct_array_ty};
 use inkwell::types::{ArrayType, BasicType};
@@ -15,7 +15,7 @@ use program_structure::ast::{
 #[derive(Clone, PartialEq, Eq)]
 pub enum ConcreteValue {
     Int(i128),
-    Array(Vec<i128>),
+    Array(Box<Vec<ConcreteValue>>),
     Unknown,
 }
 
@@ -28,10 +28,10 @@ impl ConcreteValue {
         }
     }
 
-    pub fn as_array(&self) -> Vec<i128> {
+    pub fn as_array(&self) -> &Box<Vec<ConcreteValue>> {
         match self {
             ConcreteValue::Int(..) => unreachable!(),
-            ConcreteValue::Array(v) => v.clone(),
+            ConcreteValue::Array(v) => v,
             ConcreteValue::Unknown => unreachable!(),
         }
     }
@@ -68,6 +68,24 @@ impl ConcreteValue {
             }
             ConcreteValue::Unknown => "unknown".to_string(),
         }
+    }
+
+    pub fn get_from_access(&self, mut access: Vec<usize>) -> ConcreteValue {
+        match self {
+            ConcreteValue::Array(arr) => {
+                let a = access.pop();
+                match a {
+                    None => self.clone(),
+                    Some(idx) => arr.as_ref()[idx].get_from_access(access),
+                }
+            }
+            _ => self.clone(),
+        }
+    }
+
+    pub fn init_array(ints: Vec<i128>) -> ConcreteValue {
+        let vals = ints.into_iter().map(|i| ConcreteValue::Int(i)).collect();
+        ConcreteValue::Array(Box::new(vals))
     }
 }
 
@@ -142,25 +160,18 @@ pub fn resolve_expr_static<'ctx>(
             name,
             access,
         } => {
-            if access.len() <= 1 && arg2val.contains_key(name) {
+            if arg2val.contains_key(name) {
                 let v = &arg2val[name];
-                match v {
-                    ConcreteValue::Int(..) => v.clone(),
-                    ConcreteValue::Array(arr) => {
-                        if access.len() == 0 {
-                            v.clone()
-                        } else {
-                            let idx = match &access[0] {
-                                Access::ArrayAccess(a) => {
-                                    resolve_expr_static(env, scope_info, arg2val, a).as_int()
-                                }
-                                Access::ComponentAccess(..) => unreachable!(),
-                            };
-                            ConcreteValue::Int(arr[idx as usize])
+                let access_idxes: Vec<usize> = access
+                    .iter()
+                    .map(|a| match a {
+                        Access::ArrayAccess(a) => {
+                            resolve_expr_static(env, scope_info, arg2val, a).as_int() as usize
                         }
-                    }
-                    ConcreteValue::Unknown => unreachable!(),
-                }
+                        Access::ComponentAccess(..) => unreachable!(),
+                    })
+                    .collect();
+                v.get_from_access(access_idxes)
             } else {
                 ConcreteValue::Unknown
             }
@@ -170,105 +181,19 @@ pub fn resolve_expr_static<'ctx>(
             if scope_info.is_component(id) {
                 ConcreteValue::Unknown
             } else {
-                // Hacking
-                if id == "log_ceil" {
-                    let n = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-                    let res = hacking_log_ceil(n);
-                    ConcreteValue::Int(res)
-                } else if id == "nbits" {
-                    let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-                    let res = hacking_nbits(a);
-                    ConcreteValue::Int(res)
-                } else if id == "max" {
-                    let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-                    let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
-                    let res = max(a, b);
-                    ConcreteValue::Int(res)
-                } else if id == "get_BLS12_381_prime" {
-                    let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-                    let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
-                    let res = get_bls12_381_prime(a, b);
-                    ConcreteValue::Array(res)
-                } else if id == "get_BLS12_381_parameter" {
-                    ConcreteValue::Int(15132376222941642752)
-                }
-                else {
-                    ConcreteValue::Unknown
-                }
+                interpret_func(env, scope_info, arg2val, id, args)
             }
         }
         ArrayInLine { meta: _, values } => {
             let mut arr = Vec::new();
             for expr in values {
                 let v = resolve_expr_static(env, scope_info, arg2val, expr);
-                if v.is_int() {
-                    arr.push(v.as_int());
-                } else {
-                    return ConcreteValue::Unknown;
-                }
+                arr.push(v);
             }
-            ConcreteValue::Array(arr)
+            ConcreteValue::Array(Box::new(arr))
         }
         _ => ConcreteValue::Unknown,
     }
-}
-
-fn hacking_log_ceil(n: i128) -> i128 {
-    let mut n_temp = n;
-    for i in 0..254 {
-        if n_temp == 0 {
-            return i;
-        };
-        n_temp = n_temp / 2
-    }
-    return 254;
-}
-
-fn hacking_nbits(a: i128) -> i128 {
-    let mut n = 1;
-    let mut r = 0;
-    while n - 1 < a {
-        r += 1;
-        n *= 2;
-    }
-    return r;
-}
-
-fn get_bls12_381_prime(n: i128, k: i128) -> Vec<i128> {
-    let p: Vec<i128>;
-    if n == 96 && k == 4 {
-        p = [
-            54880396502181392957329877675,
-            31935979117156477062286671870,
-            20826981314825584179608359615,
-            8047903782086192180586325942,
-        ]
-        .to_vec();
-    } else if n == 77 && k == 5 {
-        p = [
-            151110683138771015150251,
-            101672770061349971921567,
-            5845403419599137187901,
-            110079541992039310225047,
-            7675079137884323292337,
-        ]
-        .to_vec();
-    } else if n == 55 && k == 7 {
-        p = [
-            35747322042231467,
-            36025922209447795,
-            1084959616957103,
-            7925923977987733,
-            16551456537884751,
-            23443114579904617,
-            1829881462546425,
-        ]
-        .to_vec();
-    } else {
-        println!("Invalid n, k pair");
-        unreachable!();
-    }
-    return p;
 }
 
 fn resolve_prefix_op_static<'ctx>(

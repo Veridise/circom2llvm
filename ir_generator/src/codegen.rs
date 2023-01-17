@@ -154,6 +154,10 @@ impl<'ctx> CodeGen<'ctx> {
             .build_pointer_cast(ptr.clone(), default_ptr_ty, "ptr_cast");
         let mut vals = vec![_ptr.into()];
         for d in dims {
+            if !d.is_const() {
+                println!("Error: Dimension is not a constant, current: {}", d.print_to_string());
+                unreachable!();
+            }
             vals.push(d.clone().into());
         }
         self.builder
