@@ -220,6 +220,10 @@ impl<'ctx> ScopeInformation<'ctx> {
             ValueTypeEnum::Variable
         }
     }
+
+    pub fn is_var(&self, env: &GlobalInformation, var_name: &String) -> bool {
+        return self.get_var_ty_enum(env, var_name) == ValueTypeEnum::Variable && !self.is_component_var(var_name);
+    }
 }
 
 pub fn init_scope_info<'ctx>(

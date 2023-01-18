@@ -1,7 +1,7 @@
 use crate::after_process::remove_opaque_struct_name;
 use crate::codegen::init_codegen;
 use crate::environment::{init_env, init_instantiation_manager};
-use crate::expression_static::{resolve_expr_static, Instantiation};
+use crate::expression_static::{resolve_expr_static, Instantiation, SymbolValueManager};
 use crate::function::{infer_fn, Function};
 use crate::scope::init_scope;
 use crate::scope_information::{init_scope_info, ScopeInformation};
@@ -245,6 +245,7 @@ pub fn generate(
                     &env,
                     scope_info,
                     &mut arg2val,
+                    &mut SymbolValueManager::init(),
                     &mut sub_templ_arg_vals,
                     &body,
                 );

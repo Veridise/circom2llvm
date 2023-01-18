@@ -99,6 +99,94 @@ pub type ArgValues = Vec<ConcreteValue>;
 pub type ArgTable = HashMap<String, ConcreteValue>;
 pub type Instantiation = (ArgTable, Statement);
 
+pub struct SymbolValueManager {
+    pub var2val: HashMap<String, Expression>,
+    pub var2dims: HashMap<String, Vec<usize>>,
+}
+
+impl SymbolValueManager {
+    fn compute_idx(&self, var_name: &String, access: &Vec<usize>) -> usize {
+        match self.var2dims.get(var_name) {
+            Some(dims) => {
+                assert!(dims.len() == access.len());
+                if dims.len() == 0 {
+                    0
+                } else {
+                    let mut res = 0;
+                    for i in 0..dims.len() {
+                        let acc = &dims[(i + 1)..].iter().fold(1, |a, b| a * b);
+                        res += access[i] * acc;
+                    }
+                    res
+                }
+            },
+            None => unreachable!(),
+        }
+    }
+    fn compute_key(&self, var_name: &String, access: &Vec<usize>) -> String {
+        match self.var2dims.get(var_name) {
+            Some(dims) => {
+                assert!(dims.len() == access.len());
+                if dims.len() == 0 {
+                    var_name.clone()
+                } else {
+                    let res = self.compute_idx(var_name, access);
+                    format!("{}_{}", var_name, res.to_string())
+                }
+            },
+            None => unreachable!(),
+        }
+    }
+
+    pub fn get_expr(&self, var_name: &String, access: &Vec<usize>) -> Option<&Expression> {
+        match self.var2dims.get(var_name) {
+            Some(dims) => {
+                if dims.len() != access.len() {
+                    None
+                } else {
+                    let key = self.compute_key(var_name, access);
+                    self.var2val.get(&key)
+                }
+            },
+            None => unreachable!(),
+        }
+    }
+
+    pub fn set_expr(&mut self, var_name: &String, access: &Vec<usize>, expr: &Expression) {
+        match self.var2dims.get(var_name) {
+            Some(dims) => {
+                if dims.len() != access.len() {
+                    match expr {
+                        Expression::ArrayInLine { meta: _, values } => {
+                            for (i, expr) in values.iter().enumerate() {
+                                let mut new_access = access.clone();
+                                new_access.push(i);
+                                self.set_expr(var_name, access, expr);
+                            }
+                        },
+                        _ => (),
+                    }
+                } else {
+                    let key = self.compute_key(var_name, access);
+                    self.var2val.insert(key, expr.clone());
+                }
+            },
+            None => unreachable!(),
+        }
+    }
+
+    pub fn add_dims(&mut self, var_name: &String, dimensions: Vec<usize>) {
+        self.var2dims.insert(var_name.clone(), dimensions);
+    }
+
+    pub fn init() -> SymbolValueManager {
+        SymbolValueManager {
+            var2val: HashMap::new(),
+            var2dims: HashMap::new(),
+        }
+    }
+}
+
 pub fn resolve_expr_static<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation,
