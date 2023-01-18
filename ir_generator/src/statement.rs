@@ -361,9 +361,10 @@ fn instant_expr<'ctx>(
             if_true,
             if_false,
         } => {
+            let cond = instant_expr(env, scope_info, arg2val, var2val, cond);
             let if_true = instant_expr(env, scope_info, arg2val, var2val, if_true.as_ref());
             let if_false = instant_expr(env, scope_info, arg2val, var2val, if_false.as_ref());
-            let res = resolve_expr_static(env, scope_info, &arg2val, cond);
+            let res = resolve_expr_static(env, scope_info, &arg2val, &cond);
             match res {
                 ConcreteValue::Int(i) => {
                     if i == 1 {
@@ -375,7 +376,7 @@ fn instant_expr<'ctx>(
                 ConcreteValue::Array(..) => unreachable!(),
                 ConcreteValue::Unknown => Expression::InlineSwitchOp {
                     meta: meta.clone(),
-                    cond: cond.clone(),
+                    cond: Box::new(cond),
                     if_true: Box::new(if_true),
                     if_false: Box::new(if_false),
                 },
