@@ -164,6 +164,7 @@ pub fn resolve_expr_static<'ctx>(
                 let v = &arg2val[name];
                 let access_idxes: Vec<usize> = access
                     .iter()
+                    .rev()
                     .map(|a| match a {
                         Access::ArrayAccess(a) => {
                             resolve_expr_static(env, scope_info, arg2val, a).as_int() as usize

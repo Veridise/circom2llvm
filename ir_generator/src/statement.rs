@@ -273,7 +273,12 @@ fn instant_access<'ctx>(
         .iter()
         .map(|a| match a {
             Access::ArrayAccess(expr) => {
-                Access::ArrayAccess(instant_expr(env, scope_info, arg2val, expr))
+                let a_expr = instant_expr(env, scope_info, arg2val, expr);
+                if !a_expr.is_number() {
+                    println!("Error: Non-static access!");
+                    unreachable!();
+                }
+                Access::ArrayAccess(a_expr)
             }
             Access::ComponentAccess(..) => a.clone(),
         })
