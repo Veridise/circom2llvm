@@ -95,7 +95,7 @@ pub fn name_signal(
     var_ty: ValueTypeEnum,
 ) -> String {
     let operator = "gep";
-    let name = format!("{}_{}", templ_name, signal_name);
+    let name = format!("{}|{}", templ_name, signal_name);
     let var_ty_abbr = print_variable_type(&var_ty);
     let name = format!("{}.{}.{}", operator, name, var_ty_abbr);
     return name;
