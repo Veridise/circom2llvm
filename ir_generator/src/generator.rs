@@ -84,6 +84,7 @@ pub fn generate(
     input_path: &PathBuf,
     output_path: &PathBuf,
     output_summary_path: &PathBuf,
+    generate_summary: bool,
 ) {
     let context = Context::create();
     let file_path = input_path.as_os_str().to_str().unwrap();
@@ -296,14 +297,16 @@ pub fn generate(
         t.build_instrustions(&env, &codegen, body);
         summarygen.add_component(t);
     }
-
-    let json_result = summarygen.print_to_file(output_summary_path);
-    match json_result {
-        Ok(..) => (),
-        Err(err) => {
-            println!("Error: {}", err);
+    if generate_summary {
+        let json_result = summarygen.print_to_file(output_summary_path);
+        match json_result {
+            Ok(..) => (),
+            Err(err) => {
+                println!("Error: {}", err);
+            }
         }
     }
+
     let result = codegen.module.print_to_file(&output_path);
     match result {
         Ok(_) => {

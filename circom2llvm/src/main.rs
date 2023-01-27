@@ -33,6 +33,10 @@ struct Args {
     /// The compilation mode, instantiation or abstraction.
     #[arg(long, default_value_t = false)]
     instantiation: bool,
+
+    /// Generate summary or not.
+    #[arg(long, default_value_t = false)]
+    summarize: bool,
 }
 
 fn main() {
@@ -188,6 +192,7 @@ fn main() {
             &input_path,
             &output_path,
             &output_summary_path,
+            args.summarize,
         );
     }
 }
