@@ -230,18 +230,25 @@ pub fn generate(
 
         // Collect instantiations from the main component to other components, so we use .rev().
         for (scope_name, body) in templ_name_pairs.iter().rev() {
-            let scope_info = env.get_scope_info(scope_name);
             if !i_manager.has_arg2val(scope_name) {
                 // This sub-component is deleted during the rewriting.
                 continue;
             }
-            let arg2vals = i_manager.get_arg2val(scope_name);
+            let scope_info = env.get_scope_info(scope_name);
+            let mut arg2vals = i_manager.get_arg2val(scope_name).clone();
             let mut instantiations: Vec<Instantiation> = Vec::new();
             let mut sub_templ_arg_vals = HashSet::new();
+            let mut consumed_templ_signatures = HashSet::new();
 
-            // Rewrite the body by possible argument->concrete_value mappings.
-            for origin_arg2val in arg2vals {
+            while arg2vals.len() > 0 {
+                let origin_arg2val = arg2vals.pop().unwrap();
+                let signature = scope_info.gen_signature(&origin_arg2val);
+                if consumed_templ_signatures.contains(&signature) {
+                    continue;
+                }
+                consumed_templ_signatures.insert(scope_info.gen_signature(&origin_arg2val));
                 let mut arg2val = origin_arg2val.clone();
+                // Rewrite the body by possible argument->concrete_value mappings.
                 let new_body = instant_stmt(
                     &env,
                     scope_info,
@@ -250,14 +257,17 @@ pub fn generate(
                     &mut sub_templ_arg_vals,
                     &body,
                 );
-                instantiations.push((origin_arg2val.clone(), new_body));
-            }
-
-            // Add all argument->concrete_value mappings of sub-components which are collected during the rewriting.
-            for (sub_templ_name, arg_vals) in &sub_templ_arg_vals {
-                let target_scope_info = env.get_scope_info(&sub_templ_name);
-                let arg2val = target_scope_info.gen_arg2val(&arg_vals);
-                i_manager.set_arg2val(sub_templ_name, arg2val);
+                instantiations.push((origin_arg2val, new_body));
+                // Add all argument->concrete_value mappings of sub-components which are collected during the rewriting.
+                for (sub_templ_name, arg_vals) in &sub_templ_arg_vals {
+                    let target_scope_info = env.get_scope_info(&sub_templ_name);
+                    let sub_templ_arg2val = target_scope_info.gen_arg2val(&arg_vals);
+                    if sub_templ_name != scope_name {
+                        i_manager.set_arg2val(sub_templ_name, sub_templ_arg2val);
+                    } else {
+                        arg2vals.push(sub_templ_arg2val);
+                    }
+                }
             }
 
             // Build all possible circuits of the current template.
