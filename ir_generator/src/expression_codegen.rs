@@ -234,13 +234,22 @@ fn resolve_prefix_op<'ctx>(
 }
 
 fn resolve_infix_op<'ctx>(
-    _env: &GlobalInformation<'ctx>,
+    env: &GlobalInformation<'ctx>,
     codegen: &CodeGen<'ctx>,
     infix_op: &ExpressionInfixOpcode,
     lval: IntValue<'ctx>,
     rval: IntValue<'ctx>,
 ) -> IntValue<'ctx> {
     use ExpressionInfixOpcode::*;
+    let mut lval = lval;
+    let mut rval = rval;
+    if lval.get_type() != rval.get_type() {
+        if rval.get_type() == env.val_ty {
+            lval = codegen.builder.build_int_cast(lval, env.val_ty, "intcast");
+        } else {
+            rval = codegen.builder.build_int_cast(rval, env.val_ty, "intcast");
+        }
+    }
     let temp = match infix_op {
         Add => codegen.builder.build_int_add(lval, rval, "add"),
         BitAnd => codegen.builder.build_and(lval, rval, "and"),

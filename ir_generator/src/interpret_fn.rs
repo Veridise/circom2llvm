@@ -5089,6 +5089,14 @@ fn hacking_get_domain_seperator_tag() -> Vec<i128> {
     return dst;
 }
 
+fn hacking_calc_chunks(n: i128, chunk_size: i128) -> i128 {
+    let mut num_chunks = n / chunk_size;
+    if n % chunk_size != 0 {
+        num_chunks += 1;
+    }
+    return num_chunks;
+}
+
 pub fn interpret_func<'ctx>(
     env: &GlobalInformation<'ctx>,
     scope_info: &ScopeInformation,
@@ -5149,6 +5157,11 @@ pub fn interpret_func<'ctx>(
         let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
         let res = hacking_poseidon_s(a);
         ConcreteValue::init_array(res)
+    } else if id == "calcChunks" {
+        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+        let res = hacking_calc_chunks(a, b);
+        ConcreteValue::Int(res)
     } else {
         ConcreteValue::Unknown
     }
