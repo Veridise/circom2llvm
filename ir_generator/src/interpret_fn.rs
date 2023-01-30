@@ -5105,40 +5105,48 @@ pub fn interpret_func<'ctx>(
     args: &Vec<Expression>,
 ) -> ConcreteValue {
     // Hacking
+    let mut known_args = Vec::new();
+    for arg in args {
+        let known_arg = resolve_expr_static(env, scope_info, arg2val, arg);
+        if known_arg.is_unknown() {
+            return ConcreteValue::Unknown
+        }
+        known_args.push(known_arg);
+    }
     if id == "log_ceil" {
-        let n = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let n = known_args[0].as_int();
         let res = hacking_log_ceil(n);
         ConcreteValue::Int(res)
     } else if id == "nbits" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let a = known_args[0].as_int();
         let res = hacking_nbits(a);
         ConcreteValue::Int(res)
     } else if id == "max" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-        let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+        let a = known_args[0].as_int();
+        let b = known_args[1].as_int();
         let res = max(a, b);
         ConcreteValue::Int(res)
     } else if id == "get_BLS12_381_prime" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-        let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+        let a = known_args[0].as_int();
+        let b = known_args[1].as_int();
         let res = hacking_get_bls12_381_prime(a, b);
         ConcreteValue::init_array(res)
     } else if id == "get_BLS12_381_parameter" {
         ConcreteValue::Int(1234567)
     } else if id == "div_ceil" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-        let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+        let a = known_args[0].as_int();
+        let b = known_args[1].as_int();
         let res = hacking_div_ceil(a, b);
         ConcreteValue::Int(res)
     } else if id == "getDomainSeperatorTag" {
         let res = hacking_get_domain_seperator_tag();
         ConcreteValue::init_array(res)
     } else if id == "POSEIDON_C" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let a = known_args[0].as_int();
         let res = hacking_poseidon_c(a);
         ConcreteValue::init_array(res)
     } else if id == "POSEIDON_M" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let a = known_args[0].as_int();
         let res = hacking_poseidon_m(a);
         ConcreteValue::Array(Box::new(
             res.into_iter()
@@ -5146,7 +5154,7 @@ pub fn interpret_func<'ctx>(
                 .collect(),
         ))
     } else if id == "POSEIDON_P" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let a = known_args[0].as_int();
         let res = hacking_poseidon_p(a);
         ConcreteValue::Array(Box::new(
             res.into_iter()
@@ -5154,13 +5162,17 @@ pub fn interpret_func<'ctx>(
                 .collect(),
         ))
     } else if id == "POSEIDON_S" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
+        let a = known_args[0].as_int();
         let res = hacking_poseidon_s(a);
         ConcreteValue::init_array(res)
     } else if id == "calcChunks" {
-        let a = resolve_expr_static(env, scope_info, arg2val, &args[0]).as_int();
-        let b = resolve_expr_static(env, scope_info, arg2val, &args[1]).as_int();
+        let a = known_args[0].as_int();
+        let b = known_args[1].as_int();
         let res = hacking_calc_chunks(a, b);
+        ConcreteValue::Int(res)
+    } else if id == "sqrt" {
+        let a = known_args[0].as_int();
+        let res = (a as f64).sqrt() as i128;
         ConcreteValue::Int(res)
     } else {
         ConcreteValue::Unknown
