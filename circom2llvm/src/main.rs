@@ -139,7 +139,7 @@ fn main() {
                         let abs_path = match canonicalize(&include_path) {
                             Ok(p) => p,
                             Err(_) => {
-                                println!("Path is not found: {}", include_path.to_string_lossy());
+                                eprintln!("Path is not found: {}", include_path.to_string_lossy());
                                 unreachable!();
                             }
                         };
